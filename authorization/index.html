@@ -1,0 +1,1265 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mainflux IoT System">
+      
+      
+      
+        <link rel="canonical" href="https://docs.mainflux.io/authorization/">
+      
+      <link rel="icon" href="../img/logo.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.1">
+    
+    
+      
+        <title>Authorization - Mainflux</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e8d9bf0c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#authorization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Mainflux" class="md-header__button md-logo" aria-label="Mainflux" data-md-component="logo">
+      
+  <img src="../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mainflux
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Authorization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Mainflux" class="md-nav__button md-logo" aria-label="Mainflux" data-md-component="logo">
+      
+  <img src="../img/logo.png" alt="logo">
+
+    </a>
+    Mainflux
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architecture
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../provision/" class="md-nav__link">
+        Provision
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messaging/" class="md-nav__link">
+        Messaging
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        Storage
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lora/" class="md-nav__link">
+        LoRa
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opcua/" class="md-nav__link">
+        OPC-UA
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../edge/" class="md-nav__link">
+        Edge
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+        Authentication
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Authorization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Authorization
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#policies" class="md-nav__link">
+    Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predefined-policies" class="md-nav__link">
+    Predefined Policies
+  </a>
+  
+    <nav class="md-nav" aria-label="Predefined Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#users-service-related-policies" class="md-nav__link">
+    Users service related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#things-service-related-policies" class="md-nav__link">
+    Things service related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-entity-related-policies" class="md-nav__link">
+    Group entity related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-the-defined-policies" class="md-nav__link">
+    Summary of the Defined Policies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-policies" class="md-nav__link">
+    Add Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-policies" class="md-nav__link">
+    Delete Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-adding-a-policy" class="md-nav__link">
+    Example usage of adding a policy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-sharing-a-thing" class="md-nav__link">
+    Example usage of sharing a Thing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-groups" class="md-nav__link">
+    Example usage of Groups
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-sharing-entities-via-group" class="md-nav__link">
+    Example usage of sharing entities via Group
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groups/" class="md-nav__link">
+        Groups
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bootstrap/" class="md-nav__link">
+        Bootstrap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../twins/" class="md-nav__link">
+        Twins
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tracing/" class="md-nav__link">
+        Tracing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev-guide/" class="md-nav__link">
+        Developer's Guide
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        Kubernetes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark/" class="md-nav__link">
+        Benchmark
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#policies" class="md-nav__link">
+    Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predefined-policies" class="md-nav__link">
+    Predefined Policies
+  </a>
+  
+    <nav class="md-nav" aria-label="Predefined Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#users-service-related-policies" class="md-nav__link">
+    Users service related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#things-service-related-policies" class="md-nav__link">
+    Things service related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-entity-related-policies" class="md-nav__link">
+    Group entity related policies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-the-defined-policies" class="md-nav__link">
+    Summary of the Defined Policies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-policies" class="md-nav__link">
+    Add Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-policies" class="md-nav__link">
+    Delete Policies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-adding-a-policy" class="md-nav__link">
+    Example usage of adding a policy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-sharing-a-thing" class="md-nav__link">
+    Example usage of sharing a Thing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-groups" class="md-nav__link">
+    Example usage of Groups
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage-of-sharing-entities-via-group" class="md-nav__link">
+    Example usage of sharing entities via Group
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">#</a></h1>
+<h2 id="policies">Policies<a class="headerlink" href="#policies" title="Permanent link">#</a></h2>
+<p>Mainflux uses policies to control permissions on entities: <strong>users</strong>, <strong>things</strong>, and <strong>groups</strong>. Under the hood, Mainflux uses <a href="https://www.ory.sh/keto/">ORY Keto</a> that is an open-source implementation of <a href="https://www.usenix.org/conference/atc19/presentation/pang">"Zanzibar: Google's Consistent, Global Authorization System"</a>.</p>
+<p>Policies define permissions for the entities. For example, <em>which user</em> has <em>access</em> to <em>a specific thing</em>. Such policies have three main components: <strong>subject</strong>, <strong>object</strong>, and <strong>relation</strong>.</p>
+<p>To put it briefly:</p>
+<p><strong>Subject</strong>: As the name suggests, it is the subject that will have the policy such as <em>users</em>. Mainflux uses entity UUID on behalf of the real entities.</p>
+<p><strong>Object</strong>: Objects are Mainflux entities (e.g. <em>thing</em> or <em>group</em>) represented by their UUID.</p>
+<p><strong>Relation</strong>: This is the action that the subject wants to do on the object.</p>
+<blockquote>
+<p>For more conceptual details, you can refer <a href="https://www.ory.sh/keto/docs">official ORY Keto documentation</a></p>
+</blockquote>
+<p>All three components create a single policy.</p>
+<p>For example, let's assume we have a following policy: <code>"user_id_123" has "read" relation on "thing_id_123"</code>. This policy means that subject (a user with ID: <code>user_id_123</code>) has a relation (<code>read</code>) on the object (a thing with ID: <code>thing_id_123</code>). Based upon this example, If the user wants to view a <code>Thing</code>, Mainflux first identifies the user with Authentication Keys and checks the policy as:</p>
+<pre><code>User with ID: `user_id_123` has `read` relation on the thing with ID: `thing_id_123`.
+</code></pre>
+<p>If the user has no such policy, the operation will be denied; otherwise, the operation will be allowed. In this case, since the user <code>user_id_123</code> has the policy, the <code>read</code> operation on the thing <code>thing_id_123</code> will be allowed for the user with ID <code>user_id_123</code>. On the other hand, requests coming from other users (who have a different ID than <code>user_id_123</code>) will be denied.</p>
+<p>In order to check whether a user has the policy or not, Mainflux makes a gRPC call to Keto API, then Keto handles the checking existence of the policy.</p>
+<p>All policies are stored in the Keto Database. The database responsible for storing all policies is deployed along with the Mainflux, as a standalone PostgreSQL database container.</p>
+<h2 id="predefined-policies">Predefined Policies<a class="headerlink" href="#predefined-policies" title="Permanent link">#</a></h2>
+<p>Mainflux comes with predefined policies.</p>
+<h3 id="users-service-related-policies">Users service related policies<a class="headerlink" href="#users-service-related-policies" title="Permanent link">#</a></h3>
+<ul>
+<li>By default, Mainflux allows anybody to create a user. If you disable this default policy, only <em>admin</em> is able to create a user.
+This default policy can be disabled through an environment variable called <code>MF_USERS_ALLOW_SELF_REGISTER</code> in deployment time. <code>MF_USERS_ALLOW_SELF_REGISTER</code> is a boolean. Therefore, it expects <code>"true"</code> or <code>"false"</code>. If you assign <code>"false"</code> to this environment variable, only <em>admin</em> can create a user.
+Mainflux creates a special policy to enable this feature as follows: <code>user#create@*</code>. This policy dictates that subject <code>*</code> has <code>create</code> relation on the object <code>users</code>. Here, Mainflux uses a special <code>*</code> subject to represent all users. If this policy is defined, everybody can create new users.</li>
+<li>All users are a <code>member of the users</code>. To be more precise, once the new user is created, the policy service creates the following policy:
+<code>users#member@&lt;user_id&gt;</code> indicating that the subject <code>&lt;user_id</code>&gt; has <code>member</code> relation on the object <code>users</code>.</li>
+<li>The admin has a special policy indicating that the user is admin. This policy is the following:
+<code>&lt;admin_id&gt;</code> has <code>member</code> relation on the object <code>authorities</code>.</li>
+</ul>
+<h3 id="things-service-related-policies">Things service related policies<a class="headerlink" href="#things-service-related-policies" title="Permanent link">#</a></h3>
+<ul>
+<li>There are 3 policies regarding <code>Things</code>: <code>read</code>, <code>write</code> and <code>delete</code>.</li>
+<li>When a user creates a thing, the user will have <code>read</code>, <code>write</code> and <code>delete</code> policies on the <code>Thing</code>.</li>
+<li>In order to view a thing, you need <code>read</code> policy on that thing.</li>
+<li>In order to update and share the thing, you need a <code>write</code> policy on that thing.</li>
+<li>In order to remove a thing, you need a <code>delete</code> policy on that thing.</li>
+</ul>
+<h3 id="group-entity-related-policies">Group entity related policies<a class="headerlink" href="#group-entity-related-policies" title="Permanent link">#</a></h3>
+<ul>
+<li>Once the user creates a new group, the user will have a <code>member</code> policy on the group.</li>
+<li>If you assign a new User member to your group, the new user will have a <code>member</code> policy on this particular group.</li>
+<li>If you assign a new Thing member to your group, whatever has <code>member</code> policy on that group will have <code>read</code>, <code>write</code> and <code>delete</code> policies on the Things defined in the Group.</li>
+<li>Mainflux allows users to assign access rights of the Things group with the Users group. Thus, each member of the User group can access Things defined in the Thing group. In order to do so, the Policy service adds members of the User group as a <code>member</code> of the Thing Group. Therefore, the Users group members have <code>read</code>, <code>write</code> and <code>delete</code> policy on the Things defined in the Thing Group.</li>
+</ul>
+<h3 id="summary-of-the-defined-policies">Summary of the Defined Policies<a class="headerlink" href="#summary-of-the-defined-policies" title="Permanent link">#</a></h3>
+<ul>
+<li><strong><code>member</code></strong>: Identifies registered user's role such as <code>admin</code>. Also, it indicates memberships on the Group entity.</li>
+<li><strong><code>read</code>, <code>write</code> and <code>delete</code></strong>: Controls access control for the Things.</li>
+<li><strong><code>create</code></strong>: Mainflux uses special <code>create</code> policy to allow everybody to create new users. If you want to enable this feature through the HTTP, you need to make following request:</li>
+</ul>
+<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;:[&quot;*&quot;],&quot;policies&quot;: [&quot;create&quot;], &quot;object&quot;: &quot;user&quot;}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<h2 id="add-policies">Add Policies<a class="headerlink" href="#add-policies" title="Permanent link">#</a></h2>
+<p>You can add policies as well through an HTTP endpoint. <em>Only</em> admin can use this endpoint. Therefore, you need an authentication token for the admin.</p>
+<p><strong>Caveat:</strong> Only policies defined under <a href="#summary-of-the-defined-policies">Summary of the Defined Policies</a> are allowed. Other policies are not allowed. For example, you can add <code>member</code> policy but not <code>custom-member</code> policy because <code>custom-member</code> policy is not defined on the system.</p>
+<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;subject_id1&gt;&quot;,...&quot;&lt;subject_idN&gt;&quot;], &quot;object&quot;: &quot;&lt;object&gt;&quot;, &quot;policies&quot;: [&quot;&lt;action_1&gt;, ...&quot;&lt;action_N&gt;&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<h2 id="delete-policies">Delete Policies<a class="headerlink" href="#delete-policies" title="Permanent link">#</a></h2>
+<p>The admin can delete policies. Only policies defined on <a href="/authorization/#summary-of-the-defined-policies">Predefined Policies section</a> are allowed.</p>
+<blockquote>
+<p>Must-have: admin_token, object, subjects_ids and policies</p>
+</blockquote>
+<pre><code class="language-bash">curl -isSX PUT http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;subject_id1&gt;&quot;,...&quot;&lt;subject_idN&gt;&quot;], &quot;object&quot;: &quot;&lt;object&gt;&quot;, &quot;policies&quot;: [&quot;&lt;action_1&gt;, ...&quot;&lt;action_N&gt;&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<p><em>admin_token</em> must belong to the admin.</p>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Wed, 03 Nov 2021 13:00:05 GMT
+
+</code></pre>
+<p>If you delete policies, the policy will be removed from the policy storage. Further authorization checks related to that policy will fail.</p>
+<p>For example, let's assume <code>user1</code> has <code>read</code> policy on the thing <code>thing-123</code>. If you delete this policy as:</p>
+<pre><code class="language-bash">curl -isSX PUT http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;user1_id&gt;&quot;], &quot;object&quot;: &quot;thing-123&quot;, &quot;policies&quot;: [&quot;read&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<p><code>user1</code> will not be able to view the <code>thing-123</code> anymore because the policy which allows <code>user1</code> to view <code>thing-123</code> is deleted by the admin.</p>
+<h2 id="example-usage-of-adding-a-policy">Example usage of adding a policy<a class="headerlink" href="#example-usage-of-adding-a-policy" title="Permanent link">#</a></h2>
+<p>Suppose we are using the Mainflux version that doesn't have a policies feature yet. Once you migrate a new version of the Mainflux including the Policy feature, your users will face a lack of authorization. For example, there is a user created before the Policy feature. This user is authenticated by <code>&lt;user_token</code>&gt;. Although the following operation is valid, the user will have an authorization error.</p>
+<pre><code class="language-bash">mainflux-cli things create '{&quot;name&quot;:&quot;user-thing&quot;}' &lt;user_token&gt;
+
+error: failed to create entity: 403 Forbidden
+</code></pre>
+<p>The reason is that the user has not enough policy to create a new Thing after migration. In order to create a new thing, the user has to have a <code>member</code> relation on the <code>users</code> key. So that, Mainflux understands that the requester user is authorized to create new Things.</p>
+<p>The easiest solution for this problem is adding policies for the users through the HTTP endpoint. As described above, the user needs a <code>member</code> relation on the <code>users</code>.</p>
+<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;:[&quot;&lt;user_id&gt;&quot;],&quot;policies&quot;: [&quot;member&quot;], &quot;object&quot;: &quot;users&quot;}' -H &quot;Authorization: Bearer &lt;admin_token&gt; &quot; -H 'Content-Type: application/json'
+</code></pre>
+<p>So what this request does is add new policies for the subject defined in the <code>subjects</code> field of the request body. Henceforth, the subject (here <code>&lt;user_id&gt;</code>) will have a <code>member</code> relation on the object <code>users</code>. This policy allows the user to create new Things.</p>
+<p>Please, keep in mind that this endpoint requires you to use <code>&lt;admin_token&gt;</code>, not any token. So, the token must belong to the admin.</p>
+<h2 id="example-usage-of-sharing-a-thing">Example usage of sharing a Thing<a class="headerlink" href="#example-usage-of-sharing-a-thing" title="Permanent link">#</a></h2>
+<p>Let's assume, we have two users (called <code>user1</code> and <code>user2</code>) registered on the system who have <code>user_id_1</code> and <code>user_id_2</code> as their ID respectively.
+Let's create a thing with the following command:</p>
+<pre><code class="language-bash">mainflux-cli things create '{&quot;name&quot;:&quot;user1-thing&quot;}' &lt;user1_token&gt;           
+
+created: a1109d52-6281-410e-93ae-38ba7daa9381
+</code></pre>
+<p>This command creates a thing called <code>"user1-thing"</code> with ID = <code>a1109d52-6281-410e-93ae-38ba7daa9381</code>. Mainflux identifies the <code>user1</code> by using the <code>&lt;user1_token&gt;</code>. After identifying the requester as <code>user1</code>, the Policy service adds <code>read</code>, <code>write</code> and <code>delete</code> policies to <code>user1</code> on <code>"user1-thing"</code>.</p>
+<p>If <code>user2</code> wants to view the <code>"user1-thing"</code>, the request will be denied.</p>
+<pre><code class="language-bash">mainflux-cli things get a1109d52-6281-410e-93ae-38ba7daa9381 &lt;user2_token&gt;
+
+error: failed to fetch entity : 403 Forbidden
+</code></pre>
+<p>After identifying the requester as <code>user2</code>, the Policy service checks that <code>Is user2 allowed to view the "user1-thing"?</code> Since <code>user2</code> has no such policy (<code>read</code> policy on <code>"user1-thing"</code>), the Policy service denies this request.</p>
+<p>Now, <code>user1</code> wants to share the <code>"user1-thing"</code> with <code>user2</code>. <code>user1</code> can achieve this via HTTP endpoint for sharing things as follows:</p>
+<pre><code class="language-bash">curl -isSX POST http://localhost/things/a1109d52-6281-410e-93ae-38ba7daa9381/share -d '{&quot;user_ids&quot;:[&quot;&lt;user2_id&gt;]&quot;, &quot;policies&quot;: [&quot;read&quot;, &quot;delete&quot;]}' -H &quot;Authorization: Bearer &lt;user1_token&gt;&quot; -H 'Content-Type: application/json'
+
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Thu, 09 Sep 2021 11:36:10 GMT
+Content-Type: application/json
+Content-Length: 3
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{}
+</code></pre>
+<blockquote>
+<p>Note: Since sharing a thing requires a <code>write</code> policy on the thing, <code>user2</code> cannot assign a new policy for <code>"user1-thing"</code> by itself.</p>
+</blockquote>
+<p>Now, <code>user2</code> has <code>read</code> and <code>delete</code> policies on <code>"user1-thing"</code> which allows <code>user2</code> to view and delete <code>"user1-thing"</code>. However, <code>user2</code> cannot update the <code>"user1-thing"</code> because <code>user2</code> has no <code>write</code> policy on <code>"user1-thing"</code>.</p>
+<p>Let's try again viewing the <code>"user1-thing"</code> as <code>user2</code>:</p>
+<pre><code class="language-bash">mainflux-cli things get a1109d52-6281-410e-93ae-38ba7daa9381 &lt;user2_token&gt;
+
+{
+  &quot;id&quot;: &quot;a1109d52-6281-410e-93ae-38ba7daa9381&quot;,
+  &quot;key&quot;: &quot;6c9c2146-de49-460d-8f0d-adce4ad37500&quot;,
+  &quot;name&quot;: &quot;user1-thing&quot;
+}
+</code></pre>
+<p>As we expected, the operation is successfully done. The policy server checked that <code>Is user2 allowed to view "user1-thing"?</code> Since <code>user2</code> has a <code>read</code> policy on <code>"user1-thing"</code>, the Policy server allows this request.</p>
+<h2 id="example-usage-of-groups">Example usage of Groups<a class="headerlink" href="#example-usage-of-groups" title="Permanent link">#</a></h2>
+<p>In this scenario, there will be two users called <code>user1@example.com</code> and <code>user2@example.com</code>. <code>user1@example.com</code> will create one Thing called <code>thing-test</code>. Then, the Group entity will be utilized to store all of the created entities (<code>user1@example.com</code>, <code>user2@example.com</code>, and <code>thing-test</code>). At the end of this scenario, we will verify that although <code>user2@example.com</code> has no ownership of <code>thing-test</code>, <code>user2@example.com</code> can access the <code>thing-test</code> because they are in the same group.</p>
+<p>Let's start with creating users:
+- Create <code>user1@example.com</code></p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user1@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
+</code></pre>
+<ul>
+<li>Create <code>user2@example.com</code></li>
+</ul>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user2@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
+</code></pre>
+<p>Now, let's create a Thing called <code>thing-test</code> owned by <code>user1@example.com</code>. Prior to creating it, first, obtain a token for <code>user1@example.com</code> as follows:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/tokens -d '{&quot;email&quot;:&quot;user1@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
+</code></pre>
+<p>It is convenient to store the generated token because the token will be required in further steps repeatedly.</p>
+<pre><code class="language-bash">export USER1TOKEN=&lt;USER1TOKEN&gt;
+</code></pre>
+<p>And create a Thing called <code>thing-test</code></p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/things/bulk -d '[{&quot;name&quot;: &quot;thing-test&quot;}]'
+</code></pre>
+<blockquote>
+<p>Note: We will need the ID of newly created Thing in further steps. Again, it is better to store it.</p>
+</blockquote>
+<p>If <code>user2@example.com</code> tries to view <code>thing-test</code>, the operation will be denied by policy service because <code>user2@example.com</code> has no policies related to reading <code>thing-test</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/&lt;thing_id&gt;
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Fri, 05 Nov 2021 06:03:42 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+<p>It is time to create a new Group and put all entities into that Group. Mainflux provides HTTP API for Groups like other entities. We will utilize this HTTP API for Group operations. For more details about Groups, please see <a href="/groups">Groups documentation</a>.</p>
+<pre><code>curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;my_group&quot;}'
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Fri, 05 Nov 2021 06:10:32 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /groups/01FKQBGQEP71DG9C99J37YBJD7
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>The <code>POST /groups</code> API creates a new group. In our case, it creates a group called <code>my_group</code>. Since <code>user1@example.com</code>'s token is used, the policy service creates a policy to indicate that <code>user1@example.com</code> is <em>member</em> of <em>my_group</em>.</p>
+<p>In the <em>Location response header</em>, you can see the ID of the <code>my_group</code>. For the response above, the location is <code>Location: /groups/01FKQBGQEP71DG9C99J37YBJD7</code>. Therefore, the group ID of <code>my_group</code> is <code>01FKQBGQEP71DG9C99J37YBJD7</code>. We will need this ID while assigning new members to <code>my_group</code>.</p>
+<p>The group <code>my_group</code> includes just a member that is <code>user1@example.com</code>, yet. In order to add new members, we will use <a href="/groups/#assign-a-member-to-a-group"><code>POST /groups/&lt;group_id&gt;/members</code></a>. While assigning entities, you will need the ID of the entities respectively. Let's start with assigning <code>thing-test</code> to <code>my_group</code>.</p>
+<pre><code class="language-bash"> curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;members&quot;:[&quot;&lt;thing_id&gt;&quot;], &quot;type&quot;:&quot;things&quot;}'
+</code></pre>
+<p>The crucial point here is that since we are assigning a Thing to the Group, the <code>"type"</code> field of the request body <strong>must be</strong> <code>things</code>.</p>
+<p>Now, assign <code>user2@example.com</code> to <code>my_group</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/$g/members -d '{&quot;members&quot;: &quot;c0fb3fdb-ecfa-407a-bd11-93884d70baf7&quot;], &quot;type&quot;:&quot;users&quot;}'
+</code></pre>
+<p>Again, please be careful about the <code>"type"</code> field of the request body. Since we are assigning the user, the type is <code>users</code>.</p>
+<blockquote>
+<p>Under the hood, the Policy service creates <code>member</code> policies for each entity respectively. Also, each <em>user</em> member will have access to Things defined in the Group. That's why the type field is crucial.</p>
+</blockquote>
+<p>Okay, let's check whether <code>user2@example.com</code> is capable to view the <code>my-thing</code>. Previously, the Policy service denied that request from <code>user2@example.com</code>. Try again:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/&lt;thing_id&gt;
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Fri, 05 Nov 2021 06:36:03 GMT
+Content-Type: application/json
+Content-Length: 111
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;7d551538-834d-4398-bd4d-38940dd4bfa9&quot;,&quot;name&quot;:&quot;thing-test&quot;,&quot;key&quot;:&quot;4305f78d-399b-4cc4-ad42-3fd5bac09715&quot;}
+</code></pre>
+<p>Successful as we expected. Since <code>user2@example.com</code> and <code>my-thing</code> reside in the same group, <code>user2@example.com</code> can access the <code>my-thing</code> through Group policies.</p>
+<p>If you unassign user2@example.com, the user cannot access <code>my-thing</code>. In order to test it, you can unassign the <code>user2@example.com</code> as follows:</p>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/$g/members -d '{&quot;members&quot;: &quot;c0fb3fdb-ecfa-407a-bd11-93884d70baf7&quot;], &quot;type&quot;:&quot;users&quot;}'
+</code></pre>
+<p>Since <code>user2@example.com</code> is not a member of the my_group anymore, the Policy service denies incoming request related to viewing the <code>my-thing</code> from <code>user2@example.com</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/$th
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Fri, 05 Nov 2021 06:39:47 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+<h2 id="example-usage-of-sharing-entities-via-group">Example usage of sharing entities via Group<a class="headerlink" href="#example-usage-of-sharing-entities-via-group" title="Permanent link">#</a></h2>
+<p>Mainflux allows you to group entities (e.g., <code>Users</code> and <code>Things</code>) through <code>Group</code> object in <code>auth</code> service. You can find more details about usage of the <code>Group</code> at <a href="../groups/">Groups documentation.</a></p>
+<p>In this example, we will demonstrate how you can share access of the Users group to the Things group. So, each member of the Users group will have access to each Thing assigned to the Things group. We are going to start from a clean Mainflux setup and follow these steps:</p>
+<ol>
+<li>Create a new user and multiple Things,</li>
+<li>Create a Thing and User group, and assign members to groups,</li>
+<li>Share access of the groups</li>
+</ol>
+<p>First of all, obtain a token for the default admin. You can use any user but for the simplicity of the document, the default admin will be used.</p>
+<blockquote>
+<p>By default, Mainflux uses credentials described in <a href="https://github.com/mainflux/mainflux/blob/master/docker/.env#L46">.env</a> for the default admin.</p>
+</blockquote>
+<pre><code class="language-bash">$ curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/tokens -d '{&quot;email&quot;:&quot;admin@example.com&quot;,
+&quot;password&quot;:&quot;12345678&quot;}'
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 08:26:45 GMT
+Content-Type: application/json
+Content-Length: 285
+Connection: keep-alive
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
+
+{&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQxNDk2MDUsImlhdCI6MTYzNDExMzYwNSwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6ImFkbWluQGV4YW1wbGUuY29tIiwiaXNzdWVyX2lkIjoiOTA3MjkzMDMtZDMwZC00YmQ5LTkwMTYtNDljMThjZmY4YjUxIiwidHlwZSI6MH0.G1kjXiGX76BqpytmLdXtjLF9s9K5CVm4ScNMIaKlkwE&quot;}
+</code></pre>
+<p>You can store the generated token because we will need it in further steps.</p>
+<pre><code class="language-bash">$ export token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQxNDk2MDUsImlhdCI6MTYzNDExMzYwNSwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6ImFkbWluQGV4YW1wbGUuY29tIiwiaXNzdWVyX2lkIjoiOTA3MjkzMDMtZDMwZC00YmQ5LTkwMTYtNDljMThjZmY4YjUxIiwidHlwZSI6MH0.G1kjXiGX76BqpytmLdXtjLF9s9K5CVm4ScNMIaKlkwE
+</code></pre>
+<p>Now, we can create a new user as follows:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
+
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 08:45:57 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /users/f31f8a0a-11b1-4aa6-a4a3-9629378c0326
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
+</code></pre>
+<p>You can obtain the user ID via <code>Location</code>. The ID of the <code>user@example.com</code> is <code>f31f8a0a-11b1-4aa6-a4a3-9629378c0326</code>.</p>
+<p>After creating the new user, we have two users on the system as <code>admin@example.com</code> and <code>user@example.com</code>.
+Then, the admin creates multiple Things called <code>admin-thing-1</code> and <code>admin-thing-2</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/bulk -d '[{&quot;name&quot;: &quot;a
+dmin-thing-1&quot;}, {&quot;name&quot;: &quot;admin-thing-2&quot;}]'
+
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 08:53:38 GMT
+Content-Type: application/json
+Content-Length: 241
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;things&quot;:[{&quot;id&quot;:&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;,&quot;name&quot;:&quot;admin-thing-1&quot;,&quot;key&quot;:&quot;4fb36389-f7a5-424d-8c4f-da5c9e91f3c5&quot;},{&quot;id&quot;:&quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;,&quot;name&quot;:&quot;admin-thing-2&quot;,&quot;key&quot;:&quot;410f5889-c756-470d-bd65-2e99b4ecc679&quot;}]}
+</code></pre>
+<pre><code class="language-bash">export th1=c3d75452-ae00-4aea-84f9-29ab79fd0d26
+export th2=ee589c61-0b98-4176-9da0-d91913087be6
+</code></pre>
+<p>Mainflux identifies <code>admin@example.com</code> via the token provided through the <code>Authorization</code> request header. On top of that, Mainflux claims ownership of things (<code>admin-thing-1</code> and <code>admin-thing-2</code>) on the <code>admin@example.com</code>. So that, the creator of Things (in this case <code>admin@example.com</code>) is going to have <code>read</code>, <code>write</code> and <code>delete</code> policies on the Thing.</p>
+<p>If <code>user@example.com</code> logs in the system, <code>user@example.com</code> cannot access the things created by the <code>admin@example.com</code> due to lack of policies.</p>
+<p>The next step is creating the user and things Groups respectively. You can create groups as follows:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;user_group&quot;}'
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:24:39 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /groups/01FHWFFMME9N2N26DG0DMNRWRW
+Access-Control-Expose-Headers: Location
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;thing_group&quot;}'
+HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:24:58 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /groups/01FHWFG78DSYA458D8ST4YQ9Y9
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>Again, you can obtain group IDs via <code>Location</code> in response. It is convenient to store them in variables.</p>
+<pre><code class="language-bash">export ug=01FHWFFMME9N2N26DG0DMNRWRW
+export tg=01FHWFG78DSYA458D8ST4YQ9Y9
+</code></pre>
+<p>After creating groups, we are ready to assign new members to groups. Let's start with the user group.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$ug/members -d '{&quot;members&quot;:[&quot;f31f8a0a-11b1-4aa6-a4a3-9629378c0326&quot;], &quot;type&quot;:&quot;users&quot;}'
+
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:37:05 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>If you remember, <code>f31f8a0a-11b1-4aa6-a4a3-9629378c0326</code> is the ID of the <code>user@example.com</code>. Since the <code>$ug</code> represents the ID of the user group called <code>user_group</code>, we indicated the type of the group as <code>"users"</code> in the request body.</p>
+<p>Now, we can assign Things to the thing group.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$tg/members -d '{&quot;members&quot;:[&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;, &quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;], &quot;type&quot;:&quot;things&quot;}'
+
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:42:12 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>The same logic applies here as well. The IDs of the things that <code>admin@example.com</code> created are <code>c3d75452-ae00-4aea-84f9-29ab79fd0d26</code> and <code>ee589c61-0b98-4176-9da0-d91913087be6</code>. Since the <code>$tg</code> represents the ID of the thing group called <code>thing_group</code>, we indicated the type of the group as <code>"things"</code> in the request body.</p>
+<p>Before moving to the third step, let's analyze the current situation. We have two groups, two users, and two things. The first group is the user group and consists of two users, <code>admin@example.com</code> (since the admin created the group) and <code>user@example.com</code>. The second group is the thing group. It includes two things created by <code>admin@example.com</code>.  <code>user@example.com</code> still has no access to things created by <code>admin@example.com</code>. You can verify it as:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:51:45 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:51:49 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+<p>The <code>$TOKEN</code> is the token for <code>user@example.com</code>. As you can see, requests to access things are denied.</p>
+<p>Now, let's assign group access rights.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST http://localhost/groups/$ug/share -d '{&quot;thing_group_id&quot;: &quot;01FHWFG78DSYA458D8ST4YQ9Y9&quot;}' -H 'Content-Type: application/json' -H &quot;Authorization: Bearer $TOKEN&quot;
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 09:59:13 GMT
+Content-Type: application/json
+Content-Length: 3
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>Now, all the members of the <code>user_group</code> have access to things within the <code>thing_group</code>. Therefore, <code>user@example.com</code> has <code>read</code>, <code>write</code> and <code>delete</code> policies on the things within the thing_group.</p>
+<p>Try to access things as <code>user@example.com</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 10:02:19 GMT
+Content-Type: application/json
+Content-Length: 114
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;,&quot;name&quot;:&quot;admin-thing-1&quot;,&quot;key&quot;:&quot;4fb36389-f7a5-424d-8c4f-da5c9e91f3c5&quot;}
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 10:02:21 GMT
+Content-Type: application/json
+Content-Length: 114
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;,&quot;name&quot;:&quot;admin-thing-2&quot;,&quot;key&quot;:&quot;410f5889-c756-470d-bd65-2e99b4ecc679&quot;}
+</code></pre>
+<p>Successful!</p>
+<p>Let's assume, <code>admin@example.com</code> does not want to share things with <code>user@example.com</code> anymore. In order to achieve that, <code>admin@example.com</code> unassigns <code>user@example.com</code> from the <code>user_group</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$ug/members -d '{&quot;members&quot;:[&quot;f31f8a0a-11b1-4aa6-a4a3-9629378c0326&quot;], &quot;type&quot;:&quot;users&quot;}'
+
+HTTP/1.1 204 No Content
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 10:08:56 GMT
+Content-Type: application/json
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<p>Now, when <code>user@example.com</code> tries to access the things, the request will be denied.</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 10:10:26 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
+HTTP/1.1 403 Forbidden
+Server: nginx/1.20.0
+Date: Wed, 13 Oct 2021 10:10:28 GMT
+Content-Type: application/json
+Content-Length: 60
+Connection: keep-alive
+
+{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
+</code></pre>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../authentication/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Authentication" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Authentication
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../cli/" class="md-footer__link md-footer__link--next" aria-label="Next: CLI" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              CLI
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright (c) Mainflux
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.8aa65030.min.js"></script>
+      
+    
+  </body>
+</html>
