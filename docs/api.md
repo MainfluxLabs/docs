@@ -168,28 +168,6 @@ Access-Control-Allow-Headers: *
 
 ## Things
 
-### Create Thing
-To create a thing, you need the thing and a `user_token`
-
-> Must-have: `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '{"name": "<thing_name>"}'
-```
-
-Response:
-```bash
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 12 Jan 2022 14:20:05 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /things/647216d6-2f02-4358-9752-afffbf12a642
-Warning-Deprecated: This endpoint will be depreciated in v1.0.0. It will be replaced with the bulk endpoint currently found at /things/bulk.
-Access-Control-Expose-Headers: Location
-```
-
 ### Create Thing with External ID
 It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
 There are two limitations - the existing ID have to be in UUID V4 format and it has to be unique in the Mainflux domain.
@@ -199,7 +177,7 @@ To create a thing with an external ID, you need provide the UUID v4 format ID to
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<thing_name>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<thing_name>"}]'
 ```
 
 Response:
@@ -220,7 +198,7 @@ You can create multiple things at once by entering a series of things structures
 > Must-have: `user_token` and at least two things
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"name": "<thing_name_1>"}, {"name": "<thing_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"name": "<thing_name_1>"}, {"name": "<thing_name_2>"}]'
 ```
 
 Response:
@@ -242,21 +220,9 @@ The same as creating a Thing with external ID the user can create multiple thing
 > Must-have: `user_token` and at least two things
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/bulk -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<thing_name_1>"},{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<thing_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<thing_name>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<thing_name1>"}]'
 ```
 
-Response:
-```bash
-HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:19:48 GMT
-Content-Type: application/json
-Content-Length: 227
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{"things":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
-```
 ### Get Thing
 You can get thing entity by entering the thing ID and `user_token`
 
@@ -342,28 +308,6 @@ Access-Control-Expose-Headers: Location
 
 ## Channels
 
-### Create Channel
-To create a channel, you need a `user_token`
-
-> Must-have: `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '{"name": "<channel_name>"}'
-```
-
-Response:
-```bash
-HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:26:51 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /channels/db4b7428-e278-4fe3-b85a-d65554d6abe9
-Warning-Deprecated: This endpoint will be depreciated in v1.0.0. It will be replaced with the bulk endpoint currently found at /channels/bulk.
-Access-Control-Expose-Headers: Location
-```
-
 ### Create Channel with external ID
 Channel is a group of things that could represent a special category in existing systems, e.g. a building level channel could represent the level of a smarting building system. For helping to keep the reference, it is possible to set an existing ID while creating the Mainflux channel. There are two limitations - the existing ID has to be in UUID V4 format and it has to be unique in the Mainflux domain.
 
@@ -372,7 +316,7 @@ To create a channel with external ID, the user needs provide a UUID v4 format un
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<channel_name>"}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<channel_name>"}]'
 ```
 
 Response:
@@ -384,7 +328,6 @@ Content-Type: application/json
 Content-Length: 0
 Connection: keep-alive
 Location: /channels/db4b7428-e278-4fe3-b85a-d65554d6abe9
-Warning-Deprecated: This endpoint will be depreciated in v1.0.0. It will be replaced with the bulk endpoint currently found at /channels/bulk.
 Access-Control-Expose-Headers: Location
 ```
 ### Create Channels
@@ -393,7 +336,7 @@ The same as creating a channel with external ID the user can create multiple cha
 > Must-have: `user_token` and at least 2 channels
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/bulk -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>"}]'
 ```
 
 Response:
@@ -415,7 +358,7 @@ As with things, you can create multiple channels with external ID at once
 > Must-have: `user_token` and at least 2 channels
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels/bulk -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<channel_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<channel_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<channel_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<channel_name_2>"}]'
 ```
 
 Response:
@@ -719,7 +662,7 @@ Get list of ID's from group
 > Must-have: `user_token` and `group_id`
 
 ```bash
-curl -s -S -i -X GET -H 'Content-Type: application/json' -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members  
+curl -s -S -i -X GET -H 'Content-Type: application/json' -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members
 ```
 
 Response:
@@ -961,7 +904,7 @@ Access-Control-Expose-Headers: Location
 > Must-have: 'user_token' and 'key_id'
 
 ```bash
-curl -isSX DELETE  http://localhost/keys/<key_id> -H 'Content-Type: application/json' -H 'Authorization: Bearer <user_token>'  
+curl -isSX DELETE  http://localhost/keys/<key_id> -H 'Content-Type: application/json' -H 'Authorization: Bearer <user_token>'
 ```
 
 Response:
