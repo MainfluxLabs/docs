@@ -157,7 +157,7 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt -X DELETE -H "Authorization: Bear
 Multiple channels can be created by executing a `POST /things` request with a JSON payload.  The payload should contain a JSON array of the channels to be created.  If there is an error any of the channels, none of the channels will be created.
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/channel -d '[{"name":"joe"},{"name":"betty"}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/channels -d '[{"name":"joe"},{"name":"betty"}]'
 ```
 
 The response's body will contain a list of the created channels.
