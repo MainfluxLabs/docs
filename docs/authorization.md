@@ -129,7 +129,7 @@ Let's assume, we have two users (called `user1` and `user2`) registered on the s
 Let's create a thing with the following command:
 
 ```bash
-mainflux-cli things create '{"name":"user1-thing"}' <user1_token>           
+mainflux-cli things create '{"name":"user1-thing"}' <user1_token>
 
 created: a1109d52-6281-410e-93ae-38ba7daa9381
 ```
@@ -207,7 +207,7 @@ export USER1TOKEN=<USER1TOKEN>
 
 And create a Thing called `thing-test`
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER1TOKEN" http://localhost/things/bulk -d '[{"name": "thing-test"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $USER1TOKEN" http://localhost/things -d '[{"name": "thing-test"}]'
 ```
 
 > Note: We will need the ID of newly created Thing in further steps. Again, it is better to store it.
@@ -362,7 +362,7 @@ After creating the new user, we have two users on the system as `admin@example.c
 Then, the admin creates multiple Things called `admin-thing-1` and `admin-thing-2`.
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" http://localhost/things/bulk -d '[{"name": "a
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" http://localhost/things -d '[{"name": "a
 dmin-thing-1"}, {"name": "admin-thing-2"}]'
 
 HTTP/1.1 201 Created

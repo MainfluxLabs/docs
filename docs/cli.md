@@ -28,7 +28,7 @@ Available Commands:
   channels    Channels management
   help        Help about any command
   messages    Send or read messages
-  provision   Bulk create things and channels from a config file
+  provision   Create things and channels from a config file
   things      Things management
   users       Users management
   health      Mainflux Things service health check
@@ -89,9 +89,9 @@ mainflux-cli health
 Mainflux has two options for user creation. Either everybody or just the admin is able to create new users. This option is dictated through policies and be configured through environment variable (`MF_USERS_ALLOW_SELF_REGISTER`). If only the admin is allowed to create new users, then the `<user_token>` is required because the token is used to verify that the requester is admin or not. Otherwise, the token is not used, since everybody can create new users. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
 
 ```bash
-if env `MF_USERS_ALLOW_SELF_REGISTER` is "true" then   
+if env `MF_USERS_ALLOW_SELF_REGISTER` is "true" then
   mainflux-cli users create <user_email> <user_password>
-else   
+else
   mainflux-cli users create <user_email> <user_password> <admin_token>
 ```
 
@@ -128,7 +128,7 @@ mainflux-cli things create '{"name":"myThing"}' <user_token>
 mainflux-cli things create '{"name":"myThing", "metadata": {\"key1\":\"value1\"}}' <user_token>
 ```
 
-#### Bulk Provision Things
+#### Provision Things
 
 ```bash
 mainflux-cli provision things <file> <user_token>
@@ -162,7 +162,7 @@ mainflux-cli things get <thing_id> <user_token>
 mainflux-cli channels create '{"name":"myChannel"}' <user_token>
 ```
 
-#### Bulk Provision Channels
+#### Provision Channels
 ```bash
 mainflux-cli provision channels <file> <user_token>
 ```

@@ -39,30 +39,8 @@ Before proceeding, make sure that you have created a new account and obtained an
 
 #### Provisioning Things
 
-> This endpoint will be depreciated in 0.11.0.  It will be replaced with the bulk endpoint currently found at /things/bulk.
-
-Things are created by executing request `POST /things` with a JSON payload. Note that you will also need `user_token` in order to create things that belong to this particular user.
-
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/things -d '{"name":"weio"}'
-```
-
-Response will contain `Location` header whose value represents path to newly created thing:
-
-```
-HTTP/1.1 201 Created
-Content-Type: application/json
-Location: /things/81380742-7116-4f6f-9800-14fe464f6773
-Date: Tue, 10 Apr 2018 10:02:59 GMT
-Content-Length: 0
-```
-
-#### Bulk Provisioning Things
-
-Multiple things can be created by executing a `POST /things/bulk` request with a JSON payload.  The payload should contain a JSON array of the things to be created.  If there is an error any of the things, none of the things will be created.
-
-```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/things/bulk -d '[{"name":"weio"},{"name":"bob"}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/things -d '[{"name":"weio"},{"name":"bob"}]'
 ```
 
 The response's body will contain a list of the created things.
@@ -176,30 +154,10 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt -X DELETE -H "Authorization: Bear
 
 #### Provisioning Channels
 
-> This endpoint will be depreciated in 0.11.0.  It will be replaced with the bulk endpoint currently found at /channels/bulk.
-
-Channels are created by executing request `POST /channels`:
-
-```
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/channels -d '{"name":"mychan"}'
-```
-
-After sending request you should receive response with `Location` header that contains path to newly created channel:
-
-```
-HTTP/1.1 201 Created
-Content-Type: application/json
-Location: /channels/19daa7a8-a489-4571-8714-ef1a214ed914
-Date: Tue, 10 Apr 2018 11:30:07 GMT
-Content-Length: 0
-```
-
-#### Bulk Provisioning Channels
-
-Multiple channels can be created by executing a `POST /things/bulk` request with a JSON payload.  The payload should contain a JSON array of the channels to be created.  If there is an error any of the channels, none of the channels will be created.
+Multiple channels can be created by executing a `POST /things` request with a JSON payload.  The payload should contain a JSON array of the channels to be created.  If there is an error any of the channels, none of the channels will be created.
 
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/channels/bulk -d '[{"name":"joe"},{"name":"betty"}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" https://localhost/channels -d '[{"name":"joe"},{"name":"betty"}]'
 ```
 
 The response's body will contain a list of the created channels.
