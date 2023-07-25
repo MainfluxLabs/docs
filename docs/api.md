@@ -633,15 +633,254 @@ Content-Length: 660
 {"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"channel_name":"1a0cde06-8e5c-4f07-aac5-95aff4a19ea0","publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"channel_name":"1a0cde06-8e5c-4f07-aac5-95aff4a19ea0","publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"channel_name":"1a0cde06-8e5c-4f07-aac5-95aff4a19ea0","publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
 ```
 
-## Groups
+## Orgs
 
-### Create group
-To create a group, you need the group name and a `user_token`
+### Create org
+To create an org, you need the org name, description, metadata and a `user_token`
 
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups -d '{"name": "<group_name>", "parent_id": "<previous_group_id>", "description": "<group_description>", "metadata": {}}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs -d '{"name": "<org_name>", "description": "<org_description>", "metadata": {}}'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /orgs/25da5d7a-d3f5-435e-bcad-0cf22343121a
+Date: Fri, 14 Jul 2023 14:03:14 GMT
+Content-Length: 0
+```
+
+### View org
+To view an org, you need the org ID and a `user_token`
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:22:48 GMT
+Content-Length: 250
+
+{"id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","name":"org_name","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","description":"org_description","created_at":"2023-07-14T14:03:14.897Z","updated_at":"2023-07-14T14:03:14.897Z"}
+```
+
+### Update org
+To update an org, you need the org ID, name, description, metadata and a `user_token`
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>"  http://localhost/orgs/<org_id> -d '{"name": "<org_name>", "description": "<org_desc>", "metadata":{}}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:41:23 GMT
+Content-Length: 0
+```
+
+### Delete org
+To delete an org, you need the org ID and a `user_token`
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:47:24 GMT
+```
+
+### List orgs
+
+To list orgs, you need a `user_token`
+Only admin users can list all orgs, other users can only list orgs they are members of.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 20:43:58 GMT
+Content-Length: 456
+
+{"limit":10,"offset":0,"total":2,"name":"","orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822", "metadata":{"meta":"test1"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","metadata":{"meta":"test2"},"created_at":"2023-07-13T09:29:41.718Z","updated_at":"2023-07-13T11:08:22.586Z"}]}
+```
+
+### Assign members
+
+To assign members to an org, you need the org ID, member emails, member roles and a `user_token`
+
+> Must-have:  `email`, `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members -d '{"members":[{"email": "<user_email>","role": "user_role"}]}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:24:44 GMT
+Content-Length: 0
+```
+
+### Unassign members
+
+To unassign members from an org, you need the org ID, member IDs and a `user_token`
+
+> Must-have: `user_token`, `org_id` and `member_id`
+
+```bash
+curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members -d '{"member_ids":["<member_id>"]}'
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:44:58 GMT
+```
+### Update members
+
+To update members of an org, you need the org ID, member emails roles and a `user_token`
+
+> Must-have: `user_token`, `org_id` and `user_email`
+
+```bash
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/members -d '{"members":[{"email": "user_email","role": "user_role"}]}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:54:12 GMT
+Content-Length: 0
+```
+
+### List members
+
+To list members of an org, you need the org ID and a `user_token`
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 09:13:22 GMT
+Content-Length: 235
+
+{"limit":10,"offset":0,"total":2,"name":"","members":[{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}]}
+```
+### Assign groups
+
+To assign groups to an org, you need the org ID, group IDs and a `user_token`
+
+> Must-have: `user_token`, `org_id` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/groups -d '{"group_ids":["<group_id>", "group_id_1"]}'
+
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 09:57:44 GMT
+Content-Length: 0
+```
+
+### Unassign groups
+
+To unassign groups from an org, you need the org ID, group IDs and a `user_token`
+
+> Must-have: `user_token`, `org_id` and `group_id`
+
+```bash
+curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/groups -d '{"group_ids":["<group_id>", "group_id_1"]}'
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 10:10:50 GMT
+```
+
+### List groups
+
+To list groups of an org, you need the org ID and a `user_token`
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"  http://localhost/orgs/<org_id>/groups
+```
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 10:14:06 GMT
+Content-Length: 313
+
+{"limit":10,"offset":0,"total":2,"name":"","groups":[{"id":"36cc5dfd-9899-4751-ac34-f131a5dadbd0","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","name":"group_name","description":"description"},{"id":"e364b9e6-502a-4381-b1be-6c5aafeb2610","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","name":"group_name_2","description":"description"}]}
+```
+
+### List memberships
+
+To list memberships of an org, you need the member ID and a `user_token`
+
+> Must-have: `user_token` and `member_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"  http://localhost/members/<member_id>/orgs
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 10:21:56 GMT
+Content-Length: 622
+
+{"limit":10,"offset":0,"total":3,"name":"","orgs":[{"id":"1fb75a76-3ca9-4c38-9194-5b03f25860f1","name":"org_name","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"},{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"}]}
+```
+
+## Groups
+
+### Create group
+To create a group, you need the group name, description, metadata and a `user_token`
+
+> Must-have: `user_name`,  `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups -d '{"name": "<group_name>", "description": "<group_description>", "metadata": {}}'
 ```
 
 Response:
@@ -657,7 +896,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Members
-Get list of ID's from group
+Get list of group members
 
 > Must-have: `user_token` and `group_id`
 
@@ -675,16 +914,16 @@ Content-Length: 116
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"limit":10,"total":0,"level":0,"name":"","Members":[{"ID":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","Type":"users"}]}
+{"limit":10,"total":0,"offset":0,"name":"","members":[{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","name":"member_name", "key":"c1adc45a-9f29-4a7a-80c8-a5bbdd9c5d05", "metadata":{}]}
 ```
 
 ### Assign
-Assign user, thing or channel to a group
+Assign members to a group
 
-> Must-have: `user_token`, `group_id`, `member_id` and `member_type`
+> Must-have: `user_token`, `group_id`, `member_id`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<user_id>" | "<thing_id_>" | "<channel_id_>"], "type":["users" | "things" | "channels"]}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<member_id>", "<member_id_1>", "member_id_2>"]}'
 ```
 
 Response:
@@ -699,12 +938,12 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Unassign
-Unassign user, thing or channel from group
+Unassign members from a group
 
-> Must-have: `user_token`, `group_id`, `member_id` and `member_type`
+> Must-have: `user_token`, `group_id`, `member_id`
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<user_id>" | "<thing_id_>" | "<channel_id_>"], "type":["users" | "things" | "channels"]}'
+curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members -d '{"members":["<user_id>", "<thing_id_1>", "<member_id_2>"]}'
 ```
 
 Response:
@@ -715,6 +954,28 @@ Date: Wed, 10 Mar 2021 17:13:06 GMT
 Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
+```
+
+### List memberships
+Get all groups where a member is assigned to
+
+> Must-have: `user_token` and `member_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things/<member_id>/groups
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:06:48 GMT
+Content-Type: application/json
+Content-Length: 503
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2214d843-abf8-3db1-93fd-bdc8954d42mi","name":"group_name_1","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:14:19.579Z","updated_at":"2021-04-10T16:54:01.579Z"}]}
 ```
 
 ### Get group
@@ -736,7 +997,7 @@ Content-Length: 201
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"01F0EH61SA7C7NDKWYCXVG7PWD","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","level":0,"path":"","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
+{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
 ```
 
 ### Get groups
@@ -758,7 +1019,7 @@ Content-Length: 496
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":2,"level":0,"name":"","groups":[{"id":"01F0EH61SA7C7NDKWYCXVG7PWD","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","level":1,"path":"01F0EH61SA7C7NDKWYCXVG7PWD","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"01F0EHQTP2HQ7JTWZNMVJ0JJCN","name":"group_name_1","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","level":1,"path":"01F0EHQTP2HQ7JTWZNMVJ0JJCN","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
+{"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc",created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","name":"group_name_1","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
 ```
 
 ### Update group
@@ -799,17 +1060,6 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
-
-### Share User Group with Things Group
-Adds access rights on thing groups to the user group.
-
-> Must-have: `user_token`, `user_group_id` and `<thing_group_id>`.
-
-```bash
-curl -s -S -i -X POST http://localhost/groups/<user_group_id>/share -d '{"thing_group_id": "<thing_group_id>"}' -H 'Content-Type: application/json' -H "Authorization: Bearer <user_token>"
-```
-
-Each user from the group identified by `user_group_id` will have `read`, `write`, and `delete` policies on the things grouped by `thing_group_id`. Therefore, they will be able to do operations defined under [Things Policies section](/authorization/#things-service-related-policies).
 
 ## Policies
 
