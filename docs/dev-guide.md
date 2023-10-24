@@ -2,14 +2,14 @@
 
 ## Getting Mainflux
 
-Mainflux source can be found in the official [Mainflux GitHub repository](https://github.com/Mainflux/mainflux). You should fork this repository in order to make changes to the project. The forked version of the repository should be cloned using the following:
+Mainflux source can be found in the official [Mainflux GitHub repository](https://github.com/MainfluxLabs/mainflux). You should fork this repository in order to make changes to the project. The forked version of the repository should be cloned using the following:
 
 ```bash
 git clone <forked repository> $SOMEPATH/mainflux
 cd $SOMEPATH/mainflux
 ```
 
-**Note:** If your `$SOMEPATH` is equal to `$GOPATH/src/github.com/mainflux/mainflux`, make sure that your `$GOROOT` and `$GOPATH` do not overlap (otherwise, go modules won't work).
+**Note:** If your `$SOMEPATH` is equal to `$GOPATH/src/github.com/MainfluxLabs/mainflux`, make sure that your `$GOROOT` and `$GOPATH` do not overlap (otherwise, go modules won't work).
 
 ## Building
 
@@ -23,7 +23,7 @@ Mainflux uses `Protocol Buffers for Go with Gadgets` to generate faster marshali
 
 A copy of [Go](https://golang.org/doc/install) (version 1.17.5) and docker template (version 3.7) will also need to be installed on your system.
 
-If any of these versions seem outdated, the latest can always be found in our [CI script](https://github.com/mainflux/mainflux/blob/master/scripts/ci.sh).
+If any of these versions seem outdated, the latest can always be found in our [CI script](https://github.com/MainfluxLabs/mainflux/blob/master/scripts/ci.sh).
 
 ### Build All Services
 
@@ -168,7 +168,7 @@ Up until now it has been noticed that in case of high load, big messages and man
 mainflux-mqtt   | FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
 mainflux-mqtt exited with code 137
 ```
-This problem is caused the default allowed memory in node (V8). [V8 gives the user 1.7GB per default](https://medium.com/tomincode/increasing-nodes-memory-337dfb1a60dd). To fix the problem you should add the following environment variable `NODE_OPTIONS:--max-old-space-size=SPACE_IN_MB` in the [environment section](https://github.com/mainflux/mainflux/blob/master/docker/aedes.yml#L31) of the aedes.yml configuration. To find the right value for the `--max-old-space-size` parameter you'll have to experiment a bit depending on your needs.
+This problem is caused the default allowed memory in node (V8). [V8 gives the user 1.7GB per default](https://medium.com/tomincode/increasing-nodes-memory-337dfb1a60dd). To fix the problem you should add the following environment variable `NODE_OPTIONS:--max-old-space-size=SPACE_IN_MB` in the [environment section](https://github.com/MainfluxLabs/mainflux/blob/master/docker/aedes.yml#L31) of the aedes.yml configuration. To find the right value for the `--max-old-space-size` parameter you'll have to experiment a bit depending on your needs.
 
 The Mainflux MQTT service uses the [Aedes MQTT Broker](https://github.com/mcollina/aedes) for implementation of the MQTT related things. Therefore, for some questions or problems you can also check out the Aedes's documentation or reach out its contributors.
 
@@ -296,7 +296,7 @@ field that can have one of the following values:
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
 way to fetch it and process it. If you want to integrate through
-[docker-compose.yml](https://github.com/mainflux/mainflux/blob/master/docker/docker-compose.yml)
+[docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml)
 you can use `mainflux-es-redis` service. Just connect to it and consume events
 from Redis Stream named `mainflux.things`.
 
@@ -433,7 +433,7 @@ the following event types:
 - `thing.update_connections` for device connection update.
 
 If you want to integrate through
-[docker-compose.yml](https://github.com/mainflux/mainflux/blob/master/docker/addons/bootstrap/docker-compose.yml)
+[docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/bootstrap/docker-compose.yml)
 you can use `mainflux-es-redis` service. Just connect to it and consume events
 from Redis Stream named `mainflux.bootstrap`.
 
@@ -547,7 +547,7 @@ Events that are coming from MQTT adapter have following fields:
 - `instance` represents MQTT adapter instance.
 
 If you want to integrate through
-[docker-compose.yml](https://github.com/mainflux/mainflux/blob/master/docker/docker-compose.yml)
+[docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml)
 you can use `mainflux-es-redis` service. Just connect to it and consume events
 from Redis Stream named `mainflux.mqtt`.
 

@@ -2,12 +2,12 @@
 
 Mainflux CLI makes it easy to manage users, things, channels and messages.
 
-CLI can be downloaded as separate asset from [project realeses](https://github.com/mainflux/mainflux/releases) or it can be built with `GNU Make` tool:
+CLI can be downloaded as separate asset from [project realeses](https://github.com/MainfluxLabs/mainflux/releases) or it can be built with `GNU Make` tool:
 
 Get the mainflux code
 
 ```bash
-go get github.com/mainflux/mainflux
+go get github.com/MainfluxLabs/mainflux
 ```
 
 Build the mainflux-cli

@@ -87,7 +87,7 @@ curl -s -S -X GET http://mainflux-domain.com:8202/things/bootstrap/<external_id>
 Then to start the agent service you can do it like this
 
 ```
-git clone https://github.com/mainflux/agent
+git clone https://github.com/MainfluxLabs/agent
 make
 cd build
 
@@ -210,8 +210,8 @@ Additonaly `Export` service publishes liveliness status to `Agent` via NATS subj
 Get the code:
 
 ```bash
-go get github.com/mainflux/export
-cd $GOPATH/github.com/mainflux/export
+go get github.com/MainfluxLabs/export
+cd $GOPATH/github.com/MainfluxLabs/export
 ```
 
 Make:
@@ -376,11 +376,11 @@ MAINFLUX_USER_PASSWORD='12345678'
 
 `EXTERNAL_KEY` and `EXTERNAL_ID` are parameters posted to `/mapping` endpoint of `provision` service, `MAINFLUX_HOST` is location of cloud instance of Mainflux that `export` should connect to and `MAINFLUX_USER_EMAIL` and `MAINFLUX_USER_PASSWORD` are users credentials in the cloud.
 
-[conftoml]:(https://github.com/mainflux/export/blob/master/configs/config.toml)
-[docker-compose]:(https://github.com/mainflux/mainflux/docker/docker-compose.yml)
-[env]:(https://github.com/mainflux/export#environmet-variables)
-[agent]:(https://github.com/mainflux/agent)
-[protomsg]:(https://github.com/mainflux/mainflux/blob/master/pkg/messaging/message.proto)
+[conftoml]:(https://github.com/MainfluxLabs/export/blob/master/configs/config.toml)
+[docker-compose]:(https://github.com/MainfluxLabs/mainflux/docker/docker-compose.yml)
+[env]:(https://github.com/MainfluxLabs/export#environmet-variables)
+[agent]:(https://github.com/MainfluxLabs/agent)
+[protomsg]:(https://github.com/MainfluxLabs/mainflux/blob/master/pkg/messaging/message.proto)
 
 ## Example deployment
 
@@ -488,7 +488,7 @@ build/mainflux-agent
 ### Export
 
 ```
-git clone https://github.com/mainflux/export
+git clone https://github.com/MainfluxLabs/export
 make
 ```
 Edit the `configs/config.toml` setting

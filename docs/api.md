@@ -3,7 +3,7 @@
 ## Reference
 API reference in the Swagger UI can be found at:
 
-[https://api.mainflux.io](https://api.mainflux.io)
+[https://mainfluxlabs.github.io/mainflux](https://mainfluxlabs.github.io/mainflu)
 
 ## Users
 

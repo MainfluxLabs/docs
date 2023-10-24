@@ -311,7 +311,7 @@ In this example, we will demonstrate how you can share access of the Users group
 
 First of all, obtain a token for the default admin. You can use any user but for the simplicity of the document, the default admin will be used.
 
-> By default, Mainflux uses credentials described in [.env](https://github.com/mainflux/mainflux/blob/master/docker/.env#L46) for the default admin.
+> By default, Mainflux uses credentials described in [.env](https://github.com/MainfluxLabs/mainflux/blob/master/docker/.env#L46) for the default admin.
 
 ```bash
 $ curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/tokens -d '{"email":"admin@example.com",
