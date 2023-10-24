@@ -15,7 +15,7 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing 
 Note that if you're going to use senml message format, you should always send
 messages as an array.
 
-For more information about the HTTP messaging service API, please check out the [API documentation](https://github.com/mainflux/mainflux/blob/master/api/http.yml).
+For more information about the HTTP messaging service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/http.yml).
 
 ## MQTT
 
@@ -41,7 +41,7 @@ to every command.
 
 ## CoAP
 
-CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/mainflux/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/mainflux/coap-cli).
+CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/MainfluxLabs/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/MainfluxLabs/coap-cli).
 
 ###
 Examples:
@@ -64,7 +64,7 @@ The most of the notifications received from the Adapter are non-confirmable. By 
 
 > Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.
 
-CoAP Adapter sends these notifications every 12 hours. To configure this period, please check [adapter documentation](https://www.github.com/mainflux/mainflux/tree/master/coap/README.md) If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
+CoAP Adapter sends these notifications every 12 hours. To configure this period, please check [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md) If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
 
 ## WS
 Mainflux supports [MQTT-over-WS](https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).), rather than pure WS protocol. this bring numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.

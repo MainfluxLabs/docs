@@ -1,6 +1,6 @@
 # Kubernetes
 
-Mainflux can be easily deployed on Kubernetes platform by using Helm Chart from official [Mainflux DevOps GitHub repository](https://github.com/mainflux/devops).
+Mainflux can be easily deployed on Kubernetes platform by using Helm Chart from official [Mainflux DevOps GitHub repository](https://github.com/MainfluxLabs/devops).
 
 ## Prerequisites
 - Kubernetes
@@ -40,9 +40,9 @@ helm install ingress-nginx ingress-nginx/ingress-nginx --version 3.26.0 --create
 ```
 
 ## Deploying Mainflux
-Get Helm charts from [Mainflux DevOps GitHub repository](https://github.com/mainflux/devops):
+Get Helm charts from [Mainflux DevOps GitHub repository](https://github.com/MainfluxLabs/devops):
 ```bash
-git clone https://github.com/mainflux/devops.git
+git clone https://github.com/MainfluxLabs/devops.git
 cd devops/charts/mainflux
 ```
 
@@ -128,10 +128,6 @@ The following table lists the configurable parameters and their default values.
 | adapter_lora.enabled                 | Enable LoRa adapter                                                        | false        |
 | adapter_lora.httpPort                | LoRa adapter HTTP port                                                     | 8187         |
 | adapter_lora.redisRouteMapPort       | LoRa adapter Redis Auth Cache port                                         | 6379         |
-| twins.enabled                        | Enable twins service                                                       | false        |
-| twins.dbPort                         | Twins service DB port                                                      | 27017        |
-| twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
-| twins.redisCachePort                 | Twins service Redis Cache port                                             | 6379         |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
@@ -160,7 +156,7 @@ By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3
 ### Additional Steps to Configure Ingress Controller
 To send MQTT messages to your host on ports `1883` and `8883` some additional steps are required in configuring NGINX Ingress Controller.
 
-NGINX Ingress Controller uses ConfigMap to expose TCP services. That ConfigMap is included in helm chart in [ingress.yaml](https://github.com/mainflux/devops/blob/master/charts/mainflux/templates/ingress.yaml#L141) file assuming that location of ConfigMap should be `ingress-nginx/tcp-services`. If Ingress Controller expects it in some other namespace or with other name you should edit metadata in [ingress.yaml](https://github.com/mainflux/devops/blob/master/charts/mainflux/templates/ingress.yaml#L147). This location was set with `--tcp-services-configmap` flag and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/) if it's not already specified. This is explained in [NGINX Ingress documentation](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/)
+NGINX Ingress Controller uses ConfigMap to expose TCP services. That ConfigMap is included in helm chart in [ingress.yaml](https://github.com/MainfluxLabs/devops/blob/master/charts/mainflux/templates/ingress.yaml#L141) file assuming that location of ConfigMap should be `ingress-nginx/tcp-services`. If Ingress Controller expects it in some other namespace or with other name you should edit metadata in [ingress.yaml](https://github.com/MainfluxLabs/devops/blob/master/charts/mainflux/templates/ingress.yaml#L147). This location was set with `--tcp-services-configmap` flag and you can check it in deployment of Ingress Controller or add it there in [args section for nginx-ingress-controller](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/) if it's not already specified. This is explained in [NGINX Ingress documentation](https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/)
 
 Also, those two ports need to be exposed in the Service defined for the Ingress. You can do that with command that edit your service:
 
@@ -181,7 +177,7 @@ and add in spec->ports:
 
 ## TLS & mTLS
 
-For testing purposes you can generate certificates as explained in detail in [authentication](/authentication) chapter of this document. So, you can use [this script](https://github.com/mainflux/mainflux/blob/master/docker/ssl/Makefile) and after replacing all `localhost` with your hostname, run:
+For testing purposes you can generate certificates as explained in detail in [authentication](/authentication) chapter of this document. So, you can use [this script](https://github.com/MainfluxLabs/mainflux/blob/master/docker/ssl/Makefile) and after replacing all `localhost` with your hostname, run:
 
 ```
 make ca
@@ -201,7 +197,7 @@ thing.crt
 thing.key
 ```
 
-Create kubernetes secrets using those certificates with running commands from (secrets script)[https://github.com/mainflux/devops/blob/master/charts/mainflux/secrets/secrets.sh]. In this example secrets are created in `mf` namespace:
+Create kubernetes secrets using those certificates with running commands from (secrets script)[https://github.com/MainfluxLabs/devops/blob/master/charts/mainflux/secrets/secrets.sh]. In this example secrets are created in `mf` namespace:
 
 ```
 kubectl -n mf create secret tls mainflux-server \

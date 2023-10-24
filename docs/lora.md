@@ -1,6 +1,6 @@
 # LoRa
 
-Bridging with LoRaWAN Networks can be done over the [lora-adapter](https://github.com/mainflux/mainflux/tree/master/lora). This service sits between Mainflux and [LoRa Server](https://www.loraserver.io) and just forwards the messages from one system to another via MQTT protocol, using the adequate MQTT topics and in the good message format (JSON and SenML), i.e. respecting the APIs of both systems.
+Bridging with LoRaWAN Networks can be done over the [lora-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/lora). This service sits between Mainflux and [LoRa Server](https://www.loraserver.io) and just forwards the messages from one system to another via MQTT protocol, using the adequate MQTT topics and in the good message format (JSON and SenML), i.e. respecting the APIs of both systems.
 
 LoRa Server is used for connectivity layer. Specially for the [LoRa Gateway Bridge](https://www.loraserver.io/lora-gateway-bridge/overview/) service, which abstracts the [SemTech packet-forwarder UDP protocol](https://github.com/Lora-net/packet_forwarder/blob/master/PROTOCOL.TXT) into JSON over MQTT. But also for the [LoRa Server](https://www.loraserver.io/loraserver/overview) service,  responsible of the de-duplication and handling of uplink frames received by the gateway(s), handling of the LoRaWAN mac-layer and scheduling of downlink data transmissions. Finally the [Lora App Server](https://www.loraserver.io/lora-app-server/overview/) services is used to interact with the system.
 
@@ -47,7 +47,7 @@ docker-compose -f docker/addons/lora-adapter/docker-compose.yml up -d
 
 **Troubleshouting:**  The lora-adapter subscribes to the LoRa Server MQTT broker and will fail if the connection is not established. You must ensure that the environment variable `MF_LORA_ADAPTER_MESSAGES_URL` is propertly configured.
 
-**Remark:** By defaut, `MF_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.mainflux.io:1883` in the [docker-compose.yml](https://github.com/mainflux/mainflux/blob/master/docker/addons/lora-adapter/docker-compose.yml) file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
+**Remark:** By defaut, `MF_LORA_ADAPTER_MESSAGES_URL` is set as `tcp://lora.mqtt.mainfluxlabs.io:1883` in the [docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/lora-adapter/docker-compose.yml) file of the adapter. If you run the composition without configure this variable you will start to receive messages from our demo server.
 
 ### Route Map
 

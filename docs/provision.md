@@ -31,7 +31,7 @@ Response should look like this:
 }
 ```
 
-For more information about the Users service API, please check out the [API documentation](https://github.com/mainflux/mainflux/blob/master/api/users.yml).
+For more information about the Users service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/users.yml).
 
 ### System Provisioning
 
@@ -315,7 +315,7 @@ If you want to disconnect your thing from the channel, send following request:
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -X DELETE -H "Authorization: Bearer <user_token>" https://localhost/channels/<channel_id>/things/<thing_id>
 ```
 
-For more information about the Things service API, please check out the [API documentation](https://github.com/mainflux/mainflux/blob/master/api/things.yml).
+For more information about the Things service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/things.yml).
 
 ## Provision Service
 
@@ -528,7 +528,7 @@ Response contains created things, channels and certificates if any:
 Deploy Mainflux UI docker composition as it contains all the required services for provisioning to work ( `certs`, `bootstrap` and Mainflux core)
 
 ```
-git clone https://github.com/mainflux/ui
+git clone https://github.com/MainfluxLabs/ui
 cd ui
 docker-compose -f docker/docker-compose.yml up
 ```
@@ -563,7 +563,7 @@ curl -s -S -X GET http://mainflux.com:8202/things/bootstrap/gateway -H "Authoriz
 Or you can start `Agent` with:
 
 ```bash
-git clone https://github.com/mainflux/agent
+git clone https://github.com/MainfluxLabs/agent
 cd agent
 make
 MF_AGENT_BOOTSTRAP_ID=gateway MF_AGENT_BOOTSTRAP_KEY=external_key MF_AGENT_BOOTSTRAP_URL=http://mainflux.ccom:8202/things/bootstrap build/mainflux-agent
@@ -576,19 +576,19 @@ Agent will retrieve connections parameters and connect to Mainflux cloud.
 
 
 
-[mainflux]: https://github.com/mainflux/mainflux
-[bootstrap]: https://github.com/mainflux/mainflux/tree/master/bootstrap
-[export]: https://github.com/mainflux/export
-[agent]: https://github.com/mainflux/agent
-[mfxui]: https://github.com/mainflux/mainflux/ui
-[config]: https://github.com/mainflux/mainflux/tree/master/provision#configuration
-[env]: https://github.com/mainflux/mainflux/blob/master/.env
-[conftoml]: https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml
-[auth]: https://github.com/mainflux/mainflux/blob/master/auth/README.md
-[exp]: https://github.com/mainflux/export
-[cli]: https://github.com/mainflux/mainflux/tree/master/cli
+[mainflux]: https://github.com/MainfluxLabs/mainflux
+[bootstrap]: https://github.com/MainfluxLabs/mainflux/tree/master/bootstrap
+[export]: https://github.com/MainfluxLabs/export
+[agent]: https://github.com/MainfluxLabs/agent
+[mfxui]: https://github.com/MainfluxLabs/mainflux/ui
+[config]: https://github.com/MainfluxLabs/mainflux/tree/master/provision#configuration
+[env]: https://github.com/MainfluxLabs/mainflux/blob/master/.env
+[conftoml]: https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml
+[auth]: https://github.com/MainfluxLabs/mainflux/blob/master/auth/README.md
+[exp]: https://github.com/MainfluxLabs/export
+[cli]: https://github.com/MainfluxLabs/mainflux/tree/master/cli
 
-For more information about the Provision service API, please check out the [API documentation](https://github.com/mainflux/mainflux/blob/master/api/provision.yml).
+For more information about the Provision service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/provision.yml).
 
 ## Certs Service
 Issues certificates for things. `Certs` service can create certificates to be used when `Mainflux` is deployed to support mTLS.  
@@ -648,4 +648,4 @@ In this mode certificates can also be revoked:
 curl -s -S -X DELETE http://localhost:8204/certs/revoke -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json'   -d '{"thing_id":"c30b8842-507c-4bcd-973c-74008cef3be5"}'
 ```
 
-For more information about the Certification service API, please check out the [API documentation](https://github.com/mainflux/mainflux/blob/master/api/certs.yml).
+For more information about the Certification service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/certs.yml).
