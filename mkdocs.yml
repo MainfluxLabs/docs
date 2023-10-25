@@ -1,0 +1,41 @@
+#
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+#
+
+copyright: Copyright (c) MainfluxLabs
+repo_url: https://github.com/MainfluxLabs/docs
+site_description: MainfluxLabs IoT System
+site_name: MainfluxLabs
+site_url: https://mainfluxlabs.github.io
+edit_uri: ""
+theme:
+  name: readthedocs
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: "#"
+
+nav:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - Getting Started: getting-started.md
+  - Provision: provision.md
+  - Messaging: messaging.md
+  - Storage: storage.md
+  - LoRa: lora.md
+  - Edge: edge.md
+  - Security: security.md
+  - Authentication: authentication.md
+  - Authorization: authorization.md
+  - CLI: cli.md
+  - API: api.md
+  - Groups: groups.md
+  - Bootstrap: bootstrap.md
+  - Tracing: tracing.md
+  - Developer's Guide: dev-guide.md
+  - Kubernetes: kubernetes.md
+  - Benchmark: benchmark.md
