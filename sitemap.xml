@@ -1,108 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://docs.mainflux.io/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/api/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/api/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/architecture/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/architecture/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/authentication/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/authentication/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/authorization/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/authorization/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/benchmark/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/benchmark/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/bootstrap/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/bootstrap/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/cli/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/cli/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/dev-guide/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/dev-guide/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/edge/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/edge/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/getting-started/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/getting-started/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/groups/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/groups/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/kubernetes/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/kubernetes/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/lora/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/lora/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/messaging/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/messaging/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/opcua/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/opcua/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/provision/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/provision/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/security/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/security/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/storage/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/storage/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://docs.mainflux.io/tracing/</loc>
-         <lastmod>2022-03-07</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://docs.mainflux.io/twins/</loc>
-         <lastmod>2022-03-07</lastmod>
+         <loc>https://mainfluxlabs.github.io/tracing/</loc>
+         <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

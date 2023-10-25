@@ -1,986 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/provision/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Provision - Mainflux</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Provision";
+        var mkdocs_page_input_path = "provision.md";
+        var mkdocs_page_url = "/provision/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Mainflux IoT System">
-      
-      
-      
-        <link rel="canonical" href="https://docs.mainflux.io/provision/">
-      
-      <link rel="icon" href="../img/logo.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.1">
-    
-    
-      
-        <title>Provision - Mainflux</title>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/stylesheets/main.e8d9bf0c.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
-        
-      
-    
-    
-    
-      
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
+<body class="wy-body-for-nav" role="document">
 
-    
-    
-  </head>
-  
-  
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-  
-    
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#provision" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Mainflux" class="md-header__button md-logo" aria-label="Mainflux" data-md-component="logo">
-      
-  <img src="../img/logo.png" alt="logo">
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            Mainflux
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Provision
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-      <label class="md-header__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Mainflux
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-    
-    
-      <div class="md-header__source">
-        <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-  </div>
-  <div class="md-source__repository">
-    GitHub
-  </div>
-</a>
       </div>
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
 
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Mainflux" class="md-nav__button md-logo" aria-label="Mainflux" data-md-component="logo">
-      
-  <img src="../img/logo.png" alt="logo">
-
-    </a>
-    Mainflux
-  </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-  </div>
-  <div class="md-source__repository">
-    GitHub
-  </div>
-</a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Provision</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#platform-management">Platform management</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#users-management">Users Management</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#account-creation">Account Creation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#obtaining-an-authorization-key">Obtaining an Authorization Key</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#system-provisioning">System Provisioning</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#provisioning-things">Provisioning Things</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieving-provisioned-things">Retrieving Provisioned Things</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#searching-provisioned-things">Searching Provisioned Things</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#removing-things">Removing Things</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#provisioning-channels">Provisioning Channels</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieving-provisioned-channels">Retrieving Provisioned Channels</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#removing-channels">Removing Channels</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#access-control">Access Control</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#provision-service">Provision Service</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#authentication">Authentication</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#running">Running</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#provision_1">Provision</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#certs-service">Certs Service</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#development-mode">Development mode</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pki-mode">PKI mode</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lora/">LoRa</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../groups/">Groups</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
     </div>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        Architecture
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
-        Getting Started
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Provision
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Provision
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#platform-management" class="md-nav__link">
-    Platform management
-  </a>
-  
-    <nav class="md-nav" aria-label="Platform management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#users-management" class="md-nav__link">
-    Users Management
-  </a>
-  
-    <nav class="md-nav" aria-label="Users Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#account-creation" class="md-nav__link">
-    Account Creation
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obtaining-an-authorization-key" class="md-nav__link">
-    Obtaining an Authorization Key
-  </a>
-  
-</li>
-        
-      </ul>
     </nav>
-  
-</li>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Mainflux</a>
         
-          <li class="md-nav__item">
-  <a href="#system-provisioning" class="md-nav__link">
-    System Provisioning
-  </a>
-  
-    <nav class="md-nav" aria-label="System Provisioning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#provisioning-things" class="md-nav__link">
-    Provisioning Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bulk-provisioning-things" class="md-nav__link">
-    Bulk Provisioning Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrieving-provisioned-things" class="md-nav__link">
-    Retrieving Provisioned Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#searching-provisioned-things" class="md-nav__link">
-    Searching Provisioned Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#removing-things" class="md-nav__link">
-    Removing Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#provisioning-channels" class="md-nav__link">
-    Provisioning Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bulk-provisioning-channels" class="md-nav__link">
-    Bulk Provisioning Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrieving-provisioned-channels" class="md-nav__link">
-    Retrieving Provisioned Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#removing-channels" class="md-nav__link">
-    Removing Channels
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#access-control" class="md-nav__link">
-    Access Control
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#provision-service" class="md-nav__link">
-    Provision Service
-  </a>
-  
-    <nav class="md-nav" aria-label="Provision Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
-    Running
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#provision_1" class="md-nav__link">
-    Provision
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certs-service" class="md-nav__link">
-    Certs Service
-  </a>
-  
-    <nav class="md-nav" aria-label="Certs Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#development-mode" class="md-nav__link">
-    Development mode
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pki-mode" class="md-nav__link">
-    PKI mode
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Provision</li>
+    <li class="wy-breadcrumbs-aside">
     </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../messaging/" class="md-nav__link">
-        Messaging
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../storage/" class="md-nav__link">
-        Storage
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lora/" class="md-nav__link">
-        LoRa
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../opcua/" class="md-nav__link">
-        OPC-UA
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../edge/" class="md-nav__link">
-        Edge
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../security/" class="md-nav__link">
-        Security
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
-        Authentication
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../authorization/" class="md-nav__link">
-        Authorization
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        CLI
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
-        API
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../groups/" class="md-nav__link">
-        Groups
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bootstrap/" class="md-nav__link">
-        Bootstrap
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../twins/" class="md-nav__link">
-        Twins
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tracing/" class="md-nav__link">
-        Tracing
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dev-guide/" class="md-nav__link">
-        Developer's Guide
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kubernetes/" class="md-nav__link">
-        Kubernetes
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../benchmark/" class="md-nav__link">
-        Benchmark
-      </a>
-    </li>
-  
-
-    
   </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#platform-management" class="md-nav__link">
-    Platform management
-  </a>
-  
-    <nav class="md-nav" aria-label="Platform management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#users-management" class="md-nav__link">
-    Users Management
-  </a>
-  
-    <nav class="md-nav" aria-label="Users Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#account-creation" class="md-nav__link">
-    Account Creation
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#obtaining-an-authorization-key" class="md-nav__link">
-    Obtaining an Authorization Key
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#system-provisioning" class="md-nav__link">
-    System Provisioning
-  </a>
-  
-    <nav class="md-nav" aria-label="System Provisioning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#provisioning-things" class="md-nav__link">
-    Provisioning Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bulk-provisioning-things" class="md-nav__link">
-    Bulk Provisioning Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrieving-provisioned-things" class="md-nav__link">
-    Retrieving Provisioned Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#searching-provisioned-things" class="md-nav__link">
-    Searching Provisioned Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#removing-things" class="md-nav__link">
-    Removing Things
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#provisioning-channels" class="md-nav__link">
-    Provisioning Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bulk-provisioning-channels" class="md-nav__link">
-    Bulk Provisioning Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrieving-provisioned-channels" class="md-nav__link">
-    Retrieving Provisioned Channels
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#removing-channels" class="md-nav__link">
-    Removing Channels
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#access-control" class="md-nav__link">
-    Access Control
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#provision-service" class="md-nav__link">
-    Provision Service
-  </a>
-  
-    <nav class="md-nav" aria-label="Provision Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
-    Running
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#provision_1" class="md-nav__link">
-    Provision
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certs-service" class="md-nav__link">
-    Certs Service
-  </a>
-  
-    <nav class="md-nav" aria-label="Certs Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#development-mode" class="md-nav__link">
-    Development mode
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pki-mode" class="md-nav__link">
-    PKI mode
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
-                
-
-
-<h1 id="provision">Provision<a class="headerlink" href="#provision" title="Permanent link">#</a></h1>
+                <h1 id="provision">Provision<a class="headerlink" href="#provision" title="Permanent link">#</a></h1>
 <p>Provisioning is a process of configuration of an IoT platform in which system operator creates and sets-up different entities used in the platform - users, channels and things.</p>
 <h2 id="platform-management">Platform management<a class="headerlink" href="#platform-management" title="Permanent link">#</a></h2>
 <h3 id="users-management">Users Management<a class="headerlink" href="#users-management" title="Permanent link">#</a></h3>
@@ -998,26 +212,11 @@
       &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjMzODg0NzcsImlhdCI6MTUyMzM1MjQ3NywiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJqb2huLmRvZUBlbWFpbC5jb20ifQ.cygz9zoqD7Rd8f88hpQNilTCAS1DrLLgLg4PRcH-iAI&quot;
 }
 </code></pre>
-<p>For more information about the Users service API, please check out the <a href="https://github.com/mainflux/mainflux/blob/master/api/users.yml">API documentation</a>.</p>
+<p>For more information about the Users service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/users.yml">API documentation</a>.</p>
 <h3 id="system-provisioning">System Provisioning<a class="headerlink" href="#system-provisioning" title="Permanent link">#</a></h3>
 <p>Before proceeding, make sure that you have created a new account and obtained an authorization key.</p>
 <h4 id="provisioning-things">Provisioning Things<a class="headerlink" href="#provisioning-things" title="Permanent link">#</a></h4>
-<blockquote>
-<p>This endpoint will be depreciated in 0.11.0.  It will be replaced with the bulk endpoint currently found at /things/bulk.</p>
-</blockquote>
-<p>Things are created by executing request <code>POST /things</code> with a JSON payload. Note that you will also need <code>user_token</code> in order to create things that belong to this particular user.</p>
-<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/things -d '{&quot;name&quot;:&quot;weio&quot;}'
-</code></pre>
-<p>Response will contain <code>Location</code> header whose value represents path to newly created thing:</p>
-<pre><code>HTTP/1.1 201 Created
-Content-Type: application/json
-Location: /things/81380742-7116-4f6f-9800-14fe464f6773
-Date: Tue, 10 Apr 2018 10:02:59 GMT
-Content-Length: 0
-</code></pre>
-<h4 id="bulk-provisioning-things">Bulk Provisioning Things<a class="headerlink" href="#bulk-provisioning-things" title="Permanent link">#</a></h4>
-<p>Multiple things can be created by executing a <code>POST /things/bulk</code> request with a JSON payload.  The payload should contain a JSON array of the things to be created.  If there is an error any of the things, none of the things will be created.</p>
-<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/things/bulk -d '[{&quot;name&quot;:&quot;weio&quot;},{&quot;name&quot;:&quot;bob&quot;}]'
+<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/things -d '[{&quot;name&quot;:&quot;weio&quot;},{&quot;name&quot;:&quot;bob&quot;}]'
 </code></pre>
 <p>The response's body will contain a list of the created things.</p>
 <pre><code class="language-json">HTTP/2 201
@@ -1100,22 +299,8 @@ access-control-expose-headers: Location
 <pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/things/&lt;thing_id&gt;
 </code></pre>
 <h4 id="provisioning-channels">Provisioning Channels<a class="headerlink" href="#provisioning-channels" title="Permanent link">#</a></h4>
-<blockquote>
-<p>This endpoint will be depreciated in 0.11.0.  It will be replaced with the bulk endpoint currently found at /channels/bulk.</p>
-</blockquote>
-<p>Channels are created by executing request <code>POST /channels</code>:</p>
-<pre><code>curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/channels -d '{&quot;name&quot;:&quot;mychan&quot;}'
-</code></pre>
-<p>After sending request you should receive response with <code>Location</code> header that contains path to newly created channel:</p>
-<pre><code>HTTP/1.1 201 Created
-Content-Type: application/json
-Location: /channels/19daa7a8-a489-4571-8714-ef1a214ed914
-Date: Tue, 10 Apr 2018 11:30:07 GMT
-Content-Length: 0
-</code></pre>
-<h4 id="bulk-provisioning-channels">Bulk Provisioning Channels<a class="headerlink" href="#bulk-provisioning-channels" title="Permanent link">#</a></h4>
-<p>Multiple channels can be created by executing a <code>POST /things/bulk</code> request with a JSON payload.  The payload should contain a JSON array of the channels to be created.  If there is an error any of the channels, none of the channels will be created.</p>
-<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/channels/bulk -d '[{&quot;name&quot;:&quot;joe&quot;},{&quot;name&quot;:&quot;betty&quot;}]'
+<p>Multiple channels can be created by executing a <code>POST /things</code> request with a JSON payload.  The payload should contain a JSON array of the channels to be created.  If there is an error any of the channels, none of the channels will be created.</p>
+<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/channels -d '[{&quot;name&quot;:&quot;joe&quot;},{&quot;name&quot;:&quot;betty&quot;}]'
 </code></pre>
 <p>The response's body will contain a list of the created channels.</p>
 <pre><code class="language-json">HTTP/2 201
@@ -1225,27 +410,27 @@ Things that are not connected to this channel are not allowed to communicate ove
 <p>If you want to disconnect your thing from the channel, send following request:</p>
 <pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; https://localhost/channels/&lt;channel_id&gt;/things/&lt;thing_id&gt;
 </code></pre>
-<p>For more information about the Things service API, please check out the <a href="https://github.com/mainflux/mainflux/blob/master/api/things.yml">API documentation</a>.</p>
+<p>For more information about the Things service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/things.yml">API documentation</a>.</p>
 <h2 id="provision-service">Provision Service<a class="headerlink" href="#provision-service" title="Permanent link">#</a></h2>
 <p>Provisioning is a process of configuration of an IoT platform in which system operator creates and sets-up different entities used in the platform - users, channels and things. It is part of process of setting up IoT applications where we connect devices on edge with platform in cloud.</p>
-<p>For provisioning we can use <a href="https://github.com/mainflux/mainflux/tree/master/cli">Mainflux CLI</a> for creating users and for each node in the edge (eg. gateway) required number of things, channels, connecting them and creating certificates if needed.</p>
+<p>For provisioning we can use <a href="https://github.com/MainfluxLabs/mainflux/tree/master/cli">Mainflux CLI</a> for creating users and for each node in the edge (eg. gateway) required number of things, channels, connecting them and creating certificates if needed.</p>
 <p>Provision service is used to set up initial application configuration once user is created. Provision service creates  things, channels, connections and certificates. Once user is created we can use provision to create a setup for edge node in one HTTP request instead of issuing several CLI commands.</p>
-<p>Provision service provides an HTTP API to interact with <a href="https://github.com/mainflux/mainflux">Mainflux</a>.</p>
-<p>For gateways to communicate with <a href="https://github.com/mainflux/mainflux">Mainflux</a> configuration is required (MQTT host, thing, channels, certificates...). Gateway will send a request to <a href="https://github.com/mainflux/mainflux/tree/master/bootstrap">Bootstrap</a> service providing <code>&lt;external_id&gt;</code> and <code>&lt;external_key&gt;</code> in HTTP request to get the configuration. To make a request to <a href="https://github.com/mainflux/mainflux/tree/master/bootstrap">Bootstrap</a> service you can use <a href="https://github.com/mainflux/agent">Agent</a> service on a gateway.</p>
-<p>To create bootstrap configuration you can use <a href="https://github.com/mainflux/mainflux/tree/master/bootstrap">Bootstrap</a> or <code>Provision</code> service. <a href="https://github.com/mainflux/mainflux/ui">Mainflux UI</a> uses <a href="https://github.com/mainflux/mainflux/tree/master/bootstrap">Bootstrap</a> service for creating gateway configurations. <code>Provision</code> service should provide an easy way of provisioning your gateways i.e creating bootstrap configuration and as many things and channels that your setup requires.</p>
+<p>Provision service provides an HTTP API to interact with <a href="https://github.com/MainfluxLabs/mainflux">Mainflux</a>.</p>
+<p>For gateways to communicate with <a href="https://github.com/MainfluxLabs/mainflux">Mainflux</a> configuration is required (MQTT host, thing, channels, certificates...). Gateway will send a request to <a href="https://github.com/MainfluxLabs/mainflux/tree/master/bootstrap">Bootstrap</a> service providing <code>&lt;external_id&gt;</code> and <code>&lt;external_key&gt;</code> in HTTP request to get the configuration. To make a request to <a href="https://github.com/MainfluxLabs/mainflux/tree/master/bootstrap">Bootstrap</a> service you can use <a href="https://github.com/MainfluxLabs/agent">Agent</a> service on a gateway.</p>
+<p>To create bootstrap configuration you can use <a href="https://github.com/MainfluxLabs/mainflux/tree/master/bootstrap">Bootstrap</a> or <code>Provision</code> service. <a href="https://github.com/MainfluxLabs/mainflux/ui">Mainflux UI</a> uses <a href="https://github.com/MainfluxLabs/mainflux/tree/master/bootstrap">Bootstrap</a> service for creating gateway configurations. <code>Provision</code> service should provide an easy way of provisioning your gateways i.e creating bootstrap configuration and as many things and channels that your setup requires.</p>
 <p>Also, you may use provision service to create certificates for each thing. Each service running on gateway may require more than one thing and channel for communication.
-If, for example, you are using services <a href="https://github.com/mainflux/agent">Agent</a> and <a href="https://github.com/mainflux/export">Export</a> on a gateway you will need two channels for <code>Agent</code> (<code>data</code> and <code>control</code>) and one thing for <code>Export</code>.
-Additionally, if you enabled mTLS each service will need its own thing and certificate for access to <a href="https://github.com/mainflux/mainflux">Mainflux</a>.
+If, for example, you are using services <a href="https://github.com/MainfluxLabs/agent">Agent</a> and <a href="https://github.com/MainfluxLabs/export">Export</a> on a gateway you will need two channels for <code>Agent</code> (<code>data</code> and <code>control</code>) and one thing for <code>Export</code>.
+Additionally, if you enabled mTLS each service will need its own thing and certificate for access to <a href="https://github.com/MainfluxLabs/mainflux">Mainflux</a>.
 Your setup could require any number of things and channels, this kind of setup we can call <code>provision layout</code>.</p>
-<p>Provision service provides a way of specifying this <code>provision layout</code> and creating a setup according to that layout by serving requests on <code>/mapping</code> endpoint. Provision layout is configured in <a href="https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a>.</p>
+<p>Provision service provides a way of specifying this <code>provision layout</code> and creating a setup according to that layout by serving requests on <code>/mapping</code> endpoint. Provision layout is configured in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a>.</p>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h3>
-<p>The service is configured using the environment variables presented in the following <a href="https://github.com/mainflux/mainflux/tree/master/provision#configuration">table</a>. Note that any unset variables will be replaced with their default values.</p>
-<p>By default, call to <code>/mapping</code> endpoint will create one thing and two channels (<code>control</code> and <code>data</code>) and connect it as this is typical setup required by <a href="/edge/#agent">Agent</a>. If there is a requirement for different provision layout we can use <a href="https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml">config</a> file in addition to environment variables.</p>
-<p>For the purposes of running provision as an add-on in docker composition environment variables seems more suitable. Environment variables are set in <a href="https://github.com/mainflux/mainflux/blob/master/.env">.env</a>.</p>
-<p>Configuration can be specified in <a href="https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a>. Config file can specify all the settings that environment variables can configure and in addition <code>/mapping</code> endpoint provision layout can be configured.</p>
+<p>The service is configured using the environment variables presented in the following <a href="https://github.com/MainfluxLabs/mainflux/tree/master/provision#configuration">table</a>. Note that any unset variables will be replaced with their default values.</p>
+<p>By default, call to <code>/mapping</code> endpoint will create one thing and two channels (<code>control</code> and <code>data</code>) and connect it as this is typical setup required by <a href="/edge/#agent">Agent</a>. If there is a requirement for different provision layout we can use <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml">config</a> file in addition to environment variables.</p>
+<p>For the purposes of running provision as an add-on in docker composition environment variables seems more suitable. Environment variables are set in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/.env">.env</a>.</p>
+<p>Configuration can be specified in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a>. Config file can specify all the settings that environment variables can configure and in addition <code>/mapping</code> endpoint provision layout can be configured.</p>
 <p>In <code>config.toml</code> we can enlist an array of things and channels that we want to create and make connections between them which we call provision layout.</p>
 <p>Things Metadata can be whatever suits your needs. Thing that has metadata with <code>external_id</code> will have bootstrap configuration created, <code>external_id</code> value will be populated with value from <a href="#example">request</a>).
-Bootstrap configuration can be fetched with <a href="https://github.com/mainflux/agent">Agent</a>. For channel's metadata <code>type</code> is reserved for <code>control</code> and <code>data</code> which we use with <a href="https://github.com/mainflux/agent">Agent</a>.</p>
+Bootstrap configuration can be fetched with <a href="https://github.com/MainfluxLabs/agent">Agent</a>. For channel's metadata <code>type</code> is reserved for <code>control</code> and <code>data</code> which we use with <a href="https://github.com/MainfluxLabs/agent">Agent</a>.</p>
 <p>Example of provision layout below</p>
 <pre><code class="language-toml">[bootstrap]
   [bootstrap.content]
@@ -1334,12 +519,12 @@ Bootstrap configuration can be fetched with <a href="https://github.com/mainflux
 <p><code>[bootstrap.content]</code> will be marshalled and saved into <code>content</code> field in bootstrap configs when request to <code>/mappings</code> is made, <code>content</code> field from bootstrap config is used to create <code>Agent</code> and <code>Export</code> configuration files upon <code>Agent</code> fetching bootstrap configuration.</p>
 <h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h3>
 <p>In order to create necessary entities provision service needs to authenticate against Mainflux.
-To provide authentication credentials to the provision service you can pass it in as an environment variable or in a config file as Mainflux user and password or as API token (that can be issued on <code>/users</code> or <code>/keys</code> endpoint of <a href="https://github.com/mainflux/mainflux/blob/master/auth/README.md">auth</a>.</p>
+To provide authentication credentials to the provision service you can pass it in as an environment variable or in a config file as Mainflux user and password or as API token (that can be issued on <code>/users</code> or <code>/keys</code> endpoint of <a href="https://github.com/MainfluxLabs/mainflux/blob/master/auth/README.md">auth</a>.</p>
 <p>Additionally, users or API token can be passed in Authorization header, this authentication takes precedence over others.</p>
 <ul>
-<li><code>username</code>, <code>password</code> - (<code>MF_PROVISION_USER</code>, <code>MF_PROVISION_PASSWORD</code> in <a href="https://github.com/mainflux/mainflux/blob/master/.env">.env</a>, <code>mf_user</code>, <code>mf_pass</code> in <a href="https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a></li>
-<li>API Key - (<code>MF_PROVISION_API_KEY</code> in <a href="https://github.com/mainflux/mainflux/blob/master/.env">.env</a> or <a href="https://github.com/mainflux/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a></li>
-<li><code>Authorization: Bearer Token|ApiKey</code> - request authorization header containing either users token or API key. Check <a href="https://github.com/mainflux/mainflux/blob/master/auth/README.md">auth</a>.</li>
+<li><code>username</code>, <code>password</code> - (<code>MF_PROVISION_USER</code>, <code>MF_PROVISION_PASSWORD</code> in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/.env">.env</a>, <code>mf_user</code>, <code>mf_pass</code> in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a></li>
+<li>API Key - (<code>MF_PROVISION_API_KEY</code> in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/.env">.env</a> or <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/provision/configs/config.toml">config.toml</a></li>
+<li><code>Authorization: Bearer Token|ApiKey</code> - request authorization header containing either users token or API key. Check <a href="https://github.com/MainfluxLabs/mainflux/blob/master/auth/README.md">auth</a>.</li>
 </ul>
 <h3 id="running">Running<a class="headerlink" href="#running" title="Permanent link">#</a></h3>
 <p>Provision service can be run as a standalone or in docker composition as addon to the core docker composition.</p>
@@ -1398,7 +583,7 @@ build/mainflux-provision
 </code></pre>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h3>
 <p>Deploy Mainflux UI docker composition as it contains all the required services for provisioning to work ( <code>certs</code>, <code>bootstrap</code> and Mainflux core)</p>
-<pre><code>git clone https://github.com/mainflux/ui
+<pre><code>git clone https://github.com/MainfluxLabs/ui
 cd ui
 docker-compose -f docker/docker-compose.yml up
 </code></pre>
@@ -1420,13 +605,13 @@ created: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTY1ODU3MDUsImlhdCI6MT
 <pre><code>curl -s -S -X GET http://mainflux.com:8202/things/bootstrap/gateway -H &quot;Authorization: Thing external_key&quot; -H 'Content-Type: application/json'
 </code></pre>
 <p>Or you can start <code>Agent</code> with:</p>
-<pre><code class="language-bash">git clone https://github.com/mainflux/agent
+<pre><code class="language-bash">git clone https://github.com/MainfluxLabs/agent
 cd agent
 make
 MF_AGENT_BOOTSTRAP_ID=gateway MF_AGENT_BOOTSTRAP_KEY=external_key MF_AGENT_BOOTSTRAP_URL=http://mainflux.ccom:8202/things/bootstrap build/mainflux-agent
 </code></pre>
 <p>Agent will retrieve connections parameters and connect to Mainflux cloud.</p>
-<p>For more information about the Provision service API, please check out the <a href="https://github.com/mainflux/mainflux/blob/master/api/provision.yml">API documentation</a>.</p>
+<p>For more information about the Provision service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/provision.yml">API documentation</a>.</p>
 <h2 id="certs-service">Certs Service<a class="headerlink" href="#certs-service" title="Permanent link">#</a></h2>
 <p>Issues certificates for things. <code>Certs</code> service can create certificates to be used when <code>Mainflux</code> is deployed to support mTLS.<br />
 <code>Certs</code> service will create certificate for valid thing ID if valid user token is passed and user is owner of the provided thing ID.</p>
@@ -1467,81 +652,57 @@ MF_CERTS_VAULT_TOKEN=&lt;vault_acces_token&gt;
 In this mode certificates can also be revoked:</p>
 <pre><code class="language-bash">curl -s -S -X DELETE http://localhost:8204/certs/revoke -H &quot;Authorization: Bearer $TOKEN&quot; -H 'Content-Type: application/json'   -d '{&quot;thing_id&quot;:&quot;c30b8842-507c-4bcd-973c-74008cef3be5&quot;}'
 </code></pre>
-<p>For more information about the Certification service API, please check out the <a href="https://github.com/mainflux/mainflux/blob/master/api/certs.yml">API documentation</a>.</p>
-
+<p>For more information about the Certification service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/certs.yml">API documentation</a>.</p>
               
-            </article>
-          </div>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        
-        <a href="../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Getting Started
             </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../messaging/" class="md-footer__link md-footer__link--next" aria-label="Next: Messaging" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Messaging
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-    <div class="md-copyright__highlight">
-      Copyright (c) Mainflux
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../getting-started/" class="btn btn-neutral float-left" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../messaging/" class="btn btn-neutral float-right" title="Messaging">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) Mainflux</p>
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
     
     
-      <script src="../assets/javascripts/bundle.8aa65030.min.js"></script>
-      
+      <span><a href="../getting-started/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-  </body>
+    
+      <span><a href="../messaging/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>

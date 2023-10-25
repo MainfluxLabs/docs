@@ -1,1038 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/edge/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Edge - Mainflux</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Edge";
+        var mkdocs_page_input_path = "edge.md";
+        var mkdocs_page_url = "/edge/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Mainflux IoT System">
-      
-      
-      
-        <link rel="canonical" href="https://docs.mainflux.io/edge/">
-      
-      <link rel="icon" href="../img/logo.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.1">
-    
-    
-      
-        <title>Edge - Mainflux</title>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/stylesheets/main.e8d9bf0c.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
-        
-      
-    
-    
-    
-      
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
+<body class="wy-body-for-nav" role="document">
 
-    
-    
-  </head>
-  
-  
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-  
-    
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#edge" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Mainflux" class="md-header__button md-logo" aria-label="Mainflux" data-md-component="logo">
-      
-  <img src="../img/logo.png" alt="logo">
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            Mainflux
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Edge
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-      <label class="md-header__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Mainflux
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-    
-    
-      <div class="md-header__source">
-        <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-  </div>
-  <div class="md-source__repository">
-    GitHub
-  </div>
-</a>
       </div>
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
 
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Mainflux" class="md-nav__button md-logo" aria-label="Mainflux" data-md-component="logo">
-      
-  <img src="../img/logo.png" alt="logo">
-
-    </a>
-    Mainflux
-  </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/mainflux/mainflux" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-  </div>
-  <div class="md-source__repository">
-    GitHub
-  </div>
-</a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lora/">LoRa</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Edge</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#agent">Agent</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#run-agent">Run Agent</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#remote-execution-of-commands-via-agent">Remote execution of commands via Agent</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#remote-terminal">Remote terminal</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#heartbeat">Heartbeat</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#proxying-commands">Proxying commands</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#edgex">EdgeX</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remote-commands">Remote Commands</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#export">Export</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#environment-variables">Environment variables</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#http-port">Http port</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#mqtt-connection">MQTT connection</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#mtls">MTLS</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#routes">Routes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#how-to-save-config-via-agent">How to save config via agent</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#using-configure-script">Using configure script</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-deployment">Example deployment</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#edge-deployment">Edge deployment</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#services-in-the-cloud">Services in the cloud</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#services-on-the-edge">Services on the Edge</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#agent_1">Agent</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#export_1">Export</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#testing-export">Testing Export</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../groups/">Groups</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
     </div>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        Architecture
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
-        Getting Started
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../provision/" class="md-nav__link">
-        Provision
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../messaging/" class="md-nav__link">
-        Messaging
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../storage/" class="md-nav__link">
-        Storage
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lora/" class="md-nav__link">
-        LoRa
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../opcua/" class="md-nav__link">
-        OPC-UA
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Edge
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Edge
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#agent" class="md-nav__link">
-    Agent
-  </a>
-  
-    <nav class="md-nav" aria-label="Agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-agent" class="md-nav__link">
-    Run Agent
-  </a>
-  
-    <nav class="md-nav" aria-label="Run Agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remote-execution-of-commands-via-agent" class="md-nav__link">
-    Remote execution of commands via Agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remote-terminal" class="md-nav__link">
-    Remote terminal
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#heartbeat" class="md-nav__link">
-    Heartbeat
-  </a>
-  
-</li>
-        
-      </ul>
     </nav>
-  
-</li>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Mainflux</a>
         
-          <li class="md-nav__item">
-  <a href="#proxying-commands" class="md-nav__link">
-    Proxying commands
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edgex" class="md-nav__link">
-    EdgeX
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remote-commands" class="md-nav__link">
-    Remote Commands
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#export" class="md-nav__link">
-    Export
-  </a>
-  
-    <nav class="md-nav" aria-label="Export">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
-    Install
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
-    Environment variables
-  </a>
-  
-    <nav class="md-nav" aria-label="Environment variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#http-port" class="md-nav__link">
-    Http port
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mqtt-connection" class="md-nav__link">
-    MQTT connection
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mtls" class="md-nav__link">
-    MTLS
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#routes" class="md-nav__link">
-    Routes
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-save-config-via-agent" class="md-nav__link">
-    How to save config via agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-configure-script" class="md-nav__link">
-    Using configure script
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-deployment" class="md-nav__link">
-    Example deployment
-  </a>
-  
-    <nav class="md-nav" aria-label="Example deployment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-deployment" class="md-nav__link">
-    Edge deployment
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-in-the-cloud" class="md-nav__link">
-    Services in the cloud
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-on-the-edge" class="md-nav__link">
-    Services on the Edge
-  </a>
-  
-    <nav class="md-nav" aria-label="Services on the Edge">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#agent_1" class="md-nav__link">
-    Agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#export_1" class="md-nav__link">
-    Export
-  </a>
-  
-    <nav class="md-nav" aria-label="Export">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#testing-export" class="md-nav__link">
-    Testing Export
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Edge</li>
+    <li class="wy-breadcrumbs-aside">
     </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../security/" class="md-nav__link">
-        Security
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
-        Authentication
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../authorization/" class="md-nav__link">
-        Authorization
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        CLI
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
-        API
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../groups/" class="md-nav__link">
-        Groups
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bootstrap/" class="md-nav__link">
-        Bootstrap
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../twins/" class="md-nav__link">
-        Twins
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tracing/" class="md-nav__link">
-        Tracing
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dev-guide/" class="md-nav__link">
-        Developer's Guide
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kubernetes/" class="md-nav__link">
-        Kubernetes
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../benchmark/" class="md-nav__link">
-        Benchmark
-      </a>
-    </li>
-  
-
-    
   </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#agent" class="md-nav__link">
-    Agent
-  </a>
-  
-    <nav class="md-nav" aria-label="Agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-agent" class="md-nav__link">
-    Run Agent
-  </a>
-  
-    <nav class="md-nav" aria-label="Run Agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remote-execution-of-commands-via-agent" class="md-nav__link">
-    Remote execution of commands via Agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remote-terminal" class="md-nav__link">
-    Remote terminal
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#heartbeat" class="md-nav__link">
-    Heartbeat
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#proxying-commands" class="md-nav__link">
-    Proxying commands
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edgex" class="md-nav__link">
-    EdgeX
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remote-commands" class="md-nav__link">
-    Remote Commands
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#export" class="md-nav__link">
-    Export
-  </a>
-  
-    <nav class="md-nav" aria-label="Export">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
-    Install
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
-    Environment variables
-  </a>
-  
-    <nav class="md-nav" aria-label="Environment variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#http-port" class="md-nav__link">
-    Http port
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mqtt-connection" class="md-nav__link">
-    MQTT connection
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mtls" class="md-nav__link">
-    MTLS
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#routes" class="md-nav__link">
-    Routes
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-save-config-via-agent" class="md-nav__link">
-    How to save config via agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-configure-script" class="md-nav__link">
-    Using configure script
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-deployment" class="md-nav__link">
-    Example deployment
-  </a>
-  
-    <nav class="md-nav" aria-label="Example deployment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-deployment" class="md-nav__link">
-    Edge deployment
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-in-the-cloud" class="md-nav__link">
-    Services in the cloud
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-on-the-edge" class="md-nav__link">
-    Services on the Edge
-  </a>
-  
-    <nav class="md-nav" aria-label="Services on the Edge">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#agent_1" class="md-nav__link">
-    Agent
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#export_1" class="md-nav__link">
-    Export
-  </a>
-  
-    <nav class="md-nav" aria-label="Export">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#testing-export" class="md-nav__link">
-    Testing Export
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
-                
-
-
-<h1 id="edge">Edge<a class="headerlink" href="#edge" title="Permanent link">#</a></h1>
+                <h1 id="edge">Edge<a class="headerlink" href="#edge" title="Permanent link">#</a></h1>
 <p>Mainflux IoT platform provides services for supporting management of devices on the edge. Typically, IoT solution includes devices (sensors/actuators) deployed in far edge and connected through some proxy gateway.
 Although most devices could be connected to the Mainflux directly, using gateways decentralizes system, decreases load on the cloud and makes setup less difficult. Also, gateways can provide additional data processing, filtering and storage.</p>
 <p>Services that can be used on gateway to enable data and control plane for edge:</p>
@@ -1044,12 +218,12 @@ Although most devices could be connected to the Mainflux directly, using gateway
 <table>
 <thead>
 <tr>
-<th align="center"><img alt="Edge1" src="../img/edge/edge.png" /></th>
+<th style="text-align: center;"><img alt="Edge1" src="../img/edge/edge.png" /></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"><b>Figure 1 - Edge services deployment</b></td>
+<td style="text-align: center;"><b>Figure 1 - Edge services deployment</b></td>
 </tr>
 </tbody>
 </table>
@@ -1110,7 +284,7 @@ Gateway can be provisioned with <a href="/provision/"><code>provision</code></a>
 <li><code>content</code> is used for configuring parameters of agent and export service.</li>
 </ul>
 <p>Then to start the agent service you can do it like this</p>
-<pre><code>git clone https://github.com/mainflux/agent
+<pre><code>git clone https://github.com/MainfluxLabs/agent
 make
 cd build
 
@@ -1199,8 +373,8 @@ When connection is lost, if QoS2 is used, messages from the local bus are stored
 Additonaly <code>Export</code> service publishes liveliness status to <code>Agent</code> via NATS subject <code>heartbeat.export.service</code></p>
 <h3 id="install">Install<a class="headerlink" href="#install" title="Permanent link">#</a></h3>
 <p>Get the code:</p>
-<pre><code class="language-bash">go get github.com/mainflux/export
-cd $GOPATH/github.com/mainflux/export
+<pre><code class="language-bash">go get github.com/MainfluxLabs/export
+cd $GOPATH/github.com/MainfluxLabs/export
 </code></pre>
 <p>Make:</p>
 <pre><code class="language-bash">make
@@ -1210,7 +384,7 @@ cd $GOPATH/github.com/mainflux/export
 ./mainflux-export
 </code></pre>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h3>
-<p>By default <code>Export</code> service looks for config file at <a href="(https://github.com/mainflux/export/blob/master/configs/config.toml)"><code>../configs/config.toml</code></a> if no env vars are specified.  </p>
+<p>By default <code>Export</code> service looks for config file at <a href="(https://github.com/MainfluxLabs/export/blob/master/configs/config.toml)"><code>../configs/config.toml</code></a> if no env vars are specified.  </p>
 <pre><code class="language-toml">[exp]
   log_level = &quot;debug&quot;
   nats = &quot;localhost:4222&quot;
@@ -1292,7 +466,7 @@ To match Mainflux requirements <code>mqtt_topic</code> must contain <code>channe
 <li><code>workers</code> - specifies number of workers that will be used for message forwarding.</li>
 <li><code>type</code> - specifies message transformation:<ul>
 <li><code>default</code> is for sending messages as they are received on NATS with no transformation (so they should be in SenML or JSON format if we want to persist them in Mainflux in cloud). If you don't want to persist messages in Mainflux or you are not exporting to Mainflux cloud - message format can be anything that suits your application as message passes untransformed.</li>
-<li><code>mfx</code> is for messages that are being picked up on internal Mainflux NATS bus. When using <code>Export</code> along with Mainflux deployed on gateway (<a href="#edge">Fig. 1</a>) messages coming from MQTT broker that are published to NATS bus are <a href="(https://github.com/mainflux/mainflux/blob/master/pkg/messaging/message.proto)">Mainflux message</a>. Using <code>mfx</code> type will extract payload and <code>export</code> will publish it to <code>mqtt_topic</code>. Extracted payload is SenML or JSON if we want to persist messages. <code>nats_topic</code> in this case must be <code>channels</code>, or if you want to pick messages from a specific channel in local Mainflux instance to be exported to cloud you can put <code>channels.&lt;local_mainflux_channel_id&gt;</code>.</li>
+<li><code>mfx</code> is for messages that are being picked up on internal Mainflux NATS bus. When using <code>Export</code> along with Mainflux deployed on gateway (<a href="#edge">Fig. 1</a>) messages coming from MQTT broker that are published to NATS bus are <a href="(https://github.com/MainfluxLabs/mainflux/blob/master/pkg/messaging/message.proto)">Mainflux message</a>. Using <code>mfx</code> type will extract payload and <code>export</code> will publish it to <code>mqtt_topic</code>. Extracted payload is SenML or JSON if we want to persist messages. <code>nats_topic</code> in this case must be <code>channels</code>, or if you want to pick messages from a specific channel in local Mainflux instance to be exported to cloud you can put <code>channels.&lt;local_mainflux_channel_id&gt;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1302,7 +476,7 @@ To match Mainflux requirements <code>mqtt_topic</code> must contain <code>channe
  * <code>channel</code> - MQTT part of the topic where to publish MQTT data (<code>channel/&lt;channel_id&gt;/messages</code> is format of mainflux MQTT topic) and plays a part in authorization.</p>
 <p>If Mainflux and Export service are deployed on same gateway <code>Export</code> can be configured to send messages from Mainflux internal NATS bus to Mainflux in a cloud.
 In order for <code>Export</code> service to listen on Mainflux NATS deployed on the same machine NATS port must be exposed.
-Edit Mainflux <a href="(https://github.com/mainflux/mainflux/docker/docker-compose.yml)">docker-compose.yml</a>. NATS section must look like below:</p>
+Edit Mainflux <a href="(https://github.com/MainfluxLabs/mainflux/docker/docker-compose.yml)">docker-compose.yml</a>. NATS section must look like below:</p>
 <pre><code>  nats:
     image: nats:1.3.0
     container_name: mainflux-nats
@@ -1313,7 +487,7 @@ Edit Mainflux <a href="(https://github.com/mainflux/mainflux/docker/docker-compo
       - 4222:4222
 </code></pre>
 <h3 id="how-to-save-config-via-agent">How to save config via agent<a class="headerlink" href="#how-to-save-config-via-agent" title="Permanent link">#</a></h3>
-<p>Configuration file for <code>Export</code> service can be sent over MQTT using <a href="(https://github.com/mainflux/agent)">Agent</a> service.</p>
+<p>Configuration file for <code>Export</code> service can be sent over MQTT using <a href="(https://github.com/MainfluxLabs/agent)">Agent</a> service.</p>
 <pre><code>mosquitto_pub -u &lt;thing_id&gt; -P &lt;thing_key&gt; -t channels/&lt;control_ch_id&gt;/messages/req -h localhost -p 18831  -m  &quot;[{\&quot;bn\&quot;:\&quot;1:\&quot;, \&quot;n\&quot;:\&quot;config\&quot;, \&quot;vs\&quot;:\&quot;save, export, &lt;config_file_path&gt;, &lt;file_content_base64&gt;\&quot;}]&quot;
 </code></pre>
 <p><code>vs="save, export, config_file_path, file_content_base64"</code> - vs determines where to save file and contains file content in base64 encoding payload:</p>
@@ -1396,7 +570,7 @@ TOK=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk5MDQ4MDQsImlhdCI6MTU4OTg
 These parameters will be used by <code>Agent</code> service on the gateway to retrieve that information and establish a connection with the cloud.</p>
 <h2 id="services-on-the-edge">Services on the Edge<a class="headerlink" href="#services-on-the-edge" title="Permanent link">#</a></h2>
 <h3 id="agent_1">Agent<a class="headerlink" href="#agent_1" title="Permanent link">#</a></h3>
-<p>Start the [NATS][nats] and <a href="(https://github.com/mainflux/agent)">Agent</a> service:</p>
+<p>Start the [NATS][nats] and <a href="(https://github.com/MainfluxLabs/agent)">Agent</a> service:</p>
 <pre><code class="language-bash">gnatsd
 MF_AGENT_BOOTSTRAP_ID=54:FG:66:DC:43 \
 MF_AGENT_BOOTSTRAP_KEY=&quot;223334fw2&quot; \
@@ -1410,7 +584,7 @@ build/mainflux-agent
 {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Agent service started, exposed port 9003&quot;,&quot;ts&quot;:&quot;2020-05-07T15:50:58.128531057Z&quot;}
 </code></pre>
 <h3 id="export_1">Export<a class="headerlink" href="#export_1" title="Permanent link">#</a></h3>
-<pre><code>git clone https://github.com/mainflux/export
+<pre><code>git clone https://github.com/MainfluxLabs/export
 make
 </code></pre>
 <p>Edit the <code>configs/config.toml</code> setting
@@ -1461,80 +635,56 @@ go run main.go -s http://localhost:4222 export.test &quot;[{\&quot;bn\&quot;:\&q
 <p>In Mainflux <code>mqtt</code> service:</p>
 <pre><code class="language-log">mainflux-mqtt   | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Publish - client ID export-88529fb2-6c1e-4b60-b9ab-73b5d89f7404 to the topic: channels/e2adcfa6-96b2-425d-8cd4-ff8cb9c056ce/messages/export/test&quot;,&quot;ts&quot;:&quot;2020-05-08T15:16:02.999684791Z&quot;}
 </code></pre>
-
               
-            </article>
-          </div>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        
-        <a href="../opcua/" class="md-footer__link md-footer__link--prev" aria-label="Previous: OPC-UA" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              OPC-UA
             </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../security/" class="md-footer__link md-footer__link--next" aria-label="Next: Security" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Security
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-    <div class="md-copyright__highlight">
-      Copyright (c) Mainflux
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lora/" class="btn btn-neutral float-left" title="LoRa"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../security/" class="btn btn-neutral float-right" title="Security">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) Mainflux</p>
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
     
     
-      <script src="../assets/javascripts/bundle.8aa65030.min.js"></script>
-      
+      <span><a href="../lora/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-  </body>
+    
+      <span><a href="../security/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>
