@@ -122,9 +122,6 @@ The following table lists the configurable parameters and their default values.
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
 | influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
 | influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 8905         |
-| adapter_opcua.enabled                | Enable OPC-UA adapter                                                      | false        |
-| adapter_opcua.httpPort               | OPC-UA adapter HTTP port                                                   | 8188         |
-| adapter_opcua.redisRouteMapPort      | OPC-UA adapter Redis Auth Cache port                                       | 6379         |
 | adapter_lora.enabled                 | Enable LoRa adapter                                                        | false        |
 | adapter_lora.httpPort                | LoRa adapter HTTP port                                                     | 8187         |
 | adapter_lora.redisRouteMapPort       | LoRa adapter Redis Auth Cache port                                         | 6379         |
@@ -147,9 +144,7 @@ List of add-ons services in charts:
 - bootstrap
 - influxdb.writer
 - influxdb.reader
-- adapter_opcua
 - adapter_lora
-- twins
 
 By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
@@ -173,7 +168,7 @@ and add in spec->ports:
     port: 8883
     protocol: TCP
     targetPort: 8883
-```    
+```
 
 ## TLS & mTLS
 
