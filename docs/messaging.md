@@ -4,6 +4,35 @@ Once a channel is provisioned and thing is connected to it, it can start to
 publish messages on the channel. The following sections will provide an example
 of message publishing for each of the supported protocols.
 
+#### Adding a Profile to Channel Metadata
+When creating a channel, ensure that the metadata includes a profile.
+The profile contains information about the content type, which influences the type of message that can be sent over the channel. Depending on the content type specified in the profile, messages can be published in formats such as SenML, CoAP Binary Representation (COBR), or JSON.
+Additionally, for JSON messages, you may include time fields in the profile to facilitate time conversion. The time fields specify the format, field name, and location for the timestamp in the JSON payload.This is crucial for defining the message format that the channel will support.
+Here's an example of including a profile in the metadata:
+```
+{
+...
+  "Name": "channel-name",
+  "Metadata": {
+    "type": "channel",
+    "profile": {
+     "content-type": "application/senml+json",
+     "time_field": {
+       "field_format": "unix",
+       "field_name": "time_name",
+       "location": "UTC"
+     }
+    }
+  }
+}
+```
+
+Supported Content Types:
+
+1) SenML: "application/senml+json"
+2) COBR: "application/senml+cbor"
+3) JSON: "application/json"
+
 ## HTTP
 
 To publish message over channel, thing should send following request:
@@ -34,7 +63,7 @@ To subscribe to channel, thing should call following command:
 mosquitto_sub -u <thing_id> -P <thing_key> -t channels/<channel_id>/messages -h localhost
 ```
 
-If you want to use standard topic such as `channels/<channel_id>/messages` with SenML content type (JSON or CBOR), you should use following topic `channels/<channel_id>/messages`.
+If you want to use standard topic such as `channels/<channel_id>/senml/messages` with SenML content type (JSON or CBOR), you should use following topic `channels/<channel_id>/senml/messages`.
 
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
@@ -142,15 +171,15 @@ client.connect({onSuccess:onConnect});
 
 ## Subtopics
 
-In order to use subtopics and give more meaning to your pub/sub channel, you can simply add any suffix to base `/channels/<channel_id>/messages` topic.
+In order to use subtopics and give more meaning to your pub/sub channel, you can simply add any suffix to base `/channels/<channel_id>/senml/messages` or `/channels/<channel_id>/json/messages` topic.
 
-Example subtopic publish/subscribe for bedroom temperature would be `channels/<channel_id>/messages/bedroom/temperature`.
+Example subtopic publish/subscribe for bedroom temperature would be `channels/<channel_id>/senml/messages/bedroom/temperature`.
 
 Subtopics are generic and multilevel. You can use almost any suffix with any depth.
 
 Topics with subtopics are propagated to NATS broker in the following format `channels.<channel_id>.<optional_subtopic>`.
 
-Our example topic `channels/<channel_id>/messages/bedroom/temperature` will be translated to appropriate NATS topic `channels.<channel_id>.bedroom.temperature`.
+Our example topic `channels/<channel_id>/senml/messages/bedroom/temperature` will be translated to appropriate NATS topic `channels.<channel_id>.bedroom.temperature`.
 
 You can use multilevel subtopics, that have multiple parts. These parts are separated by `.` or `/` separators.
 When you use combination of these two, have in mind that behind the scene, `/` separator will be replaced with `.`.
