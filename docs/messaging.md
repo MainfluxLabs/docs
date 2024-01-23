@@ -7,7 +7,8 @@ of message publishing for each of the supported protocols.
 #### Adding a Profile to Channel Metadata
 When creating a channel, ensure that the metadata includes a profile.
 The profile contains information about the content type, which influences the type of message that can be sent over the channel. Depending on the content type specified in the profile, messages can be published in formats such as SenML, CoAP Binary Representation (COBR), or JSON.
-Additionally, for JSON messages, you may include time fields in the profile to facilitate time conversion. The time fields specify the format, field name, and location for the timestamp in the JSON payload.This is crucial for defining the message format that the channel will support.
+This is crucial for defining the message format that the channel will support.
+Additionally, for JSON messages, you may include time fields in the profile to facilitate time conversion. The time fields specify the format, field name, and location for the timestamp in the JSON payload.
 Here's an example of including a profile in the metadata:
 ```
 {
