@@ -6,16 +6,15 @@ of message publishing for each of the supported protocols.
 
 #### Creating Channel with Profile
 
-When creating or editing a channel we can add a `profile` field with the corresponding profile structure value in the metadata.
+When creating or editing a channel we can add  in the metadata a `profile` field with the corresponding profile structure value.
 A profile must contain a `content_type` field defines the payload format of messages in order to transform and store them properly. Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
-Additionally, if `content_type` is defined as `application/json`, you can set the `time_field` structure to define the `name` payload field to use as timestamp, the timestamp `format` and the timestamp `location`.
+Additionally, if `content_type` is defined as `application/json`, you can set the `time_field` structure to define the payload field `name` to use as timestamp, the timestamp `format` and the timestamp `location`.
   
 Here's an example of `SenML` metadata:
 ```
 {
   "Name": "channel-name",
   "Metadata": {
-    "type": "channel",
     "profile": {
     "content_type": "application/senml+json",
     }
@@ -27,7 +26,6 @@ Here's an example of `JSON` metadata:
 ```
   "Name": "channel-name",
   "Metadata": {
-    "type": "channel",
     "profile": {
      "content_type": "application/json",
      "time_field": {
@@ -39,6 +37,18 @@ Here's an example of `JSON` metadata:
   }
 }
 ```
+Here's an example of `SenML-CBOR` metadata:
+```
+{
+  "Name": "channel-name",
+  "Metadata": {
+    "profile": {
+    "content_type": "application/senml+cbor",
+    }
+  }
+}
+```
+
 
 ## HTTP
 
