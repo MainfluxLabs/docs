@@ -49,6 +49,9 @@ Here's an example of `SenML-CBOR` metadata:
 }
 ```
 
+The Profile metadata includes a `retention` field that determines whether messages should be stored in the database. When `retention` is set to `true`, messages will be saved in the database.  
+Conversely, if `retention` is set to `false`, messages will be sent without storing them.
+
 
 ## HTTP
 
@@ -209,3 +212,29 @@ it's subtopics.
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
 For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)
+
+## Notifiers
+
+The Notifier is designed to enhance communication capabilities by allowing messages sent by a thing to be forwarded to specified contacts via email or SMS.
+To utilize the Notifier, users need to define it within the Profile metadata of their channels.
+The Profile includes a `Notifier` field, which consists of properties such as `Type` (specifying the type of Notifier to use, e.g., SMTP or SMPP), `Contacts` (an array of contact details to which messages will be forwarded), and `Subject` (a customizable subject line for the forwarded messages).
+
+Supported Notifier Types are SMTP for sending emails and SMPP  for sending text messages (SMS).
+
+Example usage in a channel:
+```
+{
+  ...
+    "Metadata": {
+        "content_type": "application/senml+json",
+        "retention": true,
+        "notifier": {
+            "type": "smtp",
+            "contacts": ["email1@example.com", "email2@example.com"],
+            "subject": "Notification from IoT Device"
+        }
+    }
+}
+```
+
+**Note:** If `retention` is set to `false`, only notifications will be sent without storing the message in the database.
