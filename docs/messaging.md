@@ -215,11 +215,10 @@ For more information and examples checkout [official nats.io documentation](http
 
 ## Notifiers
 
-The Notifier is designed to enhance communication capabilities by allowing messages sent by a thing to be forwarded to specified contacts via email or SMS.
-To utilize the Notifier, users need to define it within the Profile metadata of their channels.
-The Profile includes a `Notifier` field, which consists of properties such as `Type` (specifying the type of Notifier to use, e.g., SMTP or SMPP), `Contacts` (an array of contact details to which messages will be forwarded), and `Subject` (a customizable subject line for the forwarded messages).
+Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
+Notification can be enabled per channel by setting in the Channel Profile metadata a proper `notifier` field value. which is a structure with fields `type` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subject` (a customizable subject info).
 
-Supported Notifier Types are SMTP for sending emails and SMPP  for sending text messages (SMS).
+Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
 
 Example usage in a channel:
 ```
