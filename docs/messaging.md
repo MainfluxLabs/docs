@@ -216,7 +216,7 @@ For more information and examples checkout [official nats.io documentation](http
 ## Notifiers
 
 Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
-Notification can be enabled per channel by setting in the Channel Profile metadata a proper `notifier` field value. which is a structure with fields `type` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subject` (a customizable subject info).
+Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `type` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subject` (a customizable subject info).
 
 Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
 
