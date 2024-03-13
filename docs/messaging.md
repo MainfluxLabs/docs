@@ -9,7 +9,7 @@ of message publishing for each of the supported protocols.
 When creating or editing a channel we can add  in the metadata a `profile` field with the corresponding profile structure value.
 A profile must contain a `content_type` field defines the payload format of messages in order to transform and store them properly. Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
 Additionally, if `content_type` is defined as `application/json`, you can set the `time_field` structure to define the payload field `name` to use as timestamp, the timestamp `format` and the timestamp `location`.
-  
+
 Here's an example of `SenML` metadata:
 ```
 {
@@ -49,6 +49,23 @@ Here's an example of `SenML-CBOR` metadata:
 }
 ```
 
+The Profile metadata includes a `retain` field in `writer` section that determines whether messages should be stored in the database. When `retain` is set to `true`, messages will be saved in the database.
+Conversely, if `retain` is set to `false`, messages will be sent without storing them. If subtopics are defined, the `retain` will be applied to matching message subtopics only.
+
+Here's an example of `retain` field in `writer` section:
+```
+{
+  "Metadata": {
+    "profile": {
+      "writer": {
+        "retain": true
+        "subtopics": ["subtopic1", "subtopic2"]
+      }
+    }
+  }
+}
+```
+**Note:** If 'writer' section is not defined, the default value for `retain` is `true`.
 
 ## HTTP
 
@@ -209,3 +226,31 @@ it's subtopics.
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
 For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)
+
+## Notifiers
+
+Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
+Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `protocol` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subtopics` (an array of subtopics for which the notification will be sent).
+
+Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
+
+Example usage in a channel:
+
+```
+{
+  "profile": {
+    "content_type": "application/senml+json",
+    "writer": {
+      "retain": true,
+      "subtopics": ["subtopic1", "subtopic2"]
+    }
+    "notifier": {
+      "protocol": "smtp",
+      "contacts": ["email1@example.com", "email2@example.com"],
+      "subtopics": ["subtopic1", "subtopic2"],
+    }
+  }
+}
+```
+
+**Note:** If `retain` is set to `false`, only notifications will be sent without storing the message in the database.
