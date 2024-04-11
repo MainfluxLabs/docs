@@ -4,69 +4,6 @@ Once a channel is provisioned and thing is connected to it, it can start to
 publish messages on the channel. The following sections will provide an example
 of message publishing for each of the supported protocols.
 
-#### Creating Channel with Profile
-
-When creating or editing a channel we can add  in the metadata a `profile` field with the corresponding profile structure value.
-A profile must contain a `content_type` field defines the payload format of messages in order to transform and store them properly. Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
-Additionally, if `content_type` is defined as `application/json`, you can set the `time_field` structure to define the payload field `name` to use as timestamp, the timestamp `format` and the timestamp `location`.
-
-Here's an example of `SenML` metadata:
-```
-{
-  "Name": "channel-name",
-  "Metadata": {
-    "profile": {
-    "content_type": "application/senml+json",
-    }
-  }
-}
-```
-
-Here's an example of `JSON` metadata:
-```
-  "Name": "channel-name",
-  "Metadata": {
-    "profile": {
-     "content_type": "application/json",
-     "time_field": {
-       "format": "unix",
-       "name": "time_field_name",
-       "location": "UTC"
-     }
-    }
-  }
-}
-```
-Here's an example of `SenML-CBOR` metadata:
-```
-{
-  "Name": "channel-name",
-  "Metadata": {
-    "profile": {
-    "content_type": "application/senml+cbor",
-    }
-  }
-}
-```
-
-The Profile metadata includes a `retain` field in `writer` section that determines whether messages should be stored in the database. When `retain` is set to `true`, messages will be saved in the database.
-Conversely, if `retain` is set to `false`, messages will be sent without storing them. If subtopics are defined, the `retain` will be applied to matching message subtopics only.
-
-Here's an example of `retain` field in `writer` section:
-```
-{
-  "Metadata": {
-    "profile": {
-      "writer": {
-        "retain": true
-        "subtopics": ["subtopic1", "subtopic2"]
-      }
-    }
-  }
-}
-```
-**Note:** If 'writer' section is not defined, the default value for `retain` is `true`.
-
 ## HTTP
 
 To publish message over channel, thing should send following request:
@@ -75,8 +12,7 @@ To publish message over channel, thing should send following request:
 curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing <thing_key>" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-Note that if you're going to use senml message format, you should always send
-messages as an array.
+**Note:** If you're going to use senml message format, you should always send messages as an array.
 
 For more information about the HTTP messaging service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/http.yml).
 
@@ -130,7 +66,7 @@ The most of the notifications received from the Adapter are non-confirmable. By 
 CoAP Adapter sends these notifications every 12 hours. To configure this period, please check [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md) If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
 
 ## WS
-Mainflux supports [MQTT-over-WS](https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).), rather than pure WS protocol. this bring numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.
+Mainflux supports [MQTT-over-WS](https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).), rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.
 
 There are 2 reccomended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:
 
@@ -220,30 +156,96 @@ When you use combination of these two, have in mind that behind the scene, `/` s
 Every empty part of subtopic will be removed. What this means is that subtopic `a///b` is equivalent to `a/b`.
 When you want to subscribe, you can use NATS wildcards `*` and `>`. Every subtopic part can have `*` or `>` as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as `a.b*c.d` will be invalid, while `a.b.*.c.d` will be valid.
 
-Authorization is done on channel level, so you only have to have access to channel in order to have access to
-it's subtopics.
+Authorization is done on the channel level, so you only have to have access to the channel in order to have access to its subtopics.
 
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
 For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)
 
-## Notifiers
+## Configure Channel Profile
 
-Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
-Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `protocol` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subtopics` (an array of subtopics for which the notification will be sent).
+When creating or editing a channel we can add  in the metadata a `profile` field with the corresponding profile structure value.
+The profile structure consists of the following fields: `content_type`, `write`, `notify`, `webhook`, `writer`, `notifier`
 
-Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
+A `content_type` field defines the payload format of messages in order to transform and store them properly.
+Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
 
-Example usage in a channel:
-
+Here's an example of `SenML-JSON` metadata:
 ```
 {
   "profile": {
     "content_type": "application/senml+json",
+    "write": "true",
+    "notify": "false",
+    "webhook": "false",
     "writer": {
-      "retain": true,
       "subtopics": ["subtopic1", "subtopic2"]
     }
+  }
+}
+```
+
+Here's an example of `SenML-CBOR` metadata:
+```
+{
+  "profile": {
+    "content_type": "application/senml+cbor",
+    "write": "true",
+    "notify":" false",
+    "webhook": "false",
+    "writer": {
+      "subtopics": ["subtopic1", "subtopic2"]
+    } 
+  }
+}
+```
+
+When `content_type` is defined as `application/json`, in the `writer` structure you can define the payload field `time_name` to use as timestamp, the timestamp `time_format` and the timestamp `time_location`.
+
+Here's an example of `JSON` metadata:
+```
+{
+  "profile": {
+    "content_type": "application/json",
+    "write": "true",
+    "notify": "false",
+    "webhook": "false",
+    "writer": {
+      "subtopics": ["subtopic1", "subtopic2"],
+      "time_name": "",
+      "time_format": "unix",
+      "time_location": "UTC"
+    }
+  }
+}
+```
+
+A `write` field determines whether messages should be stored in the database. When `write` is set to `true`, messages will be saved in the database.
+Conversely, if `write` is set to `false`, messages will be sent without storing them.
+If subtopics are defined in `writer` structure, the `write` will be applied to matching message subtopics only.
+
+**Note:** If `writer` section is not defined, the default value for `write` is `true`.
+
+### Notifiers
+
+Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
+
+Similar to the `write` field in the Channel Profile metadata, the `notify` field indicates whether notifications should be sent.
+Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `protocol` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subtopics` (an array of subtopics for which the notification will be sent).
+
+Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
+
+Here's an example with `notifier` section:
+```
+{
+  "profile": {
+    "content_type": "application/senml+json",
+    "write": "true",
+    "notify": "true",
+    "webhook": "false",
+    "writer": {
+      "subtopics": ["subtopic1", "subtopic2"],
+    },
     "notifier": {
       "protocol": "smtp",
       "contacts": ["email1@example.com", "email2@example.com"],
@@ -252,5 +254,28 @@ Example usage in a channel:
   }
 }
 ```
+**Note:** If `write` is set to `false`, only notifications will be sent without storing the message in the database.
 
-**Note:** If `retain` is set to `false`, only notifications will be sent without storing the message in the database.
+### Webhooks
+
+Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the `webhook` field to value `true` in the Channel Profile metadata.
+
+Here is an example with the value of the `webhook` field set to `true`:
+
+```
+{
+  "profile": {
+    "content_type": "application/json",
+    "write": "true",
+    "notify": "false",
+    "webhook": "true",
+    "writer": {
+      "subtopics": ["subtopic1", "subtopic2"],
+      "time_name": "",
+      "time_format": "unix",
+      "time_location": "UTC"
+    }
+  }
+}
+```
