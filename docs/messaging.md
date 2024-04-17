@@ -175,12 +175,9 @@ Here's an example of `SenML-JSON` metadata:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": "true",
-    "notify": "false",
-    "webhook": "false",
-    "writer": {
-      "subtopics": ["subtopic1", "subtopic2"]
-    }
+    "write": false,
+    "notify": false,
+    "webhook": false,
   }
 }
 ```
@@ -190,12 +187,9 @@ Here's an example of `SenML-CBOR` metadata:
 {
   "profile": {
     "content_type": "application/senml+cbor",
-    "write": "true",
-    "notify":" false",
-    "webhook": "false",
-    "writer": {
-      "subtopics": ["subtopic1", "subtopic2"]
-    } 
+    "write": false,
+    "notify":" false,
+    "webhook": false,
   }
 }
 ```
@@ -207,12 +201,12 @@ Here's an example of `JSON` metadata:
 {
   "profile": {
     "content_type": "application/json",
-    "write": "true",
-    "notify": "false",
-    "webhook": "false",
+    "write": true,
+    "notify": false,
+    "webhook": false,
     "writer": {
-      "subtopics": ["subtopic1", "subtopic2"],
-      "time_name": "",
+      "subtopics": ["subtopic1"],
+      "time_name": "timestamp",
       "time_format": "unix",
       "time_location": "UTC"
     }
@@ -240,12 +234,9 @@ Here's an example with `notifier` section:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": "true",
-    "notify": "true",
-    "webhook": "false",
-    "writer": {
-      "subtopics": ["subtopic1", "subtopic2"],
-    },
+    "write": false,
+    "notify": true,
+    "webhook": false,
     "notifier": {
       "protocol": "smtp",
       "contacts": ["email1@example.com", "email2@example.com"],
@@ -258,24 +249,5 @@ Here's an example with `notifier` section:
 
 ### Webhooks
 
-Webhooks service provides forwarding received messages to other platforms.
+Webhooks service provides forwarding received messages to other platforms.\
 Message forwarding can be enabled by setting the `webhook` field to value `true` in the Channel Profile metadata.
-
-Here is an example with the value of the `webhook` field set to `true`:
-
-```
-{
-  "profile": {
-    "content_type": "application/json",
-    "write": "true",
-    "notify": "false",
-    "webhook": "true",
-    "writer": {
-      "subtopics": ["subtopic1", "subtopic2"],
-      "time_name": "",
-      "time_format": "unix",
-      "time_location": "UTC"
-    }
-  }
-}
-```
