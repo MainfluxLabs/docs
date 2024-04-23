@@ -277,7 +277,7 @@ Please assure that MQTT microservice has `node_modules` installed, as explained 
 ## Events
 In order to be easily integratable system, Mainflux is using [Redis Streams](https://redis.io/topics/streams-intro)
 as an event log for event sourcing. Services that are publishing events to Redis Streams
-are `things` service, `bootstrap` service and `mqtt` adapter.
+are `things` service and `mqtt` adapter.
 
 ### Things Service
 For every operation that has side effects (that is changing service state) `things`
@@ -417,123 +417,10 @@ format:
    6) "thing.disconnect"
 ```
 
-> **Note:** Every one of these events will omit fields that were not used or are not
+**Note:** Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.
 
-### Bootstrap Service
-Bootstrap service publishes events to Redis Stream called `mainflux.bootstrap`.
-Every event from this service contains `operation` field which indicates one of
-the following event types:
-- `config.create` for configuration creation,
-- `config.update` for configuration update,
-- `config.remove` for configuration removal,
-- `thing.bootstrap` for device bootstrap,
-- `thing.state_change` for device state change,
-- `thing.update_connections` for device connection update.
-
-If you want to integrate through
-[docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/bootstrap/docker-compose.yml)
-you can use `mainflux-es-redis` service. Just connect to it and consume events
-from Redis Stream named `mainflux.bootstrap`.
-
-#### Configuration create event
-Whenever configuration is created, `bootstrap` service will generate and publish
-new `create` event. This event will have the following format:
-```
-1) "1555404899581-0"
-2)  1) "owner"
-    2) "john.doe@email.com"
-    3) "name"
-    4) "some"
-    5) "channels"
-    6) "ff13ca9c-7322-4c28-a25c-4fe5c7b753fc, c3642289-501d-4974-82f2-ecccc71b2d82, c3642289-501d-4974-82f2-ecccc71b2d83, cd4ce940-9173-43e3-86f7-f788e055eb14"
-    7) "externalID"
-    8) "9c:b6:d:eb:9f:fd"
-    9) "content"
-   10) "{}"
-   11) "timestamp"
-   12) "1555404899"
-   13) "operation"
-   14) "config.create"
-   15) "thing_id"
-   16) "63a110d4-2b77-48d2-aa46-2582681eeb82"
-```
-
-#### Configuration update event
-Whenever configuration is updated, `bootstrap` service will generate and publish
-new `update` event. This event will have the following format:
-```
-1) "1555405104368-0"
-2)  1) "content"
-    2) "NOV_MGT_HOST: http://127.0.0.1:7000\nDOCKER_MGT_HOST: http://127.0.0.1:2375\nAGENT_MGT_HOST: https://127.0.0.1:7003\nMF_MQTT_HOST: tcp://104.248.142.133:8443"              
-    3) "timestamp"
-    4) "1555405104"
-    5) "operation"
-    6) "config.update"
-    7) "thing_id"
-    8) "63a110d4-2b77-48d2-aa46-2582681eeb82"
-    9) "name"
-   10) "weio"
-```
-
-#### Configuration remove event
-Whenever configuration is removed, `bootstrap` service will generate and publish
-new `remove` event. This event will have the following format:
-```
-1) "1555405464328-0"
-2) 1) "thing_id"
-   2) "63a110d4-2b77-48d2-aa46-2582681eeb82"
-   3) "timestamp"
-   4) "1555405464"
-   5) "operation"
-   6) "config.remove"
-```
-
-#### Thing bootstrap event
-Whenever thing is bootstrapped, `bootstrap` service will generate and publish
-new `bootstrap` event. This event will have the following format:
-```
-1) "1555405173785-0"
-2) 1) "externalID"
-   2) "9c:b6:d:eb:9f:fd"
-   3) "success"
-   4) "1"
-   5) "timestamp"
-   6) "1555405173"
-   7) "operation"
-   8) "thing.bootstrap"
-```
-
-#### Thing change state event
-Whenever thing's state changes, `bootstrap` service will generate and publish
-new `change state` event. This event will have the following format:
-```
-1) "1555405294806-0"
-2) 1) "thing_id"
-   2) "63a110d4-2b77-48d2-aa46-2582681eeb82"
-   3) "state"
-   4) "0"
-   5) "timestamp"
-   6) "1555405294"
-   7) "operation"
-   8) "thing.state_change"
-```
-
-#### Thing update connections event
-Whenever thing's list of connections is updated, `bootstrap` service will generate
-and publish new `update connections` event. This event will have the following format:
-```
-1) "1555405373360-0"
-2) 1) "operation"
-   2) "thing.update_connections"
-   3) "thing_id"
-   4) "63a110d4-2b77-48d2-aa46-2582681eeb82"
-   5) "channels"
-   6) "ff13ca9c-7322-4c28-a25c-4fe5c7b753fc, 925461e6-edfb-4755-9242-8a57199b90a5, c3642289-501d-4974-82f2-ecccc71b2d82"
-   7) "timestamp"
-   8) "1555405373"
-```
 
 ### MQTT Adapter
 Instead of using heartbeat to know when client is connected through MQTT adapter one

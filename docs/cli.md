@@ -254,30 +254,3 @@ mainflux-cli messages send <channel_id> '[{"bn":"Dev1","n":"temp","v":20}, {"n":
 ```bash
 mainflux-cli messages read <channel_id> <thing_auth_token>
 ```
-
-### Bootstrap
-
-#### Add configuration
-```bash
-mainflux-cli bootstrap add '{"external_id": "myExtID", "external_key": "myExtKey", "name": "myName", "content": "myContent"}' <user_token>
-```
-
-#### View configuration
-```bash
-mainflux-cli bootstrap view <thing_id> <user_token>
-```
-
-#### Update configuration
-```bash
-mainflux-cli bootstrap update '{"MFThing":"<thing_id>", "name": "newName", "content": "newContent"}' <user_token>
-```
-
-#### Remove configuration
-```bash
-mainflux-cli bootstrap remove <thing_id> <user_token>
-```
-
-#### Bootstrap configuration
-```bash
-mainflux-cli bootstrap bootstrap <external_id> <external_key>
-```
