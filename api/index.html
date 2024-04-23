@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/api/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>API - Mainflux</title>
+    <title>API - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Mainflux
+          <a href=".." class="icon icon-home"> MainfluxLabs
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -52,7 +52,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
                 </li>
               </ul>
               <ul>
@@ -232,6 +232,14 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#webhooks">Webhooks</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-webhooks">Create Webhooks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-webhooks-by-thing-id">Get Webhooks by Thing ID</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -240,7 +248,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                <li class="toctree-l1"><a class="" href="../bootstrap.md">Bootstrap</a>
                 </li>
               </ul>
               <ul>
@@ -266,7 +274,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Mainflux</a>
+          <a href="..">MainfluxLabs</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -1212,6 +1220,55 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
+<h2 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h2>
+<h3 id="create-webhooks">Create Webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h3>
+<p>To forward a message to another platform, you need to create a Webhook with the necessary data such as the <code>name</code> of the Webhook, <code>thing_id</code> which refers to the Thing for which the Webhook is being created, the <code>url</code> to which the message is forwarded, and the expected <code>format</code> of the data.
+Available formats are SenML and JSON and they can be defined correspondingly with values <code>senml</code> and <code>json</code>.</p>
+<p>Also, you can create multiple Webhooks at once by entering a series of Webhooks structures, <code>thing_id</code> and a <code>user_token</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>thing_id</code>, <code>name</code>, <code>format</code> and <code>url</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/webhooks/&lt;thing_id&gt; -d '[{&quot;name&quot;:&quot;&lt;name&gt;&quot;,&quot;format&quot;:&quot;&lt;format&gt;&quot;,&quot;url&quot;:&quot;&lt;url&gt;&quot;}]'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Thu, 11 Apr 2024 11:47:12 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
+</code></pre>
+<p><strong>Note:</strong> The logged-in user who creates a Webhook for a certain Thing must be the owner of that Thing.</p>
+<h3 id="get-webhooks-by-thing-id">Get Webhooks by Thing ID<a class="headerlink" href="#get-webhooks-by-thing-id" title="Permanent link">#</a></h3>
+<p>You can get all Webhooks for certain Thing by entering <code>user_token</code> and <code>thing_id</code> if you are the owner of that Thing.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>thing_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/webhooks/&lt;thing_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Thu, 11 Apr 2024 11:44:57 GMT
+Content-Type: application/json
+Content-Length: 257
+Connection: keep-alive
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
+
+
+{&quot;webhooks&quot;:[{&quot;thing_id&quot;:&quot;50e6b371-60ff-45cf-bb52-8200e7cde536&quot;,&quot;name&quot;:&quot;Test&quot;,&quot;format&quot;:&quot;json&quot;,&quot;url&quot;:&quot;https://api.test.com/&quot;},{&quot;thing_id&quot;:&quot;50e6b371-60ff-45cf-bb52-8200e7cde536&quot;,&quot;name&quot;:&quot;Test2&quot;,&quot;format&quot;:&quot;json&quot;,&quot;url&quot;:&quot;https://api.test2.com/&quot;}]}
+</code></pre>
               
             </div>
           </div><footer>
@@ -1224,7 +1281,7 @@ Access-Control-Expose-Headers: Location
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-      <p>Copyright (c) Mainflux</p>
+      <p>Copyright (c) MainfluxLabs</p>
   </div>
 
   Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.

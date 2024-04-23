@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/edge/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Edge - Mainflux</title>
+    <title>Edge - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Mainflux
+          <a href=".." class="icon icon-home"> MainfluxLabs
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -52,7 +52,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
                 </li>
               </ul>
               <ul>
@@ -164,7 +164,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                <li class="toctree-l1"><a class="" href="../bootstrap.md">Bootstrap</a>
                 </li>
               </ul>
               <ul>
@@ -190,7 +190,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Mainflux</a>
+          <a href="..">MainfluxLabs</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -495,7 +495,7 @@ Edit Mainflux <a href="(https://github.com/MainfluxLabs/mainflux/docker/docker-c
 payload := base64.StdEncoding.EncodeToString(b)
 </code></pre>
 <h3 id="using-configure-script">Using configure script<a class="headerlink" href="#using-configure-script" title="Permanent link">#</a></h3>
-<p>There is a <code>configuration.sh</code> script in a <code>scripts</code> directory that can be used for automatic configuration and start up of remotely deployed <code>export</code>. For this to work it is presumed that <code>mainflux-export</code> and <code>scripts/export_start</code> are placed in executable path on remote device. Additionally this script requires that remote device is provisioned following the steps described for <a href="../provision/">provision</a> service.</p>
+<p>There is a <code>configuration.sh</code> script in a <code>scripts</code> directory that can be used for automatic configuration and start up of remotely deployed <code>export</code>. For this to work it is presumed that <code>mainflux-export</code> and <code>scripts/export_start</code> are placed in executable path on remote device. Additionally this script requires that remote device is provisioned following the steps described for <a href="provision.md">provision</a> service.</p>
 <p>To run it first edit script to set parameters</p>
 <pre><code>MTLS=false
 EXTERNAL_KEY='raspberry'
@@ -514,12 +514,6 @@ On the gateway we will start services <a href="/edge/#agent">Agent</a> and <a hr
 <h2 id="services-in-the-cloud">Services in the cloud<a class="headerlink" href="#services-in-the-cloud" title="Permanent link">#</a></h2>
 <p>Start the Mainflux:</p>
 <pre><code class="language-bash">docker-compose -f docker/docker-compose.yml up
-</code></pre>
-<p>Start the Bootstrap service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/bootstrap/docker-compose.yml up
-</code></pre>
-<p>Start the Provision service</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/provision/docker-compose.yml up
 </code></pre>
 <p>Create user:</p>
 <pre><code class="language-bash">mainflux-cli -m http://localhost:8180 users create test@email.com 12345678
@@ -647,7 +641,7 @@ go run main.go -s http://localhost:4222 export.test &quot;[{\&quot;bn\&quot;:\&q
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-      <p>Copyright (c) Mainflux</p>
+      <p>Copyright (c) MainfluxLabs</p>
   </div>
 
   Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.

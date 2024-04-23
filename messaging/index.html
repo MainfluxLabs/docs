@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/messaging/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Messaging - Mainflux</title>
+    <title>Messaging - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Mainflux
+          <a href=".." class="icon icon-home"> MainfluxLabs
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -52,7 +52,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
                 </li>
               </ul>
               <ul class="current">
@@ -71,6 +71,14 @@
     <li class="toctree-l2"><a class="reference internal" href="#ws">WS</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#subtopics">Subtopics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configure-channel-profile">Configure Channel Profile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#notifiers">Notifiers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#webhooks">Webhooks</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -112,7 +120,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                <li class="toctree-l1"><a class="" href="../bootstrap.md">Bootstrap</a>
                 </li>
               </ul>
               <ul>
@@ -138,7 +146,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Mainflux</a>
+          <a href="..">MainfluxLabs</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -160,10 +168,9 @@ publish messages on the channel. The following sections will provide an example
 of message publishing for each of the supported protocols.</p>
 <h2 id="http">HTTP<a class="headerlink" href="#http" title="Permanent link">#</a></h2>
 <p>To publish message over channel, thing should send following request:</p>
-<pre><code>curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; https://localhost/http/channels/&lt;channel_id&gt;/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<pre><code>curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; -H &quot;Content-Type: application/senml+json&quot; https://localhost/http/channels/&lt;channel_id&gt;/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
-<p>Note that if you're going to use senml message format, you should always send
-messages as an array.</p>
+<p><strong>Note:</strong> If you're going to use senml message format, you should always send messages as an array.</p>
 <p>For more information about the HTTP messaging service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/http.yml">API documentation</a>.</p>
 <h2 id="mqtt">MQTT<a class="headerlink" href="#mqtt" title="Permanent link">#</a></h2>
 <p>To send and receive messages over MQTT you could use <a href="https://mosquitto.org">Mosquitto tools</a>,
@@ -197,7 +204,7 @@ To subscribe, send <code>GET</code> request with Observe option (flag <code>o</c
 </blockquote>
 <p>CoAP Adapter sends these notifications every 12 hours. To configure this period, please check <a href="https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md">adapter documentation</a> If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.</p>
 <h2 id="ws">WS<a class="headerlink" href="#ws" title="Permanent link">#</a></h2>
-<p>Mainflux supports <a href="https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).">MQTT-over-WS</a>, rather than pure WS protocol. this bring numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.</p>
+<p>Mainflux supports <a href="https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).">MQTT-over-WS</a>, rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.</p>
 <p>There are 2 reccomended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:</p>
 <ol>
 <li><a href="https://www.eclipse.org/paho/index.php?page=clients/js/index.php">Eclipse Paho JavaScript Client</a></li>
@@ -272,15 +279,105 @@ client.connect({onSuccess:onConnect});
 When you use combination of these two, have in mind that behind the scene, <code>/</code> separator will be replaced with <code>.</code>.
 Every empty part of subtopic will be removed. What this means is that subtopic <code>a///b</code> is equivalent to <code>a/b</code>.
 When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>&gt;</code>. Every subtopic part can have <code>*</code> or <code>&gt;</code> as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as <code>a.b*c.d</code> will be invalid, while <code>a.b.*.c.d</code> will be valid.</p>
-<p>Authorization is done on channel level, so you only have to have access to channel in order to have access to
-it's subtopics.</p>
+<p>Authorization is done on the channel level, so you only have to have access to the channel in order to have access to its subtopics.</p>
 <p><strong>Note:</strong> When using MQTT, it's recommended that you use standard MQTT wildcards <code>+</code> and <code>#</code>.</p>
 <p>For more information and examples checkout <a href="https://nats.io/documentation/writing_applications/subscribing/">official nats.io documentation</a></p>
+<h2 id="configure-channel-profile">Configure Channel Profile<a class="headerlink" href="#configure-channel-profile" title="Permanent link">#</a></h2>
+<p>When creating or editing a channel we can add  in the metadata a <code>profile</code> field with the corresponding profile structure value.
+The profile structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>notify</code>, <code>webhook</code>, <code>writer</code>, <code>notifier</code></p>
+<p>A <code>content_type</code> field defines the payload format of messages in order to transform and store them properly.
+Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values <code>application/senml+json</code>, <code>application/senml+cbor</code> and <code>application/json</code>.</p>
+<p>Here's an example of <code>SenML-JSON</code> metadata:</p>
+<pre><code>{
+  &quot;profile&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+json&quot;,
+    &quot;write&quot;: &quot;true&quot;,
+    &quot;notify&quot;: &quot;false&quot;,
+    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;writer&quot;: {
+      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;]
+    }
+  }
+}
+</code></pre>
+<p>Here's an example of <code>SenML-CBOR</code> metadata:</p>
+<pre><code>{
+  &quot;profile&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+cbor&quot;,
+    &quot;write&quot;: &quot;true&quot;,
+    &quot;notify&quot;:&quot; false&quot;,
+    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;writer&quot;: {
+      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;]
+    }
+  }
+}
+</code></pre>
+<p>When <code>content_type</code> is defined as <code>application/json</code>, in the <code>transformer</code> structure you can define the payload field <code>time_field</code> to use as timestamp, the timestamp <code>time_format</code>, the timestamp <code>time_location</code> and the payload <code>value_fields</code> names.</p>
+<p>Here's an example of <code>JSON</code> metadata:</p>
+<pre><code>{
+  &quot;profile&quot;: {
+    &quot;content_type&quot;: &quot;application/json&quot;,
+    &quot;write&quot;: &quot;true&quot;,
+    &quot;notify&quot;: &quot;false&quot;,
+    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;transformer&quot;: {
+      &quot;value_fields&quot;: [&quot;val1&quot;, &quot;val2&quot;],
+      &quot;time_field&quot;: &quot;&quot;,
+      &quot;time_format&quot;: &quot;unix&quot;,
+      &quot;time_location&quot;: &quot;UTC&quot;
+    }
+  }
+}
+</code></pre>
+<p>A <code>write</code> field determines whether messages should be stored in the database. When <code>write</code> is set to <code>true</code>, messages will be saved in the database.
+Conversely, if <code>write</code> is set to <code>false</code>, messages will be sent without storing them.</p>
+<p><strong>Note:</strong> If <code>writer</code> section is not defined, the default value for <code>write</code> is <code>true</code>.</p>
+<h3 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h3>
+<p>Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.</p>
+<p>Similar to the <code>write</code> field in the Channel Profile metadata, the <code>notify</code> field indicates whether notifications should be sent.
+Notification can be enabled per channel by setting in the Channel Profile metadata the proper <code>notifier</code> field structure with fields <code>protocol</code> (SMTP or SMPP), <code>contacts</code> (an array of contact email or phone number), and <code>subtopics</code> (an array of subtopics for which the notification will be sent).</p>
+<p>Supported notifier types are <code>smtp</code> (Simple Mail Transfer Protocol) and <code>smpp</code> (Short Message Peer-to-Peer).</p>
+<p>Here's an example with <code>notifier</code> section:</p>
+<pre><code>{
+  &quot;profile&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+json&quot;,
+    &quot;write&quot;: &quot;false&quot;,
+    &quot;notify&quot;: &quot;true&quot;,
+    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;notifier&quot;: {
+      &quot;protocol&quot;: &quot;smtp&quot;,
+      &quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],
+      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;],
+    }
+  }
+}
+</code></pre>
+<p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, only notifications will be sent without storing the message in the database.</p>
+<h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
+<p>Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the <code>webhook</code> field to value <code>true</code> in the Channel Profile metadata.</p>
+<p>Here is an example with the value of the <code>webhook</code> field set to <code>true</code>:</p>
+<pre><code>{
+  &quot;profile&quot;: {
+    &quot;content_type&quot;: &quot;application/json&quot;,
+    &quot;write&quot;: &quot;true&quot;,
+    &quot;notify&quot;: &quot;false&quot;,
+    &quot;webhook&quot;: &quot;true&quot;,
+    &quot;writer&quot;: {
+      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;],
+      &quot;time_field&quot;: &quot;&quot;,
+      &quot;time_format&quot;: &quot;unix&quot;,
+      &quot;time_location&quot;: &quot;UTC&quot;
+    }
+  }
+}
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../provision/" class="btn btn-neutral float-left" title="Provision"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../getting-started/" class="btn btn-neutral float-left" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../storage/" class="btn btn-neutral float-right" title="Storage">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -288,7 +385,7 @@ it's subtopics.</p>
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-      <p>Copyright (c) Mainflux</p>
+      <p>Copyright (c) MainfluxLabs</p>
   </div>
 
   Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
@@ -309,7 +406,7 @@ it's subtopics.</p>
         </span>
     
     
-      <span><a href="../provision/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../getting-started/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../storage/" style="color: #fcfcfc">Next &raquo;</a></span>

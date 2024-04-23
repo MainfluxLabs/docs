@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/dev-guide/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Developer's Guide - Mainflux</title>
+    <title>Developer's Guide - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Mainflux
+          <a href=".." class="icon icon-home"> MainfluxLabs
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -52,7 +52,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
                 </li>
               </ul>
               <ul>
@@ -96,7 +96,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                <li class="toctree-l1"><a class="" href="../bootstrap.md">Bootstrap</a>
                 </li>
               </ul>
               <ul>
@@ -180,22 +180,6 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#bootstrap-service">Bootstrap Service</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#configuration-create-event">Configuration create event</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#configuration-update-event">Configuration update event</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#configuration-remove-event">Configuration remove event</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#thing-bootstrap-event">Thing bootstrap event</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#thing-change-state-event">Thing change state event</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#thing-update-connections-event">Thing update connections event</a>
-    </li>
-        </ul>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#mqtt-adapter">MQTT Adapter</a>
     </li>
         </ul>
@@ -218,7 +202,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Mainflux</a>
+          <a href="..">MainfluxLabs</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -407,7 +391,7 @@ postgres=# ALTER USER mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 <h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">#</a></h2>
 <p>In order to be easily integratable system, Mainflux is using <a href="https://redis.io/topics/streams-intro">Redis Streams</a>
 as an event log for event sourcing. Services that are publishing events to Redis Streams
-are <code>things</code> service, <code>bootstrap</code> service and <code>mqtt</code> adapter.</p>
+are <code>things</code> service and <code>mqtt</code> adapter.</p>
 <h3 id="things-service">Things Service<a class="headerlink" href="#things-service" title="Permanent link">#</a></h3>
 <p>For every operation that has side effects (that is changing service state) <code>things</code>
 service will generate new event and publish it to Redis Stream called <code>mainflux.things</code>.
@@ -526,111 +510,9 @@ format:</p>
    5) &quot;operation&quot;
    6) &quot;thing.disconnect&quot;
 </code></pre>
-<blockquote>
 <p><strong>Note:</strong> Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.</p>
-</blockquote>
-<h3 id="bootstrap-service">Bootstrap Service<a class="headerlink" href="#bootstrap-service" title="Permanent link">#</a></h3>
-<p>Bootstrap service publishes events to Redis Stream called <code>mainflux.bootstrap</code>.
-Every event from this service contains <code>operation</code> field which indicates one of
-the following event types:
-- <code>config.create</code> for configuration creation,
-- <code>config.update</code> for configuration update,
-- <code>config.remove</code> for configuration removal,
-- <code>thing.bootstrap</code> for device bootstrap,
-- <code>thing.state_change</code> for device state change,
-- <code>thing.update_connections</code> for device connection update.</p>
-<p>If you want to integrate through
-<a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/addons/bootstrap/docker-compose.yml">docker-compose.yml</a>
-you can use <code>mainflux-es-redis</code> service. Just connect to it and consume events
-from Redis Stream named <code>mainflux.bootstrap</code>.</p>
-<h4 id="configuration-create-event">Configuration create event<a class="headerlink" href="#configuration-create-event" title="Permanent link">#</a></h4>
-<p>Whenever configuration is created, <code>bootstrap</code> service will generate and publish
-new <code>create</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555404899581-0&quot;
-2)  1) &quot;owner&quot;
-    2) &quot;john.doe@email.com&quot;
-    3) &quot;name&quot;
-    4) &quot;some&quot;
-    5) &quot;channels&quot;
-    6) &quot;ff13ca9c-7322-4c28-a25c-4fe5c7b753fc, c3642289-501d-4974-82f2-ecccc71b2d82, c3642289-501d-4974-82f2-ecccc71b2d83, cd4ce940-9173-43e3-86f7-f788e055eb14&quot;
-    7) &quot;externalID&quot;
-    8) &quot;9c:b6:d:eb:9f:fd&quot;
-    9) &quot;content&quot;
-   10) &quot;{}&quot;
-   11) &quot;timestamp&quot;
-   12) &quot;1555404899&quot;
-   13) &quot;operation&quot;
-   14) &quot;config.create&quot;
-   15) &quot;thing_id&quot;
-   16) &quot;63a110d4-2b77-48d2-aa46-2582681eeb82&quot;
-</code></pre>
-<h4 id="configuration-update-event">Configuration update event<a class="headerlink" href="#configuration-update-event" title="Permanent link">#</a></h4>
-<p>Whenever configuration is updated, <code>bootstrap</code> service will generate and publish
-new <code>update</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555405104368-0&quot;
-2)  1) &quot;content&quot;
-    2) &quot;NOV_MGT_HOST: http://127.0.0.1:7000\nDOCKER_MGT_HOST: http://127.0.0.1:2375\nAGENT_MGT_HOST: https://127.0.0.1:7003\nMF_MQTT_HOST: tcp://104.248.142.133:8443&quot;              
-    3) &quot;timestamp&quot;
-    4) &quot;1555405104&quot;
-    5) &quot;operation&quot;
-    6) &quot;config.update&quot;
-    7) &quot;thing_id&quot;
-    8) &quot;63a110d4-2b77-48d2-aa46-2582681eeb82&quot;
-    9) &quot;name&quot;
-   10) &quot;weio&quot;
-</code></pre>
-<h4 id="configuration-remove-event">Configuration remove event<a class="headerlink" href="#configuration-remove-event" title="Permanent link">#</a></h4>
-<p>Whenever configuration is removed, <code>bootstrap</code> service will generate and publish
-new <code>remove</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555405464328-0&quot;
-2) 1) &quot;thing_id&quot;
-   2) &quot;63a110d4-2b77-48d2-aa46-2582681eeb82&quot;
-   3) &quot;timestamp&quot;
-   4) &quot;1555405464&quot;
-   5) &quot;operation&quot;
-   6) &quot;config.remove&quot;
-</code></pre>
-<h4 id="thing-bootstrap-event">Thing bootstrap event<a class="headerlink" href="#thing-bootstrap-event" title="Permanent link">#</a></h4>
-<p>Whenever thing is bootstrapped, <code>bootstrap</code> service will generate and publish
-new <code>bootstrap</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555405173785-0&quot;
-2) 1) &quot;externalID&quot;
-   2) &quot;9c:b6:d:eb:9f:fd&quot;
-   3) &quot;success&quot;
-   4) &quot;1&quot;
-   5) &quot;timestamp&quot;
-   6) &quot;1555405173&quot;
-   7) &quot;operation&quot;
-   8) &quot;thing.bootstrap&quot;
-</code></pre>
-<h4 id="thing-change-state-event">Thing change state event<a class="headerlink" href="#thing-change-state-event" title="Permanent link">#</a></h4>
-<p>Whenever thing's state changes, <code>bootstrap</code> service will generate and publish
-new <code>change state</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555405294806-0&quot;
-2) 1) &quot;thing_id&quot;
-   2) &quot;63a110d4-2b77-48d2-aa46-2582681eeb82&quot;
-   3) &quot;state&quot;
-   4) &quot;0&quot;
-   5) &quot;timestamp&quot;
-   6) &quot;1555405294&quot;
-   7) &quot;operation&quot;
-   8) &quot;thing.state_change&quot;
-</code></pre>
-<h4 id="thing-update-connections-event">Thing update connections event<a class="headerlink" href="#thing-update-connections-event" title="Permanent link">#</a></h4>
-<p>Whenever thing's list of connections is updated, <code>bootstrap</code> service will generate
-and publish new <code>update connections</code> event. This event will have the following format:</p>
-<pre><code>1) &quot;1555405373360-0&quot;
-2) 1) &quot;operation&quot;
-   2) &quot;thing.update_connections&quot;
-   3) &quot;thing_id&quot;
-   4) &quot;63a110d4-2b77-48d2-aa46-2582681eeb82&quot;
-   5) &quot;channels&quot;
-   6) &quot;ff13ca9c-7322-4c28-a25c-4fe5c7b753fc, 925461e6-edfb-4755-9242-8a57199b90a5, c3642289-501d-4974-82f2-ecccc71b2d82&quot;
-   7) &quot;timestamp&quot;
-   8) &quot;1555405373&quot;
-</code></pre>
 <h3 id="mqtt-adapter">MQTT Adapter<a class="headerlink" href="#mqtt-adapter" title="Permanent link">#</a></h3>
 <p>Instead of using heartbeat to know when client is connected through MQTT adapter one
 can fetch events from Redis Streams that MQTT adapter publishes. MQTT adapter
@@ -678,7 +560,7 @@ from Redis Stream named <code>mainflux.mqtt</code>.</p>
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-      <p>Copyright (c) Mainflux</p>
+      <p>Copyright (c) MainfluxLabs</p>
   </div>
 
   Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.

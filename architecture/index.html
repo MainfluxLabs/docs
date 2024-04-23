@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/architecture/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Architecture - Mainflux</title>
+    <title>Architecture - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -30,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Mainflux
+          <a href=".." class="icon icon-home"> MainfluxLabs
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -64,7 +64,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../provision/">Provision</a>
+                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
                 </li>
               </ul>
               <ul>
@@ -108,7 +108,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                <li class="toctree-l1"><a class="" href="../bootstrap.md">Bootstrap</a>
                 </li>
               </ul>
               <ul>
@@ -134,7 +134,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Mainflux</a>
+          <a href="..">MainfluxLabs</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -162,12 +162,16 @@
 </thead>
 <tbody>
 <tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/auth">auth</a></td>
+<td style="text-align: left;">Manages platform's orgs and auth concerns</td>
+</tr>
+<tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/users">users</a></td>
 <td style="text-align: left;">Manages platform's users and auth concerns</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/things">things</a></td>
-<td style="text-align: left;">Manages platform's things, channels and access policies</td>
+<td style="text-align: left;">Manages platform's things, channels, groups and access policies</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/http">http-adapter</a></td>
@@ -180,10 +184,6 @@
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/coap">coap-adapter</a></td>
 <td style="text-align: left;">Provides a CoAP interface for accessing communication channels</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/opcua">opcua-adapter</a></td>
-<td style="text-align: left;">Provides an OPC-UA interface for accessing communication channels</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/lora">lora-adapter</a></td>
@@ -223,7 +223,7 @@ To connect Mainflux instances running on a gateway with Mainflux in a cloud we c
 <li><a href="/edge/#export">Export</a></li>
 </ul>
 <h2 id="unified-iot-platform">Unified IoT Platform<a class="headerlink" href="#unified-iot-platform" title="Permanent link">#</a></h2>
-<p>Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system. 
+<p>Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.
 Since we can deploy same Mainflux code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once the engineers understand how to deploy and maintain the platform, they will have the same known work across the whole edge-fog-cloud continuum.
 Same set of tools can be used, same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.</p>
               
@@ -238,7 +238,7 @@ Same set of tools can be used, same patches and bug fixes can be applied. The wh
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-      <p>Copyright (c) Mainflux</p>
+      <p>Copyright (c) MainfluxLabs</p>
   </div>
 
   Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
