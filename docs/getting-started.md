@@ -3,8 +3,8 @@
 ## Step 1 - Run the System
 Before proceeding, install the following prerequisites:
 
-- [Docker](https://docs.docker.com/install/) (version 18.09)
-- [Docker compose](https://docs.docker.com/compose/install/) (version 1.24.1)
+- [Docker](https://docs.docker.com/install/) (version 24.0.7)
+- [Docker compose](https://docs.docker.com/compose/install/) (version 2.23.3)
 
 Once everything is installed, execute the following command from project root:
 
