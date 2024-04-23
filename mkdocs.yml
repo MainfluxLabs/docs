@@ -34,7 +34,6 @@ nav:
   - CLI: cli.md
   - API: api.md
   - Groups: groups.md
-  - Bootstrap: bootstrap.md
   - Tracing: tracing.md
   - Developer's Guide: dev-guide.md
   - Kubernetes: kubernetes.md

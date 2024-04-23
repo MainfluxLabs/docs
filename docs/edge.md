@@ -398,18 +398,6 @@ Start the Mainflux:
 docker-compose -f docker/docker-compose.yml up
 ```
 
-Start the Bootstrap service:
-
-```bash
-docker-compose -f docker/addons/bootstrap/docker-compose.yml up
-```
-
-Start the Provision service
-
-```bash
-docker-compose -f docker/addons/provision/docker-compose.yml up
-```
-
 Create user:
 ```bash
 mainflux-cli -m http://localhost:8180 users create test@email.com 12345678
