@@ -247,7 +247,7 @@ Here's an example with `notifier` section:
 
 ### Webhooks
 
-Webhooks service provides forwarding received messages to other platforms.
+Webhooks service provides forwarding received messages to other platforms.\
 Message forwarding can be enabled by setting the `webhook` field to value `true` in the Channel Profile metadata.
 
 Here is an example with the value of the `webhook` field set to `true`:
