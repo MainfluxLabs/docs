@@ -290,9 +290,6 @@ Available formats are SenML, CBOR, and JSON and they can be defined correspondin
     &quot;write&quot;: &quot;true&quot;,
     &quot;notify&quot;: &quot;false&quot;,
     &quot;webhook&quot;: &quot;false&quot;,
-    &quot;writer&quot;: {
-      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;]
-    }
   }
 }
 </code></pre>
@@ -303,9 +300,6 @@ Available formats are SenML, CBOR, and JSON and they can be defined correspondin
     &quot;write&quot;: &quot;true&quot;,
     &quot;notify&quot;:&quot; false&quot;,
     &quot;webhook&quot;: &quot;false&quot;,
-    &quot;writer&quot;: {
-      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;]
-    }
   }
 }
 </code></pre>
@@ -351,21 +345,15 @@ Notification can be enabled per channel by setting in the Channel Profile metada
 </code></pre>
 <p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, only notifications will be sent without storing the message in the database.</p>
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
-<p>Webhooks service provides forwarding received messages to other platforms.
+<p>Webhooks service provides forwarding received messages to other platforms.\
 Message forwarding can be enabled by setting the <code>webhook</code> field to value <code>true</code> in the Channel Profile metadata.</p>
 <p>Here is an example with the value of the <code>webhook</code> field set to <code>true</code>:</p>
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: &quot;true&quot;,
+    &quot;write&quot;: &quot;false&quot;,
     &quot;notify&quot;: &quot;false&quot;,
     &quot;webhook&quot;: &quot;true&quot;,
-    &quot;writer&quot;: {
-      &quot;subtopics&quot;: [&quot;subtopic1&quot;, &quot;subtopic2&quot;],
-      &quot;time_field&quot;: &quot;&quot;,
-      &quot;time_format&quot;: &quot;unix&quot;,
-      &quot;time_location&quot;: &quot;UTC&quot;
-    }
   }
 }
 </code></pre>
