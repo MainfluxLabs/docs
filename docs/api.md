@@ -1171,14 +1171,13 @@ Access-Control-Expose-Headers: Location
 
 ### Create Webhooks
 
-To forward a message to another platform, you need to create a Webhook with the necessary data such as the `name` of the Webhook, `thing_id` which refers to the Thing for which the Webhook is being created, the `url` to which the message is forwarded, and the expected `format` of the data.
-Available formats are SenML and JSON and they can be defined correspondingly with values `senml` and `json`.
+To forward a message to another platform, you need to create a Webhook with the necessary data such as the `name` of the Webhook, `thing_id` which refers to the Thing for which the Webhook is being created, and the `url` to which the message will be forwarded.
 
 Also, you can create multiple Webhooks at once by entering a series of Webhooks structures, `thing_id` and a `user_token`.
 
-> Must-have: `user_token`, `thing_id`, `name`, `format` and `url`
+> Must-have: `user_token`, `thing_id`, `name` and `url`
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/webhooks/<thing_id> -d '[{"name":"<name>","format":"<format>","url":"<url>"}]'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/webhooks/<thing_id> -d '[{"name":"<name>","url":"<url>"}]'
 ```
 
 Response:
@@ -1198,7 +1197,7 @@ Access-Control-Allow-Headers: *
 ```
 **Note:** The logged-in user who creates a Webhook for a certain Thing must be the owner of that Thing.
 
-### Get Webhooks by Thing ID
+### Get Webhooks 
 You can get all Webhooks for certain Thing by entering `user_token` and `thing_id` if you are the owner of that Thing.
 
 > Must-have: `user_token` and `thing_id`
@@ -1212,7 +1211,7 @@ HTTP/1.1 200 OK
 Server: nginx/1.20.0
 Date: Thu, 11 Apr 2024 11:44:57 GMT
 Content-Type: application/json
-Content-Length: 257
+Content-Length: 208
 Connection: keep-alive
 Strict-Transport-Security: max-age=63072000; includeSubdomains
 X-Frame-Options: DENY
@@ -1222,5 +1221,5 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
 
-{"webhooks":[{"thing_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","format":"json","url":"https://api.test.com/"},{"thing_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","format":"json","url":"https://api.test2.com/"}]}
+{"webhooks":[{"thing_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/"},{"thing_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","url":"https://api.test2.com/"}]}
 ```
