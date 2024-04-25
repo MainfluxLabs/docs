@@ -9,7 +9,7 @@ of message publishing for each of the supported protocols.
 To publish message over channel, thing should send following request:
 
 ```
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing <thing_key>" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/senml+json" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Note:** If you're going to use senml message format, you should always send messages as an array.
@@ -175,9 +175,9 @@ Here's an example of `SenML-JSON` metadata:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": false,
-    "notify": false,
-    "webhook": false,
+    "write": "true",
+    "notify": "false",
+    "webhook": "false",
   }
 }
 ```
@@ -187,26 +187,26 @@ Here's an example of `SenML-CBOR` metadata:
 {
   "profile": {
     "content_type": "application/senml+cbor",
-    "write": false,
-    "notify":" false,
-    "webhook": false,
+    "write": "true",
+    "notify":" false",
+    "webhook": "false",
   }
 }
 ```
 
-When `content_type` is defined as `application/json`, in the `writer` structure you can define the payload field `time_name` to use as timestamp, the timestamp `time_format` and the timestamp `time_location`.
+When `content_type` is defined as `application/json`, in the `transformer` structure you can define the payload field `time_field` to use as timestamp, the timestamp `time_format`, the timestamp `time_location` and the payload `value_fields` names.
 
 Here's an example of `JSON` metadata:
 ```
 {
   "profile": {
     "content_type": "application/json",
-    "write": true,
-    "notify": false,
-    "webhook": false,
-    "writer": {
-      "subtopics": ["subtopic1"],
-      "time_name": "timestamp",
+    "write": "true",
+    "notify": "false",
+    "webhook": "false",
+    "transformer": {
+      "value_fields": ["val1", "val2"],
+      "time_field": "",
       "time_format": "unix",
       "time_location": "UTC"
     }
@@ -216,12 +216,10 @@ Here's an example of `JSON` metadata:
 
 A `write` field determines whether messages should be stored in the database. When `write` is set to `true`, messages will be saved in the database.
 Conversely, if `write` is set to `false`, messages will be sent without storing them.
-If subtopics are defined in `writer` structure, the `write` will be applied to matching message subtopics only.
 
 **Note:** If `writer` section is not defined, the default value for `write` is `true`.
 
 ### Notifiers
-
 Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
 
 Similar to the `write` field in the Channel Profile metadata, the `notify` field indicates whether notifications should be sent.
@@ -234,9 +232,9 @@ Here's an example with `notifier` section:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": false,
-    "notify": true,
-    "webhook": false,
+    "write": "false",
+    "notify": "true",
+    "webhook": "false",
     "notifier": {
       "protocol": "smtp",
       "contacts": ["email1@example.com", "email2@example.com"],
@@ -252,3 +250,15 @@ Here's an example with `notifier` section:
 Webhooks service provides forwarding received messages to other platforms.\
 Message forwarding can be enabled by setting the `webhook` field to value `true` in the Channel Profile metadata.
 
+Here is an example with the value of the `webhook` field set to `true`:
+
+```
+{
+  "profile": {
+    "content_type": "application/json",
+    "write": "false",
+    "notify": "false",
+    "webhook": "true",
+  }
+}
+```
