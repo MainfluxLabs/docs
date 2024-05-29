@@ -206,7 +206,7 @@ Here's an example of `JSON` metadata:
     "webhook_id": "",
     "transformer": {
       "value_fields": ["val1", "val2"],
-      "time_field": "",
+      "time_field": "t",
       "time_format": "unix",
       "time_location": "UTC"
     }

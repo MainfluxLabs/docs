@@ -114,10 +114,6 @@ The following table lists the configurable parameters and their default values.
 | mqtt.redisCachePort                  | MQTT adapter Redis Auth Cache port                                         | 6379         |
 | adapter_coap.udpPort                 | CoAP adapter UDP port                                                      | 5683         |
 | ui.port                              | UI port                                                                    | 3000         |
-| bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
-| bootstrap.dbPort                     | Bootstrap service DB port                                                  | 5432         |
-| bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 8182         |
-| bootstrap.redisESPort                | Bootstrap service Redis Event Store port                                   | 6379         |
 | influxdb.enabled                     | Enable InfluxDB reader & writer                                            | false        |
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
 | influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
@@ -130,18 +126,18 @@ All Mainflux services (both core and add-ons) can have their `logLevel`, `image.
 
 Mainflux Core is a minimalistic set of required Mainflux services. They are all installed by default:
 
-- authn
+- auth
 - users
 - things
 - adapter_http
 - adapter_mqtt
 - adapter_coap
+- adapter_ws
 - ui
 
 Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader & writer you should run `helm install` with `--set influxdb=true`.
 List of add-ons services in charts:
 
-- bootstrap
 - influxdb.writer
 - influxdb.reader
 - adapter_lora

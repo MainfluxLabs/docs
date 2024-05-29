@@ -4,10 +4,11 @@
 
 Mainflux IoT platform is comprised of the following services:
 
-| Service                                                                   | Description                                                                      |
-|:--------------------------------------------------------------------------|:---------------------------------------------------------------------------------|
+| Service                                                                       | Description                                                                      |
+|:------------------------------------------------------------------------------|:---------------------------------------------------------------------------------|
+| [auth](https://github.com/MainfluxLabs/mainflux/tree/master/auth)             | Manages platform's orgs and auth concerns                                        |
 | [users](https://github.com/MainfluxLabs/mainflux/tree/master/users)           | Manages platform's users and auth concerns                                       |
-| [things](https://github.com/MainfluxLabs/mainflux/tree/master/things)         | Manages platform's things, channels and access policies                          |
+| [things](https://github.com/MainfluxLabs/mainflux/tree/master/things)         | Manages platform's things, channels, groups and access policies                  |
 | [http-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/http)     | Provides an HTTP interface for accessing communication channels                  |
 | [mqtt-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/mqtt)     | Provides an MQTT and MQTT over WS interface for accessing communication channels |
 | [coap-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/coap)     | Provides a CoAP interface for accessing communication channels                   |
