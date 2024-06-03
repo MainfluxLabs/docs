@@ -338,7 +338,7 @@ The detailed configuration of the Channel Profile can be found at [Channel Profi
 > Must-have: `user_token`,`group_id`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<channel_name>","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<channel_name>","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]'
 ```
 
 Response:
@@ -347,12 +347,12 @@ HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:26:51 GMT
 Content-Type: application/json
-Content-Length: 202
+Content-Length: 204
 Connection: keep-alive
 Location: /channels/db4b7428-e278-4fe3-b85a-d65554d6abe9
 Access-Control-Expose-Headers: Location
 
-{"things":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name":"channel_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]}
+{"channels":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name":"channel_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]}
 
 ```
 ### Create Channels
@@ -361,7 +361,7 @@ The same as creating a channel with external ID the user can create multiple cha
 > Must-have: `user_token`, `group_id` and at least 2 channels
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"name": "<channel_name_1>"}, {"name": "<channel_name_2>","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]'
 ```
 
 Response:
@@ -383,7 +383,7 @@ As with things, you can create multiple channels with external ID at once
 > Must-have: `user_token`, `group_id` and at least 2 channels
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<channel_name_1>","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<channel_name_2>","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/channels -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<channel_name_1>","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<channel_name_2>","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]'
 ```
 
 Response:
@@ -396,7 +396,7 @@ Content-Length: 398
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"channels":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"channel_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"profile":{"content-type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"channel_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]}
+{"channels":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"channel_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"channel_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]}
 ```
 ### Get Channel
 Get a channel entity for a logged in user
@@ -439,7 +439,7 @@ Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","channels":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name","metadata":{"key":"val"},"profile":{"content-type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name_1","metadata":{"key":"val"},"profile":{"content-type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name_2","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"order":"","direction":"","channels":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name_1","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"channel_name_2","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]}
 ```
 
 ### Get Channels by Group
@@ -461,7 +461,7 @@ Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","channels":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"channel_name","metadata":{"key":"val"},"profile":{"content-type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","name":"channel_name_1","metadata":{"key":"val"},"profile":{"content-type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","name":"channel_name_2","metadata":{"key":"val"},"profile":{"content-type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"order":"","direction":"","channels":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"channel_name","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","name":"channel_name_1","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","name":"channel_name_2","metadata":{"key":"val"},"profile":{"Content-Type":"application/json"}}]}
 ```
 
 ### Update Channel
@@ -584,7 +584,7 @@ Checks if thing has access to a channel
 > Must-have: `thing_key`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/connections -d '{"token": "<thing_key>"}'
+curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/connections -d '{"key": "<thing_key>"}'
 ```
 
 Response:
@@ -593,11 +593,11 @@ HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Mon, 22 Mar 2021 13:10:53 GMT
 Content-Type: application/json
-Content-Length: 46
+Content-Length: 103
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"d69d0098-072b-41bf-8c6e-ce4dbb12d333"}
+{"channel_id":"d69d0098-072b-41bf-8c6e-ce4dbb12d333","thing_id":"a543a098-072b-41bf-8c6e-ce4dbb12d444"}
 ```
 
 ### Identify
@@ -789,12 +789,12 @@ Date: Mon, 17 Jul 2023 08:44:58 GMT
 ```
 ### Update members
 
-To update members of an org, you need the org ID, member emails roles and a `user_token`
+To update members of an org, you need the org ID, member ids and a `user_token`
 
 > Must-have: `user_token`, `org_id` and `user_email`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/members -d '{"members":[{"email": "user_email","role": "user_role"}]}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/members -d '{"members":[{"member_id":"<member_id>", "role":"new_role"}]}'
 ```
 
 Response:
