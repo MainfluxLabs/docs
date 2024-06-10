@@ -192,8 +192,8 @@ to every command.</p>
 </code></pre>
 <p>To send a message, use <code>POST</code> request.
 To subscribe, send <code>GET</code> request with Observe option (flag <code>o</code>) set to false. There are two ways to unsubscribe:
-  1) Send <code>GET</code> request with Observe option set to true.
-  2) Forget the token and send <code>RST</code> message as a response to <code>CONF</code> message received by the server.</p>
+1) Send <code>GET</code> request with Observe option set to true.
+2) Forget the token and send <code>RST</code> message as a response to <code>CONF</code> message received by the server.</p>
 <p>The most of the notifications received from the Adapter are non-confirmable. By <a href="https://tools.ietf.org/html/rfc7641#page-18">RFC 7641</a>:</p>
 <blockquote>
 <p>Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.</p>
@@ -279,17 +279,17 @@ When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>
 <p><strong>Note:</strong> When using MQTT, it's recommended that you use standard MQTT wildcards <code>+</code> and <code>#</code>.</p>
 <p>For more information and examples checkout <a href="https://nats.io/documentation/writing_applications/subscribing/">official nats.io documentation</a></p>
 <h2 id="configure-channel-profile">Configure Channel Profile<a class="headerlink" href="#configure-channel-profile" title="Permanent link">#</a></h2>
-<p>When creating or editing a channel we can add  in the metadata a <code>profile</code> field with the corresponding profile structure value.
-The profile structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>notify</code>, <code>webhook</code>, <code>writer</code>, <code>notifier</code></p>
+<p>When creating or editing a channel we can add a <code>profile</code> field with the corresponding profile structure value.
+The profile structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>notify</code>, <code>webhook_id</code>, <code>transformer</code>, <code>notifier</code></p>
 <p>A <code>content_type</code> field defines the payload format of messages in order to transform and store them properly.
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values <code>application/senml+json</code>, <code>application/senml+cbor</code> and <code>application/json</code>.</p>
 <p>Here's an example of <code>SenML-JSON</code> metadata:</p>
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: &quot;true&quot;,
-    &quot;notify&quot;: &quot;false&quot;,
-    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;write&quot;: true,
+    &quot;notify&quot;: false,
+    &quot;webhook_id&quot;: &quot;&quot;
   }
 }
 </code></pre>
@@ -297,23 +297,23 @@ Available formats are SenML, CBOR, and JSON and they can be defined correspondin
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/senml+cbor&quot;,
-    &quot;write&quot;: &quot;true&quot;,
-    &quot;notify&quot;:&quot; false&quot;,
-    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;write&quot;: true,
+    &quot;notify&quot;: false,
+    &quot;webhook_id&quot;: &quot;&quot;
   }
 }
 </code></pre>
-<p>When <code>content_type</code> is defined as <code>application/json</code>, in the <code>transformer</code> structure you can define the payload field <code>time_field</code> to use as timestamp, the timestamp <code>time_format</code>, the timestamp <code>time_location</code> and the payload <code>value_fields</code> names.</p>
+<p>When <code>content_type</code> is defined as <code>application/json</code>, in the <code>transformer</code> structure you can define the payload field <code>time_field</code> to use as timestamp, the timestamp <code>time_format</code> and the timestamp <code>time_location</code>.</p>
 <p>Here's an example of <code>JSON</code> metadata:</p>
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: &quot;true&quot;,
-    &quot;notify&quot;: &quot;false&quot;,
-    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;write&quot;: true,
+    &quot;notify&quot;: false,
+    &quot;webhook_id&quot;: &quot;&quot;,
     &quot;transformer&quot;: {
       &quot;value_fields&quot;: [&quot;val1&quot;, &quot;val2&quot;],
-      &quot;time_field&quot;: &quot;&quot;,
+      &quot;time_field&quot;: &quot;t&quot;,
       &quot;time_format&quot;: &quot;unix&quot;,
       &quot;time_location&quot;: &quot;UTC&quot;
     }
@@ -322,19 +322,18 @@ Available formats are SenML, CBOR, and JSON and they can be defined correspondin
 </code></pre>
 <p>A <code>write</code> field determines whether messages should be stored in the database. When <code>write</code> is set to <code>true</code>, messages will be saved in the database.
 Conversely, if <code>write</code> is set to <code>false</code>, messages will be sent without storing them.</p>
-<p><strong>Note:</strong> If <code>writer</code> section is not defined, the default value for <code>write</code> is <code>true</code>.</p>
 <h3 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h3>
 <p>Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.</p>
-<p>Similar to the <code>write</code> field in the Channel Profile metadata, the <code>notify</code> field indicates whether notifications should be sent.
+<p>Similar to the <code>write</code> field in the Channel Profile, the <code>notify</code> field indicates whether notifications should be sent.
 Notification can be enabled per channel by setting in the Channel Profile metadata the proper <code>notifier</code> field structure with fields <code>protocol</code> (SMTP or SMPP), <code>contacts</code> (an array of contact email or phone number), and <code>subtopics</code> (an array of subtopics for which the notification will be sent).</p>
 <p>Supported notifier types are <code>smtp</code> (Simple Mail Transfer Protocol) and <code>smpp</code> (Short Message Peer-to-Peer).</p>
 <p>Here's an example with <code>notifier</code> section:</p>
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: &quot;false&quot;,
-    &quot;notify&quot;: &quot;true&quot;,
-    &quot;webhook&quot;: &quot;false&quot;,
+    &quot;write&quot;: false,
+    &quot;notify&quot;: true,
+    &quot;webhook_id&quot;: &quot;&quot;,
     &quot;notifier&quot;: {
       &quot;protocol&quot;: &quot;smtp&quot;,
       &quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],
@@ -343,20 +342,24 @@ Notification can be enabled per channel by setting in the Channel Profile metada
   }
 }
 </code></pre>
-<p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, only notifications will be sent without storing the message in the database.</p>
+<p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, notifications will be sent without storing the message in the database.</p>
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
-<p>Webhooks service provides forwarding received messages to other platforms.\
-Message forwarding can be enabled by setting the <code>webhook</code> field to value <code>true</code> in the Channel Profile metadata.</p>
-<p>Here is an example with the value of the <code>webhook</code> field set to <code>true</code>:</p>
+<p>Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the ID of the webhook to the <code>webhook_id</code> field within the Profile Channel.</p>
+<p>Here is an example with the value of the <code>webhook_id</code> field:</p>
 <pre><code>{
   &quot;profile&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: &quot;false&quot;,
-    &quot;notify&quot;: &quot;false&quot;,
-    &quot;webhook&quot;: &quot;true&quot;,
+    &quot;write&quot;: false,
+    &quot;notify&quot;: false,
+    &quot;webhook_id&quot;: &quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,
+    &quot;transformer&quot;: {
+      &quot;value_fields&quot;: [&quot;field1&quot;, &quot;field2&quot;],
+    },
   }
 }
 </code></pre>
+<p>The <code>value_fields</code> field inside the transformer contains the values based on which the transformer filters incoming payload messages. Filtered messages are forwarded via webhooks.</p>
               
             </div>
           </div><footer>
