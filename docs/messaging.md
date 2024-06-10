@@ -56,8 +56,8 @@ coap-cli post channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -a
 ```
 To send a message, use `POST` request.
 To subscribe, send `GET` request with Observe option (flag `o`) set to false. There are two ways to unsubscribe:
-  1) Send `GET` request with Observe option set to true.
-  2) Forget the token and send `RST` message as a response to `CONF` message received by the server.
+1) Send `GET` request with Observe option set to true.
+2) Forget the token and send `RST` message as a response to `CONF` message received by the server.
 
 The most of the notifications received from the Adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
 
@@ -164,8 +164,8 @@ For more information and examples checkout [official nats.io documentation](http
 
 ## Configure Channel Profile
 
-When creating or editing a channel we can add  in the metadata a `profile` field with the corresponding profile structure value.
-The profile structure consists of the following fields: `content_type`, `write`, `notify`, `webhook`, `writer`, `notifier`
+When creating or editing a channel we can add a `profile` field with the corresponding profile structure value.
+The profile structure consists of the following fields: `content_type`, `write`, `notify`, `webhook_id`, `transformer`, `notifier`
 
 A `content_type` field defines the payload format of messages in order to transform and store them properly.
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
@@ -175,9 +175,9 @@ Here's an example of `SenML-JSON` metadata:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": "true",
-    "notify": "false",
-    "webhook": "false",
+    "write": true,
+    "notify": false,
+    "webhook_id": ""
   }
 }
 ```
@@ -187,26 +187,26 @@ Here's an example of `SenML-CBOR` metadata:
 {
   "profile": {
     "content_type": "application/senml+cbor",
-    "write": "true",
-    "notify":" false",
-    "webhook": "false",
+    "write": true,
+    "notify": false,
+    "webhook_id": ""
   }
 }
 ```
 
-When `content_type` is defined as `application/json`, in the `transformer` structure you can define the payload field `time_field` to use as timestamp, the timestamp `time_format`, the timestamp `time_location` and the payload `value_fields` names.
+When `content_type` is defined as `application/json`, in the `transformer` structure you can define the payload field `time_field` to use as timestamp, the timestamp `time_format` and the timestamp `time_location`.
 
 Here's an example of `JSON` metadata:
 ```
 {
   "profile": {
     "content_type": "application/json",
-    "write": "true",
-    "notify": "false",
-    "webhook": "false",
+    "write": true,
+    "notify": false,
+    "webhook_id": "",
     "transformer": {
       "value_fields": ["val1", "val2"],
-      "time_field": "",
+      "time_field": "t",
       "time_format": "unix",
       "time_location": "UTC"
     }
@@ -217,12 +217,11 @@ Here's an example of `JSON` metadata:
 A `write` field determines whether messages should be stored in the database. When `write` is set to `true`, messages will be saved in the database.
 Conversely, if `write` is set to `false`, messages will be sent without storing them.
 
-**Note:** If `writer` section is not defined, the default value for `write` is `true`.
-
 ### Notifiers
+
 Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
 
-Similar to the `write` field in the Channel Profile metadata, the `notify` field indicates whether notifications should be sent.
+Similar to the `write` field in the Channel Profile, the `notify` field indicates whether notifications should be sent.
 Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `protocol` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subtopics` (an array of subtopics for which the notification will be sent).
 
 Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
@@ -232,9 +231,9 @@ Here's an example with `notifier` section:
 {
   "profile": {
     "content_type": "application/senml+json",
-    "write": "false",
-    "notify": "true",
-    "webhook": "false",
+    "write": false,
+    "notify": true,
+    "webhook_id": "",
     "notifier": {
       "protocol": "smtp",
       "contacts": ["email1@example.com", "email2@example.com"],
@@ -243,22 +242,26 @@ Here's an example with `notifier` section:
   }
 }
 ```
-**Note:** If `write` is set to `false`, only notifications will be sent without storing the message in the database.
+**Note:** If `write` is set to `false`, notifications will be sent without storing the message in the database.
 
 ### Webhooks
 
-Webhooks service provides forwarding received messages to other platforms.\
-Message forwarding can be enabled by setting the `webhook` field to value `true` in the Channel Profile metadata.
+Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Channel.
 
-Here is an example with the value of the `webhook` field set to `true`:
+Here is an example with the value of the `webhook_id` field:
 
 ```
 {
   "profile": {
     "content_type": "application/json",
-    "write": "false",
-    "notify": "false",
-    "webhook": "true",
+    "write": false,
+    "notify": false,
+    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
+    "transformer": {
+      "value_fields": ["field1", "field2"],
+    },
   }
 }
 ```
+The `value_fields` field inside the transformer contains the values based on which the transformer filters incoming payload messages. Filtered messages are forwarded via webhooks.
