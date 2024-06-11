@@ -186,15 +186,11 @@
 <p><img alt="arch" src="../img/architecture.jpg" /></p>
 <h2 id="domain-model">Domain Model<a class="headerlink" href="#domain-model" title="Permanent link">#</a></h2>
 <p>The platform is built around 5 main entities: <strong>users</strong>, <strong>orgs</strong>, <strong>groups</strong>, <strong>things</strong> and <strong>channels</strong>.</p>
-<p><code>User</code> represents the real (human) user of the system. It is represented via its
-e-mail and password, which he uses as platform access credentials in order to obtain
-an access token. Once logged into the system, user can manage his resources (i.e.
-things and channels) in CRUD fashion and define access control policies by
-connecting them.</p>
-<p><code>Thing</code> represents devices (or applications) connected to Mainflux that uses the
-platform for message exchange with other "things".</p>
-<p><code>Channel</code> represents a communication channel. It serves as message topic that
-can be consumed by all of the things connected to it.</p>
+<p><code>User</code> represents users of the system via <code>e-mail</code> and <code>password</code>, which he uses as platform access credentials in order to obtain an access token. Once logged into the system, user can manage his resources in CRUD fashion and define access control policies with orgs and groups roles.</p>
+<p><code>Thing</code> represents devices of the system.</p>
+<p><code>Channel</code> represents a communication channel used to identify devices by profile. It allows to configure messages payload format and data consumption (storage, rules engine, notifications and webhooks).</p>
+<p><code>Groups</code> represents a group of <code>things</code> and <code>channels</code>. </p>
+<p><code>Orgs</code> represents an organisation of users with different roles that allow to invite users and create groups. The creator has <code>owner</code> role and can invite other users and give them <code>admin</code>, <code>editor</code> or <code>viewer</code> roles. <code>admin</code> can invite other users, create groups and access any organisation one. <code>editor</code> can't invite users and can create groups but to access others groups he has to be previously invited. Finally, <code>viewer</code> can only access others groups if he was previously invited.</p>
 <h2 id="messaging">Messaging<a class="headerlink" href="#messaging" title="Permanent link">#</a></h2>
 <p>Mainflux uses <a href="https://nats.io">NATS</a> as its messaging backbone, due to its
 lightweight and performant nature. You can treat its <em>subjects</em> as physical
