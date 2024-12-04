@@ -19,7 +19,7 @@ Mainflux IoT platform is comprised of the following services:
 
 ## Domain Model
 
-The platform is built around 3 main entities: **users**, **things** and **channels**.
+The platform is built around 5 main entities: **organizations**, **groups, **users**, **things** and **channels**.
 
 `User` represents the real (human) user of the system. It is represented via its
 e-mail and password, which he uses as platform access credentials in order to obtain
