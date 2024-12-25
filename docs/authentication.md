@@ -11,7 +11,7 @@ There are three types of authentication keys:
 Authentication keys are represented and distributed by the corresponding [JWT](https://jwt.io/).
 User keys are issued when user logs in. Each user request (other than registration and login) contains user key that is used to authenticate the user.
 
-API keys are similar to the User keys. The main difference is that API keys have configurable expiration time. If no time is set, the key will never expire. API keys are the only key type that _can be revoked_. This also means that, despite being used as a JWT, it requires a query to the database to validate the API key. The user with API key can perform all the same actions as the user with login key (can act on behalf of the user for Thing, Channel, or user profile management), *except issuing new API keys*. 
+API keys are similar to the User keys. The main difference is that API keys have configurable expiration time. If no time is set, the key will never expire. API keys are the only key type that _can be revoked_. This also means that, despite being used as a JWT, it requires a query to the database to validate the API key. The user with API key can perform all the same actions as the user with login key (can act on behalf of the user for Thing, Profile, or user profile management), *except issuing new API keys*. 
 
 Recovery key is the password recovery key. It's short-lived token used for password recovery process.
 
@@ -38,7 +38,7 @@ In most of the cases, HTTPS, MQTTS or secure CoAP are secure enough. However, so
 AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 ```
 
-Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided [here](http://www.github.com/MainfluxLabs/mainflux/tree/master/docker/ssl/Makefile). In order to create a valid certificate, you need to create Mainflux thing using the process described in the [provisioning section](/provision/#platform-management). After that, you need to fetch created thing key. Thing key will be used to create x.509 certificate for the corresponding thing. To create a certificate, execute the following commands:
+Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided [here](http://www.github.com/MainfluxLabs/mainflux/tree/master/docker/ssl/Makefile). In order to create a valid certificate, you need to create Mainflux thing. After that, you need to fetch created thing key. Thing key will be used to create x.509 certificate for the corresponding thing. To create a certificate, execute the following commands:
 
 ```bash
 cd docker/ssl
@@ -73,21 +73,21 @@ Once you have created CA and server-side cert, you can spin the composition usin
 AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 ```
 
-Then, you can create user and provision things and channels. Now, in order to send a message from the specific thing to the channel, you need to connect thing to the channel and generate corresponding client certificate using aforementioned commands. To publish a message to the channel, thing should send following request:
+Then, you can create user and provision things and profiles within the same group. Now, in order to send a message from the specific thing (which has an assigned profile), you need to generate corresponding client certificate using the aforementioned commands. To publish a message, thing should send following request:
 
 ### HTTPS
 ```bash
-curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -X POST -H "Content-Type: application/senml+json" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -X POST -H "Content-Type: application/senml+json" https://localhost/http/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 ### MQTTS
 
 #### Publish
 ```bash
-mosquitto_pub -u <thing_id> -P <thing_key> -t channels/<channel_id>/messages -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -u <thing_id> -P <thing_key> -t /messages -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 #### Subscribe
 ```
-mosquitto_sub -u <thing_id> -P <thing_key> --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -t channels/<channel_id>/messages -h localhost -p 8883
+mosquitto_sub -u <thing_id> -P <thing_key> --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/<thing_cert_name>.crt --key docker/ssl/certs/<thing_cert_key>.key -t /messages -h localhost -p 8883
 ```
