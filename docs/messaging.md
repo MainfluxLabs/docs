@@ -140,7 +140,45 @@ If the `data_filters` and `data_field` fields are empty, the whole payload will 
 The explanations for the `webhook_id` and `smtp_id` fields of the `config` can be found in the [Webhooks](#webhooks) and [Notifiers](#notifiers) sections.
 
 ---
+### Notifiers
 
+Notifiers service provides a service for sending notifications. It can be configured to send email notifications over SMTP (Simple Mail Transfer Protocol).
+
+Notification can be enabled by setting the appropriate notifier ID to the `smtp_id` field within the Profile Config.
+
+Here is an example with the value of the `smtp_id` field:
+```json
+{
+  "config": {
+    "content_type": "application/senml+json",
+    "write": false,
+    "webhook_id": "",
+    "smtp_id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b"
+  }
+}
+```
+
+**Note:** If `write` is set to `false`, notifications will be sent without storing the message in the database.
+
+---
+### Webhooks
+
+Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Config.
+
+Here is an example with the value of the `webhook_id` field:
+
+```json
+{
+  "config": {
+    "content_type": "application/json",
+    "write": false,
+    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
+    "smtp_id": ""
+  }
+}
+```
+---
 ### Subtopics
 
 In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base `/messages` topic.
@@ -296,42 +334,4 @@ var loc = { hostname: 'localhost', port: 80 }
 client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), "clientId")
 // Connect the client
 client.connect({onSuccess:onConnect});
-```
-
-## Notifiers
-
-Notifiers service provides a service for sending notifications. It can be configured to send email notifications over SMTP (Simple Mail Transfer Protocol).
-
-Notification can be enabled by setting the appropriate notifier ID to the `smtp_id` field within the Profile Config.
-
-Here is an example with the value of the `smtp_id` field:
-```
-{
-  "config": {
-    "content_type": "application/senml+json",
-    "write": false,
-    "webhook_id": "",
-    "smtp_id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b"
-  }
-}
-```
-
-**Note:** If `write` is set to `false`, notifications will be sent without storing the message in the database.
-
-## Webhooks
-
-Webhooks service provides forwarding received messages to other platforms.
-Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Config.
-
-Here is an example with the value of the `webhook_id` field:
-
-```
-{
-  "config": {
-    "content_type": "application/json",
-    "write": false,
-    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
-    "smtp_id": ""
-  }
-}
 ```

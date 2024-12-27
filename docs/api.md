@@ -7,35 +7,8 @@ API reference in the Swagger UI can be found at:
 
 ## Users
 
-### Create User
-To get started with the Mainflux system, you can use the `root` role with the highest privilege and manage all entities. 
-In order to add users to the system, the `root` administrator must create accounts for them.
-
-> Must-have: `email`, `password` (password must contain at least 8 characters) and `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users -d '{"email":"<user_email>", "password":"<user_password>"}'
-```
-
-Response:
-```bash
-HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:06:45 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
-Strict-Transport-Security: max-age=63072000; includeSubdomains
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: *
-Access-Control-Allow-Headers: *
-```
-
 ### Create Token
-To log in to the Mainflux system, you need to create a `user_token`.
+To log in to the Mainflux system, you need to create a `user_token`. The obtained token is used for access control in the system.
 
 > Must-have: registered `email` and `password`
 
@@ -60,6 +33,33 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
 {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTU0MjQ4MzgsImlhdCI6MTYxNTM4ODgzOCwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaXNzdWVyX2lkIjoiZDc4MmI0MmItZTMxNy00Y2Q3LTlkZDAtNGUyZWEwZjM0OWM4IiwidHlwZSI6MH0.TAQxV6TImKw06RsK0J11rOHiWPvexEOA4BNZnhLhtxs"}
+```
+
+### Create User
+The predefined user within the Mainflux system is the `root admin`.
+In order to add users to the system, the `root` administrator must create accounts for them.
+
+> Must-have: `email`, `password` (password must contain at least 8 characters) and `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users -d '{"email":"<user_email>", "password":"<user_password>"}'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:06:45 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
 ```
 
 ### Get User
