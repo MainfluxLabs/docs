@@ -89,16 +89,13 @@ mainfluxlabs-cli health
 ### Users management
 #### Create User
 
-Mainflux has two options for user creation. Either everybody or just the admin is able to create new users. This option is dictated through policies and be configured through environment variable (`MF_USERS_ALLOW_SELF_REGISTER`). If only the admin is allowed to create new users, then the `<user_token>` is required because the token is used to verify that the requester is admin or not. Otherwise, the token is not used, since everybody can create new users. However, the token is still required, in order to be consistent. For more details, please see [Authorization page](authorization.md).
+Within Mainflux, the admin creates users.
+The `<user_token>` is required because the token is used to verify that the requester is admin or not.
+For more details, please see [Authorization page](authorization.md).
 
 ```bash
-if env `MF_USERS_ALLOW_SELF_REGISTER` is "true" then
-  mainfluxlabs-cli users create <user_email> <user_password>
-else
-  mainfluxlabs-cli users create <user_email> <user_password> <admin_token>
+  mainfluxlabs-cli users create <user_email> <user_password> <user_token>
 ```
-
-`MF_USERS_ALLOW_SELF_REGISTER` is `true` by default. Therefore, you do not need to provide `<admin_token>` if `MF_USERS_ALLOW_SELF_REGISTER` is true. On the other hand, if you set `MF_USERS_ALLOW_SELF_REGISTER` to `false`, the Admin token is required for authorization. Therefore, you have to provide the admin token through third argument stated as `<admin_token>`.
 
 #### Login User
 ```bash
@@ -217,124 +214,124 @@ mainfluxlabs-cli messages read <thing_auth_token>
 ```
 
 ### Groups
-#### Create new group
+#### Create new Group
 ```bash
 mainfluxlabs-cli groups create '{"name":"<group_name>","description":"<description>","metadata":{"key":"value",...}}' <org_id> <user_token>
 ```
 
-#### Delete group
+#### Delete Group
 ```bash
 mainfluxlabs-cli groups delete <group_id> <user_token>
 ```
 
-#### Get group by id
+#### Get Group by ID
 ```bash
 mainfluxlabs-cli groups get <group_id> <user_token>
 ```
 
-#### List all groups
+#### List all Groups
 ```bash
 mainfluxlabs-cli groups get all <user_token>
 ```
 
-#### Update group
+#### Update Group
 ```bash
 mainfluxlabs-cli groups update '{"name":"<new_name>"}' <group_id> <user_token>
 ```
 
-#### List things by group
+#### List Things by Group
 ```bash
 mainfluxlabs-cli groups things <group_id> <user_token>
 ```
 
-#### View group by thing
+#### View Group by Thing
 ```bash
 mainfluxlabs-cli groups thing <thing_id> <user_token>
 ```
 
-#### List profiles by group
+#### List Profiles by Group
 ```bash
 mainfluxlabs-cli groups profiles <group_id> <user_token>
 ```
 
-#### View group by profile
+#### View Group by Profile
 ```bash
 mainfluxlabs-cli groups profile <profile_id> <user_token>
 ```
 
 ### Orgs
-#### Create new org
+#### Create new Org
 ```bash
 mainfluxlabs-cli orgs create '{"name":"<org_name>","description":"<description>","metadata":{"key":"value",...}}' <user_token>
 ```
 
-#### Get org by id
+#### Get Org by ID
 ```bash
 mainfluxlabs-cli orgs get <org_id> <user_token>
 ```
 
-#### List all orgs
+#### List all Orgs
 ```bash
 mainfluxlabs-cli orgs get all <user_token>
 ```
 
-#### Update org
+#### Update Org
 ```bash
 mainfluxlabs-cli orgs update '{"name":"<new_name>"}' <org_id> <user_token>
 ```
 
-#### Delete org
+#### Delete Org
 ```bash
 mainfluxlabs-cli orgs delete <org_id> <user_token>
 ```
 
-#### Assign user to an org
+#### Assign User to an Org
 ```bash
 mainfluxlabs-cli orgs assign '[{"member_id":"<member_id>","email":"<email>","role":"<role>"}]' <org_id> <user_token>
 ```
 
-#### Unassign user from org
+#### Unassign User from Org
 ```bash
 mainfluxlabs-cli orgs unassign '["<member_id>"]' <org_id> <user_token>
 ```
 
-#### Update members
+#### Update Members
 ```bash
 mainfluxlabs-cli orgs update-members '[{"member_id":"<member_id>","role":"<new_role>"}]' <org_id> <user_token>
 ```
 
-#### List users by org
+#### List Users by Org
 ```bash
 mainfluxlabs-cli orgs members <org_id> <user_token>
 ```
 
-#### List orgs that user belongs to
+#### List Orgs that User belongs to
 ```bash
 mainfluxlabs-cli orgs memberships <member_id> <user_token>
 ```
 
 ### Webhooks
-#### Create new webhooks
+#### Create new Webhooks
 ```bash
 mainfluxlabs-cli webhooks create '[{"name":"<webhook_name>","url":"<http://webhook-url.com>","headers":{"key":"value",...}}]' <group_id> <user_token>
 ```
 
-#### Get webhook by id
+#### Get Webhook by ID
 ```bash
 mainfluxlabs-cli webhooks get by-id <id> <user_token>
 ```
 
-#### Get webhooks by group
+#### Get Webhooks by Group
 ```bash
 mainfluxlabs-cli webhooks get group <group_id> <user_token>
 ```
 
-#### Update webhook
+#### Update Webhook
 ```bash
 mainfluxlabs-cli webhooks update '{"name":"<new_name>","url":"<http://webhook-url.com>"}' <webhook_id> <user_token>
 ```
 
-#### Delete webhooks
+#### Delete Webhooks
 ```bash
 mainfluxlabs-cli webhooks delete '["<webhook_id>"]' <group_id> <user_token>
 ```
