@@ -7,7 +7,7 @@ copyright: Copyright (c) MainfluxLabs
 repo_url: https://github.com/MainfluxLabs/docs
 site_description: MainfluxLabs IoT System
 site_name: MainfluxLabs
-site_url: https://mainfluxlabs.github.io
+site_url: https://mainflux.com/index.html
 edit_uri: ""
 theme:
   name: readthedocs
@@ -23,18 +23,16 @@ nav:
   - Overview: index.md
   - Architecture: architecture.md
   - Getting Started: getting-started.md
-  - Provision: provision.md
-  - Messaging: messaging.md
-  - Storage: storage.md
-  - LoRa: lora.md
-  - Edge: edge.md
-  - Security: security.md
   - Authentication: authentication.md
   - Authorization: authorization.md
-  - CLI: cli.md
   - API: api.md
-  - Groups: groups.md
+  - Messaging: messaging.md
+  - Storage: storage.md
+  - Edge: edge.md
+  - Security: security.md
+  - CLI: cli.md
   - Tracing: tracing.md
   - Developer's Guide: dev-guide.md
   - Kubernetes: kubernetes.md
   - Benchmark: benchmark.md
+  - Enterprise: enterprise.md

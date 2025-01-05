@@ -1,39 +1,237 @@
 # Messaging
 
-Once a channel is provisioned and thing is connected to it, it can start to
-publish messages on the channel. The following sections will provide an example
-of message publishing for each of the supported protocols.
+Once a profile is provisioned and assigned to a thing, publishing messages can begin.
+The following sections will provide an example of message publishing for each of the supported protocols.
+
+### Configure Profile Config
+
+For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure `config`.
+The `config` structure consists of the following fields: `content_type`, `write`, `webhook_id`, `transformer`, `smtp_id`.
+
+A `content_type` field defines the payload format of messages in order to transform and store them properly.
+Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
+
+A `write` field determines whether messages should be stored in the database. When `write` is set to `true`, messages will be saved in the database.
+Conversely, if `write` is set to `false`, messages will be sent without storing them.
+
+Here's an example of `SenML-JSON` metadata:
+```json
+{
+  "config": {
+    "content_type": "application/senml+json",
+    "write": true,
+    "webhook_id": "",
+    "smtp_id": ""
+  }
+}
+```
+
+Here's an example of `SenML-CBOR` metadata:
+```json
+{
+  "config": {
+    "content_type": "application/senml+cbor",
+    "write": true,
+    "webhook_id": "",
+    "smtp_id": ""
+  }
+}
+```
+
+The payload of the IoT message often contains message time. It can be in different formats (like base time and record time in the case of SenML) and the message field can be under the arbitrary key. Usually, we would want to map that time to the Mainflux Message field `created`, and for that reason, we need to configure the `transformer` to be able to read the field, parse it using proper format and location (if devices time is different from the service time), and map it to Mainflux Message.
+
+When `content_type` is defined as `application/json`, inside the `transformer` structure it is possible to configure the field `time_field` which is the name of the JSON key to use as a timestamp, `time_format` to use for the field value and `time_location`.
+
+Here's an example of `JSON` metadata:
+```json
+{
+  "config": {
+    "content_type": "application/json",
+    "write": true,
+    "webhook_id": "",
+    "transformer": {
+      "data_filters": ["val1", "val2"],
+      "data_field":"field1",
+      "time_field": "t",
+      "time_format": "unix",
+      "time_location": "UTC"
+    },
+    "smtp_id": ""
+  }
+}
+```
+
+In case it is necessary to extract the received payload and use a specific object within the payload, it is possible to define a value within the `data_field` field that will be used to extract the payload.
+
+If we have a payload from which we want to get a list of "params", then the `config` should look like this:
+```json lines
+{
+  "config": {
+    "content_type": "application/json",
+    "write": true,
+    "transformer": {
+      "data_filters": [],
+      "data_field": "root.params",
+      "time_field": "created",
+      "time_format": "rfc3339",
+      "time_location": "UTC"
+    }
+  }
+}
+
+// Received payload with params
+{
+  "root": {
+    "params": [
+      {
+        "field": "temperature",
+        "value": 20,
+        "created": "2024-12-24T17:15:55.000Z"
+      },
+      {
+        "field": "humidity",
+        "value": 45,
+        "created": "2024-12-24T17:17:00.000Z"
+      },
+    ]
+  }
+}
+```
+The extraction result is:
+```json
+[
+      {
+        "field": "temperature",
+        "value": 20,
+        "created": "2024-12-24T17:15:55.000Z"
+      },
+      {
+        "field": "humidity",
+        "value": 45,
+        "created": "2024-12-24T17:17:00.000Z"
+      }
+]
+```
+Field `data_field` represents a string containing dot-separated values, unless only first-level extraction is used, then only the field name is enough (for example, "root"). Each of those words represents the level of the JSON payload to be extracted, which is important to specify them correctly for nested objects.
+
+For the messages that contain _JSON array as the root element_, JSON Transformer does normalization of the data: it creates a separate JSON message for each JSON object in the root.
+
+The `data_filters` field inside the `transformer` contains the values based on which the transformer filters incoming payload messages.
+If there is certain data that you want to store, you can define it in the `data_filters` field.
+For the previous example, we can filter the extracted payload and save only the fields under the key "field" and "value", then the updated config structure would look like this:
+```json
+{
+  "config": {
+    "content_type": "application/json",
+    "write": true,
+    "transformer": {
+      "data_filters": ["field","value"],
+      "data_field": "root.params",
+      "time_field": "created",
+      "time_format": "rfc3339",
+      "time_location": "UTC"
+    }
+  }
+}
+```
+
+If the `data_filters` and `data_field` fields are empty, the whole payload will be used.
+
+The explanations for the `webhook_id` and `smtp_id` fields of the `config` can be found in the [Webhooks](#webhooks) and [Notifiers](#notifiers) sections.
+
+---
+### Notifiers
+
+Notifiers service provides a service for sending notifications. It can be configured to send email notifications over SMTP (Simple Mail Transfer Protocol).
+
+Notification can be enabled by setting the appropriate notifier ID to the `smtp_id` field within the Profile Config.
+
+Here is an example with the value of the `smtp_id` field:
+```json
+{
+  "config": {
+    "content_type": "application/senml+json",
+    "write": false,
+    "webhook_id": "",
+    "smtp_id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b"
+  }
+}
+```
+
+**Note:** If `write` is set to `false`, notifications will be sent without storing the message in the database.
+
+---
+### Webhooks
+
+Webhooks service provides forwarding received messages to other platforms.
+Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Config.
+
+Here is an example with the value of the `webhook_id` field:
+
+```json
+{
+  "config": {
+    "content_type": "application/json",
+    "write": false,
+    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
+    "smtp_id": ""
+  }
+}
+```
+---
+### Subtopics
+
+In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base `/messages` topic.
+
+Example subtopic publish/subscribe for bedroom temperature would be `/messages/bedroom/temperature`.
+
+Subtopics are generic and multilevel. You can use almost any suffix with any depth.
+
+Topics with subtopics are propagated to NATS broker in the following format `<format>.messages.<optional_subtopic>`.
+The `format` prefix is included in the topic which is obtained from the `content_type` field specified in the `transformer` part of the `config` structure in the Profile.
+The prefix value can be set to `json` or `senml`.
+
+Our example topic `/messages/bedroom/temperature` with `content_type` defined as `application/senml+json` will be translated to appropriate NATS topic `senml.messages.bedroom.temperature`.
+
+You can use multilevel subtopics, that have multiple parts. These parts are separated by `.` or `/` separators.
+When you use combination of these two, have in mind that behind the scene, `/` separator will be replaced with `.`.
+Every empty part of subtopic will be removed. What this means is that subtopic `a///b` is equivalent to `a/b`.
+When you want to subscribe, you can use NATS wildcards `*` and `>`. Every subtopic part can have `*` or `>` as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as `a.b*c.d` will be invalid, while `a.b.*.c.d` will be valid.
+
+**Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
+
+*For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)*
 
 ## HTTP
 
-To publish message over channel, thing should send following request:
+To publish message, a thing with proper profile should send following request:
 
 ```
-curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/senml+json" https://localhost/http/channels/<channel_id>/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/senml+json" https://localhost/http/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
 **Note:** If you're going to use senml message format, you should always send messages as an array.
 
-For more information about the HTTP messaging service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/http.yml).
+*For more information about the HTTP messaging service API, please check out the [API documentation](https://github.com/MainfluxLabs/mainflux/blob/master/api/openapi/http.yml).*
 
 ## MQTT
 
 To send and receive messages over MQTT you could use [Mosquitto tools](https://mosquitto.org),
 or [Paho](https://www.eclipse.org/paho/) if you want to use MQTT over WebSocket.
 
-To publish message over channel, thing should call following command:
+To publish message, thing should call following command:
 
 ```
-mosquitto_pub -u <thing_id> -P <thing_key> -t channels/<channel_id>/messages -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -u <thing_id> -P <thing_key> -t /messages -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-To subscribe to channel, thing should call following command:
+To subscribe to a topic, thing should call following command:
 
 ```
-mosquitto_sub -u <thing_id> -P <thing_key> -t channels/<channel_id>/messages -h localhost
+mosquitto_sub -u <thing_id> -P <thing_key> -t /messages -h localhost
 ```
 
-If you want to use standard topic such as `channels/<channel_id>/messages` with SenML content type (JSON or CBOR), you should use following topic `channels/<channel_id>/messages`.
+If you want to use standard topic such as `/messages` with SenML content type (JSON or CBOR), you should use following topic `/messages`.
 
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
@@ -46,13 +244,13 @@ CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC
 Examples:
 
 ```
-coap-cli get channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
+coap-cli get /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
 ```
 ```
-coap-cli post channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world"
+coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world"
 ```
 ```
-coap-cli post channels/0bb5ba61-a66e-4972-bab6-26f19962678f/messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world" -h 0.0.0.0 -p 1234
+coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world" -h 0.0.0.0 -p 1234
 ```
 To send a message, use `POST` request.
 To subscribe, send `GET` request with Observe option (flag `o`) set to false. There are two ways to unsubscribe:
@@ -68,7 +266,7 @@ CoAP Adapter sends these notifications every 12 hours. To configure this period,
 ## WS
 Mainflux supports [MQTT-over-WS](https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).), rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.
 
-There are 2 reccomended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:
+There are 2 recommended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:
 
 1. [Eclipse Paho JavaScript Client](https://www.eclipse.org/paho/index.php?page=clients/js/index.php)
 2. [MQTT.js](https://github.com/mqttjs/MQTT.js)
@@ -96,9 +294,8 @@ Here is an example of a browser application connecting to Mainflux server and se
         username: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
         password: 'ec82f341-d4b5-4c77-ae05-34877a62428f',
     }
-
-    var channelId = '08676a76-101d-439c-b62e-d4bb3b014337'
-    var topic = 'channels/' + channelId + '/messages'
+    
+    var topic = '/messages'
 
     // Connect string, and specify the connection method by the protocol
     // ws Unencrypted WebSocket connection
@@ -138,130 +335,3 @@ client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), "clientId")
 // Connect the client
 client.connect({onSuccess:onConnect});
 ```
-
-## Subtopics
-
-In order to use subtopics and give more meaning to your pub/sub channel, you can simply add any suffix to base `/channels/<channel_id>/messages` topic.
-
-Example subtopic publish/subscribe for bedroom temperature would be `channels/<channel_id>/messages/bedroom/temperature`.
-
-Subtopics are generic and multilevel. You can use almost any suffix with any depth.
-
-Topics with subtopics are propagated to NATS broker in the following format `channels.<channel_id>.<optional_subtopic>`.
-
-Our example topic `channels/<channel_id>/messages/bedroom/temperature` will be translated to appropriate NATS topic `channels.<channel_id>.bedroom.temperature`.
-
-You can use multilevel subtopics, that have multiple parts. These parts are separated by `.` or `/` separators.
-When you use combination of these two, have in mind that behind the scene, `/` separator will be replaced with `.`.
-Every empty part of subtopic will be removed. What this means is that subtopic `a///b` is equivalent to `a/b`.
-When you want to subscribe, you can use NATS wildcards `*` and `>`. Every subtopic part can have `*` or `>` as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as `a.b*c.d` will be invalid, while `a.b.*.c.d` will be valid.
-
-Authorization is done on the channel level, so you only have to have access to the channel in order to have access to its subtopics.
-
-**Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
-
-For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)
-
-## Configure Channel Profile
-
-When creating or editing a channel we can add a `profile` field with the corresponding profile structure value.
-The profile structure consists of the following fields: `content_type`, `write`, `notify`, `webhook_id`, `transformer`, `notifier`
-
-A `content_type` field defines the payload format of messages in order to transform and store them properly.
-Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
-
-Here's an example of `SenML-JSON` metadata:
-```
-{
-  "profile": {
-    "content_type": "application/senml+json",
-    "write": true,
-    "notify": false,
-    "webhook_id": ""
-  }
-}
-```
-
-Here's an example of `SenML-CBOR` metadata:
-```
-{
-  "profile": {
-    "content_type": "application/senml+cbor",
-    "write": true,
-    "notify": false,
-    "webhook_id": ""
-  }
-}
-```
-
-When `content_type` is defined as `application/json`, in the `transformer` structure you can define the payload field `time_field` to use as timestamp, the timestamp `time_format` and the timestamp `time_location`.
-
-Here's an example of `JSON` metadata:
-```
-{
-  "profile": {
-    "content_type": "application/json",
-    "write": true,
-    "notify": false,
-    "webhook_id": "",
-    "transformer": {
-      "value_fields": ["val1", "val2"],
-      "time_field": "t",
-      "time_format": "unix",
-      "time_location": "UTC"
-    }
-  }
-}
-```
-
-A `write` field determines whether messages should be stored in the database. When `write` is set to `true`, messages will be saved in the database.
-Conversely, if `write` is set to `false`, messages will be sent without storing them.
-
-### Notifiers
-
-Notifiers service provides a service for sending notifications. It can be configured to send different types of notifications such as SMS messages or emails.
-
-Similar to the `write` field in the Channel Profile, the `notify` field indicates whether notifications should be sent.
-Notification can be enabled per channel by setting in the Channel Profile metadata the proper `notifier` field structure with fields `protocol` (SMTP or SMPP), `contacts` (an array of contact email or phone number), and `subtopics` (an array of subtopics for which the notification will be sent).
-
-Supported notifier types are `smtp` (Simple Mail Transfer Protocol) and `smpp` (Short Message Peer-to-Peer).
-
-Here's an example with `notifier` section:
-```
-{
-  "profile": {
-    "content_type": "application/senml+json",
-    "write": false,
-    "notify": true,
-    "webhook_id": "",
-    "notifier": {
-      "protocol": "smtp",
-      "contacts": ["email1@example.com", "email2@example.com"],
-      "subtopics": ["subtopic1", "subtopic2"],
-    }
-  }
-}
-```
-**Note:** If `write` is set to `false`, notifications will be sent without storing the message in the database.
-
-### Webhooks
-
-Webhooks service provides forwarding received messages to other platforms.
-Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Channel.
-
-Here is an example with the value of the `webhook_id` field:
-
-```
-{
-  "profile": {
-    "content_type": "application/json",
-    "write": false,
-    "notify": false,
-    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
-    "transformer": {
-      "value_fields": ["field1", "field2"],
-    },
-  }
-}
-```
-The `value_fields` field inside the transformer contains the values based on which the transformer filters incoming payload messages. Filtered messages are forwarded via webhooks.

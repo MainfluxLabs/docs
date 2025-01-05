@@ -4,34 +4,36 @@
 
 Mainflux IoT platform is comprised of the following services:
 
-| Service                                                                       | Description                                                                      |
-|:------------------------------------------------------------------------------|:---------------------------------------------------------------------------------|
-| [auth](https://github.com/MainfluxLabs/mainflux/tree/master/auth)             | Manages platform's orgs and auth concerns                                        |
-| [users](https://github.com/MainfluxLabs/mainflux/tree/master/users)           | Manages platform's users and auth concerns                                       |
-| [things](https://github.com/MainfluxLabs/mainflux/tree/master/things)         | Manages platform's things, channels, groups and access policies                  |
-| [http-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/http)     | Provides an HTTP interface for accessing communication channels                  |
-| [mqtt-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/mqtt)     | Provides an MQTT and MQTT over WS interface for accessing communication channels |
-| [coap-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/coap)     | Provides a CoAP interface for accessing communication channels                   |
-| [lora-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/lora)     | Provides a LoRa Server forwarder for accessing communication channels            |
-| [mainflux-cli](https://github.com/MainfluxLabs/mainflux/tree/master/cli)      | Command line interface                                                           |
+| Service                                                                       | Description                                                      |
+|:------------------------------------------------------------------------------|:-----------------------------------------------------------------|
+| [auth](https://github.com/MainfluxLabs/mainflux/tree/master/auth)             | Manages platform's orgs and auth concerns                        |
+| [users](https://github.com/MainfluxLabs/mainflux/tree/master/users)           | Manages platform's users and auth concerns                       |
+| [things](https://github.com/MainfluxLabs/mainflux/tree/master/things)         | Manages platform's things, profiles, groups and group members    |
+| [http-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/http)     | Provides an HTTP interface for sending messages                  |
+| [mqtt-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/mqtt)     | Provides an MQTT and MQTT over WS interface for sending messages |
+| [coap-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/coap)     | Provides a CoAP interface for sending messages                   |
+| [mainflux-cli](https://github.com/MainfluxLabs/mainflux/tree/master/cli)      | Command line interface                                           |
 
 ![arch](img/architecture.jpg)
 
 ## Domain Model
 
-The platform is built around 5 main entities: **organizations**, **groups, **users**, **things** and **channels**.
+The platform is built around 5 main entities: **users**, **organizations**, **groups**, **profiles** and **things**.
 
 `User` represents the real (human) user of the system. It is represented via its
 e-mail and password, which he uses as platform access credentials in order to obtain
-an access token. Once logged into the system, user can manage his resources (i.e.
-things and channels) in CRUD fashion and define access control policies by
-connecting them.
+an access token. Once logged into the system, user can manage his resources (i.e. groups,
+things and profiles) in CRUD fashion and define access control.
+
+`Org` represents the highest entity in the system hierarchy consisting of its `members` and `groups`. It unites all the elements into a whole.
+
+`Group` within an organization represents a set of Things, Profiles, Notifiers, Webhooks, Downlinks. Access to these entities requires appropriate rights, which are obtained when assigning a user to a group.
+
+`Profile` determines message topics that can be consumed by all things to which it is assigned.
 
 `Thing` represents devices (or applications) connected to Mainflux that uses the
 platform for message exchange with other "things".
 
-`Channel` represents a communication channel. It serves as message topic that
-can be consumed by all of the things connected to it.
 
 ## Messaging
 
@@ -49,8 +51,8 @@ messages should be formatted using [SenML](https://tools.ietf.org/html/draft-iet
 Mainflux platform can be run on the edge as well. Deploying Mainflux on a gateway makes it able to collect, store and analyze data, organize and authenticate devices.
 To connect Mainflux instances running on a gateway with Mainflux in a cloud we can use two gateway services developed for that purpose:
 
-* [Agent](/edge/#agent)
-* [Export](/edge/#export)
+* [Agent](edge.md#agent)
+* [Export](edge.md#export)
 
 ## Unified IoT Platform
 Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.

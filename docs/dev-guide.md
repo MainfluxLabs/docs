@@ -75,7 +75,7 @@ make docker_http
 
 > N.B. Mainflux creates `FROM scratch` docker containers which are compact and small in size.
 
-> N.B. The `things-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, __rebuilding of all docker containers with `make dockers` or rebuilding the `things-db` and `users-db` containers separately with `make docker_things-db` and `make docker_users-db` respectively, will cause data loss. All your users, things, channels and connections between them will be lost!__ As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Mainflux dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Mainflux setup](#cleaning-up-your-dockerized-mainflux-setup) section for details. Please note that this kind of updating might not work if there are database changes.
+> N.B. The `things-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, __rebuilding of all docker containers with `make dockers` or rebuilding the `things-db` and `users-db` containers separately with `make docker_things-db` and `make docker_users-db` respectively, will cause data loss. All your users, things, profiles, groups will be lost!__ As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Mainflux dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Mainflux setup](#cleaning-up-your-dockerized-mainflux-setup) section for details. Please note that this kind of updating might not work if there are database changes.
 
 #### Building Docker images for development
 
@@ -241,7 +241,7 @@ gnatsd
 ```
 
 #### PostgreSQL
-Mainflux uses PostgreSQL to store metadata (`users`, `things` and `channels` entities alongside with authorization tokens).
+Mainflux uses PostgreSQL to store metadata (`users`,`orgs`,`groups`,`things` and `profiles` entities alongside with authorization tokens).
 It expects that PostgreSQL DB is installed, set up and running on the local system.
 
 Information how to set-up (prepare) PostgreSQL database can be found [here](https://support.rackspace.com/how-to/postgresql-creating-and-dropping-roles/),
@@ -287,11 +287,9 @@ field that can have one of the following values:
 - `thing.create` for thing creation,
 - `thing.update` for thing update,
 - `thing.remove` for thing removal,
-- `thing.connect` for connecting a thing to a channel,
-- `thing.disconnect` for disconnecting thing from a channel,
-- `channel.create` for channel creation,
-- `channel.update` for channel update,
-- `channel.remove` for channel removal.
+- `profile.create` for profile creation,
+- `profile.update` for profile update,
+- `profile.remove` for profile removal.
 
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
@@ -306,16 +304,18 @@ Whenever thing is created, `things` service will generate new `create` event. Th
 event will have the following format:
 ```
 1) "1555334740911-0"
-2)  1) "operation"
-    2) "thing.create"
-    3) "name"
-    4) "d0"
-    5) "id"
-    6) "3c36273a-94ea-4802-84d6-a51de140112e"
-    7) "owner"
-    8) "john.doe@email.com"
-    9) "metadata"
-   10) "{}"
+2)  1) "id"
+    2) "1c36273a-94ea-4802-84d6-a51de140112a"
+    3) "group_id"
+    4) "2c36273a-94ea-4802-84d6-a51de140112b"
+    5) "profile_id"
+    6) "3c36273a-94ea-4802-84d6-a51de140112c"
+    7) "operation"
+    8) "thing.create"
+    9) "name"
+    10) "d0"
+    11) "metadata"
+    12) "{}"
 ```
 
 As you can see from this example, every odd field represents field name while every
@@ -328,12 +328,15 @@ Whenever thing instance is updated, `things` service will generate new `update` 
 This event will have the following format:
 ```
 1) "1555336161544-0"
-2) 1) "operation"
-   2) "thing.update"
-   3) "name"
-   4) "weio"
-   5) "id"
-   6) "3c36273a-94ea-4802-84d6-a51de140112e"
+2) 1) "id"
+   2) "3c36273a-94ea-4802-84d6-a51de140112e"
+   3) "profile_id"
+   4) "3c36273a-94ea-4802-84d6-a51de140112c"
+   5) "operation"
+   6) "thing.update"
+   7) "name"
+   8) "weio"
+ 
 ```
 Note that thing update event will contain only those fields that were updated using
 update endpoint.
@@ -349,72 +352,45 @@ publish new `remove` event. This event will have the following format:
    4) "thing.remove"
 ```
 
-#### Channel create event
-Whenever channel instance is created, `things` service will generate and publish new
+#### Profile create event
+Whenever profile instance is created, `things` service will generate and publish new
 `create` event. This event will have the following format:
 ```
 1) "1555334740918-0"
 2) 1) "id"
    2) "16fb2748-8d3b-4783-b272-bb5f4ad4d661"
-   3) "owner"
-   4) "john.doe@email.com"
+   3) "group_id"
+   4) "2c36273a-94ea-4802-84d6-a51de140112b"
    5) "operation"
-   6) "channel.create"
+   6) "profile.create"
    7) "name"
-   8) "c1"
+   8) "p1"
 ```
 
-#### Channel update event
-Whenever channel instance is updated, `things` service will generate and publish new
+#### Profile update event
+Whenever profile instance is updated, `things` service will generate and publish new
 `update` event. This event will have the following format:
 ```
 1) "1555338870341-0"
-2) 1) "name"
-   2) "chan"
-   3) "id"
-   4) "d9d8f31b-f8d4-49c5-b943-6db10d8e2949"
+2) 1) "id"
+   2) "d9d8f31b-f8d4-49c5-b943-6db10d8e2949"
+   3) "name"
+   4) "profile1"
    5) "operation"
-   6) "channel.update"
+   6) "profile.update"
 ```
-Note that update channel event will contain only those fields that were updated using
-update channel endpoint.
+Note that update profile event will contain only those fields that were updated using
+update profile endpoint.
 
-#### Channel remove event
-Whenever channel instance is removed from the system, `things` service will generate and
+#### Profile remove event
+Whenever profile instance is removed from the system, `things` service will generate and
 publish new `remove` event. This event will have the following format:
 ```
 1) 1) "1555339429661-0"
 2) 1) "id"
    2) "d9d8f31b-f8d4-49c5-b943-6db10d8e2949"
    3) "operation"
-   4) "channel.remove"
-```
-
-#### Connect thing to a channel event
-Whenever thing is connected to a channel on `things` service, `things` service will
-generate and publish new `connect` event. This event will have the following format:
-```
-1) "1555334740920-0"
-2) 1) "chan_id"
-   2) "d9d8f31b-f8d4-49c5-b943-6db10d8e2949"
-   3) "thing_id"
-   4) "3c36273a-94ea-4802-84d6-a51de140112e"
-   5) "operation"
-   6) "thing.connect"
-```
-
-#### Disconnect thing from a channel event
-Whenever thing is disconnected from a channel on `things` service, `things` service
-will generate and publish new `disconnect` event. This event will have the following
-format:
-```
-1) "1555334740920-0"
-2) 1) "chan_id"
-   2) "d9d8f31b-f8d4-49c5-b943-6db10d8e2949"
-   3) "thing_id"
-   4) "3c36273a-94ea-4802-84d6-a51de140112e"
-   5) "operation"
-   6) "thing.disconnect"
+   4) "profile.remove"
 ```
 
 **Note:** Every one of these events will omit fields that were not used or are not
