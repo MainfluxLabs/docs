@@ -839,6 +839,27 @@ Access-Control-Expose-Headers: Location
 {"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}}
 ```
 
+### Get Metadata by Key
+Get thing metadata by providing the `thing_key`
+
+> Must-have: `thing_key`
+
+ ```bash
+curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/metadata
+```
+
+Response:
+```bash
+Server: nginx/1.20.0
+Date: Tue, 21 Jan 2025 15:46:10 GMT
+Content-Type: application/json
+Content-Length: 29
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"metadata":{"test":"data"}}
+```
+
 ### Get All Things
 Get all things that the user can access, list requests accepts limit and offset query parameters
 
