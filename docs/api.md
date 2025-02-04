@@ -844,7 +844,7 @@ Get thing metadata by providing the `thing_key`
 
 > Must-have: `thing_key`
 
- ```bash
+```bash
 curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/metadata
 ```
 
