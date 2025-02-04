@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/api/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/api/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
     <title>API - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "API";
         var mkdocs_page_input_path = "api.md";
-        var mkdocs_page_url = "/api/";
+        var mkdocs_page_url = "/index.html/api/";
       </script>
     
     <!--[if lt IE 9]>
@@ -52,35 +52,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
                 </li>
               </ul>
               <ul class="current">
@@ -90,9 +66,9 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#users">Users</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-user">Create User</a>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-token">Create Token</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-user">Create User</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#get-user">Get User</a>
     </li>
@@ -104,15 +80,95 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#orgs">Orgs</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-org">Create Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-org">View Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-org">Update Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-org">Delete Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-orgs">List Orgs</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#org-members">Org Members</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#assign-members">Assign Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#unassign-members">Unassign Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-members">Update Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-members">List Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-orgs-by-member">List Orgs by Member</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#groups">Groups</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-group">Create Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-group">Get Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-groups">Get Groups</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-group">Update Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-group">Delete Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-group-by-thing">Get Group by Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-group-by-profile">Get Group by Profile</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#group-members">Group Members</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#assign-members_1">Assign Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#unassign-members_1">Unassign Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-members_1">Update Members</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-members-by-group">Get Members by Group</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#profiles">Profiles</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-profile-with-external-id">Create Profile with external ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-profiles">Create Profiles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-profiles-with-external-id">Create Profiles with external ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-profile">Get Profile</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-profiles">Get Profiles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-profiles-by-group">Get Profiles by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-profile">Update Profile</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-profile">Delete Profile</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#things">Things</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-thing-with-external-id">Create Thing with External ID</a>
+    <li class="toctree-l3"><a class="reference internal" href="#create-thing-with-external-id">Create Thing with external ID</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-things">Create Things</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-things-with-external-id">Create Things with external ID</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#get-thing">Get Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-metadata-by-key">Get Metadata by Key</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#get-all-things">Get All Things</a>
     </li>
@@ -121,32 +177,6 @@
     <li class="toctree-l3"><a class="reference internal" href="#update-thing">Update Thing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#delete-thing">Delete Thing</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#channels">Channels</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-channel-with-external-id">Create Channel with external ID</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#create-channels">Create Channels</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#create-channels-with-external-id">Create Channels with external ID</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-channel">Get Channel</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-channels">Get Channels</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-channels-by-group">Get Channels by Group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-channel">Update Channel</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#delete-channel">Delete Channel</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#connect">Connect</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#disconnect">Disconnect</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#access-by-key">Access by Key</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#identify">Identify</a>
     </li>
@@ -157,60 +187,6 @@
     <li class="toctree-l3"><a class="reference internal" href="#send-messages">Send Messages</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#read-messages">Read Messages</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#orgs">Orgs</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-org">Create org</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#view-org">View org</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-org">Update org</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#delete-org">Delete org</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#list-orgs">List orgs</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#assign-members">Assign members</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#unassign-members">Unassign members</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-members">Update members</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#list-members">List members</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#list-orgs-by-member">List orgs by member</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#groups">Groups</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-group">Create group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-group">Get group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-groups">Get groups</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-group">Update group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#delete-group">Delete group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-group-by-thing">Get group by thing</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-group-by-channel">Get group by channel</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#group-roles">Group roles</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-roles-by-group">Create roles by group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#delete-roles-by-group">Delete roles by group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-roles-by-group">Update roles by group</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-roles-by-group">Get roles by group</a>
     </li>
         </ul>
     </li>
@@ -238,7 +214,41 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#notifiers">Notifiers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-notifiers">Create Notifiers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-notifiers-by-group-id">Get Notifiers by Group ID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-notifier">Get Notifier</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-notifier">Update Notifier</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-notifiers">Delete Notifiers</a>
+    </li>
+        </ul>
+    </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
                 </li>
               </ul>
               <ul>
@@ -255,6 +265,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
                 </li>
               </ul>
       </div>
@@ -283,34 +297,12 @@
                 <h1 id="api">API<a class="headerlink" href="#api" title="Permanent link">#</a></h1>
 <h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">#</a></h2>
 <p>API reference in the Swagger UI can be found at:</p>
-<p><a href="https://mainfluxlabs.github.io/mainflu">https://mainfluxlabs.github.io/mainflux</a></p>
+<p><a href="https://mainfluxlabs.github.io/docs/">https://mainfluxlabs.github.io/mainflux</a></p>
 <h2 id="users">Users<a class="headerlink" href="#users" title="Permanent link">#</a></h2>
-<h3 id="create-user">Create User<a class="headerlink" href="#create-user" title="Permanent link">#</a></h3>
-<p>To start working with the Mainflux system, you need to create a user account.</p>
-<blockquote>
-<p>Must-have: e-mail and password (password must contain at least 8 characters)</p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;&lt;user_email&gt;&quot;, &quot;password&quot;:&quot;&lt;user_password&gt;&quot;}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:06:45 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
-Strict-Transport-Security: max-age=63072000; includeSubdomains
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: *
-Access-Control-Allow-Headers: *
-</code></pre>
 <h3 id="create-token">Create Token<a class="headerlink" href="#create-token" title="Permanent link">#</a></h3>
-<p>To log in to the Mainflux system, you need to create a <code>user_token</code>.</p>
+<p>To log in to the Mainflux system, you need to create a <code>user_token</code>. The obtained token is used for access control in the system.</p>
 <blockquote>
-<p>Must-have: registered e-mail and password</p>
+<p>Must-have: registered <code>email</code> and <code>password</code></p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/tokens -d '{&quot;email&quot;:&quot;&lt;user_email&gt;&quot;,
 &quot;password&quot;:&quot;&lt;user_password&gt;&quot;}'
@@ -330,6 +322,29 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
 {&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTU0MjQ4MzgsImlhdCI6MTYxNTM4ODgzOCwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaXNzdWVyX2lkIjoiZDc4MmI0MmItZTMxNy00Y2Q3LTlkZDAtNGUyZWEwZjM0OWM4IiwidHlwZSI6MH0.TAQxV6TImKw06RsK0J11rOHiWPvexEOA4BNZnhLhtxs&quot;}
+</code></pre>
+<h3 id="create-user">Create User<a class="headerlink" href="#create-user" title="Permanent link">#</a></h3>
+<p>The predefined user within the Mainflux system is the <code>root admin</code>.
+In order to add users to the system, the <code>root</code> administrator must create accounts for them.</p>
+<blockquote>
+<p>Must-have: <code>email</code>, <code>password</code> (password must contain at least 8 characters) and <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users -d '{&quot;email&quot;:&quot;&lt;user_email&gt;&quot;, &quot;password&quot;:&quot;&lt;user_password&gt;&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:06:45 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+Access-Control-Allow-Headers: *
 </code></pre>
 <h3 id="get-user">Get User<a class="headerlink" href="#get-user" title="Permanent link">#</a></h3>
 <p>You can always check the user entity that is logged in by entering the user ID and <code>user_token</code>.</p>
@@ -402,7 +417,7 @@ Access-Control-Allow-Headers: *
 <h3 id="change-password">Change Password<a class="headerlink" href="#change-password" title="Permanent link">#</a></h3>
 <p>Changing the user password can be done by calling the update password function</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>old_password</code> and password (<code>new_password</code>)</p>
+<p>Must-have: <code>user_token</code>, <code>old_password</code> and <code>password</code> (new_password)</p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/password -d '{&quot;old_password&quot;:&quot;&lt;old_password&gt;&quot;, &quot;password&quot;:&quot;&lt;new_password&gt;&quot;}'
 </code></pre>
@@ -420,15 +435,484 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 </code></pre>
-<h2 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h2>
-<h3 id="create-thing-with-external-id">Create Thing with External ID<a class="headerlink" href="#create-thing-with-external-id" title="Permanent link">#</a></h3>
-<p>It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
-There are two limitations - the existing ID have to be in UUID V4 format and it has to be unique in the Mainflux domain.</p>
-<p>To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a <code>user_token</code>, metadata and <code>group_id</code>.</p>
+<h2 id="orgs">Orgs<a class="headerlink" href="#orgs" title="Permanent link">#</a></h2>
+<h3 id="create-org">Create Org<a class="headerlink" href="#create-org" title="Permanent link">#</a></h3>
+<p>To create an org, you need the org name, description, metadata and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs -d '{&quot;name&quot;: &quot;&lt;org_name&gt;&quot;, &quot;description&quot;: &quot;&lt;org_description&gt;&quot;, &quot;metadata&quot;: {}}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /orgs/25da5d7a-d3f5-435e-bcad-0cf22343121a
+Date: Fri, 14 Jul 2023 14:03:14 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="view-org">View Org<a class="headerlink" href="#view-org" title="Permanent link">#</a></h3>
+<p>To view an org, you need the org ID and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:22:48 GMT
+Content-Length: 250
+
+{&quot;id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;name&quot;:&quot;org_name&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;description&quot;:&quot;org_description&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;updated_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;}
+</code></pre>
+<h3 id="update-org">Update Org<a class="headerlink" href="#update-org" title="Permanent link">#</a></h3>
+<p>To update an org, you need the org ID, name, description, metadata and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash"> curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot;  http://localhost/orgs/&lt;org_id&gt; -d '{&quot;name&quot;: &quot;&lt;org_name&gt;&quot;, &quot;description&quot;: &quot;&lt;org_desc&gt;&quot;, &quot;metadata&quot;:{}}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:41:23 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="delete-org">Delete Org<a class="headerlink" href="#delete-org" title="Permanent link">#</a></h3>
+<p>To delete an org, you need the org ID and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:47:24 GMT
+</code></pre>
+<h3 id="list-orgs">List Orgs<a class="headerlink" href="#list-orgs" title="Permanent link">#</a></h3>
+<p>To list orgs, you need a <code>user_token</code>
+Only admin users can list all orgs, other users can only list orgs they are members of.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 20:43:58 GMT
+Content-Length: 456
+
+{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;name&quot;:&quot;&quot;,&quot;orgs&quot;:[{&quot;id&quot;:&quot;9883c534-eeb5-4e30-aec9-bd6cf1639f95&quot;,&quot;name&quot;:&quot;org_name_1&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;, &quot;metadata&quot;:{&quot;meta&quot;:&quot;test1&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:35:40.116Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T10:58:32.523Z&quot;},{&quot;id&quot;:&quot;49114ab9-acbb-4d0b-be01-0dc2f396136c&quot;,&quot;name&quot;:&quot;org_name_2&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;metadata&quot;:{&quot;meta&quot;:&quot;test2&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:29:41.718Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T11:08:22.586Z&quot;}]}
+</code></pre>
+<h2 id="org-members">Org Members<a class="headerlink" href="#org-members" title="Permanent link">#</a></h2>
+<h3 id="assign-members">Assign Members<a class="headerlink" href="#assign-members" title="Permanent link">#</a></h3>
+<p>To assign members to an org, you need the org ID, member emails, member roles and a <code>user_token</code>
+Only roles defined on <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+<blockquote>
+<p>Must-have:  <code>email</code>, <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;org_members&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;,&quot;role&quot;: &quot;user_role&quot;}]}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:24:44 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="unassign-members">Unassign Members<a class="headerlink" href="#unassign-members" title="Permanent link">#</a></h3>
+<p>To unassign members from an org, you need the org ID, member IDs and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>member_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;&lt;member_id&gt;&quot;]}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:44:58 GMT
+</code></pre>
+<h3 id="update-members">Update Members<a class="headerlink" href="#update-members" title="Permanent link">#</a></h3>
+<p>To update members of an org, you need the org ID, member ids, role and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>user_email</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_id&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;org_members&quot;:[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 08:54:12 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="list-members">List Members<a class="headerlink" href="#list-members" title="Permanent link">#</a></h3>
+<p>To list members of an org, you need the org ID and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 09:13:22 GMT
+Content-Length: 235
+
+{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;name&quot;:&quot;&quot;,&quot;members&quot;:[{&quot;id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}]}
+</code></pre>
+<h3 id="list-orgs-by-member">List Orgs by Member<a class="headerlink" href="#list-orgs-by-member" title="Permanent link">#</a></h3>
+<p>To list orgs by member, you need the member ID and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>member_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot;  http://localhost/members/&lt;member_id&gt;/orgs
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 17 Jul 2023 10:21:56 GMT
+Content-Length: 622
+
+{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:3,&quot;name&quot;:&quot;&quot;,&quot;orgs&quot;:[{&quot;id&quot;:&quot;1fb75a76-3ca9-4c38-9194-5b03f25860f1&quot;,&quot;name&quot;:&quot;org_name&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;},{&quot;id&quot;:&quot;49114ab9-acbb-4d0b-be01-0dc2f396136c&quot;,&quot;name&quot;:&quot;org_name_1&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;},{&quot;id&quot;:&quot;9883c534-eeb5-4e30-aec9-bd6cf1639f95&quot;,&quot;name&quot;:&quot;org_name_2&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;}]}
+</code></pre>
+<h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h2>
+<h3 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h3>
+<p>To create a group, you need the group name, description, metadata, <code>org_id</code> and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>org_id</code>, <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/groups -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;, &quot;description&quot;: &quot;&lt;group_description&gt;&quot;, &quot;metadata&quot;: {}}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 16:58:09 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Location: /groups/01F0EH61SA7C7NDKWYCXVG7PWD
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="get-group">Get Group<a class="headerlink" href="#get-group" title="Permanent link">#</a></h3>
+<p>Get a group entity for a logged-in user</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:06:48 GMT
+Content-Type: application/json
+Content-Length: 264
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
+</code></pre>
+<h3 id="get-groups">Get Groups<a class="headerlink" href="#get-groups" title="Permanent link">#</a></h3>
+<p>Get all groups, list requests accepts limit and offset query parameters</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:09:28 GMT
+Content-Type: application/json
+Content-Length: 573
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;groups&quot;:[{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;},{&quot;id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name_1&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T17:07:52.13Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T17:07:52.13Z&quot;}]}
+</code></pre>
+<h3 id="update-group">Update Group<a class="headerlink" href="#update-group" title="Permanent link">#</a></h3>
+<p>Update group entity</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt; -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:11:51 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="delete-group">Delete Group<a class="headerlink" href="#delete-group" title="Permanent link">#</a></h3>
+<p>Delete a group entity</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:14:13 GMT
+Content-Type: application/json
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="get-group-by-thing">Get Group by Thing<a class="headerlink" href="#get-group-by-thing" title="Permanent link">#</a></h3>
+<p>Get a group entity by thing</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>thing_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt;/groups
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:06:48 GMT
+Content-Type: application/json
+Content-Length: 264
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
+</code></pre>
+<h3 id="get-group-by-profile">Get Group by Profile<a class="headerlink" href="#get-group-by-profile" title="Permanent link">#</a></h3>
+<p>Get a group entity by profile</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/profiles/&lt;profile_id&gt;/groups
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:06:48 GMT
+Content-Type: application/json
+Content-Length: 264
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
+</code></pre>
+<h2 id="group-members">Group Members<a class="headerlink" href="#group-members" title="Permanent link">#</a></h2>
+<h3 id="assign-members_1">Assign Members<a class="headerlink" href="#assign-members_1" title="Permanent link">#</a></h3>
+<p>In order to assign members to a group, you need the group ID, member roles and a <code>user_token</code>
+Only roles defined on <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, group_members</p>
+</blockquote>
+<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_members&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Wed, 03 Nov 2021 13:00:14 GMT
+Content-Length: 3
+
+{}
+</code></pre>
+<h3 id="unassign-members_1">Unassign Members<a class="headerlink" href="#unassign-members_1" title="Permanent link">#</a></h3>
+<p>To unassign members from a group, you need the group ID, member IDs, role and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, member_ids</p>
+</blockquote>
+<pre><code class="language-bash">curl -isSX PATCH http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;,&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;]}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Wed, 03 Nov 2021 13:00:05 GMT
+</code></pre>
+<h3 id="update-members_1">Update Members<a class="headerlink" href="#update-members_1" title="Permanent link">#</a></h3>
+<p>To update members of an group, you need the group ID, member ids and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_members&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:11:51 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="get-members-by-group">Get Members by Group<a class="headerlink" href="#get-members-by-group" title="Permanent link">#</a></h3>
+<p>To list members by group, you need the group ID and a <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 17:09:28 GMT
+Content-Type: application/json
+Content-Length: 225
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;groups_roles&quot;:[{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;role&quot;:&quot;viewer&quot;},{&quot;id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;email&quot;:&quot;user2@gmail.com&quot;,&quot;role&quot;:&quot;editor&quot;}]}
+</code></pre>
+<h2 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">#</a></h2>
+<h3 id="create-profile-with-external-id">Create Profile with external ID<a class="headerlink" href="#create-profile-with-external-id" title="Permanent link">#</a></h3>
+<p>A profile is a set of configuration parameters that can be applied to a Thing within the same group.
+To create a profile with external ID, the user needs to provide a UUID v4 format unique ID, <code>group_id</code>, metadata, config and a <code>user_token</code>.
+The detailed configuration of the Profile Config can be found at <a href="https://github.com/MainfluxLabs/docs/blob/master/docs/messaging.md#configure-profile-config">Profile Config</a>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>,<code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/profiles -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;: &quot;&lt;profile_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:26:51 GMT
+Content-Type: application/json
+Content-Length: 204
+Connection: keep-alive
+Location: /profiles/db4b7428-e278-4fe3-b85a-d65554d6abe9
+Access-Control-Expose-Headers: Location
+
+{&quot;profiles&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;:&quot;profile_name&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
+
+</code></pre>
+<h3 id="create-profiles">Create Profiles<a class="headerlink" href="#create-profiles" title="Permanent link">#</a></h3>
+<p>The same as creating a profile with external ID the user can create multiple profiles at once by providing UUID v4 format unique ID in a series of profiles together with a <code>user_token</code> and <code>&lt;group_id&gt;</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code> and profiles</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/profiles -d '[{&quot;name&quot;: &quot;&lt;profile_name_1&gt;&quot;}, {&quot;name&quot;: &quot;&lt;profile_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:28:10 GMT
+Content-Type: application/json
+Content-Length: 352
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;profiles&quot;:[{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;name&quot;:&quot;profile_name_1&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;name&quot;:&quot;profile_name_2&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;content-type&quot;:&quot;application/json&quot;}}]}
+</code></pre>
+<h3 id="create-profiles-with-external-id">Create Profiles with external ID<a class="headerlink" href="#create-profiles-with-external-id" title="Permanent link">#</a></h3>
+<p>You can create multiple profiles with external ID at once</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code> and at least 2 profiles</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/profiles -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;name&quot;: &quot;&lt;profile_name_1&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;name&quot;: &quot;&lt;profile_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:28:10 GMT
+Content-Type: application/json
+Content-Length: 398
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;profiles&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;name&quot;:&quot;profile_name_1&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;name&quot;:&quot;profile_name_2&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
+</code></pre>
+<h3 id="get-profile">Get Profile<a class="headerlink" href="#get-profile" title="Permanent link">#</a></h3>
+<p>Get a profile entity for a logged-in user</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/profiles/&lt;profile_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:29:49 GMT
+Content-Type: application/json
+Content-Length: 188
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;profile_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;content-type&quot;:&quot;application/json&quot;}}
+</code></pre>
+<h3 id="get-profiles">Get Profiles<a class="headerlink" href="#get-profiles" title="Permanent link">#</a></h3>
+<p>Get all profiles that the user can access, list requests accepts limit and offset query parameters</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/profiles
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:30:34 GMT
+Content-Type: application/json
+Content-Length: 493
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;profiles&quot;:[{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;profile_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;profile_name_1&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;profile_name_2&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
+</code></pre>
+<h3 id="get-profiles-by-group">Get Profiles by Group<a class="headerlink" href="#get-profiles-by-group" title="Permanent link">#</a></h3>
+<p>Get all profiles by a certain group where the user has access </p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>&lt;group_id&gt;</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/profiles
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:30:34 GMT
+Content-Type: application/json
+Content-Length: 493
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;profiles&quot;:[{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;name&quot;:&quot;profile_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;name&quot;:&quot;profile_name_1&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;name&quot;:&quot;profile_name_2&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;config&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
+</code></pre>
+<h3 id="update-profile">Update Profile<a class="headerlink" href="#update-profile" title="Permanent link">#</a></h3>
+<p>Update profile entity</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/profiles/&lt;profile_id&gt; -d '{&quot;name&quot;: &quot;&lt;profile_name&gt;&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:32:08 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="delete-profile">Delete Profile<a class="headerlink" href="#delete-profile" title="Permanent link">#</a></h3>
+<p>Delete a profile entity that is not assigned to any Thing</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/profiles/&lt;profile_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:33:21 GMT
+Content-Type: application/json
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h2 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h2>
+<h3 id="create-thing-with-external-id">Create Thing with external ID<a class="headerlink" href="#create-thing-with-external-id" title="Permanent link">#</a></h3>
+<p>It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
+There are two limitations - the existing ID have to be in UUID V4 format, and it has to be unique in the Mainflux domain.</p>
+<p>To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a <code>user_token</code>, metadata, <code>group_id</code> and the profile ID assigned to it.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -439,14 +923,14 @@ Content-Length: 199
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
+{&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
 </code></pre>
 <h3 id="create-things">Create Things<a class="headerlink" href="#create-things" title="Permanent link">#</a></h3>
 <p>You can create multiple things at once by entering a series of things structures, <code>group_id</code> and a <code>user_token</code></p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and at least two things</p>
+<p>Must-have: <code>user_token</code>, <code>group_id</code> and things</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -457,14 +941,14 @@ Content-Length: 365
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;things&quot;:[{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
+{&quot;things&quot;:[{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;x9bf9e57-1685-4c89-bafb-ff5af830be8x&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
 </code></pre>
 <h3 id="create-things-with-external-id">Create Things with external ID<a class="headerlink" href="#create-things-with-external-id" title="Permanent link">#</a></h3>
 <p>The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a <code>user_token</code> and <code>group_id</code></p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and at least two things</p>
+<p>Must-have: <code>user_token</code>, <code>group_id</code> and things</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;}]'
 </code></pre>
 <h3 id="get-thing">Get Thing<a class="headerlink" href="#get-thing" title="Permanent link">#</a></h3>
 <p>You can get thing entity by entering the thing ID and <code>user_token</code></p>
@@ -482,10 +966,29 @@ Content-Length: 185
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}
+{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}
+</code></pre>
+<h3 id="get-metadata-by-key">Get Metadata by Key<a class="headerlink" href="#get-metadata-by-key" title="Permanent link">#</a></h3>
+<p>Get thing metadata by providing the <code>thing_key</code></p>
+<blockquote>
+<p>Must-have: <code>thing_key</code></p>
+</blockquote>
+<p>```bash
+curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/metadata</p>
+<pre><code>
+Response:
+```bash
+Server: nginx/1.20.0
+Date: Tue, 21 Jan 2025 15:46:10 GMT
+Content-Type: application/json
+Content-Length: 29
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;metadata&quot;:{&quot;test&quot;:&quot;data&quot;}}
 </code></pre>
 <h3 id="get-all-things">Get All Things<a class="headerlink" href="#get-all-things" title="Permanent link">#</a></h3>
-<p>Get all things, list requests accepts limit and offset query parameters</p>
+<p>Get all things that the user can access, list requests accepts limit and offset query parameters</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
@@ -500,7 +1003,7 @@ Content-Length: 582
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;things&quot;:[{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}},{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;}]}
+{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;things&quot;:[{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}},{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;}]}
 </code></pre>
 <h3 id="get-things-by-group">Get Things by Group<a class="headerlink" href="#get-things-by-group" title="Permanent link">#</a></h3>
 <p>Get all things by a certain group</p>
@@ -518,14 +1021,14 @@ Content-Length: 582
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;things&quot;:[{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}},{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;}]}
+{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;things&quot;:[{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}},{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;}]}
 </code></pre>
 <h3 id="update-thing">Update Thing<a class="headerlink" href="#update-thing" title="Permanent link">#</a></h3>
 <p>Updating a thing entity</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>thing_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt; -d '{&quot;name&quot;: &quot;&lt;thing_name&gt;&quot;}'
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt; -d '{&quot;name&quot;: &quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -551,229 +1054,8 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
-<h2 id="channels">Channels<a class="headerlink" href="#channels" title="Permanent link">#</a></h2>
-<h3 id="create-channel-with-external-id">Create Channel with external ID<a class="headerlink" href="#create-channel-with-external-id" title="Permanent link">#</a></h3>
-<p>Channel is a group of things that could represent a special category in existing systems, e.g. a building level channel could represent the level of a smarting building system. For helping to keep the reference, it is possible to set an existing ID while creating the Mainflux channel. There are two limitations - the existing ID has to be in UUID V4 format and it has to be unique in the Mainflux domain.</p>
-<p>To create a channel with external ID, the user needs provide a UUID v4 format unique ID, <code>group_id</code>, metadata, profile and a <code>user_token</code>.
-The detailed configuration of the Channel Profile can be found at <a href="https://github.com/MainfluxLabs/docs/blob/master/docs/messaging.md#configure-channel-profile">Channel Profile</a>.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>,<code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/channels -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;: &quot;&lt;channel_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:26:51 GMT
-Content-Type: application/json
-Content-Length: 204
-Connection: keep-alive
-Location: /channels/db4b7428-e278-4fe3-b85a-d65554d6abe9
-Access-Control-Expose-Headers: Location
-
-{&quot;channels&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;name&quot;:&quot;channel_name&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
-
-</code></pre>
-<h3 id="create-channels">Create Channels<a class="headerlink" href="#create-channels" title="Permanent link">#</a></h3>
-<p>The same as creating a channel with external ID the user can create multiple channels at once by providing UUID v4 format unique ID in a series of channels together with a <code>user_token</code> and <code>&lt;group_id&gt;</code>.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and at least 2 channels</p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/channels -d '[{&quot;name&quot;: &quot;&lt;channel_name_1&gt;&quot;}, {&quot;name&quot;: &quot;&lt;channel_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:28:10 GMT
-Content-Type: application/json
-Content-Length: 352
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;channels&quot;:[{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;name&quot;:&quot;channel_name_1&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;name&quot;:&quot;channel_name_2&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;content-type&quot;:&quot;application/json&quot;}}]}
-</code></pre>
-<h3 id="create-channels-with-external-id">Create Channels with external ID<a class="headerlink" href="#create-channels-with-external-id" title="Permanent link">#</a></h3>
-<p>As with things, you can create multiple channels with external ID at once</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and at least 2 channels</p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/channels -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;name&quot;: &quot;&lt;channel_name_1&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;name&quot;: &quot;&lt;channel_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:28:10 GMT
-Content-Type: application/json
-Content-Length: 398
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;channels&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;name&quot;:&quot;channel_name_1&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;name&quot;:&quot;channel_name_2&quot;,&quot;group_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
-</code></pre>
-<h3 id="get-channel">Get Channel<a class="headerlink" href="#get-channel" title="Permanent link">#</a></h3>
-<p>Get a channel entity for a logged in user</p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>channel_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:29:49 GMT
-Content-Type: application/json
-Content-Length: 188
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;channel_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;content-type&quot;:&quot;application/json&quot;}}
-</code></pre>
-<h3 id="get-channels">Get Channels<a class="headerlink" href="#get-channels" title="Permanent link">#</a></h3>
-<p>Get all channels, list requests accepts limit and offset query parameters</p>
-<blockquote>
-<p>Must-have: <code>user_token</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:30:34 GMT
-Content-Type: application/json
-Content-Length: 493
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;channels&quot;:[{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;channel_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;channel_name_1&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;channel_name_2&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
-</code></pre>
-<h3 id="get-channels-by-group">Get Channels by Group<a class="headerlink" href="#get-channels-by-group" title="Permanent link">#</a></h3>
-<p>Get all channels by a certain group</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>&lt;group_id&gt;</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/channels
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:30:34 GMT
-Content-Type: application/json
-Content-Length: 493
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;order&quot;:&quot;&quot;,&quot;direction&quot;:&quot;&quot;,&quot;channels&quot;:[{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;name&quot;:&quot;channel_name&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;b8073d41-01dc-46ad-bb26-cfecc596c6c1&quot;,&quot;name&quot;:&quot;channel_name_1&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}},{&quot;id&quot;:&quot;2200527a-f590-4fe5-b9d6-892fc6f825c3&quot;,&quot;name&quot;:&quot;channel_name_2&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;},&quot;profile&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}
-</code></pre>
-<h3 id="update-channel">Update Channel<a class="headerlink" href="#update-channel" title="Permanent link">#</a></h3>
-<p>Update channel entity</p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>channel_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt; -d '{&quot;name&quot;: &quot;&lt;channel_name&gt;&quot;}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:32:08 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="delete-channel">Delete Channel<a class="headerlink" href="#delete-channel" title="Permanent link">#</a></h3>
-<p>Delete a channel entity</p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>channel_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:33:21 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="connect">Connect<a class="headerlink" href="#connect" title="Permanent link">#</a></h3>
-<p>Connect things to channels</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>channel_id</code> and <code>thing_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/connect -d '{&quot;channel_ids&quot;: [&quot;&lt;channel_id&gt;&quot;], &quot;thing_ids&quot;: [&quot;&lt;thing_id&gt;&quot;]}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:36:32 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>Connect thing to channel</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>channel_id</code> and <code>thing_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt;/things/&lt;thing_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Fri, 21 Jan 2022 15:20:47 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Warning-Deprecated: This endpoint will be depreciated in v1.0.0. It will be replaced with the bulk endpoint found at /connect.
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="disconnect">Disconnect<a class="headerlink" href="#disconnect" title="Permanent link">#</a></h3>
-<p>Disconnect things from channels specified by lists of IDs.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>channel_ids</code> and <code>thing_ids</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost:&lt;service_port&gt;/disconnect -d '{&quot;thing_ids&quot;: [&quot;&lt;thing_id_1&gt;&quot;, &quot;&lt;thing_id_2&gt;&quot;], &quot;channel_ids&quot;: [&quot;&lt;channel_id_1&gt;&quot;, &quot;&lt;channel_id_2&gt;&quot;]}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Sun, 11 Jul 2021 17:23:39 GMT
-Content-Length: 0
-</code></pre>
-<p>Disconnect thing from the channel</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>channel_id</code> and <code>thing_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt;/things/&lt;thing_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:38:14 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="access-by-key">Access by Key<a class="headerlink" href="#access-by-key" title="Permanent link">#</a></h3>
-<p>Checks if thing has access to a channel</p>
-<blockquote>
-<p>Must-have: <code>thing_key</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/connections -d '{&quot;key&quot;: &quot;&lt;thing_key&gt;&quot;}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Mon, 22 Mar 2021 13:10:53 GMT
-Content-Type: application/json
-Content-Length: 103
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;channel_id&quot;:&quot;d69d0098-072b-41bf-8c6e-ce4dbb12d333&quot;,&quot;thing_id&quot;:&quot;a543a098-072b-41bf-8c6e-ce4dbb12d444&quot;}
-</code></pre>
 <h3 id="identify">Identify<a class="headerlink" href="#identify" title="Permanent link">#</a></h3>
-<p>Validates thing's key and returns it's ID if key is valid</p>
+<p>Validates thing's key and returns its ID if key is valid</p>
 <blockquote>
 <p>Must-have: <code>thing_key</code></p>
 </blockquote>
@@ -794,9 +1076,9 @@ Access-Control-Expose-Headers: Location
 <h3 id="send-messages">Send Messages<a class="headerlink" href="#send-messages" title="Permanent link">#</a></h3>
 <p>Sends message via HTTP protocol</p>
 <blockquote>
-<p>Must-have: <code>thing_key</code> and <code>channel_id</code></p>
+<p>Must-have: <code>thing_key</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost/http/channels/&lt;channel_id&gt;/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09,&quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5,&quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost/http/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09,&quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5,&quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 202 Accepted
@@ -806,11 +1088,11 @@ Content-Length: 0
 Connection: keep-alive
 </code></pre>
 <h3 id="read-messages">Read Messages<a class="headerlink" href="#read-messages" title="Permanent link">#</a></h3>
-<p>Reads messages from database for a given channel</p>
+<p>Reads messages from database</p>
 <blockquote>
-<p>Must-have: <code>thing_key</code> and <code>channel_id</code></p>
+<p>Must-have: <code>thing_key</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost:&lt;service_port&gt;/channels/&lt;channel_id&gt;/messages?offset=0&amp;limit=5
+<pre><code class="language-bash">curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost:&lt;service_port&gt;/messages?offset=0&amp;limit=5
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -818,329 +1100,7 @@ Content-Type: application/json
 Date: Wed, 10 Mar 2021 16:54:58 GMT
 Content-Length: 660
 
-{&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;format&quot;:&quot;messages&quot;,&quot;total&quot;:3,&quot;messages&quot;:[{&quot;channel_name&quot;:&quot;1a0cde06-8e5c-4f07-aac5-95aff4a19ea0&quot;,&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:voltage&quot;,&quot;unit&quot;:&quot;V&quot;,&quot;time&quot;:1276020076.001,&quot;value&quot;:120.1},{&quot;channel_name&quot;:&quot;1a0cde06-8e5c-4f07-aac5-95aff4a19ea0&quot;,&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020072.001,&quot;value&quot;:1.3},{&quot;channel_name&quot;:&quot;1a0cde06-8e5c-4f07-aac5-95aff4a19ea0&quot;,&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020071.001,&quot;value&quot;:1.2}]}
-</code></pre>
-<h2 id="orgs">Orgs<a class="headerlink" href="#orgs" title="Permanent link">#</a></h2>
-<h3 id="create-org">Create org<a class="headerlink" href="#create-org" title="Permanent link">#</a></h3>
-<p>To create an org, you need the org name, description, metadata and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs -d '{&quot;name&quot;: &quot;&lt;org_name&gt;&quot;, &quot;description&quot;: &quot;&lt;org_description&gt;&quot;, &quot;metadata&quot;: {}}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Content-Type: application/json
-Location: /orgs/25da5d7a-d3f5-435e-bcad-0cf22343121a
-Date: Fri, 14 Jul 2023 14:03:14 GMT
-Content-Length: 0
-</code></pre>
-<h3 id="view-org">View org<a class="headerlink" href="#view-org" title="Permanent link">#</a></h3>
-<p>To view an org, you need the org ID and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Fri, 14 Jul 2023 14:22:48 GMT
-Content-Length: 250
-
-{&quot;id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;name&quot;:&quot;org_name&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;description&quot;:&quot;org_description&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;updated_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;}
-</code></pre>
-<h3 id="update-org">Update org<a class="headerlink" href="#update-org" title="Permanent link">#</a></h3>
-<p>To update an org, you need the org ID, name, description, metadata and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
-</blockquote>
-<pre><code class="language-bash"> curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot;  http://localhost/orgs/&lt;org_id&gt; -d '{&quot;name&quot;: &quot;&lt;org_name&gt;&quot;, &quot;description&quot;: &quot;&lt;org_desc&gt;&quot;, &quot;metadata&quot;:{}}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Fri, 14 Jul 2023 14:41:23 GMT
-Content-Length: 0
-</code></pre>
-<h3 id="delete-org">Delete org<a class="headerlink" href="#delete-org" title="Permanent link">#</a></h3>
-<p>To delete an org, you need the org ID and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Content-Type: application/json
-Date: Fri, 14 Jul 2023 14:47:24 GMT
-</code></pre>
-<h3 id="list-orgs">List orgs<a class="headerlink" href="#list-orgs" title="Permanent link">#</a></h3>
-<p>To list orgs, you need a <code>user_token</code>
-Only admin users can list all orgs, other users can only list orgs they are members of.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Fri, 14 Jul 2023 20:43:58 GMT
-Content-Length: 456
-
-{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;name&quot;:&quot;&quot;,&quot;orgs&quot;:[{&quot;id&quot;:&quot;9883c534-eeb5-4e30-aec9-bd6cf1639f95&quot;,&quot;name&quot;:&quot;org_name_1&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;, &quot;metadata&quot;:{&quot;meta&quot;:&quot;test1&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:35:40.116Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T10:58:32.523Z&quot;},{&quot;id&quot;:&quot;49114ab9-acbb-4d0b-be01-0dc2f396136c&quot;,&quot;name&quot;:&quot;org_name_2&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;metadata&quot;:{&quot;meta&quot;:&quot;test2&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:29:41.718Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T11:08:22.586Z&quot;}]}
-</code></pre>
-<h3 id="assign-members">Assign members<a class="headerlink" href="#assign-members" title="Permanent link">#</a></h3>
-<p>To assign members to an org, you need the org ID, member emails, member roles and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have:  <code>email</code>, <code>user_token</code> and <code>org_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;members&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;,&quot;role&quot;: &quot;user_role&quot;}]}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 08:24:44 GMT
-Content-Length: 0
-</code></pre>
-<h3 id="unassign-members">Unassign members<a class="headerlink" href="#unassign-members" title="Permanent link">#</a></h3>
-<p>To unassign members from an org, you need the org ID, member IDs and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>member_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;&lt;member_id&gt;&quot;]}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 08:44:58 GMT
-</code></pre>
-<h3 id="update-members">Update members<a class="headerlink" href="#update-members" title="Permanent link">#</a></h3>
-<p>To update members of an org, you need the org ID, member ids and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>user_email</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_id&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;members&quot;:[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 08:54:12 GMT
-Content-Length: 0
-</code></pre>
-<h3 id="list-members">List members<a class="headerlink" href="#list-members" title="Permanent link">#</a></h3>
-<p>To list members of an org, you need the org ID and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 09:13:22 GMT
-Content-Length: 235
-
-{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;name&quot;:&quot;&quot;,&quot;members&quot;:[{&quot;id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}]}
-</code></pre>
-<h3 id="list-orgs-by-member">List orgs by member<a class="headerlink" href="#list-orgs-by-member" title="Permanent link">#</a></h3>
-<p>To list orgs by member, you need the member ID and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>member_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot;  http://localhost/members/&lt;member_id&gt;/orgs
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 10:21:56 GMT
-Content-Length: 622
-
-{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:3,&quot;name&quot;:&quot;&quot;,&quot;orgs&quot;:[{&quot;id&quot;:&quot;1fb75a76-3ca9-4c38-9194-5b03f25860f1&quot;,&quot;name&quot;:&quot;org_name&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;},{&quot;id&quot;:&quot;49114ab9-acbb-4d0b-be01-0dc2f396136c&quot;,&quot;name&quot;:&quot;org_name_1&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;},{&quot;id&quot;:&quot;9883c534-eeb5-4e30-aec9-bd6cf1639f95&quot;,&quot;name&quot;:&quot;org_name_2&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;created_at&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;0001-01-01T00:00:00Z&quot;}]}
-</code></pre>
-<h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h2>
-<h3 id="create-group">Create group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h3>
-<p>To create a group, you need the group name, description, metadata, <code>org_id</code> and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>org_id</code>, <code>user_token</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/groups -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;, &quot;description&quot;: &quot;&lt;group_description&gt;&quot;, &quot;metadata&quot;: {}}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 16:58:09 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /groups/01F0EH61SA7C7NDKWYCXVG7PWD
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="get-group">Get group<a class="headerlink" href="#get-group" title="Permanent link">#</a></h3>
-<p>Get a group entity for a logged in user</p>
-<blockquote>
-<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:06:48 GMT
-Content-Type: application/json
-Content-Length: 264
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
-</code></pre>
-<h3 id="get-groups">Get groups<a class="headerlink" href="#get-groups" title="Permanent link">#</a></h3>
-<p>Get all groups, list requests accepts limit and offset query parameters</p>
-<blockquote>
-<p>Must-have: <code>user_token</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:09:28 GMT
-Content-Type: application/json
-Content-Length: 573
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;groups&quot;:[{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;},{&quot;id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name_1&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T17:07:52.13Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T17:07:52.13Z&quot;}]}
-</code></pre>
-<h3 id="update-group">Update group<a class="headerlink" href="#update-group" title="Permanent link">#</a></h3>
-<p>Update group entity</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt; -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:11:51 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="delete-group">Delete group<a class="headerlink" href="#delete-group" title="Permanent link">#</a></h3>
-<p>Delete a group entity</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:14:13 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="get-group-by-thing">Get group by thing<a class="headerlink" href="#get-group-by-thing" title="Permanent link">#</a></h3>
-<p>Get a group entity by thing</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>thing_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt;/groups
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:06:48 GMT
-Content-Type: application/json
-Content-Length: 264
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
-</code></pre>
-<h3 id="get-group-by-channel">Get group by channel<a class="headerlink" href="#get-group-by-channel" title="Permanent link">#</a></h3>
-<p>Get a group entity by channel</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>channel_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/channels/&lt;channel_id&gt;/groups
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:06:48 GMT
-Content-Type: application/json
-Content-Length: 264
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;owner_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
-</code></pre>
-<h2 id="group-roles">Group roles<a class="headerlink" href="#group-roles" title="Permanent link">#</a></h2>
-<h3 id="create-roles-by-group">Create roles by group<a class="headerlink" href="#create-roles-by-group" title="Permanent link">#</a></h3>
-<p>The admin of the group can add custom roles. Only roles defined on <a href="/authorization/#summary-of-the-defined-policies">Predefined Roles section</a> are allowed.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code>, group_roles</p>
-</blockquote>
-<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_roles&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Content-Type: application/json
-Date: Wed, 03 Nov 2021 13:00:14 GMT
-Content-Length: 3
-
-{}
-</code></pre>
-<h3 id="delete-roles-by-group">Delete roles by group<a class="headerlink" href="#delete-roles-by-group" title="Permanent link">#</a></h3>
-<p>The admin of the group can delete roles. Only policies defined on <a href="/authorization/#summary-of-the-defined-policies">Predefined Roles section</a> are allowed.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code>, member_ids</p>
-</blockquote>
-<pre><code class="language-bash">curl -isSX PATCH http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;,&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;]}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Content-Type: application/json
-Date: Wed, 03 Nov 2021 13:00:05 GMT
-</code></pre>
-<h3 id="update-roles-by-group">Update roles by group<a class="headerlink" href="#update-roles-by-group" title="Permanent link">#</a></h3>
-<p>The admin of the group can update roles.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_roles&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:11:51 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<h3 id="get-roles-by-group">Get roles by group<a class="headerlink" href="#get-roles-by-group" title="Permanent link">#</a></h3>
-<p>To list roles by group, you need the group ID and a <code>user_token</code></p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 17:09:28 GMT
-Content-Type: application/json
-Content-Length: 225
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;groups_roles&quot;:[{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;role&quot;:&quot;viewer&quot;},{&quot;id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;email&quot;:&quot;user2@gmail.com&quot;,&quot;role&quot;:&quot;editor&quot;}]}
+{&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;format&quot;:&quot;messages&quot;,&quot;total&quot;:3,&quot;messages&quot;:[{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:voltage&quot;,&quot;unit&quot;:&quot;V&quot;,&quot;time&quot;:1276020076.001,&quot;value&quot;:120.1},{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020072.001,&quot;value&quot;:1.3},{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020071.001,&quot;value&quot;:1.2}]}
 </code></pre>
 <h2 id="api-key">API Key<a class="headerlink" href="#api-key" title="Permanent link">#</a></h2>
 <h3 id="issue-api-key">Issue API Key<a class="headerlink" href="#issue-api-key" title="Permanent link">#</a></h3>
@@ -1282,12 +1242,101 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
+<h2 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h2>
+<h3 id="create-notifiers">Create Notifiers<a class="headerlink" href="#create-notifiers" title="Permanent link">#</a></h3>
+<p>In order to send email notifications to certain contacts when a message arrives, you need to create a Notifier with the necessary data, such as the Notifier's <code>name</code>, <code>group_id</code>, which refers to the Group for which the Notifier is being created, the <code>contacts</code> to which the notifications will be sent and optional <code>metadata</code>.</p>
+<p>You can create multiple Notifiers at once by entering a series of Notifiers structures, <code>group_id</code> and a <code>user_token</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>name</code> and <code>contacts</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/notifiers -d '{&quot;notifiers: [{&quot;name&quot;:&quot;notifier_name&quot;,&quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],&quot;metadata&quot;:{}}]}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Server: nginx/1.20.0
+Date: Thu, 11 Apr 2024 12:17:12 GMT
+Content-Type: application/json
+Content-Length: 190
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;a630f594-d967-4c54-85ef-af58efe8e8eb&quot;,&quot;group_id&quot;:&quot;c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0&quot;,&quot;name&quot;:&quot;notifier_name&quot;,&quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],&quot;metadata&quot;:{}}
+
+</code></pre>
+<p><strong>Note:</strong> The logged-in user who creates a Notifier for a certain Group must have the role of "editor" of that Group.</p>
+<h3 id="get-notifiers-by-group-id">Get Notifiers by Group ID<a class="headerlink" href="#get-notifiers-by-group-id" title="Permanent link">#</a></h3>
+<p>You can get all Notifiers for certain Group by entering <code>user_token</code> and <code>group_id</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/notifiers
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Thu, 11 Apr 2024 12:19:57 GMT
+Content-Type: application/json
+Content-Length: 305
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;notifiers&quot;:[{&quot;id&quot;:&quot;a630f594-d967-4c54-85ef-af58efe8e8eb&quot;,&quot;group_id&quot;:&quot;50e6b371-60ff-45cf-bb52-8200e7cde536&quot;,&quot;name&quot;:&quot;Test&quot;,&quot;contacts&quot;: [&quot;test1@example.com&quot;]},{&quot;id&quot;:&quot;2234f594-d967-4c54-85ef-af58efe8e8ed&quot;,&quot;group_id&quot;:&quot;50e6b371-60ff-45cf-bb52-8200e7cde536&quot;,&quot;name&quot;:&quot;Test2&quot;,&quot;contacts&quot;: [&quot;test2@example.com&quot;]}]}
+</code></pre>
+<h3 id="get-notifier">Get Notifier<a class="headerlink" href="#get-notifier" title="Permanent link">#</a></h3>
+<p>View details of a certain Notifier by entering <code>user_token</code> and <code>notifier_id</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/notifiers/&lt;notifier_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Thu, 11 Apr 2024 12:24:57 GMT
+Content-Type: application/json
+Content-Length: 145
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;id&quot;:&quot;a630f594-d967-4c54-85ef-af58efe8e8eb&quot;,&quot;group_id&quot;:&quot;50e6b371-60ff-45cf-bb52-8200e7cde536&quot;,&quot;name&quot;:&quot;Test&quot;,&quot;contacts&quot;: [&quot;test1@example.com&quot;]}}
+</code></pre>
+<h3 id="update-notifier">Update Notifier<a class="headerlink" href="#update-notifier" title="Permanent link">#</a></h3>
+<p>Update data of notifier with provided ID and <code>user_token</code></p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>notifier_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/notifiers/&lt;notifier_id&gt; -d '{&quot;name&quot;: &quot;&lt;new_notifier_name&gt;&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Thu, 11 Apr 2024 12:34:52 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="delete-notifiers">Delete Notifiers<a class="headerlink" href="#delete-notifiers" title="Permanent link">#</a></h3>
+<p>Delete notifiers by given IDs</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>,<code>group_id</code>, notifier_ids</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/notifiers -d '{&quot;notifier_ids&quot;:[&quot;a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1&quot;,&quot;b513d843-abf8-4db4-93fd-bdc8917d42m2&quot;]}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Server: nginx/1.16.0
+Date: Thu, 11 Apr 2024 12:55:10 GMT
+Content-Type: application/json
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../cli/" class="btn btn-neutral float-left" title="CLI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../tracing/" class="btn btn-neutral float-right" title="Tracing">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../authorization/" class="btn btn-neutral float-left" title="Authorization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../messaging/" class="btn btn-neutral float-right" title="Messaging">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -1311,14 +1360,14 @@ Access-Control-Expose-Headers: Location
   <span class="rst-current-version" data-toggle="rst-current-version">
     
         <span>
-          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
     
-      <span><a href="../cli/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../authorization/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../tracing/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../messaging/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -1,63 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://mainfluxlabs.github.io/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/api/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/api/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/architecture/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/architecture/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/authentication/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/authentication/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/authorization/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/authorization/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/benchmark/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/benchmark/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/cli/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/cli/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/dev-guide/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/dev-guide/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/edge/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/edge/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/getting-started/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/enterprise/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/kubernetes/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/getting-started/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/messaging/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/kubernetes/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/security/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/messaging/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/storage/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/security/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://mainfluxlabs.github.io/tracing/</loc>
-         <lastmod>2025-01-27</lastmod>
+         <loc>https://mainflux.com/index.html/storage/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://mainflux.com/index.html/tracing/</loc>
+         <lastmod>2025-02-04</lastmod>
     </url>
 </urlset>

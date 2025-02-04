@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/authentication/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/authentication/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
     <title>Authentication - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "Authentication";
         var mkdocs_page_input_path = "authentication.md";
-        var mkdocs_page_url = "/authentication/";
+        var mkdocs_page_url = "/index.html/authentication/";
       </script>
     
     <!--[if lt IE 9]>
@@ -51,26 +51,6 @@
                 <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
-                </li>
-              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Authentication</a>
     <ul class="current">
@@ -100,11 +80,27 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
                 </li>
               </ul>
               <ul>
@@ -121,6 +117,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
                 </li>
               </ul>
       </div>
@@ -157,7 +157,7 @@ There are three types of authentication keys:</p>
 </ul>
 <p>Authentication keys are represented and distributed by the corresponding <a href="https://jwt.io/">JWT</a>.
 User keys are issued when user logs in. Each user request (other than registration and login) contains user key that is used to authenticate the user.</p>
-<p>API keys are similar to the User keys. The main difference is that API keys have configurable expiration time. If no time is set, the key will never expire. API keys are the only key type that <em>can be revoked</em>. This also means that, despite being used as a JWT, it requires a query to the database to validate the API key. The user with API key can perform all the same actions as the user with login key (can act on behalf of the user for Thing, Channel, or user profile management), <em>except issuing new API keys</em>. </p>
+<p>API keys are similar to the User keys. The main difference is that API keys have configurable expiration time. If no time is set, the key will never expire. API keys are the only key type that <em>can be revoked</em>. This also means that, despite being used as a JWT, it requires a query to the database to validate the API key. The user with API key can perform all the same actions as the user with login key (can act on behalf of the user for Thing, Profile, or user profile management), <em>except issuing new API keys</em>. </p>
 <p>Recovery key is the password recovery key. It's short-lived token used for password recovery process.</p>
 <p>The following actions are supported:</p>
 <ul>
@@ -175,7 +175,7 @@ This is the default Mainflux authentication mechanism and this method is used if
 <p>In most of the cases, HTTPS, MQTTS or secure CoAP are secure enough. However, sometimes you might need an even more secure connection. Mainflux supports mutual TLS authentication (<em>mTLS</em>) based on <a href="https://tools.ietf.org/html/rfc5280">X.509 certificates</a>. By default, the TLS protocol only proves the identity of the server to the client using the X.509 certificate and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication. This is called two-way or mutual authentication. Mainflux currently supports mTLS over HTTP, MQTT and MQTT over WS protocols. In order to run Docker composition with mTLS turned on, you can execute the following command from the project root:</p>
 <pre><code class="language-bash">AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 </code></pre>
-<p>Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided <a href="http://www.github.com/MainfluxLabs/mainflux/tree/master/docker/ssl/Makefile">here</a>. In order to create a valid certificate, you need to create Mainflux thing using the process described in the <a href="/provision/#platform-management">provisioning section</a>. After that, you need to fetch created thing key. Thing key will be used to create x.509 certificate for the corresponding thing. To create a certificate, execute the following commands:</p>
+<p>Mutual authentication includes client-side certificates. Certificates can be generated using the simple script provided <a href="http://www.github.com/MainfluxLabs/mainflux/tree/master/docker/ssl/Makefile">here</a>. In order to create a valid certificate, you need to create Mainflux thing. After that, you need to fetch created thing key. Thing key will be used to create x.509 certificate for the corresponding thing. To create a certificate, execute the following commands:</p>
 <pre><code class="language-bash">cd docker/ssl
 make ca CN=&lt;common_name&gt; O=&lt;organization&gt; OU=&lt;organizational_unit&gt; emailAddress=&lt;email_address&gt;
 make server_cert CN=&lt;common_name&gt; O=&lt;organization&gt; OU=&lt;organizational_unit&gt; emailAddress=&lt;email_address&gt;
@@ -200,22 +200,22 @@ CRT_FILE_NAME = thing
 <p>Once you have created CA and server-side cert, you can spin the composition using:</p>
 <pre><code class="language-bash">AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
 </code></pre>
-<p>Then, you can create user and provision things and channels. Now, in order to send a message from the specific thing to the channel, you need to connect thing to the channel and generate corresponding client certificate using aforementioned commands. To publish a message to the channel, thing should send following request:</p>
+<p>Then, you can create user and provision things and profiles within the same group. Now, in order to send a message from the specific thing (which has an assigned profile), you need to generate corresponding client certificate using the aforementioned commands. To publish a message, thing should send following request:</p>
 <h3 id="https">HTTPS<a class="headerlink" href="#https" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -X POST -H &quot;Content-Type: application/senml+json&quot; https://localhost/http/channels/&lt;channel_id&gt;/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<pre><code class="language-bash">curl -s -S -i --cacert docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -X POST -H &quot;Content-Type: application/senml+json&quot; https://localhost/http/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <h3 id="mqtts">MQTTS<a class="headerlink" href="#mqtts" title="Permanent link">#</a></h3>
 <h4 id="publish">Publish<a class="headerlink" href="#publish" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mosquitto_pub -u &lt;thing_id&gt; -P &lt;thing_key&gt; -t channels/&lt;channel_id&gt;/messages -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -m '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<pre><code class="language-bash">mosquitto_pub -u &lt;thing_id&gt; -P &lt;thing_key&gt; -t /messages -h localhost -p 8883  --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -m '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <h4 id="subscribe">Subscribe<a class="headerlink" href="#subscribe" title="Permanent link">#</a></h4>
-<pre><code>mosquitto_sub -u &lt;thing_id&gt; -P &lt;thing_key&gt; --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -t channels/&lt;channel_id&gt;/messages -h localhost -p 8883
+<pre><code>mosquitto_sub -u &lt;thing_id&gt; -P &lt;thing_key&gt; --cafile docker/ssl/certs/ca.crt --cert docker/ssl/certs/&lt;thing_cert_name&gt;.crt --key docker/ssl/certs/&lt;thing_cert_key&gt;.key -t /messages -h localhost -p 8883
 </code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../security/" class="btn btn-neutral float-left" title="Security"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../getting-started/" class="btn btn-neutral float-left" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../authorization/" class="btn btn-neutral float-right" title="Authorization">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -240,11 +240,11 @@ CRT_FILE_NAME = thing
   <span class="rst-current-version" data-toggle="rst-current-version">
     
         <span>
-          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
     
-      <span><a href="../security/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../getting-started/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../authorization/" style="color: #fcfcfc">Next &raquo;</a></span>

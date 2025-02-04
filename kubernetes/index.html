@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/kubernetes/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/kubernetes/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
     <title>Kubernetes - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "Kubernetes";
         var mkdocs_page_input_path = "kubernetes.md";
-        var mkdocs_page_url = "/kubernetes/";
+        var mkdocs_page_url = "/index.html/kubernetes/";
       </script>
     
     <!--[if lt IE 9]>
@@ -52,7 +52,15 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
               <ul>
@@ -72,19 +80,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
               <ul>
@@ -127,6 +123,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
                 </li>
               </ul>
       </div>
@@ -393,41 +393,6 @@ cd devops/charts/mainflux
 <td>UI port</td>
 <td>3000</td>
 </tr>
-<tr>
-<td>influxdb.enabled</td>
-<td>Enable InfluxDB reader &amp; writer</td>
-<td>false</td>
-</tr>
-<tr>
-<td>influxdb.dbPort</td>
-<td>InfluxDB port</td>
-<td>8086</td>
-</tr>
-<tr>
-<td>influxdb.writer.httpPort</td>
-<td>InfluxDB writer HTTP port</td>
-<td>8900</td>
-</tr>
-<tr>
-<td>influxdb.reader.httpPort</td>
-<td>InfluxDB reader HTTP port</td>
-<td>8905</td>
-</tr>
-<tr>
-<td>adapter_lora.enabled</td>
-<td>Enable LoRa adapter</td>
-<td>false</td>
-</tr>
-<tr>
-<td>adapter_lora.httpPort</td>
-<td>LoRa adapter HTTP port</td>
-<td>8187</td>
-</tr>
-<tr>
-<td>adapter_lora.redisRouteMapPort</td>
-<td>LoRa adapter Redis Auth Cache port</td>
-<td>6379</td>
-</tr>
 </tbody>
 </table>
 <p>All Mainflux services (both core and add-ons) can have their <code>logLevel</code>, <code>image.pullPolicy</code>, <code>image.repository</code> and <code>image.tag</code> overridden.</p>
@@ -442,13 +407,7 @@ cd devops/charts/mainflux
 <li>adapter_ws</li>
 <li>ui</li>
 </ul>
-<p>Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader &amp; writer you should run <code>helm install</code> with <code>--set influxdb=true</code>.
-List of add-ons services in charts:</p>
-<ul>
-<li>influxdb.writer</li>
-<li>influxdb.reader</li>
-<li>adapter_lora</li>
-</ul>
+<p>Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them.</p>
 <p>By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. <code>--set defaults.replicaCount=3 --set nats.replicaCount=3</code></p>
 <h3 id="additional-steps-to-configure-ingress-controller">Additional Steps to Configure Ingress Controller<a class="headerlink" href="#additional-steps-to-configure-ingress-controller" title="Permanent link">#</a></h3>
 <p>To send MQTT messages to your host on ports <code>1883</code> and <code>8883</code> some additional steps are required in configuring NGINX Ingress Controller.</p>
@@ -493,7 +452,7 @@ kubectl -n mf create secret generic ca \
 <p>And now set ingress.hostname, ingress.tls.hostname to your hostname and ingress.tls.secret to <code>mainflux-server</code> and after helm update you have secured ingress with TLS certificate.</p>
 <p>For mTLS you need to set <code>nginx_internal.mtls.tls="mainflux-server"</code> and <code>nginx_internal.mtls.intermediate_crt="ca"</code>.</p>
 <p>Now you can test sending mqtt message with this parameters:</p>
-<pre><code>mosquitto_pub -d -L mqtts://&lt;thing_id&gt;:&lt;thing_key&gt;@example.com:8883/channels/&lt;channel_id&gt;/messages  --cert  thing.crt --key thing.key --cafile ca.crt  -m &quot;test-message&quot;
+<pre><code>mosquitto_pub -d -L mqtts://&lt;thing_id&gt;:&lt;thing_key&gt;@example.com:8883/messages  --cert  thing.crt --key thing.key --cafile ca.crt  -m &quot;test-message&quot;
 </code></pre>
               
             </div>
@@ -524,7 +483,7 @@ kubectl -n mf create secret generic ca \
   <span class="rst-current-version" data-toggle="rst-current-version">
     
         <span>
-          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
     

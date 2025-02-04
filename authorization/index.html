@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainfluxlabs.github.io/authorization/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/authorization/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
     <title>Authorization - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "Authorization";
         var mkdocs_page_input_path = "authorization.md";
-        var mkdocs_page_url = "/authorization/";
+        var mkdocs_page_url = "/index.html/authorization/";
       </script>
     
     <!--[if lt IE 9]>
@@ -52,7 +52,39 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="" href="../provision.md">Provision</a>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Authorization</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#roles">Roles</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#viewer">Viewer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#editor">Editor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#admin">Admin</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#owner">Owner</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#root-admin">Root Admin</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#org-members">Org Members</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#examples-of-unauthorized-access">Examples of unauthorized access</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#group-members">Group Members</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
               <ul>
@@ -72,47 +104,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
-                </li>
-              </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Authorization</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#policies">Policies</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#predefined-policies">Predefined Policies</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#users-service-related-policies">Users service related policies</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#things-service-related-policies">Things service related policies</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#group-entity-related-policies">Group entity related policies</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#summary-of-the-defined-policies">Summary of the Defined Policies</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#add-policies">Add Policies</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#delete-policies">Delete Policies</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-usage-of-adding-a-policy">Example usage of adding a policy</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-usage-of-sharing-a-thing">Example usage of sharing a Thing</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-usage-of-groups">Example usage of Groups</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-usage-of-sharing-entities-via-group">Example usage of sharing entities via Group</a>
-    </li>
-    </ul>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
               <ul>
@@ -129,6 +121,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
                 </li>
               </ul>
       </div>
@@ -155,433 +151,280 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">#</a></h1>
-<h2 id="policies">Policies<a class="headerlink" href="#policies" title="Permanent link">#</a></h2>
-<p>Mainflux uses policies to control permissions on entities: <strong>users</strong>, <strong>things</strong>, and <strong>groups</strong>. Under the hood, Mainflux uses <a href="https://www.ory.sh/keto/">ORY Keto</a> that is an open-source implementation of <a href="https://www.usenix.org/conference/atc19/presentation/pang">"Zanzibar: Google's Consistent, Global Authorization System"</a>.</p>
-<p>Policies define permissions for the entities. For example, <em>which user</em> has <em>access</em> to <em>a specific thing</em>. Such policies have three main components: <strong>subject</strong>, <strong>object</strong>, and <strong>relation</strong>.</p>
-<p>To put it briefly:</p>
-<p><strong>Subject</strong>: As the name suggests, it is the subject that will have the policy such as <em>users</em>. Mainflux uses entity UUID on behalf of the real entities.</p>
-<p><strong>Object</strong>: Objects are Mainflux entities (e.g. <em>thing</em> or <em>group</em>) represented by their UUID.</p>
-<p><strong>Relation</strong>: This is the action that the subject wants to do on the object.</p>
-<blockquote>
-<p>For more conceptual details, you can refer <a href="https://www.ory.sh/keto/docs">official ORY Keto documentation</a></p>
-</blockquote>
-<p>All three components create a single policy.</p>
-<p>For example, let's assume we have a following policy: <code>"user_id_123" has "read" relation on "thing_id_123"</code>. This policy means that subject (a user with ID: <code>user_id_123</code>) has a relation (<code>read</code>) on the object (a thing with ID: <code>thing_id_123</code>). Based upon this example, If the user wants to view a <code>Thing</code>, Mainflux first identifies the user with Authentication Keys and checks the policy as:</p>
-<pre><code>User with ID: `user_id_123` has `read` relation on the thing with ID: `thing_id_123`.
-</code></pre>
-<p>If the user has no such policy, the operation will be denied; otherwise, the operation will be allowed. In this case, since the user <code>user_id_123</code> has the policy, the <code>read</code> operation on the thing <code>thing_id_123</code> will be allowed for the user with ID <code>user_id_123</code>. On the other hand, requests coming from other users (who have a different ID than <code>user_id_123</code>) will be denied.</p>
-<p>In order to check whether a user has the policy or not, Mainflux makes a gRPC call to Keto API, then Keto handles the checking existence of the policy.</p>
-<p>All policies are stored in the Keto Database. The database responsible for storing all policies is deployed along with the Mainflux, as a standalone PostgreSQL database container.</p>
-<h2 id="predefined-policies">Predefined Policies<a class="headerlink" href="#predefined-policies" title="Permanent link">#</a></h2>
-<p>Mainflux comes with predefined policies.</p>
-<h3 id="users-service-related-policies">Users service related policies<a class="headerlink" href="#users-service-related-policies" title="Permanent link">#</a></h3>
+<p>At the beginning, it is necessary to ensure access to the platform for users. 
+<strong>User registration in the system is performed exclusively by the platform administrator or <code>Root Admin</code>.</strong></p>
+<p>After the user is registered by the <code>Root Admin</code>, in order to be able to manage entities within the system, it is necessary to have certain rights.
+Mainflux uses <strong>roles</strong> to control permissions for entities at two levels: at the Organization level and at the Group level.</p>
+<p><em>More information about creating a user can be found at <a href="../api/#users">Users API</a></em>.</p>
+<hr />
+<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">#</a></h2>
+<p>Roles determine the permissions a User has within an Organization or Group.
+Below are the predefined roles in the system:</p>
+<h3 id="viewer">Viewer<a class="headerlink" href="#viewer" title="Permanent link">#</a></h3>
 <ul>
-<li>By default, Mainflux allows anybody to create a user. If you disable this default policy, only <em>admin</em> is able to create a user.
-This default policy can be disabled through an environment variable called <code>MF_USERS_ALLOW_SELF_REGISTER</code> in deployment time. <code>MF_USERS_ALLOW_SELF_REGISTER</code> is a boolean. Therefore, it expects <code>"true"</code> or <code>"false"</code>. If you assign <code>"false"</code> to this environment variable, only <em>admin</em> can create a user.
-Mainflux creates a special policy to enable this feature as follows: <code>user#create@*</code>. This policy dictates that subject <code>*</code> has <code>create</code> relation on the object <code>users</code>. Here, Mainflux uses a special <code>*</code> subject to represent all users. If this policy is defined, everybody can create new users.</li>
-<li>All users are a <code>member of the users</code>. To be more precise, once the new user is created, the policy service creates the following policy:
-<code>users#member@&lt;user_id&gt;</code> indicating that the subject <code>&lt;user_id</code>&gt; has <code>member</code> relation on the object <code>users</code>.</li>
-<li>The admin has a special policy indicating that the user is admin. This policy is the following:
-<code>&lt;admin_id&gt;</code> has <code>member</code> relation on the object <code>authorities</code>.</li>
+<li>Can only view entities (read-only access).</li>
+<li>Applies to both Organization and Group levels.</li>
 </ul>
-<h3 id="things-service-related-policies">Things service related policies<a class="headerlink" href="#things-service-related-policies" title="Permanent link">#</a></h3>
+<h3 id="editor">Editor<a class="headerlink" href="#editor" title="Permanent link">#</a></h3>
 <ul>
-<li>There are 3 policies regarding <code>Things</code>: <code>read</code>, <code>write</code> and <code>delete</code>.</li>
-<li>When a user creates a thing, the user will have <code>read</code>, <code>write</code> and <code>delete</code> policies on the <code>Thing</code>.</li>
-<li>In order to view a thing, you need <code>read</code> policy on that thing.</li>
-<li>In order to update and share the thing, you need a <code>write</code> policy on that thing.</li>
-<li>In order to remove a thing, you need a <code>delete</code> policy on that thing.</li>
+<li>Can create, delete, and view entities within the Organization or Group (more details are in the table below).</li>
 </ul>
-<h3 id="group-entity-related-policies">Group entity related policies<a class="headerlink" href="#group-entity-related-policies" title="Permanent link">#</a></h3>
+<h3 id="admin">Admin<a class="headerlink" href="#admin" title="Permanent link">#</a></h3>
 <ul>
-<li>Once the user creates a new group, the user will have a <code>member</code> policy on the group.</li>
-<li>If you assign a new User member to your group, the new user will have a <code>member</code> policy on this particular group.</li>
-<li>If you assign a new Thing member to your group, whatever has <code>member</code> policy on that group will have <code>read</code>, <code>write</code> and <code>delete</code> policies on the Things defined in the Group.</li>
-<li>Mainflux allows users to assign access rights of the Things group with the Users group. Thus, each member of the User group can access Things defined in the Thing group. In order to do so, the Policy service adds members of the User group as a <code>member</code> of the Thing Group. Therefore, the Users group members have <code>read</code>, <code>write</code> and <code>delete</code> policy on the Things defined in the Thing Group.</li>
+<li>Has all the permissions of an editor.</li>
+<li>Can assign and unassign Members to the Organization or Group.</li>
 </ul>
-<h3 id="summary-of-the-defined-policies">Summary of the Defined Policies<a class="headerlink" href="#summary-of-the-defined-policies" title="Permanent link">#</a></h3>
+<h3 id="owner">Owner<a class="headerlink" href="#owner" title="Permanent link">#</a></h3>
 <ul>
-<li><strong><code>member</code></strong>: Identifies registered user's role such as <code>admin</code>. Also, it indicates memberships on the Group entity.</li>
-<li><strong><code>read</code>, <code>write</code> and <code>delete</code></strong>: Controls access control for the Things.</li>
-<li><strong><code>create</code></strong>: Mainflux uses special <code>create</code> policy to allow everybody to create new users. If you want to enable this feature through the HTTP, you need to make following request:</li>
+<li>Has all the permissions of an admin.</li>
+<li>Has access to all entities within the Organization or Group they own.</li>
 </ul>
-<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;:[&quot;*&quot;],&quot;policies&quot;: [&quot;create&quot;], &quot;object&quot;: &quot;user&quot;}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<h2 id="add-policies">Add Policies<a class="headerlink" href="#add-policies" title="Permanent link">#</a></h2>
-<p>You can add policies as well through an HTTP endpoint. <em>Only</em> admin can use this endpoint. Therefore, you need an authentication token for the admin.</p>
-<p><strong>Caveat:</strong> Only policies defined under <a href="#summary-of-the-defined-policies">Summary of the Defined Policies</a> are allowed. Other policies are not allowed. For example, you can add <code>member</code> policy but not <code>custom-member</code> policy because <code>custom-member</code> policy is not defined on the system.</p>
-<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;subject_id1&gt;&quot;,...&quot;&lt;subject_idN&gt;&quot;], &quot;object&quot;: &quot;&lt;object&gt;&quot;, &quot;policies&quot;: [&quot;&lt;action_1&gt;, ...&quot;&lt;action_N&gt;&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<h2 id="delete-policies">Delete Policies<a class="headerlink" href="#delete-policies" title="Permanent link">#</a></h2>
-<p>The admin can delete policies. Only policies defined on <a href="/authorization/#summary-of-the-defined-policies">Predefined Policies section</a> are allowed.</p>
-<blockquote>
-<p>Must-have: admin_token, object, subjects_ids and policies</p>
-</blockquote>
-<pre><code class="language-bash">curl -isSX PUT http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;subject_id1&gt;&quot;,...&quot;&lt;subject_idN&gt;&quot;], &quot;object&quot;: &quot;&lt;object&gt;&quot;, &quot;policies&quot;: [&quot;&lt;action_1&gt;, ...&quot;&lt;action_N&gt;&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<p><em>admin_token</em> must belong to the admin.</p>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 204 No Content
-Content-Type: application/json
-Date: Wed, 03 Nov 2021 13:00:05 GMT
-
-</code></pre>
-<p>If you delete policies, the policy will be removed from the policy storage. Further authorization checks related to that policy will fail.</p>
-<p>For example, let's assume <code>user1</code> has <code>read</code> policy on the thing <code>thing-123</code>. If you delete this policy as:</p>
-<pre><code class="language-bash">curl -isSX PUT http://localhost/policies -d '{&quot;subjects&quot;: [&quot;&lt;user1_id&gt;&quot;], &quot;object&quot;: &quot;thing-123&quot;, &quot;policies&quot;: [&quot;read&quot;]}' -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; -H 'Content-Type: application/json'
-</code></pre>
-<p><code>user1</code> will not be able to view the <code>thing-123</code> anymore because the policy which allows <code>user1</code> to view <code>thing-123</code> is deleted by the admin.</p>
-<h2 id="example-usage-of-adding-a-policy">Example usage of adding a policy<a class="headerlink" href="#example-usage-of-adding-a-policy" title="Permanent link">#</a></h2>
-<p>Suppose we are using the Mainflux version that doesn't have a policies feature yet. Once you migrate a new version of the Mainflux including the Policy feature, your users will face a lack of authorization. For example, there is a user created before the Policy feature. This user is authenticated by <code>&lt;user_token</code>&gt;. Although the following operation is valid, the user will have an authorization error.</p>
-<pre><code class="language-bash">mainflux-cli things create '{&quot;name&quot;:&quot;user-thing&quot;}' &lt;user_token&gt;
-
-error: failed to create entity: 403 Forbidden
-</code></pre>
-<p>The reason is that the user has not enough policy to create a new Thing after migration. In order to create a new thing, the user has to have a <code>member</code> relation on the <code>users</code> key. So that, Mainflux understands that the requester user is authorized to create new Things.</p>
-<p>The easiest solution for this problem is adding policies for the users through the HTTP endpoint. As described above, the user needs a <code>member</code> relation on the <code>users</code>.</p>
-<pre><code class="language-bash">curl -isSX POST http://localhost/policies -d '{&quot;subjects&quot;:[&quot;&lt;user_id&gt;&quot;],&quot;policies&quot;: [&quot;member&quot;], &quot;object&quot;: &quot;users&quot;}' -H &quot;Authorization: Bearer &lt;admin_token&gt; &quot; -H 'Content-Type: application/json'
-</code></pre>
-<p>So what this request does is add new policies for the subject defined in the <code>subjects</code> field of the request body. Henceforth, the subject (here <code>&lt;user_id&gt;</code>) will have a <code>member</code> relation on the object <code>users</code>. This policy allows the user to create new Things.</p>
-<p>Please, keep in mind that this endpoint requires you to use <code>&lt;admin_token&gt;</code>, not any token. So, the token must belong to the admin.</p>
-<h2 id="example-usage-of-sharing-a-thing">Example usage of sharing a Thing<a class="headerlink" href="#example-usage-of-sharing-a-thing" title="Permanent link">#</a></h2>
-<p>Let's assume, we have two users (called <code>user1</code> and <code>user2</code>) registered on the system who have <code>user_id_1</code> and <code>user_id_2</code> as their ID respectively.
-Let's create a thing with the following command:</p>
-<pre><code class="language-bash">mainflux-cli things create '{&quot;name&quot;:&quot;user1-thing&quot;}' &lt;user1_token&gt;
-
-created: a1109d52-6281-410e-93ae-38ba7daa9381
-</code></pre>
-<p>This command creates a thing called <code>"user1-thing"</code> with ID = <code>a1109d52-6281-410e-93ae-38ba7daa9381</code>. Mainflux identifies the <code>user1</code> by using the <code>&lt;user1_token&gt;</code>. After identifying the requester as <code>user1</code>, the Policy service adds <code>read</code>, <code>write</code> and <code>delete</code> policies to <code>user1</code> on <code>"user1-thing"</code>.</p>
-<p>If <code>user2</code> wants to view the <code>"user1-thing"</code>, the request will be denied.</p>
-<pre><code class="language-bash">mainflux-cli things get a1109d52-6281-410e-93ae-38ba7daa9381 &lt;user2_token&gt;
-
-error: failed to fetch entity : 403 Forbidden
-</code></pre>
-<p>After identifying the requester as <code>user2</code>, the Policy service checks that <code>Is user2 allowed to view the "user1-thing"?</code> Since <code>user2</code> has no such policy (<code>read</code> policy on <code>"user1-thing"</code>), the Policy service denies this request.</p>
-<p>Now, <code>user1</code> wants to share the <code>"user1-thing"</code> with <code>user2</code>. <code>user1</code> can achieve this via HTTP endpoint for sharing things as follows:</p>
-<pre><code class="language-bash">curl -isSX POST http://localhost/things/a1109d52-6281-410e-93ae-38ba7daa9381/share -d '{&quot;user_ids&quot;:[&quot;&lt;user2_id&gt;]&quot;, &quot;policies&quot;: [&quot;read&quot;, &quot;delete&quot;]}' -H &quot;Authorization: Bearer &lt;user1_token&gt;&quot; -H 'Content-Type: application/json'
-
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Thu, 09 Sep 2021 11:36:10 GMT
-Content-Type: application/json
-Content-Length: 3
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{}
-</code></pre>
-<blockquote>
-<p>Note: Since sharing a thing requires a <code>write</code> policy on the thing, <code>user2</code> cannot assign a new policy for <code>"user1-thing"</code> by itself.</p>
-</blockquote>
-<p>Now, <code>user2</code> has <code>read</code> and <code>delete</code> policies on <code>"user1-thing"</code> which allows <code>user2</code> to view and delete <code>"user1-thing"</code>. However, <code>user2</code> cannot update the <code>"user1-thing"</code> because <code>user2</code> has no <code>write</code> policy on <code>"user1-thing"</code>.</p>
-<p>Let's try again viewing the <code>"user1-thing"</code> as <code>user2</code>:</p>
-<pre><code class="language-bash">mainflux-cli things get a1109d52-6281-410e-93ae-38ba7daa9381 &lt;user2_token&gt;
-
-{
-  &quot;id&quot;: &quot;a1109d52-6281-410e-93ae-38ba7daa9381&quot;,
-  &quot;key&quot;: &quot;6c9c2146-de49-460d-8f0d-adce4ad37500&quot;,
-  &quot;name&quot;: &quot;user1-thing&quot;
-}
-</code></pre>
-<p>As we expected, the operation is successfully done. The policy server checked that <code>Is user2 allowed to view "user1-thing"?</code> Since <code>user2</code> has a <code>read</code> policy on <code>"user1-thing"</code>, the Policy server allows this request.</p>
-<h2 id="example-usage-of-groups">Example usage of Groups<a class="headerlink" href="#example-usage-of-groups" title="Permanent link">#</a></h2>
-<p>In this scenario, there will be two users called <code>user1@example.com</code> and <code>user2@example.com</code>. <code>user1@example.com</code> will create one Thing called <code>thing-test</code>. Then, the Group entity will be utilized to store all of the created entities (<code>user1@example.com</code>, <code>user2@example.com</code>, and <code>thing-test</code>). At the end of this scenario, we will verify that although <code>user2@example.com</code> has no ownership of <code>thing-test</code>, <code>user2@example.com</code> can access the <code>thing-test</code> because they are in the same group.</p>
-<p>Let's start with creating users:
-- Create <code>user1@example.com</code></p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user1@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
-</code></pre>
+<h3 id="root-admin">Root Admin<a class="headerlink" href="#root-admin" title="Permanent link">#</a></h3>
 <ul>
-<li>Create <code>user2@example.com</code></li>
+<li>Has all permissions across all Organizations and Groups (and entities within them).</li>
+<li>Acts as the primary administrator for the entire platform.</li>
 </ul>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user2@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
-</code></pre>
-<p>Now, let's create a Thing called <code>thing-test</code> owned by <code>user1@example.com</code>. Prior to creating it, first, obtain a token for <code>user1@example.com</code> as follows:</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/tokens -d '{&quot;email&quot;:&quot;user1@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
-</code></pre>
-<p>It is convenient to store the generated token because the token will be required in further steps repeatedly.</p>
-<pre><code class="language-bash">export USER1TOKEN=&lt;USER1TOKEN&gt;
-</code></pre>
-<p>And create a Thing called <code>thing-test</code></p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/things -d '[{&quot;name&quot;: &quot;thing-test&quot;}]'
-</code></pre>
 <blockquote>
-<p>Note: We will need the ID of newly created Thing in further steps. Again, it is better to store it.</p>
+<p>Although these roles are the same for an Organization and a Group, <strong>they operate completely separately at those levels</strong>, 
+which means that one User <strong>can have different roles</strong> in an Organization and a Group within that Organization.</p>
 </blockquote>
-<p>If <code>user2@example.com</code> tries to view <code>thing-test</code>, the operation will be denied by policy service because <code>user2@example.com</code> has no policies related to reading <code>thing-test</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/&lt;thing_id&gt;
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Fri, 05 Nov 2021 06:03:42 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
-<p>It is time to create a new Group and put all entities into that Group. Mainflux provides HTTP API for Groups like other entities. We will utilize this HTTP API for Group operations. For more details about Groups, please see <a href="/groups">Groups documentation</a>.</p>
-<pre><code>curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;my_group&quot;}'
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Fri, 05 Nov 2021 06:10:32 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /groups/01FKQBGQEP71DG9C99J37YBJD7
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>The <code>POST /groups</code> API creates a new group. In our case, it creates a group called <code>my_group</code>. Since <code>user1@example.com</code>'s token is used, the policy service creates a policy to indicate that <code>user1@example.com</code> is <em>member</em> of <em>my_group</em>.</p>
-<p>In the <em>Location response header</em>, you can see the ID of the <code>my_group</code>. For the response above, the location is <code>Location: /groups/01FKQBGQEP71DG9C99J37YBJD7</code>. Therefore, the group ID of <code>my_group</code> is <code>01FKQBGQEP71DG9C99J37YBJD7</code>. We will need this ID while assigning new members to <code>my_group</code>.</p>
-<p>The group <code>my_group</code> includes just a member that is <code>user1@example.com</code>, yet. In order to add new members, we will use <a href="/groups/#assign-a-member-to-a-group"><code>POST /groups/&lt;group_id&gt;/members</code></a>. While assigning entities, you will need the ID of the entities respectively. Let's start with assigning <code>thing-test</code> to <code>my_group</code>.</p>
-<pre><code class="language-bash"> curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;members&quot;:[&quot;&lt;thing_id&gt;&quot;], &quot;type&quot;:&quot;things&quot;}'
-</code></pre>
-<p>The crucial point here is that since we are assigning a Thing to the Group, the <code>"type"</code> field of the request body <strong>must be</strong> <code>things</code>.</p>
-<p>Now, assign <code>user2@example.com</code> to <code>my_group</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/$g/members -d '{&quot;members&quot;: &quot;c0fb3fdb-ecfa-407a-bd11-93884d70baf7&quot;], &quot;type&quot;:&quot;users&quot;}'
-</code></pre>
-<p>Again, please be careful about the <code>"type"</code> field of the request body. Since we are assigning the user, the type is <code>users</code>.</p>
+<h2 id="org-members">Org Members<a class="headerlink" href="#org-members" title="Permanent link">#</a></h2>
+<p>When a logged-in User creates an Organization, they become the <code>Owner</code> of that Organization.
+Within it, they can add other registered users by assigning them appropriate roles defined in the table above.</p>
+<p>Unlike an <code>Admin</code> of the Organization, an <code>Owner</code> has full rights over the entities within their Organization, meaning they can manage Groups and entities in Groups without an explicit Group membership.</p>
+<p>For a simpler understanding of access control in an Org, the table below provides a clear overview:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Viewer</th>
+<th>Editor</th>
+<th>Admin</th>
+<th>Owner</th>
+<th>Root Admin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View Org</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Update Org</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Delete Org</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Assign/Unassign Members</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Create Groups</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>The operation 'Create Org' is omitted from the table because every registered (and logged-in) user has the right to do so.</p>
+<p><em>An example of assigning Members to an Organization can be found at <a href="../api/#org-members">Org Members API</a>.</em></p>
+<h3 id="examples-of-unauthorized-access">Examples of unauthorized access<a class="headerlink" href="#examples-of-unauthorized-access" title="Permanent link">#</a></h3>
+<p>Let's imagine that we have one Organization and four Members of that Organization with different roles:</p>
+<table>
+<thead>
+<tr>
+<th>org_id</th>
+<th>member_id</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8</td>
+<td>viewer</td>
+</tr>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>6b9e77a1-22f8-4e72-b2f3-122ad8b37f48</td>
+<td>editor</td>
+</tr>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>c9b8f7d5-8143-47b4-9d72-f83d3f73834e</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>f1c6e7b3-4b29-496a-810b-bf7397dc3842</td>
+<td>owner</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>If a <code>Viewer</code> tries to create a Group within that Organization, they will receive a message indicating that the creation has failed:</li>
+</ul>
 <blockquote>
-<p>Under the hood, the Policy service creates <code>member</code> policies for each entity respectively. Also, each <em>user</em> member will have access to Things defined in the Group. That's why the type field is crucial.</p>
+<p><strong>{"error": "failed to perform authorization over the entity"}</strong></p>
 </blockquote>
-<p>Okay, let's check whether <code>user2@example.com</code> is capable to view the <code>my-thing</code>. Previously, the Policy service denied that request from <code>user2@example.com</code>. Try again:</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/&lt;thing_id&gt;
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Fri, 05 Nov 2021 06:36:03 GMT
-Content-Type: application/json
-Content-Length: 111
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;7d551538-834d-4398-bd4d-38940dd4bfa9&quot;,&quot;name&quot;:&quot;thing-test&quot;,&quot;key&quot;:&quot;4305f78d-399b-4cc4-ad42-3fd5bac09715&quot;}
-</code></pre>
-<p>Successful as we expected. Since <code>user2@example.com</code> and <code>my-thing</code> reside in the same group, <code>user2@example.com</code> can access the <code>my-thing</code> through Group policies.</p>
-<p>If you unassign user2@example.com, the user cannot access <code>my-thing</code>. In order to test it, you can unassign the <code>user2@example.com</code> as follows:</p>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $USER1TOKEN&quot; http://localhost/groups/$g/members -d '{&quot;members&quot;: &quot;c0fb3fdb-ecfa-407a-bd11-93884d70baf7&quot;], &quot;type&quot;:&quot;users&quot;}'
-</code></pre>
-<p>Since <code>user2@example.com</code> is not a member of the my_group anymore, the Policy service denies incoming request related to viewing the <code>my-thing</code> from <code>user2@example.com</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $USER2TOKEN&quot; http://localhost/things/$th
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Fri, 05 Nov 2021 06:39:47 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
-<h2 id="example-usage-of-sharing-entities-via-group">Example usage of sharing entities via Group<a class="headerlink" href="#example-usage-of-sharing-entities-via-group" title="Permanent link">#</a></h2>
-<p>Mainflux allows you to group entities (e.g., <code>Users</code> and <code>Things</code>) through <code>Group</code> object in <code>auth</code> service. You can find more details about usage of the <code>Group</code> at <a href="groups.md">Groups documentation.</a></p>
-<p>In this example, we will demonstrate how you can share access of the Users group to the Things group. So, each member of the Users group will have access to each Thing assigned to the Things group. We are going to start from a clean Mainflux setup and follow these steps:</p>
-<ol>
-<li>Create a new user and multiple Things,</li>
-<li>Create a Thing and User group, and assign members to groups,</li>
-<li>Share access of the groups</li>
-</ol>
-<p>First of all, obtain a token for the default admin. You can use any user but for the simplicity of the document, the default admin will be used.</p>
-<blockquote>
-<p>By default, Mainflux uses credentials described in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/.env#L46">.env</a> for the default admin.</p>
-</blockquote>
-<pre><code class="language-bash">$ curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/tokens -d '{&quot;email&quot;:&quot;admin@example.com&quot;,
-&quot;password&quot;:&quot;12345678&quot;}'
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 08:26:45 GMT
-Content-Type: application/json
-Content-Length: 285
-Connection: keep-alive
-Strict-Transport-Security: max-age=63072000; includeSubdomains
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: *
-Access-Control-Allow-Headers: *
-
-{&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQxNDk2MDUsImlhdCI6MTYzNDExMzYwNSwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6ImFkbWluQGV4YW1wbGUuY29tIiwiaXNzdWVyX2lkIjoiOTA3MjkzMDMtZDMwZC00YmQ5LTkwMTYtNDljMThjZmY4YjUxIiwidHlwZSI6MH0.G1kjXiGX76BqpytmLdXtjLF9s9K5CVm4ScNMIaKlkwE&quot;}
-</code></pre>
-<p>You can store the generated token because we will need it in further steps.</p>
-<pre><code class="language-bash">$ export token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQxNDk2MDUsImlhdCI6MTYzNDExMzYwNSwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6ImFkbWluQGV4YW1wbGUuY29tIiwiaXNzdWVyX2lkIjoiOTA3MjkzMDMtZDMwZC00YmQ5LTkwMTYtNDljMThjZmY4YjUxIiwidHlwZSI6MH0.G1kjXiGX76BqpytmLdXtjLF9s9K5CVm4ScNMIaKlkwE
-</code></pre>
-<p>Now, we can create a new user as follows:</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/users -d '{&quot;email&quot;:&quot;user@example.com&quot;, &quot;password&quot;:&quot;12345678&quot;}'
-
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 08:45:57 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /users/f31f8a0a-11b1-4aa6-a4a3-9629378c0326
-Strict-Transport-Security: max-age=63072000; includeSubdomains
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: *
-Access-Control-Allow-Headers: *
-</code></pre>
-<p>You can obtain the user ID via <code>Location</code>. The ID of the <code>user@example.com</code> is <code>f31f8a0a-11b1-4aa6-a4a3-9629378c0326</code>.</p>
-<p>After creating the new user, we have two users on the system as <code>admin@example.com</code> and <code>user@example.com</code>.
-Then, the admin creates multiple Things called <code>admin-thing-1</code> and <code>admin-thing-2</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things -d '[{&quot;name&quot;: &quot;a
-dmin-thing-1&quot;}, {&quot;name&quot;: &quot;admin-thing-2&quot;}]'
-
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 08:53:38 GMT
-Content-Type: application/json
-Content-Length: 241
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;things&quot;:[{&quot;id&quot;:&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;,&quot;name&quot;:&quot;admin-thing-1&quot;,&quot;key&quot;:&quot;4fb36389-f7a5-424d-8c4f-da5c9e91f3c5&quot;},{&quot;id&quot;:&quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;,&quot;name&quot;:&quot;admin-thing-2&quot;,&quot;key&quot;:&quot;410f5889-c756-470d-bd65-2e99b4ecc679&quot;}]}
-</code></pre>
-<pre><code class="language-bash">export th1=c3d75452-ae00-4aea-84f9-29ab79fd0d26
-export th2=ee589c61-0b98-4176-9da0-d91913087be6
-</code></pre>
-<p>Mainflux identifies <code>admin@example.com</code> via the token provided through the <code>Authorization</code> request header. On top of that, Mainflux claims ownership of things (<code>admin-thing-1</code> and <code>admin-thing-2</code>) on the <code>admin@example.com</code>. So that, the creator of Things (in this case <code>admin@example.com</code>) is going to have <code>read</code>, <code>write</code> and <code>delete</code> policies on the Thing.</p>
-<p>If <code>user@example.com</code> logs in the system, <code>user@example.com</code> cannot access the things created by the <code>admin@example.com</code> due to lack of policies.</p>
-<p>The next step is creating the user and things Groups respectively. You can create groups as follows:</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;user_group&quot;}'
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:24:39 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /groups/01FHWFFMME9N2N26DG0DMNRWRW
-Access-Control-Expose-Headers: Location
-</code></pre>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups -d '{&quot;name&quot;: &quot;thing_group&quot;}'
-HTTP/1.1 201 Created
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:24:58 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Location: /groups/01FHWFG78DSYA458D8ST4YQ9Y9
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>Again, you can obtain group IDs via <code>Location</code> in response. It is convenient to store them in variables.</p>
-<pre><code class="language-bash">export ug=01FHWFFMME9N2N26DG0DMNRWRW
-export tg=01FHWFG78DSYA458D8ST4YQ9Y9
-</code></pre>
-<p>After creating groups, we are ready to assign new members to groups. Let's start with the user group.</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$ug/members -d '{&quot;members&quot;:[&quot;f31f8a0a-11b1-4aa6-a4a3-9629378c0326&quot;], &quot;type&quot;:&quot;users&quot;}'
-
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:37:05 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>If you remember, <code>f31f8a0a-11b1-4aa6-a4a3-9629378c0326</code> is the ID of the <code>user@example.com</code>. Since the <code>$ug</code> represents the ID of the user group called <code>user_group</code>, we indicated the type of the group as <code>"users"</code> in the request body.</p>
-<p>Now, we can assign Things to the thing group.</p>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$tg/members -d '{&quot;members&quot;:[&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;, &quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;], &quot;type&quot;:&quot;things&quot;}'
-
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:42:12 GMT
-Content-Type: application/json
-Content-Length: 0
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>The same logic applies here as well. The IDs of the things that <code>admin@example.com</code> created are <code>c3d75452-ae00-4aea-84f9-29ab79fd0d26</code> and <code>ee589c61-0b98-4176-9da0-d91913087be6</code>. Since the <code>$tg</code> represents the ID of the thing group called <code>thing_group</code>, we indicated the type of the group as <code>"things"</code> in the request body.</p>
-<p>Before moving to the third step, let's analyze the current situation. We have two groups, two users, and two things. The first group is the user group and consists of two users, <code>admin@example.com</code> (since the admin created the group) and <code>user@example.com</code>. The second group is the thing group. It includes two things created by <code>admin@example.com</code>.  <code>user@example.com</code> still has no access to things created by <code>admin@example.com</code>. You can verify it as:</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:51:45 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:51:49 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
-<p>The <code>$TOKEN</code> is the token for <code>user@example.com</code>. As you can see, requests to access things are denied.</p>
-<p>Now, let's assign group access rights.</p>
-<pre><code class="language-bash">curl -s -S -i -X POST http://localhost/groups/$ug/share -d '{&quot;thing_group_id&quot;: &quot;01FHWFG78DSYA458D8ST4YQ9Y9&quot;}' -H 'Content-Type: application/json' -H &quot;Authorization: Bearer $TOKEN&quot;
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 09:59:13 GMT
-Content-Type: application/json
-Content-Length: 3
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>Now, all the members of the <code>user_group</code> have access to things within the <code>thing_group</code>. Therefore, <code>user@example.com</code> has <code>read</code>, <code>write</code> and <code>delete</code> policies on the things within the thing_group.</p>
-<p>Try to access things as <code>user@example.com</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 10:02:19 GMT
-Content-Type: application/json
-Content-Length: 114
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;c3d75452-ae00-4aea-84f9-29ab79fd0d26&quot;,&quot;name&quot;:&quot;admin-thing-1&quot;,&quot;key&quot;:&quot;4fb36389-f7a5-424d-8c4f-da5c9e91f3c5&quot;}
-</code></pre>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 10:02:21 GMT
-Content-Type: application/json
-Content-Length: 114
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;id&quot;:&quot;ee589c61-0b98-4176-9da0-d91913087be6&quot;,&quot;name&quot;:&quot;admin-thing-2&quot;,&quot;key&quot;:&quot;410f5889-c756-470d-bd65-2e99b4ecc679&quot;}
-</code></pre>
-<p>Successful!</p>
-<p>Let's assume, <code>admin@example.com</code> does not want to share things with <code>user@example.com</code> anymore. In order to achieve that, <code>admin@example.com</code> unassigns <code>user@example.com</code> from the <code>user_group</code>.</p>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/groups/$ug/members -d '{&quot;members&quot;:[&quot;f31f8a0a-11b1-4aa6-a4a3-9629378c0326&quot;], &quot;type&quot;:&quot;users&quot;}'
-
-HTTP/1.1 204 No Content
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 10:08:56 GMT
-Content-Type: application/json
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-</code></pre>
-<p>Now, when <code>user@example.com</code> tries to access the things, the request will be denied.</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th1
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 10:10:26 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer $TOKEN&quot; http://localhost/things/$th2
-HTTP/1.1 403 Forbidden
-Server: nginx/1.20.0
-Date: Wed, 13 Oct 2021 10:10:28 GMT
-Content-Type: application/json
-Content-Length: 60
-Connection: keep-alive
-
-{&quot;error&quot;:&quot;failed to perform authorization over the entity&quot;}
-</code></pre>
+<ul>
+<li>In the second case, if a <code>Viewer</code> or <code>Editor</code> tries to invite new users to the Organization, they will also get the above error message.</li>
+<li>Next case, if an <code>Admin</code> attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied with an authorization failure message.</li>
+<li>The same error message will be received if the <code>Owner</code>, or any other Organization Member who is not a <code>Root Admin</code>, tries to access an Organization in which they are not Members.</li>
+</ul>
+<h2 id="group-members">Group Members<a class="headerlink" href="#group-members" title="Permanent link">#</a></h2>
+<p>In order to enable the correct management of the entities within the Group, the rights that the members have over these entities are checked.
+Rights over entities are defined based on <u>the role in the Group</u> in which they belong.</p>
+<p>As previously emphasized, roles in an Organization and roles in a Group are independent and don't affect each other, which means that if a User is a <code>Viewer</code> in an Organization and a Group <code>Admin</code> adds them to the Group as an <code>Editor</code>, they will have higher rights in the Group than the rights they have in the Organization.</p>
+<p>By creating a Group, the User becomes its <code>Owner</code> and has the rights defined in the table.</p>
+<p>For a simpler understanding of access control in a Group, the table below provides a clear overview:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Viewer</th>
+<th>Editor</th>
+<th>Admin</th>
+<th>Owner</th>
+<th>Root Admin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View Group</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Update Group</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Delete Group</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Assign/Unassign Members</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Create Group Entities</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>View Group Entities</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Update Group Entities</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Delete Group Entities</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>The 'Create Group' operation is omitted from the table because the rights are defined in the Org table, where it can be clearly seen that everyone except the Organization Viewer can create a Group.</p>
+<p>If we keep the data from the previous table and expand it with new data by creating Groups within the Organization and assigning Group roles to the existing members of the Organization, 
+the additional table would look like this:</p>
+<table>
+<thead>
+<tr>
+<th>org_id</th>
+<th>group_id</th>
+<th>member_id</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>9f8e7a61-d34e-4a7a-9836-df8c3f54d3a1</td>
+<td>3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8</td>
+<td>editor</td>
+</tr>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>15ee88e2-3632-41fb-acfa-2625645a2b8d</td>
+<td>6b9e77a1-22f8-4e72-b2f3-122ad8b37f48</td>
+<td>viewer</td>
+</tr>
+<tr>
+<td>550e8400-e29b-41d4-a716-446655440000</td>
+<td>565ddcfb-bf64-4e6b-80ac-371516bd0e01</td>
+<td>c9b8f7d5-8143-47b4-9d72-f83d3f73834e</td>
+<td>admin</td>
+</tr>
+</tbody>
+</table>
+<p>We can notice that the User who has the role of <code>Viewer</code> in the Organization now has the role of <code>Editor</code> in the group with ID <code>9f8e7a61-d34e-4a7a-9836-df8c3f54d3a1</code>. 
+This means that the User now has all the rights provided by that role.</p>
+<p>On the other hand, the User with ID <code>6b9e77a1-22f8-4e72-b2f3-122ad8b37f48</code> who is an Organization <code>Editor</code> now has the Group's <code>Viewer</code> role. 
+Therefore, that Member has no rights in the Group other than viewing.</p>
+<p>Since the <code>Admin</code> of the Organization is also the <code>Admin</code> of the Group with ID <code>565ddcfb-bf64-4e6b-80ac-371516bd0e01</code>, it means that they have the same rights.</p>
+<p>Based on the above examples of unauthorized access within the Organization, the same rules are applied within the Group based on the roles of the Members.</p>
+<p>In addition to the basic access rights that apply to Members, note the case of Thing creation.
+When creating a Thing, it needs to be assigned a specific Profile by specifying its ID. The Profile being assigned and the Thing <u> must belong to the same Group. </u></p>
+<p><em>An example of assigning Members to a Group can be found at <a href="../api/#group-members">Group Members API</a>.</em></p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../authentication/" class="btn btn-neutral float-left" title="Authentication"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -605,14 +448,14 @@ Connection: keep-alive
   <span class="rst-current-version" data-toggle="rst-current-version">
     
         <span>
-          <a href="https://github.com/MainfluxLabs/docs" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
     
       <span><a href="../authentication/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
