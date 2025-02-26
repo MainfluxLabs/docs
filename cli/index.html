@@ -120,9 +120,13 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#retrieve-a-subset-list-of-provisioned-things">Retrieve a subset list of provisioned Things</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#retrieve-thing-by-id">Retrieve Thing By ID</a>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieve-thing-by-id">Retrieve Thing by ID</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#retrieve-metadata-by-key">Retrieve Metadata By Key</a>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieve-things-by-profile">Retrieve Things by Profile</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieve-metadata-by-key">Retrieve Metadata by Key</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieve-thing-id-by-key">Retrieve Thing ID by Key</a>
     </li>
         </ul>
     </li>
@@ -136,11 +140,9 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#retrieve-a-subset-list-of-provisioned-profiles">Retrieve a subset list of provisioned Profiles</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#retrieve-profile-by-id">Retrieve Profile By ID</a>
+    <li class="toctree-l4"><a class="reference internal" href="#retrieve-profile-by-id">Retrieve Profile by ID</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#retrieve-a-profile-by-thing">Retrieve a Profile by Thing</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#retrieve-a-subset-list-of-things-by-profile">Retrieve a subset list of Things by Profile</a>
     </li>
         </ul>
     </li>
@@ -154,7 +156,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#groups">Groups</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#create-new-group">Create new Group</a>
+    <li class="toctree-l4"><a class="reference internal" href="#create-group">Create Group</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#delete-group">Delete Group</a>
     </li>
@@ -176,7 +178,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#orgs">Orgs</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#create-new-org">Create new Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#create-org">Create Org</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#get-org-by-id">Get Org by ID</a>
     </li>
@@ -186,21 +188,23 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#delete-org">Delete Org</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#assign-user-to-an-org">Assign User to an Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#assign-member-to-org">Assign Member to Org</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#unassign-user-from-org">Unassign User from Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#unassign-member-from-org">Unassign Member from Org</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#get-member-from-org">Get Member from Org</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#update-members">Update Members</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#list-users-by-org">List Users by Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#list-members-by-org">List Members by Org</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#list-orgs-that-user-belongs-to">List Orgs that User belongs to</a>
+    <li class="toctree-l4"><a class="reference internal" href="#list-orgs-that-member-belongs-to">List Orgs that Member belongs to</a>
     </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#webhooks">Webhooks</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#create-new-webhooks">Create new Webhooks</a>
+    <li class="toctree-l4"><a class="reference internal" href="#create-webhooks">Create Webhooks</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#get-webhook-by-id">Get Webhook by ID</a>
     </li>
@@ -285,28 +289,38 @@
   mainfluxlabs-cli [command]
 
 Available Commands:
-  profiles    Profiles management
-  help        Help about any command
-  messages    Send or read messages
-  provision   Create things and profiles from a config file
-  things      Things management
-  groups      Groups management
+  certs       Certificates management
   group_roles Group roles management
-  orgs        Organizations management
-  webhooks    Webhooks management
+  groups      Groups management
+  health      Health Check
+  help        Help about any command
+  keys        Keys management
+  messages    Send or read messages
+  orgs        Orgs management
+  profiles    Profiles management
+  provision   Provision things and profiles from a config file
+  things      Things management
   users       Users management
-  health      Mainflux Things service health check
+  webhooks    Webhooks management
 
 Flags:
-  -c, --content-type string    Mainflux message content type (default &quot;application/senml+json&quot;)
-  -h, --help                   help for mainflux-cli
-  -a, --http-prefix string     Mainflux http adapter prefix (default &quot;http&quot;)
-  -i, --insecure               Do not check for TLS cert
-  -l, --limit uint             limit query parameter (default 100)
-  -m, --mainflux-url string    Mainflux host URL (default &quot;http://localhost&quot;)
-  -o, --offset uint            offset query parameter
-  -t, --things-prefix string   Mainflux things service prefix
-  -u, --users-prefix string    Mainflux users service prefix
+  -a, --auth-url string       Auth service URL (default &quot;http://localhost&quot;)
+  -c, --certs-url string      Certs service URL (default &quot;http://localhost&quot;)
+  -y, --content-type string   Message content type (default &quot;application/senml+json&quot;)
+  -e, --email string          User email query parameter
+  -f, --format string         Message format query parameter
+  -h, --help                  help for mainfluxlabs-cli
+  -p, --http-url string       HTTP adapter URL (default &quot;http://localhost/http&quot;)
+  -i, --insecure              Do not check for TLS cert
+  -l, --limit uint            Limit query parameter (default 100)
+  -m, --metadata string       Metadata query parameter
+  -n, --name string           Name query parameter
+  -o, --offset uint           Offset query parameter
+  -r, --raw                   Enables raw output mode for easier parsing of output
+  -s, --subtopic string       Subtopic query parameter
+  -t, --things-url string     Things service URL (default &quot;http://localhost&quot;)
+  -u, --users-url string      Users service URL (default &quot;http://localhost&quot;)
+  -w, --webhooks-url string   Webhooks service URL (default &quot;http://localhost/svcwebhooks&quot;)
 
 Use &quot;mainfluxlabs-cli [command] --help&quot; for more information about a command.
 </code></pre>
@@ -373,7 +387,7 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="create-thing-with-metadata">Create Thing with metadata<a class="headerlink" href="#create-thing-with-metadata" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;metadata&quot;: {\&quot;key1\&quot;:\&quot;value1\&quot;}}' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;metadata&quot;: {&quot;key1&quot;:&quot;value1&quot;}}' &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-thing">Update Thing<a class="headerlink" href="#update-thing" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli things update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;thing_id&gt; &lt;user_token&gt;
@@ -382,13 +396,19 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <pre><code class="language-bash">mainfluxlabs-cli things delete &lt;thing_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="retrieve-a-subset-list-of-provisioned-things">Retrieve a subset list of provisioned Things<a class="headerlink" href="#retrieve-a-subset-list-of-provisioned-things" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things get all --offset=1 --limit=5 &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things get all &lt;user_token&gt;
 </code></pre>
-<h4 id="retrieve-thing-by-id">Retrieve Thing By ID<a class="headerlink" href="#retrieve-thing-by-id" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things get &lt;thing_id&gt; &lt;user_token&gt;
+<h4 id="retrieve-thing-by-id">Retrieve Thing by ID<a class="headerlink" href="#retrieve-thing-by-id" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli things get by-id &lt;thing_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="retrieve-metadata-by-key">Retrieve Metadata By Key<a class="headerlink" href="#retrieve-metadata-by-key" title="Permanent link">#</a></h4>
+<h4 id="retrieve-things-by-profile">Retrieve Things by Profile<a class="headerlink" href="#retrieve-things-by-profile" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli things get by-profile &lt;profile_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="retrieve-metadata-by-key">Retrieve Metadata by Key<a class="headerlink" href="#retrieve-metadata-by-key" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli things metadata &lt;thing_key&gt;
+</code></pre>
+<h4 id="retrieve-thing-id-by-key">Retrieve Thing ID by Key<a class="headerlink" href="#retrieve-thing-id-by-key" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli things identify &lt;thing_key&gt;
 </code></pre>
 <h3 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">#</a></h3>
 <h4 id="create-profile">Create Profile<a class="headerlink" href="#create-profile" title="Permanent link">#</a></h4>
@@ -401,26 +421,27 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <pre><code class="language-bash">mainfluxlabs-cli profiles delete &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="retrieve-a-subset-list-of-provisioned-profiles">Retrieve a subset list of provisioned Profiles<a class="headerlink" href="#retrieve-a-subset-list-of-provisioned-profiles" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli profiles get all --offset=1 --limit=5 &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli profiles get all &lt;user_token&gt;
 </code></pre>
-<h4 id="retrieve-profile-by-id">Retrieve Profile By ID<a class="headerlink" href="#retrieve-profile-by-id" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli profiles get &lt;profile_id&gt; &lt;user_token&gt;
+<h4 id="retrieve-profile-by-id">Retrieve Profile by ID<a class="headerlink" href="#retrieve-profile-by-id" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli profiles get by-id &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="retrieve-a-profile-by-thing">Retrieve a Profile by Thing<a class="headerlink" href="#retrieve-a-profile-by-thing" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli profiles thing &lt;thing_id&gt; &lt;user_token&gt;
-</code></pre>
-<h4 id="retrieve-a-subset-list-of-things-by-profile">Retrieve a subset list of Things by Profile<a class="headerlink" href="#retrieve-a-subset-list-of-things-by-profile" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things profile &lt;profile_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli profiles get by-thing &lt;thing_id&gt; &lt;user_token&gt;
 </code></pre>
 <h3 id="messaging">Messaging<a class="headerlink" href="#messaging" title="Permanent link">#</a></h3>
 <h4 id="send-a-message-over-http">Send a message over HTTP<a class="headerlink" href="#send-a-message-over-http" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;Dev1&quot;,&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}, {&quot;bn&quot;:&quot;Dev2&quot;, &quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}]' &lt;thing_auth_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli messages send [subtopic] '[{&quot;bn&quot;:&quot;Dev1&quot;,&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}, {&quot;bn&quot;:&quot;Dev2&quot;, &quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}]' &lt;thing_key&gt;
 </code></pre>
 <h4 id="read-messages-over-http">Read messages over HTTP<a class="headerlink" href="#read-messages-over-http" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli messages read &lt;thing_auth_token&gt;
+<ul>
+<li>Read messages from a specific subtopic by adding a flag <code>-s=&lt;subtopic&gt;</code></li>
+<li>Reading SenML messages is the default. To read JSON messages add the flag <code>-f=json</code></li>
+</ul>
+<pre><code class="language-bash">mainfluxlabs-cli messages read &lt;thing_key&gt;
 </code></pre>
 <h3 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h3>
-<h4 id="create-new-group">Create new Group<a class="headerlink" href="#create-new-group" title="Permanent link">#</a></h4>
+<h4 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli groups create '{&quot;name&quot;:&quot;&lt;group_name&gt;&quot;,&quot;description&quot;:&quot;&lt;description&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;value&quot;,...}}' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="delete-group">Delete Group<a class="headerlink" href="#delete-group" title="Permanent link">#</a></h4>
@@ -448,7 +469,7 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <pre><code class="language-bash">mainfluxlabs-cli groups profile &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h3 id="orgs">Orgs<a class="headerlink" href="#orgs" title="Permanent link">#</a></h3>
-<h4 id="create-new-org">Create new Org<a class="headerlink" href="#create-new-org" title="Permanent link">#</a></h4>
+<h4 id="create-org">Create Org<a class="headerlink" href="#create-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs create '{&quot;name&quot;:&quot;&lt;org_name&gt;&quot;,&quot;description&quot;:&quot;&lt;description&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;value&quot;,...}}' &lt;user_token&gt;
 </code></pre>
 <h4 id="get-org-by-id">Get Org by ID<a class="headerlink" href="#get-org-by-id" title="Permanent link">#</a></h4>
@@ -463,36 +484,39 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <h4 id="delete-org">Delete Org<a class="headerlink" href="#delete-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs delete &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="assign-user-to-an-org">Assign User to an Org<a class="headerlink" href="#assign-user-to-an-org" title="Permanent link">#</a></h4>
+<h4 id="assign-member-to-org">Assign Member to Org<a class="headerlink" href="#assign-member-to-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs assign '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;email&quot;:&quot;&lt;email&gt;&quot;,&quot;role&quot;:&quot;&lt;role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="unassign-user-from-org">Unassign User from Org<a class="headerlink" href="#unassign-user-from-org" title="Permanent link">#</a></h4>
+<h4 id="unassign-member-from-org">Unassign Member from Org<a class="headerlink" href="#unassign-member-from-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs unassign '[&quot;&lt;member_id&gt;&quot;]' &lt;org_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="get-member-from-org">Get Member from Org<a class="headerlink" href="#get-member-from-org" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli orgs member &lt;org_id&gt; &lt;member_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-members">Update Members<a class="headerlink" href="#update-members" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs update-members '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;role&quot;:&quot;&lt;new_role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="list-users-by-org">List Users by Org<a class="headerlink" href="#list-users-by-org" title="Permanent link">#</a></h4>
+<h4 id="list-members-by-org">List Members by Org<a class="headerlink" href="#list-members-by-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs members &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="list-orgs-that-user-belongs-to">List Orgs that User belongs to<a class="headerlink" href="#list-orgs-that-user-belongs-to" title="Permanent link">#</a></h4>
+<h4 id="list-orgs-that-member-belongs-to">List Orgs that Member belongs to<a class="headerlink" href="#list-orgs-that-member-belongs-to" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs memberships &lt;member_id&gt; &lt;user_token&gt;
 </code></pre>
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
-<h4 id="create-new-webhooks">Create new Webhooks<a class="headerlink" href="#create-new-webhooks" title="Permanent link">#</a></h4>
+<h4 id="create-webhooks">Create Webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks create '[{&quot;name&quot;:&quot;&lt;webhook_name&gt;&quot;,&quot;url&quot;:&quot;&lt;http://webhook-url.com&gt;&quot;,&quot;headers&quot;:{&quot;key&quot;:&quot;value&quot;,...}}]' &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="get-webhook-by-id">Get Webhook by ID<a class="headerlink" href="#get-webhook-by-id" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks get by-id &lt;id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="get-webhooks-by-group">Get Webhooks by Group<a class="headerlink" href="#get-webhooks-by-group" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli webhooks get group &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli webhooks get by-group &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-webhook">Update Webhook<a class="headerlink" href="#update-webhook" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;,&quot;url&quot;:&quot;&lt;http://webhook-url.com&gt;&quot;}' &lt;webhook_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="delete-webhooks">Delete Webhooks<a class="headerlink" href="#delete-webhooks" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli webhooks delete '[&quot;&lt;webhook_id&gt;&quot;]' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli webhooks delete '[&quot;&lt;webhook_id&gt;&quot;]' &lt;user_token&gt;
 </code></pre>
 <h3 id="keys-management">Keys management<a class="headerlink" href="#keys-management" title="Permanent link">#</a></h3>
 <h4 id="issue-a-new-key">Issue a new Key<a class="headerlink" href="#issue-a-new-key" title="Permanent link">#</a></h4>
