@@ -25,28 +25,38 @@ Usage:
   mainfluxlabs-cli [command]
 
 Available Commands:
-  profiles    Profiles management
-  help        Help about any command
-  messages    Send or read messages
-  provision   Create things and profiles from a config file
-  things      Things management
-  groups      Groups management
+  certs       Certificates management
   group_roles Group roles management
-  orgs        Organizations management
-  webhooks    Webhooks management
+  groups      Groups management
+  health      Health Check
+  help        Help about any command
+  keys        Keys management
+  messages    Send or read messages
+  orgs        Orgs management
+  profiles    Profiles management
+  provision   Provision things and profiles from a config file
+  things      Things management
   users       Users management
-  health      Mainflux Things service health check
+  webhooks    Webhooks management
 
 Flags:
-  -c, --content-type string    Mainflux message content type (default "application/senml+json")
-  -h, --help                   help for mainflux-cli
-  -a, --http-prefix string     Mainflux http adapter prefix (default "http")
-  -i, --insecure               Do not check for TLS cert
-  -l, --limit uint             limit query parameter (default 100)
-  -m, --mainflux-url string    Mainflux host URL (default "http://localhost")
-  -o, --offset uint            offset query parameter
-  -t, --things-prefix string   Mainflux things service prefix
-  -u, --users-prefix string    Mainflux users service prefix
+  -a, --auth-url string       Auth service URL (default "http://localhost")
+  -c, --certs-url string      Certs service URL (default "http://localhost")
+  -y, --content-type string   Message content type (default "application/senml+json")
+  -e, --email string          User email query parameter
+  -f, --format string         Message format query parameter
+  -h, --help                  help for mainfluxlabs-cli
+  -p, --http-url string       HTTP adapter URL (default "http://localhost/http")
+  -i, --insecure              Do not check for TLS cert
+  -l, --limit uint            Limit query parameter (default 100)
+  -m, --metadata string       Metadata query parameter
+  -n, --name string           Name query parameter
+  -o, --offset uint           Offset query parameter
+  -r, --raw                   Enables raw output mode for easier parsing of output
+  -s, --subtopic string       Subtopic query parameter
+  -t, --things-url string     Things service URL (default "http://localhost")
+  -u, --users-url string      Users service URL (default "http://localhost")
+  -w, --webhooks-url string   Webhooks service URL (default "http://localhost/svcwebhooks")
 
 Use "mainfluxlabs-cli [command] --help" for more information about a command.
 ```
@@ -143,7 +153,7 @@ mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id
 
 #### Create Thing with metadata
 ```bash
-mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>","metadata": {\"key1\":\"value1\"}}' <group_id> <user_token>
+mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>","metadata": {"key1":"value1"}}' <group_id> <user_token>
 ```
 
 #### Update Thing
@@ -158,17 +168,27 @@ mainfluxlabs-cli things delete <thing_id> <user_token>
 
 #### Retrieve a subset list of provisioned Things
 ```bash
-mainfluxlabs-cli things get all --offset=1 --limit=5 <user_token>
+mainfluxlabs-cli things get all <user_token>
 ```
 
-#### Retrieve Thing By ID
+#### Retrieve Thing by ID
 ```bash
-mainfluxlabs-cli things get <thing_id> <user_token>
+mainfluxlabs-cli things get by-id <thing_id> <user_token>
 ```
 
-#### Retrieve Metadata By Key
+#### Retrieve Things by Profile
+```bash
+mainfluxlabs-cli things get by-profile <profile_id> <user_token>
+```
+
+#### Retrieve Metadata by Key
 ```bash
 mainfluxlabs-cli things metadata <thing_key>
+```
+
+#### Retrieve Thing ID by Key
+```bash
+mainfluxlabs-cli things identify <thing_key>
 ```
 
 ### Profiles
@@ -189,37 +209,34 @@ mainfluxlabs-cli profiles delete <profile_id> <user_token>
 
 #### Retrieve a subset list of provisioned Profiles
 ```bash
-mainfluxlabs-cli profiles get all --offset=1 --limit=5 <user_token>
+mainfluxlabs-cli profiles get all <user_token>
 ```
 
-#### Retrieve Profile By ID
+#### Retrieve Profile by ID
 ```bash
-mainfluxlabs-cli profiles get <profile_id> <user_token>
+mainfluxlabs-cli profiles get by-id <profile_id> <user_token>
 ```
 
 #### Retrieve a Profile by Thing
 ```bash
-mainfluxlabs-cli profiles thing <thing_id> <user_token>
-```
-
-#### Retrieve a subset list of Things by Profile
-```bash
-mainfluxlabs-cli things profile <profile_id> <user_token>
+mainfluxlabs-cli profiles get by-thing <thing_id> <user_token>
 ```
 
 ### Messaging
 #### Send a message over HTTP
 ```bash
-mainfluxlabs-cli messages send '[{"bn":"Dev1","n":"temp","v":20}, {"n":"hum","v":40}, {"bn":"Dev2", "n":"temp","v":20}, {"n":"hum","v":40}]' <thing_auth_token>
+mainfluxlabs-cli messages send [subtopic] '[{"bn":"Dev1","n":"temp","v":20}, {"n":"hum","v":40}, {"bn":"Dev2", "n":"temp","v":20}, {"n":"hum","v":40}]' <thing_key>
 ```
 
 #### Read messages over HTTP
+* Read messages from a specific subtopic by adding a flag `-s=<subtopic>`
+* Reading SenML messages is the default. To read JSON messages add the flag `-f=json`
 ```bash
-mainfluxlabs-cli messages read <thing_auth_token>
+mainfluxlabs-cli messages read <thing_key>
 ```
 
 ### Groups
-#### Create new Group
+#### Create Group
 ```bash
 mainfluxlabs-cli groups create '{"name":"<group_name>","description":"<description>","metadata":{"key":"value",...}}' <org_id> <user_token>
 ```
@@ -265,7 +282,7 @@ mainfluxlabs-cli groups profile <profile_id> <user_token>
 ```
 
 ### Orgs
-#### Create new Org
+#### Create Org
 ```bash
 mainfluxlabs-cli orgs create '{"name":"<org_name>","description":"<description>","metadata":{"key":"value",...}}' <user_token>
 ```
@@ -290,14 +307,19 @@ mainfluxlabs-cli orgs update '{"name":"<new_name>"}' <org_id> <user_token>
 mainfluxlabs-cli orgs delete <org_id> <user_token>
 ```
 
-#### Assign User to an Org
+#### Assign Member to Org
 ```bash
 mainfluxlabs-cli orgs assign '[{"member_id":"<member_id>","email":"<email>","role":"<role>"}]' <org_id> <user_token>
 ```
 
-#### Unassign User from Org
+#### Unassign Member from Org
 ```bash
 mainfluxlabs-cli orgs unassign '["<member_id>"]' <org_id> <user_token>
+```
+
+#### Get Member from Org
+```bash
+mainfluxlabs-cli orgs member <org_id> <member_id> <user_token>
 ```
 
 #### Update Members
@@ -305,18 +327,18 @@ mainfluxlabs-cli orgs unassign '["<member_id>"]' <org_id> <user_token>
 mainfluxlabs-cli orgs update-members '[{"member_id":"<member_id>","role":"<new_role>"}]' <org_id> <user_token>
 ```
 
-#### List Users by Org
+#### List Members by Org
 ```bash
 mainfluxlabs-cli orgs members <org_id> <user_token>
 ```
 
-#### List Orgs that User belongs to
+#### List Orgs that Member belongs to
 ```bash
 mainfluxlabs-cli orgs memberships <member_id> <user_token>
 ```
 
 ### Webhooks
-#### Create new Webhooks
+#### Create Webhooks
 ```bash
 mainfluxlabs-cli webhooks create '[{"name":"<webhook_name>","url":"<http://webhook-url.com>","headers":{"key":"value",...}}]' <group_id> <user_token>
 ```
@@ -328,7 +350,7 @@ mainfluxlabs-cli webhooks get by-id <id> <user_token>
 
 #### Get Webhooks by Group
 ```bash
-mainfluxlabs-cli webhooks get group <group_id> <user_token>
+mainfluxlabs-cli webhooks get by-group <group_id> <user_token>
 ```
 
 #### Update Webhook
@@ -338,7 +360,7 @@ mainfluxlabs-cli webhooks update '{"name":"<new_name>","url":"<http://webhook-ur
 
 #### Delete Webhooks
 ```bash
-mainfluxlabs-cli webhooks delete '["<webhook_id>"]' <group_id> <user_token>
+mainfluxlabs-cli webhooks delete '["<webhook_id>"]' <user_token>
 ```
 
 ### Keys management
