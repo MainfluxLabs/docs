@@ -64,7 +64,7 @@ Here's an example of `JSON` metadata:
 In case it is necessary to extract the received payload and use a specific object within the payload, it is possible to define a value within the `data_field` field that will be used to extract the payload.
 
 If we have a payload from which we want to get a list of "params", then the `config` should look like this:
-```json lines
+```json
 {
   "config": {
     "content_type": "application/json",
@@ -78,8 +78,9 @@ If we have a payload from which we want to get a list of "params", then the `con
     }
   }
 }
-
-// Received payload with params
+``` 
+Received payload with params:
+```json
 {
   "root": {
     "params": [
@@ -92,13 +93,13 @@ If we have a payload from which we want to get a list of "params", then the `con
         "field": "humidity",
         "value": 45,
         "created": "2024-12-24T17:17:00.000Z"
-      },
+      }
     ]
   }
 }
 ```
 The extraction result is:
-```json
+```bash
 [
       {
         "field": "temperature",
@@ -240,7 +241,6 @@ to every command.
 
 CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/MainfluxLabs/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/MainfluxLabs/coap-cli).
 
-###
 Examples:
 
 ```
