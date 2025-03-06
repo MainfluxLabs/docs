@@ -168,50 +168,51 @@ which can be downloaded as a tarball from GitHub (here we use release <code>0.12
 <p>This command actually creates a temporary testing user, logs it in, then creates two things and two profiles on behalf of this user.
 This quickly provisions a Mainflux system with one simple testing scenario.</p>
 <p>Output of the command follows this pattern:</p>
-<p>```json lines
-{
-  "email": "friendly_beaver@email.com",
-  "password": "12345678"
-}</p>
-<p>"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDcwMjE3ODAsImlhdCI6MTU0Njk4NTc4MCwiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJmcmllbmRseV9iZWF2ZXJAZW1haWwuY29tIn0.Tyk31Ae680KqMrDqP895PRZg_GUytLE0IMIR_o3oO7o"</p>
-<p>[
+<pre><code class="language-bash">{
+  &quot;email&quot;: &quot;friendly_beaver@email.com&quot;,
+  &quot;password&quot;: &quot;12345678&quot;
+}
+
+
+&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDcwMjE3ODAsImlhdCI6MTU0Njk4NTc4MCwiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJmcmllbmRseV9iZWF2ZXJAZW1haWwuY29tIn0.Tyk31Ae680KqMrDqP895PRZg_GUytLE0IMIR_o3oO7o&quot;
+
+[
   {
-    "id": "b7bfc4b6-c18d-47c5-b343-98235c5acc19",
-    "group_id":"737d2200-64a1-482f-839d-64906b0bd80e",
-    "name": "p0"
+    &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;name&quot;: &quot;p0&quot;
   },
   {
-    "id": "378678cd-891b-4a39-b026-869938783f54",
-    "group_id":"737d2200-64a1-482f-839d-64906b0bd80e",
-    "name": "p1"
+    &quot;id&quot;: &quot;378678cd-891b-4a39-b026-869938783f54&quot;,
+    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;name&quot;: &quot;p1&quot;
   }
-]</p>
-<p>[
+]
+
+[
   {
-    "id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
-    "group_id":"737d2200-64a1-482f-839d-64906b0bd80e",
-    "profile_id":"b7bfc4b6-c18d-47c5-b343-98235c5acc19",
-    "key": "69590b3a-9d76-4baa-adae-9b5fec0ea14f",
-    "name": "d0",
+    &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;:&quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;,
+    &quot;name&quot;: &quot;d0&quot;,
   },
   {
-    "id": "bf78ca98-2fef-4cfc-9f26-e02da5ecdf67",
-    "group_id":"737d2200-64a1-482f-839d-64906b0bd80e",
-    "profile_id":"378678cd-891b-4a39-b026-869938783f54",
-    "key": "840c1ea1-2e8d-4809-a6d3-3433a5c489d2",
-    "name": "d1",
+    &quot;id&quot;: &quot;bf78ca98-2fef-4cfc-9f26-e02da5ecdf67&quot;,
+    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;:&quot;378678cd-891b-4a39-b026-869938783f54&quot;,
+    &quot;key&quot;: &quot;840c1ea1-2e8d-4809-a6d3-3433a5c489d2&quot;,
+    &quot;name&quot;: &quot;d1&quot;,
   }
-]</p>
-<pre><code>
-In the Mainflux system terminal (where docker compose is running) you should see following logs:
-```bash
-mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method register for user friendly_beaver@email.com took 97.573974ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.745989495Z&quot;}
+]
+</code></pre>
+<p>In the Mainflux system terminal (where docker compose is running) you should see following logs:</p>
+<pre><code class="language-bash">mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method register for user friendly_beaver@email.com took 97.573974ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.745989495Z&quot;}
 mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method login for user friendly_beaver@email.com took 69.308406ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.820610461Z&quot;}
 mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method identity for client friendly_beaver@email.com took 50.903µs to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.822208948Z&quot;}
 mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method create_things for things [{513d02d2-16c1-4f23-98be-9e12f8fee898 737d2200-64a1-482f-839d-64906b0bd80e b7bfc4b6-c18d-47c5-b343-98235c5acc19 d0 69590b3a-9d76-4baa-adae-9b5fec0ea14f map[]},{bf78ca98-2fef-4cfc-9f26-e02da5ecdf67 737d2200-64a1-482f-839d-64906b0bd80e 378678cd-891b-4a39-b026-869938783f54 d1 840c1ea1-2e8d-4809-a6d3-3433a5c489d2 map[]}] took 4.865299ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.826786175Z&quot;}
 
 ...
-
 </code></pre>
 <p>This proves that these provisioning commands were sent from the CLI to the Mainflux system.</p>
 <h2 id="step-4-send-messages">Step 4 - Send Messages<a class="headerlink" href="#step-4-send-messages" title="Permanent link">#</a></h2>

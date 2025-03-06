@@ -79,10 +79,6 @@
     <li class="toctree-l2"><a class="reference internal" href="#mqtt">MQTT</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#coap">CoAP</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#_1"></a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#ws">WS</a>
     </li>
@@ -198,41 +194,41 @@ Conversely, if <code>write</code> is set to <code>false</code>, messages will be
 }
 </code></pre>
 <p>In case it is necessary to extract the received payload and use a specific object within the payload, it is possible to define a value within the <code>data_field</code> field that will be used to extract the payload.</p>
-<p>If we have a payload from which we want to get a list of "params", then the <code>config</code> should look like this:
-```json lines
-{
-  "config": {
-    "content_type": "application/json",
-    "write": true,
-    "transformer": {
-      "data_filters": [],
-      "data_field": "root.params",
-      "time_field": "created",
-      "time_format": "rfc3339",
-      "time_location": "UTC"
+<p>If we have a payload from which we want to get a list of "params", then the <code>config</code> should look like this:</p>
+<pre><code class="language-json">{
+  &quot;config&quot;: {
+    &quot;content_type&quot;: &quot;application/json&quot;,
+    &quot;write&quot;: true,
+    &quot;transformer&quot;: {
+      &quot;data_filters&quot;: [],
+      &quot;data_field&quot;: &quot;root.params&quot;,
+      &quot;time_field&quot;: &quot;created&quot;,
+      &quot;time_format&quot;: &quot;rfc3339&quot;,
+      &quot;time_location&quot;: &quot;UTC&quot;
     }
   }
-}</p>
-<p>// Received payload with params
-{
-  "root": {
-    "params": [
+}
+</code></pre>
+<p>Received payload with params:</p>
+<pre><code class="language-json">{
+  &quot;root&quot;: {
+    &quot;params&quot;: [
       {
-        "field": "temperature",
-        "value": 20,
-        "created": "2024-12-24T17:15:55.000Z"
+        &quot;field&quot;: &quot;temperature&quot;,
+        &quot;value&quot;: 20,
+        &quot;created&quot;: &quot;2024-12-24T17:15:55.000Z&quot;
       },
       {
-        "field": "humidity",
-        "value": 45,
-        "created": "2024-12-24T17:17:00.000Z"
-      },
+        &quot;field&quot;: &quot;humidity&quot;,
+        &quot;value&quot;: 45,
+        &quot;created&quot;: &quot;2024-12-24T17:17:00.000Z&quot;
+      }
     ]
   }
-}</p>
-<pre><code>The extraction result is:
-```json
-[
+}
+</code></pre>
+<p>The extraction result is:</p>
+<pre><code class="language-bash">[
       {
         &quot;field&quot;: &quot;temperature&quot;,
         &quot;value&quot;: 20,
@@ -330,7 +326,6 @@ or <a href="https://www.eclipse.org/paho/">Paho</a> if you want to use MQTT over
 to every command.</p>
 <h2 id="coap">CoAP<a class="headerlink" href="#coap" title="Permanent link">#</a></h2>
 <p>CoAP adapter implements CoAP protocol using underlying UDP and according to <a href="https://tools.ietf.org/html/rfc7252">RFC 7252</a>. To send and receive messages over CoAP, you can use <a href="https://github.com/MainfluxLabs/coap-cli">CoAP CLI</a>. To set the add-on, please follow the installation instructions provided <a href="https://github.com/MainfluxLabs/coap-cli">here</a>.</p>
-<h3 id="_1"><a class="headerlink" href="#_1" title="Permanent link">#</a></h3>
 <p>Examples:</p>
 <pre><code>coap-cli get /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
 </code></pre>
