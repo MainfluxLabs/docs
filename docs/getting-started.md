@@ -38,7 +38,7 @@ This quickly provisions a Mainflux system with one simple testing scenario.
 
 Output of the command follows this pattern:
 
-```json lines
+```bash
 {
   "email": "friendly_beaver@email.com",
   "password": "12345678"
@@ -76,7 +76,6 @@ Output of the command follows this pattern:
     "name": "d1",
   }
 ]
-
 ```
 
 In the Mainflux system terminal (where docker compose is running) you should see following logs:
@@ -87,7 +86,6 @@ mainflux-users  | {"level":"info","message":"Method identity for client friendly
 mainflux-things | {"level":"info","message":"Method create_things for things [{513d02d2-16c1-4f23-98be-9e12f8fee898 737d2200-64a1-482f-839d-64906b0bd80e b7bfc4b6-c18d-47c5-b343-98235c5acc19 d0 69590b3a-9d76-4baa-adae-9b5fec0ea14f map[]},{bf78ca98-2fef-4cfc-9f26-e02da5ecdf67 737d2200-64a1-482f-839d-64906b0bd80e 378678cd-891b-4a39-b026-869938783f54 d1 840c1ea1-2e8d-4809-a6d3-3433a5c489d2 map[]}] took 4.865299ms to complete without errors.","ts":"2019-01-08T22:16:20.826786175Z"}
 
 ...
-
 ```
 
 This proves that these provisioning commands were sent from the CLI to the Mainflux system.
