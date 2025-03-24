@@ -231,8 +231,10 @@ mainfluxlabs-cli messages send [subtopic] '[{"bn":"Dev1","n":"temp","v":20}, {"n
 #### Read messages over HTTP
 * Read messages from a specific subtopic by adding a flag `-s=<subtopic>`
 * Reading SenML messages is the default. To read JSON messages add the flag `-f=json`
+* Setting the `by-admin` flag allows the admin to list all messages of a certain format, from all publishers
+* If `by-admin` is set, `auth_token` will be `admin_token`, otherwise `auth_token` is `thing_key`
 ```bash
-mainfluxlabs-cli messages read <thing_key>
+mainfluxlabs-cli messages read [by-admin] <auth_token>
 ```
 
 ### Groups
@@ -332,15 +334,10 @@ mainfluxlabs-cli orgs update-members '[{"member_id":"<member_id>","role":"<new_r
 mainfluxlabs-cli orgs members <org_id> <user_token>
 ```
 
-#### List Orgs that Member belongs to
-```bash
-mainfluxlabs-cli orgs memberships <member_id> <user_token>
-```
-
 ### Webhooks
 #### Create Webhooks
 ```bash
-mainfluxlabs-cli webhooks create '[{"name":"<webhook_name>","url":"<http://webhook-url.com>","headers":{"key":"value",...}}]' <group_id> <user_token>
+mainfluxlabs-cli webhooks create '[{"name":"<webhook_name>","url":"<http://webhook-url.com>","headers":{"key":"value",...}}]' <thing_id> <user_token>
 ```
 
 #### Get Webhook by ID
@@ -351,6 +348,11 @@ mainfluxlabs-cli webhooks get by-id <id> <user_token>
 #### Get Webhooks by Group
 ```bash
 mainfluxlabs-cli webhooks get by-group <group_id> <user_token>
+```
+
+#### Get Webhooks by Thing
+```bash
+mainfluxlabs-cli webhooks get by-thing <thing_id> <user_token>
 ```
 
 #### Update Webhook

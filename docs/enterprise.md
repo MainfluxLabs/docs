@@ -21,9 +21,9 @@ Downlink service supports retrieval data in `JSON` and `XML` format.
 The Filestore Service provides secure File storage for both individual devices (Things) and Groups. This service allows you to upload, update, view, list, and delete Files associated with Things or Groups in a structured and efficient manner.
 
 **Key Features:**
-- Thing-Specific File Management:
+* Thing-Specific File Management:
 Store and manage Files tied to individual Things.
-- Group-Specific File Management:
+* Group-Specific File Management:
 Manage Files shared across device Groups.
   
 The Filestore Service is useful for storing configuration files or logs for individual devices, ensuring easy access and updates. It also facilitates sharing firmware updates or other files across multiple devices within a Group, streamlining Group File management.

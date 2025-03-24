@@ -62,7 +62,7 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 ```
 
-### Get User
+### View User
 You can always check the user entity that is logged in by entering the user ID and `user_token`.
 
 > Must-have: `user_id` and `user_token`
@@ -89,7 +89,7 @@ Access-Control-Allow-Headers: *
 {"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}
 ```
 
-### Get All Users
+### List Users
 You can get all users in the database by calling this function
 
 > Must-have: `user_token`
@@ -257,7 +257,7 @@ Content-Type: application/json
 Date: Fri, 14 Jul 2023 20:43:58 GMT
 Content-Length: 456
 
-{"limit":10,"offset":0,"total":2,"name":"","orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822", "metadata":{"meta":"test1"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","metadata":{"meta":"test2"},"created_at":"2023-07-13T09:29:41.718Z","updated_at":"2023-07-13T11:08:22.586Z"}]}
+{"limit":10,"offset":0,"total":2,"orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822", "metadata":{"meta":"test1"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","metadata":{"meta":"test2"},"created_at":"2023-07-13T09:29:41.718Z","updated_at":"2023-07-13T11:08:22.586Z"}]}
 ```
 
 ## Org Members
@@ -307,6 +307,26 @@ To update members of an org, you need the org ID, member ids, role and a `user_t
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/members -d '{"org_members":[{"member_id":"<member_id>", "role":"new_role"}]}'
 ```
 
+### View Member
+
+To view member of an org, you need the org ID, member ID and a `user_token`
+
+> Must-have: `user_token`, `member_id`, `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members/<member_id>
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 24 Mar 2025 09:10:20 GMT
+Content-Length: 87
+
+{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"}
+```
+
 Response:
 ```bash
 HTTP/1.1 200 OK
@@ -332,27 +352,7 @@ Content-Type: application/json
 Date: Mon, 17 Jul 2023 09:13:22 GMT
 Content-Length: 235
 
-{"limit":10,"offset":0,"total":2,"name":"","members":[{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}]}
-```
-
-### List Orgs by Member
-
-To list orgs by member, you need the member ID and a `user_token`
-
-> Must-have: `user_token` and `member_id`
-
-```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>"  http://localhost/members/<member_id>/orgs
-```
-
-Response:
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 10:21:56 GMT
-Content-Length: 622
-
-{"limit":10,"offset":0,"total":3,"name":"","orgs":[{"id":"1fb75a76-3ca9-4c38-9194-5b03f25860f1","name":"org_name","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"},{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"}]}
+{"limit":10,"offset":0,"total":2,"members":[{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}
 ```
 
 ## Groups
@@ -378,7 +378,7 @@ Location: /groups/01F0EH61SA7C7NDKWYCXVG7PWD
 Access-Control-Expose-Headers: Location
 ```
 
-### Get Group
+### View Group
 Get a group entity for a logged-in user
 
 > Must-have: `user_token` and `group_id`
@@ -397,10 +397,10 @@ Content-Length: 264
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
+{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
 ```
 
-### Get Groups
+### List Groups
 Get all groups, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
@@ -419,7 +419,29 @@ Content-Length: 573
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name_1","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
+{"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name_1","description":"desc","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
+```
+
+### List Groups by Org
+Get groups by a specific organization
+
+> Must-have: `user_token`, `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/groups
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 15:10:28 GMT
+Content-Type: application/json
+Content-Length: 573
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name_1","description":"desc","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
 ```
 
 ### Update Group
@@ -461,7 +483,7 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
-### Get Group by Thing
+### View Group by Thing
 Get a group entity by thing
 
 > Must-have: `user_token`, `thing_id`
@@ -480,10 +502,10 @@ Content-Length: 264
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
+{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
 ```
 
-### Get Group by Profile
+### View Group by Profile
 Get a group entity by profile
 
 > Must-have: `user_token`, `profile_id`
@@ -502,7 +524,7 @@ Content-Length: 264
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","owner_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
+{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
 ```
 
 ## Group Members
@@ -563,7 +585,7 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
-### Get Members by Group
+### List Members by Group
 To list members by group, you need the group ID and a `user_token`
 
 > Must-have: `user_token`, `group_id`
@@ -582,7 +604,7 @@ Content-Length: 225
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":2,"limit":10,"offset":0,"groups_roles":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","email":"user@gmail.com","role":"viewer"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","email":"user2@gmail.com","role":"editor"}]}
+{"total":2,"limit":10,"offset":0,"group_members":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","email":"user@gmail.com","role":"viewer"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","email":"user2@gmail.com","role":"editor"}]}
 ```
 
 ## Profiles
@@ -655,7 +677,7 @@ Access-Control-Expose-Headers: Location
 
 {"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
 ```
-### Get Profile
+### View Profile
 Get a profile entity for a logged-in user
 
 > Must-have: `user_token` and `profile_id`
@@ -677,7 +699,29 @@ Access-Control-Expose-Headers: Location
 {"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content-type":"application/json"}}
 ```
 
-### Get Profiles
+### View Profile by Thing
+Get a profile by a specific thing
+
+> Must-have: `user_token` and `thing_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/profiles
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 11:20:10 GMT
+Content-Type: application/json
+Content-Length: 188
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content-type":"application/json"}}
+```
+
+### List Profiles
 Get all profiles that the user can access, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
@@ -696,10 +740,10 @@ Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
 ```
 
-### Get Profiles by Group
+### List Profiles by Group
 Get all profiles by a certain group where the user has access 
 
 > Must-have: `user_token`, `<group_id>`
@@ -714,11 +758,33 @@ HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:30:34 GMT
 Content-Type: application/json
+Content-Length: 427
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":2,"offset":0,"limit":10,"profiles":[{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+```
+
+### List Profiles by Org
+Get all profiles by a certain organization
+
+> Must-have: `user_token`, `<org_id>`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/profiles
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 10:30:34 GMT
+Content-Type: application/json
 Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"b9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
 ```
 
 ### Update Profile
@@ -817,7 +883,7 @@ The same as creating a Thing with external ID the user can create multiple thing
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","profile_id":"<profile_id>","name": "<thing_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","profile_id":"<profile_id>","name": "<thing_name_2>"}]'
 ```
 
-### Get Thing
+### View Thing
 You can get thing entity by entering the thing ID and `user_token`
 
 > Must-have: `user_token` and `thing_id`
@@ -839,7 +905,7 @@ Access-Control-Expose-Headers: Location
 {"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}}
 ```
 
-### Get Metadata by Key
+### View Metadata by Key
 Get thing metadata by providing the `thing_key`
 
 > Must-have: `thing_key`
@@ -860,7 +926,7 @@ Access-Control-Expose-Headers: Location
 {"metadata":{"test":"data"}}
 ```
 
-### Get All Things
+### List Things
 Get all things that the user can access, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
@@ -879,10 +945,10 @@ Content-Length: 582
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
+{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
 ```
 
-### Get Things by Group
+### List Things by Group
 Get all things by a certain group
 
 > Must-have: `user_token`, `group_id`
@@ -901,7 +967,51 @@ Content-Length: 582
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"order":"","direction":"","things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
+{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
+```
+
+### List Things by Profile
+Get all things by a certain profile
+
+> Must-have: `user_token`, `profile_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/profiles/<profile_id>/things
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 15:21:49 GMT
+Content-Type: application/json
+Content-Length: 582
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
+```
+
+### List Things by Org
+Get all things by a certain organization
+
+> Must-have: `user_token`, `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/things
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 15:21:49 GMT
+Content-Type: application/json
+Content-Length: 582
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
 ```
 
 ### Update Thing
@@ -918,6 +1028,26 @@ Response:
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:23:36 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+```
+
+### Update Things Metadata
+Updating a things metadata
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","metadata":{"new_key1":"new_val1"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","metadata":{"new_key2":"new_val2"}}]'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 24 Mar 2025 16:00:00 GMT
 Content-Type: application/json
 Content-Length: 0
 Connection: keep-alive
@@ -1028,7 +1158,7 @@ Access-Control-Expose-Headers: Location
 {"id":"4d62fb1e-085e-435c-a0c5-5255febfa35b","value":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDAwMzU1ODQsImp0aSI6IjRkNjJmYjFlLTA4NWUtNDM1Yy1hMGM1LTUyNTVmZWJmYTM1YiIsImlhdCI6MTYzOTkzNTU4NCwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6ImZscDFAZW1haWwuY29tIiwiaXNzdWVyX2lkIjoiYzkzY2FmYjMtYjNhNy00ZTdmLWE0NzAtMTVjMTRkOGVkMWUwIiwidHlwZSI6Mn0.RnvjhygEPPWFDEUKtfk5okzVhZzOcO0azr8gd5vby5M","issued_at":"2021-12-19T17:39:44.175088349Z","expires_at":"2021-12-20T21:26:24.175088349Z"}
 ```
 
-### Get API key details
+### View API key details
 
 > Must-have: 'user_token' and 'key_id'
 
@@ -1071,11 +1201,11 @@ Access-Control-Expose-Headers: Location
 
 ### Create Webhooks
 
-To forward a message to another platform, you need to create a Webhook with the necessary data such as the `name` of the Webhook, `group_id` which refers to the Group for which the Webhook is being created, the `url` to which the message will be forwarded and HTTP `headers` specific for the certain webhook.
+To forward a message to another platform, you need to create a Webhook with the necessary data such as the `name` of the Webhook, `thing_id` which refers to the Thing for which the Webhook is being created, the `url` to which the message will be forwarded and HTTP `headers` specific for the certain webhook.
 
-You can create multiple Webhooks at once by entering a series of Webhooks structures, `group_id` and a `user_token`.
+You can create multiple Webhooks at once by entering a series of Webhooks structures, `thing_id` and a `user_token`.
 
-> Must-have: `user_token`, `group_id`, `name` and `url`
+> Must-have: `user_token`, `thing_id`, `name` and `url`
 ```bash
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/groups/<group_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
 ```
@@ -1090,12 +1220,11 @@ Content-Length: 191
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}
+{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}
 
 ```
-**Note:** The logged-in user who creates a Webhook for a certain Group must have the role of "editor" of that Group.
 
-### Get Webhooks by Group ID
+### List Webhooks by Group
 You can get all Webhooks for certain Group by entering `user_token` and `group_id`.
 
 > Must-have: `user_token` and `group_id`
@@ -1109,14 +1238,35 @@ HTTP/1.1 200 OK
 Server: nginx/1.20.0
 Date: Thu, 11 Apr 2024 11:44:57 GMT
 Content-Type: application/json
-Content-Length: 355
+Content-Length: 488
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}},{"id":"1234f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","url":"https://api.test2.com/","headers":{}}]}
+{"total":3,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}},{"id":"1234f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"12140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","url":"https://api.test2.com/","headers":{}}]}
 ```
 
-### Get Webhook
+### List Webhooks by Thing
+You can get all Webhooks for certain Thing by entering `user_token` and `thing_id`.
+
+> Must-have: `user_token` and `thing_id`
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/things/<thing_id>/webhooks
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Mon, 24 Mar 2025 11:44:57 GMT
+Content-Type: application/json
+Content-Length: 250
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":1,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}]}
+```
+
+### View Webhook
 View details of a certain Webhook by entering `user_token` and `webhook_id`.
 
 > Must-have: `user_token` and `group_id`
@@ -1134,7 +1284,7 @@ Content-Length: 185
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}
+{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}
 ```
 ### Update Webhook
 Update data of webhook with provided ID and `user_token`
@@ -1159,10 +1309,10 @@ Access-Control-Expose-Headers: Location
 ### Delete Webhooks
 Delete webhooks by given IDs
 
-> Must-have: `user_token`,`group_id`, webhook_ids
+> Must-have: `user_token`, webhook_ids
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/webhooks -d '{"webhook_ids":["c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","2513d843-abf8-4db4-93fd-bdc8917d42mm"]}'
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/webhooks -d '{"webhook_ids":["c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","2513d843-abf8-4db4-93fd-bdc8917d42mm"]}'
 ```
 
 Response:
@@ -1203,7 +1353,7 @@ Access-Control-Expose-Headers: Location
 ```
 **Note:** The logged-in user who creates a Notifier for a certain Group must have the role of "editor" of that Group.
 
-### Get Notifiers by Group ID
+### List Notifiers by Group
 You can get all Notifiers for certain Group by entering `user_token` and `group_id`.
 
 > Must-have: `user_token` and `group_id`
@@ -1217,14 +1367,14 @@ HTTP/1.1 200 OK
 Server: nginx/1.20.0
 Date: Thu, 11 Apr 2024 12:19:57 GMT
 Content-Type: application/json
-Content-Length: 305
+Content-Length: 337
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"notifiers":[{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","contacts": ["test1@example.com"]},{"id":"2234f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","contacts": ["test2@example.com"]}]}
+{"total":2,"offset":0,"limit":10,"notifiers":[{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","contacts": ["test1@example.com"]},{"id":"2234f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","contacts": ["test2@example.com"]}]}
 ```
 
-### Get Notifier
+### View Notifier
 View details of a certain Notifier by entering `user_token` and `notifier_id`.
 
 > Must-have: `user_token` and `group_id`
