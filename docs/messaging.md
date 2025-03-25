@@ -6,7 +6,7 @@ The following sections will provide an example of message publishing for each of
 ### Configure Profile Config
 
 For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure `config`.
-The `config` structure consists of the following fields: `content_type`, `write`, `webhook_id`, `transformer`, `smtp_id`.
+The `config` structure consists of the following fields: `content_type`, `write`, `webhook`, `transformer`, `smtp_id`.
 
 A `content_type` field defines the payload format of messages in order to transform and store them properly.
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
@@ -20,7 +20,7 @@ Here's an example of `SenML-JSON` metadata:
   "config": {
     "content_type": "application/senml+json",
     "write": true,
-    "webhook_id": "",
+    "webhook": false,
     "smtp_id": ""
   }
 }
@@ -32,7 +32,7 @@ Here's an example of `SenML-CBOR` metadata:
   "config": {
     "content_type": "application/senml+cbor",
     "write": true,
-    "webhook_id": "",
+    "webhook": false,
     "smtp_id": ""
   }
 }
@@ -48,7 +48,7 @@ Here's an example of `JSON` metadata:
   "config": {
     "content_type": "application/json",
     "write": true,
-    "webhook_id": "",
+    "webhook": false,
     "transformer": {
       "data_filters": ["val1", "val2"],
       "data_field":"field1",
@@ -138,7 +138,7 @@ For the previous example, we can filter the extracted payload and save only the 
 
 If the `data_filters` and `data_field` fields are empty, the whole payload will be used.
 
-The explanations for the `webhook_id` and `smtp_id` fields of the `config` can be found in the [Webhooks](#webhooks) and [Notifiers](#notifiers) sections.
+The explanations for the `webhook` and `smtp_id` fields of the `config` can be found in the [Webhooks](#webhooks) and [Notifiers](#notifiers) sections.
 
 ---
 ### Notifiers
@@ -153,7 +153,7 @@ Here is an example with the value of the `smtp_id` field:
   "config": {
     "content_type": "application/senml+json",
     "write": false,
-    "webhook_id": "",
+    "webhook": false,
     "smtp_id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b"
   }
 }
@@ -165,16 +165,16 @@ Here is an example with the value of the `smtp_id` field:
 ### Webhooks
 
 Webhooks service provides forwarding received messages to other platforms.
-Message forwarding can be enabled by setting the ID of the webhook to the `webhook_id` field within the Profile Config.
+Setting the value `true` or `false` in the `webhook` field within Profile Config determines whether messages will be forwarded.
 
-Here is an example with the value of the `webhook_id` field:
+Here is an example with the value of the `webhook` field:
 
 ```json
 {
   "config": {
     "content_type": "application/json",
     "write": false,
-    "webhook_id": "c9bf9e57-1685-4c89-bafb-ff5af830be8a",
+    "webhook": true,
     "smtp_id": ""
   }
 }
