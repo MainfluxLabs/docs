@@ -149,7 +149,7 @@
 The following sections will provide an example of message publishing for each of the supported protocols.</p>
 <h3 id="configure-profile-config">Configure Profile Config<a class="headerlink" href="#configure-profile-config" title="Permanent link">#</a></h3>
 <p>For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure <code>config</code>.
-The <code>config</code> structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>webhook_id</code>, <code>transformer</code>, <code>smtp_id</code>.</p>
+The <code>config</code> structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>webhook</code>, <code>transformer</code>, <code>smtp_id</code>.</p>
 <p>A <code>content_type</code> field defines the payload format of messages in order to transform and store them properly.
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values <code>application/senml+json</code>, <code>application/senml+cbor</code> and <code>application/json</code>.</p>
 <p>A <code>write</code> field determines whether messages should be stored in the database. When <code>write</code> is set to <code>true</code>, messages will be saved in the database.
@@ -159,7 +159,7 @@ Conversely, if <code>write</code> is set to <code>false</code>, messages will be
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/senml+json&quot;,
     &quot;write&quot;: true,
-    &quot;webhook_id&quot;: &quot;&quot;,
+    &quot;webhook&quot;: false,
     &quot;smtp_id&quot;: &quot;&quot;
   }
 }
@@ -169,7 +169,7 @@ Conversely, if <code>write</code> is set to <code>false</code>, messages will be
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/senml+cbor&quot;,
     &quot;write&quot;: true,
-    &quot;webhook_id&quot;: &quot;&quot;,
+    &quot;webhook&quot;: false,
     &quot;smtp_id&quot;: &quot;&quot;
   }
 }
@@ -181,7 +181,7 @@ Conversely, if <code>write</code> is set to <code>false</code>, messages will be
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
     &quot;write&quot;: true,
-    &quot;webhook_id&quot;: &quot;&quot;,
+    &quot;webhook&quot;: false,
     &quot;transformer&quot;: {
       &quot;data_filters&quot;: [&quot;val1&quot;, &quot;val2&quot;],
       &quot;data_field&quot;:&quot;field1&quot;,
@@ -261,7 +261,7 @@ For the previous example, we can filter the extracted payload and save only the 
 }
 </code></pre>
 <p>If the <code>data_filters</code> and <code>data_field</code> fields are empty, the whole payload will be used.</p>
-<p>The explanations for the <code>webhook_id</code> and <code>smtp_id</code> fields of the <code>config</code> can be found in the <a href="#webhooks">Webhooks</a> and <a href="#notifiers">Notifiers</a> sections.</p>
+<p>The explanations for the <code>webhook</code> and <code>smtp_id</code> fields of the <code>config</code> can be found in the <a href="#webhooks">Webhooks</a> and <a href="#notifiers">Notifiers</a> sections.</p>
 <hr />
 <h3 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h3>
 <p>Notifiers service provides a service for sending notifications. It can be configured to send email notifications over SMTP (Simple Mail Transfer Protocol).</p>
@@ -271,7 +271,7 @@ For the previous example, we can filter the extracted payload and save only the 
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/senml+json&quot;,
     &quot;write&quot;: false,
-    &quot;webhook_id&quot;: &quot;&quot;,
+    &quot;webhook&quot;: false,
     &quot;smtp_id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;
   }
 }
@@ -280,13 +280,13 @@ For the previous example, we can filter the extracted payload and save only the 
 <hr />
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
 <p>Webhooks service provides forwarding received messages to other platforms.
-Message forwarding can be enabled by setting the ID of the webhook to the <code>webhook_id</code> field within the Profile Config.</p>
-<p>Here is an example with the value of the <code>webhook_id</code> field:</p>
+Setting the value <code>true</code> or <code>false</code> in the <code>webhook</code> field within Profile Config determines whether messages will be forwarded.</p>
+<p>Here is an example with the value of the <code>webhook</code> field:</p>
 <pre><code class="language-json">{
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
     &quot;write&quot;: false,
-    &quot;webhook_id&quot;: &quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,
+    &quot;webhook&quot;: true,
     &quot;smtp_id&quot;: &quot;&quot;
   }
 }

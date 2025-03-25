@@ -198,8 +198,6 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#list-members-by-org">List Members by Org</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#list-orgs-that-member-belongs-to">List Orgs that Member belongs to</a>
-    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#webhooks">Webhooks</a>
@@ -209,6 +207,8 @@
     <li class="toctree-l4"><a class="reference internal" href="#get-webhook-by-id">Get Webhook by ID</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#get-webhooks-by-group">Get Webhooks by Group</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#get-webhooks-by-thing">Get Webhooks by Thing</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#update-webhook">Update Webhook</a>
     </li>
@@ -437,8 +437,10 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <ul>
 <li>Read messages from a specific subtopic by adding a flag <code>-s=&lt;subtopic&gt;</code></li>
 <li>Reading SenML messages is the default. To read JSON messages add the flag <code>-f=json</code></li>
+<li>Setting the <code>by-admin</code> flag allows the admin to list all messages of a certain format, from all publishers</li>
+<li>If <code>by-admin</code> is set, <code>auth_token</code> will be <code>admin_token</code>, otherwise <code>auth_token</code> is <code>thing_key</code></li>
 </ul>
-<pre><code class="language-bash">mainfluxlabs-cli messages read &lt;thing_key&gt;
+<pre><code class="language-bash">mainfluxlabs-cli messages read [by-admin] &lt;auth_token&gt;
 </code></pre>
 <h3 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h3>
 <h4 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h4>
@@ -499,18 +501,18 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <h4 id="list-members-by-org">List Members by Org<a class="headerlink" href="#list-members-by-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs members &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="list-orgs-that-member-belongs-to">List Orgs that Member belongs to<a class="headerlink" href="#list-orgs-that-member-belongs-to" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs memberships &lt;member_id&gt; &lt;user_token&gt;
-</code></pre>
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
 <h4 id="create-webhooks">Create Webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli webhooks create '[{&quot;name&quot;:&quot;&lt;webhook_name&gt;&quot;,&quot;url&quot;:&quot;&lt;http://webhook-url.com&gt;&quot;,&quot;headers&quot;:{&quot;key&quot;:&quot;value&quot;,...}}]' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli webhooks create '[{&quot;name&quot;:&quot;&lt;webhook_name&gt;&quot;,&quot;url&quot;:&quot;&lt;http://webhook-url.com&gt;&quot;,&quot;headers&quot;:{&quot;key&quot;:&quot;value&quot;,...}}]' &lt;thing_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="get-webhook-by-id">Get Webhook by ID<a class="headerlink" href="#get-webhook-by-id" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks get by-id &lt;id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="get-webhooks-by-group">Get Webhooks by Group<a class="headerlink" href="#get-webhooks-by-group" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks get by-group &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="get-webhooks-by-thing">Get Webhooks by Thing<a class="headerlink" href="#get-webhooks-by-thing" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli webhooks get by-thing &lt;thing_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-webhook">Update Webhook<a class="headerlink" href="#update-webhook" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli webhooks update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;,&quot;url&quot;:&quot;&lt;http://webhook-url.com&gt;&quot;}' &lt;webhook_id&gt; &lt;user_token&gt;
