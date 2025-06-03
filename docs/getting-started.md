@@ -22,15 +22,15 @@ which can be downloaded as a tarball from GitHub (here we use release `0.12.1` b
 wget -O- https://github.com/MainfluxLabs/mainflux/releases/download/0.12.1/mainflux-cli_0.12.1_linux-amd64.tar.gz | tar xvz -C $GOBIN
 ```
 
-> Make sure that `$GOBIN` is added to your `$PATH` so that `mainflux-cli` command can be accessible system-wide
+> Make sure that `$GOBIN` is added to your `$PATH` so that `mainfluxlabs-cli` command can be accessible system-wide
 
-#### Build mainflux-cli
-Build `mainflux-cli` if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the [CLI](cli.md) for further details.
+#### Build mainfluxlabs-cli
+Build `mainfluxlabs-cli` if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the [CLI](cli.md) for further details.
 
 ## Step 3 - Provision the System
 Once installed, you can use the CLI to quick-provision the system for testing:
 ```bash
-mainflux-cli provision test
+mainfluxlabs-cli provision test
 ```
 
 This command actually creates a temporary testing user, logs it in, then creates two things and two profiles on behalf of this user.
@@ -94,12 +94,12 @@ This proves that these provisioning commands were sent from the CLI to the Mainf
 Once system is provisioned, a `thing` can start sending messages:
 
 ```bash
-mainflux-cli messages send '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' <thing_key>
+mainfluxlabs-cli messages send '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' <thing_key>
 ```
 
 For example:
 ```bash
-mainflux-cli messages send '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' 69590b3a-9d76-4baa-adae-9b5fec0ea14f
+mainfluxlabs-cli messages send '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]' 69590b3a-9d76-4baa-adae-9b5fec0ea14f
 ```
 
 In the Mainflux system terminal you should see following logs:
