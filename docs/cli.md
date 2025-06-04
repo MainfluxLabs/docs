@@ -70,7 +70,7 @@ docker run -it --rm mainflux/cli -m http://<IP_SERVER> [command]
 You can execute each command with `-h` flag for more information about that command, e.g.
 
 ```bash
-mainflux-cli profiles -h
+mainfluxlabs-cli profiles -h
 ```
 
 will get you usage info:

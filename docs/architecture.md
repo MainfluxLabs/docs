@@ -12,7 +12,7 @@ Mainflux IoT platform is comprised of the following services:
 | [http-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/http)     | Provides an HTTP interface for sending messages                  |
 | [mqtt-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/mqtt)     | Provides an MQTT and MQTT over WS interface for sending messages |
 | [coap-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/coap)     | Provides a CoAP interface for sending messages                   |
-| [mainflux-cli](https://github.com/MainfluxLabs/mainflux/tree/master/cli)      | Command line interface                                           |
+| [mainfluxlabs-cli](https://github.com/MainfluxLabs/mainflux/tree/master/cli)  | Command line interface                                           |
 
 ![arch](img/architecture.jpg)
 
