@@ -400,12 +400,12 @@ docker-compose -f docker/docker-compose.yml up
 
 Create user:
 ```bash
-mainflux-cli -m http://localhost:8180 users create test@email.com 12345678
+mainfluxlabs-cli -m http://localhost:8180 users create test@email.com 12345678
 ```
 
 Obtain user token:
 ```bash
-mainflux-cli -m http://localhost:8180 users token test@email.com 12345678
+mainfluxlabs-cli -m http://localhost:8180 users token test@email.com 12345678
 
 created: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk5MDQ4MDQsImlhdCI6MTU4OTg2ODgwNCwiaXNzIjoibWFpbmZsdXguYXV0aG4iLCJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsInR5cGUiOjB9.VSwpGoflOLqrHlCGoVVFPBdnnvsAhv2gc3EomXg9yM0
 
