@@ -363,7 +363,7 @@ To create a group, you need the group name, description, metadata, `org_id` and 
 > Must-have: `org_id`, `user_token`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/groups -d '{"name": "<group_name>", "description": "<group_description>", "metadata": {}}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/groups -d '{"name": "<group_name>", "description": "<group_description>", "metadata": {}}'
 ```
 
 Response:
@@ -428,7 +428,7 @@ Get groups by a specific organization
 > Must-have: `user_token`, `org_id`
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/groups
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/groups
 ```
 
 Response:
@@ -998,7 +998,7 @@ Get all things by a certain organization
 > Must-have: `user_token`, `org_id`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/things
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/things
 ```
 
 Response:
