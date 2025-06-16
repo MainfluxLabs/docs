@@ -258,6 +258,11 @@ mainfluxlabs-cli groups get <group_id> <user_token>
 mainfluxlabs-cli groups get all <user_token>
 ```
 
+#### List Groups by Org
+```bash
+mainfluxlabs-cli groups get by-org <org-id> <user_token>
+```
+
 #### Update Group
 ```bash
 mainfluxlabs-cli groups update '{"name":"<new_name>"}' <group_id> <user_token>
