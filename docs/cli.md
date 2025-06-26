@@ -148,12 +148,12 @@ mainfluxlabs-cli provision profiles <file> <user_token>
 ### Things
 #### Create Thing
 ```bash
-mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>"}' <group_id> <user_token>
+mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>"}' <user_token>
 ```
 
 #### Create Thing with metadata
 ```bash
-mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>","metadata": {"key1":"value1"}}' <group_id> <user_token>
+mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>","metadata": {"key1":"value1"}}' <user_token>
 ```
 
 #### Update Thing

@@ -832,12 +832,12 @@ Access-Control-Expose-Headers: Location
 It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
 There are two limitations - the existing ID have to be in UUID V4 format, and it has to be unique in the Mainflux domain.
 
-To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a `user_token`, metadata, `group_id` and the profile ID assigned to it.
+To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a `user_token`, metadata, and the profile ID assigned to it.
 
-> Must-have: `user_token`, `group_id`, `profile_id`
+> Must-have: `user_token`, `profile_id`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","profile_id":"<profile_id>","name":"<thing_name>","metadata":{"key":"val"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","profile_id":"<profile_id>","name":"<thing_name>","metadata":{"key":"val"}}]'
 ```
 
 Response:
@@ -853,12 +853,12 @@ Access-Control-Expose-Headers: Location
 {"things":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}}]}
 ```
 ### Create Things
-You can create multiple things at once by entering a series of things structures, `group_id` and a `user_token`
+You can create multiple things at once by entering a series of things structures and a `user_token`
 
-> Must-have: `user_token`, `group_id` and things
+> Must-have: `user_token`, series of things
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/things -d '[{"profile_id":"<profile_id>","name": "<thing_name_1>"}, {"profile_id":"<profile_id>","name": "<thing_name_2>","metadata":{"key":"val"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"profile_id":"<profile_id>","name": "<thing_name_1>"}, {"profile_id":"<profile_id>","name": "<thing_name_2>","metadata":{"key":"val"}}]'
 ```
 
 Response:
@@ -877,10 +877,10 @@ Access-Control-Expose-Headers: Location
 ### Create Things with external ID
 The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a `user_token` and `group_id`
 
-> Must-have: `user_token`, `group_id` and things
+> Must-have: `user_token`, series of things
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","profile_id":"<profile_id>","name": "<thing_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","profile_id":"<profile_id>","name": "<thing_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","profile_id":"<profile_id>","name": "<thing_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","profile_id":"<profile_id>","name": "<thing_name_2>"}]'
 ```
 
 ### View Thing
