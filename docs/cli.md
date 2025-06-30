@@ -128,24 +128,112 @@ mainfluxlabs-cli users password <old_password> <password> <user_token>
 ```
 
 ### System Provisioning
+
 #### Provision Things
+
+Provision multiple Things in bulk from a JSON / CSV input file.
+
 ```bash
 mainfluxlabs-cli provision things <file> <user_token>
 ```
 
-* `file` - A CSV or JSON file containing things (must have extension `.csv` or `.json`)
+* `file` - A path to a CSV or JSON file containing Things (must have the `.json` or `.csv` extension)
 * `user_token` - A valid user auth token for the current system
 
+##### Input file structure (JSON):
+
+The root of the JSON input file must be an array containing objects, each one representing a separate Thing,
+each of which can have the following fields:
+
+* `name`
+* `id`
+* `group_id`
+* `profile_id`
+* `metadata`
+
+See [API -> Things](api.md#things) for the meaning and explanation of these fields.
+
+Example:
+
+```json
+[
+    {
+        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
+        "profile_id": "30afa89c-decc-479c-8783-6b0c8813df0d",
+        "name": "thing0",
+        "metadata": {
+            "a": 1
+        }
+    },
+    {
+        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
+        "profile_id": "efc59216-733d-41e7-af9a-e94a11ff39ee",
+        "name": "thing1",
+        "metadata": {
+            "b": 2
+        }
+    },
+  ...
+]
+```
+
+##### Input file structure (CSV):
+
+
 #### Provision Profiles
+
+Provision multiple Profiles in bulk from a JSON / CSV input file.
+
 ```bash
 mainfluxlabs-cli provision profiles <file> <user_token>
 ```
 
-* `file` - A CSV or JSON file containing profiles
+* `file` - A path to a CSV or JSON file containing profiles (must have the `.json` or `.csv` extension)
 * `user_token` - A valid user auth token for the current system
 
+##### Input file structure (JSON):
+
+The root of the JSON input file must be an array containing objects, each one representing a separate Profile,
+each of which can have the following fields:
+
+* `name`
+* `id`
+* `group_id`
+* `config`
+* `metadata`
+
+See [API -> Profiles](api.md#profiles) for the meaning and explanation of these fields.
+
+Example:
+
+```json
+[
+    {
+        "id": "473c97ca-ac23-4e0f-b679-c34bcde98491",
+        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
+        "name": "profile0",
+        "config": {...},
+        "metadata": {
+            "a": 1
+        }
+    },
+    {
+        "id": "33da57ee-f072-4eef-a860-c3d2292e8c07",
+        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
+        "name": "profile1",
+        "config": {...},
+        "metadata": {
+            "b": 2
+        }
+    },
+  ...
+]
+```
+
+##### Input file structure (CSV):
 
 ### Things
+
 #### Create Thing
 ```bash
 mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>"}' <group_id> <user_token>
