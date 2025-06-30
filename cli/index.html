@@ -164,6 +164,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#list-all-groups">List all Groups</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#list-groups-by-org">List Groups by Org</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#update-group">Update Group</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#list-things-by-group">List Things by Group</a>
@@ -328,7 +330,7 @@ Use &quot;mainfluxlabs-cli [command] --help&quot; for more information about a c
 <pre><code class="language-bash">docker run -it --rm mainflux/cli -m http://&lt;IP_SERVER&gt; [command]
 </code></pre>
 <p>You can execute each command with <code>-h</code> flag for more information about that command, e.g.</p>
-<pre><code class="language-bash">mainflux-cli profiles -h
+<pre><code class="language-bash">mainfluxlabs-cli profiles -h
 </code></pre>
 <p>will get you usage info:</p>
 <pre><code>Profiles management: create, get, update or delete Profiles and get Profile by Thing
@@ -384,10 +386,10 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 </ul>
 <h3 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h3>
 <h4 id="create-thing">Create Thing<a class="headerlink" href="#create-thing" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;user_token&gt;
 </code></pre>
 <h4 id="create-thing-with-metadata">Create Thing with metadata<a class="headerlink" href="#create-thing-with-metadata" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;metadata&quot;: {&quot;key1&quot;:&quot;value1&quot;}}' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;metadata&quot;: {&quot;key1&quot;:&quot;value1&quot;}}' &lt;user_token&gt;
 </code></pre>
 <h4 id="update-thing">Update Thing<a class="headerlink" href="#update-thing" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli things update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;thing_id&gt; &lt;user_token&gt;
@@ -454,6 +456,9 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 </code></pre>
 <h4 id="list-all-groups">List all Groups<a class="headerlink" href="#list-all-groups" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli groups get all &lt;user_token&gt;
+</code></pre>
+<h4 id="list-groups-by-org">List Groups by Org<a class="headerlink" href="#list-groups-by-org" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli groups get by-org &lt;org-id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-group">Update Group<a class="headerlink" href="#update-group" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli groups update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;}' &lt;group_id&gt; &lt;user_token&gt;

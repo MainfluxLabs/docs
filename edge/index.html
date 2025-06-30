@@ -504,10 +504,10 @@ On the gateway we will start services <a href="/edge/#agent">Agent</a> and <a hr
 <pre><code class="language-bash">docker-compose -f docker/docker-compose.yml up
 </code></pre>
 <p>Create user:</p>
-<pre><code class="language-bash">mainflux-cli -m http://localhost:8180 users create test@email.com 12345678
+<pre><code class="language-bash">mainfluxlabs-cli -m http://localhost:8180 users create test@email.com 12345678
 </code></pre>
 <p>Obtain user token:</p>
-<pre><code class="language-bash">mainflux-cli -m http://localhost:8180 users token test@email.com 12345678
+<pre><code class="language-bash">mainfluxlabs-cli -m http://localhost:8180 users token test@email.com 12345678
 
 created: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk5MDQ4MDQsImlhdCI6MTU4OTg2ODgwNCwiaXNzIjoibWFpbmZsdXguYXV0aG4iLCJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsInR5cGUiOjB9.VSwpGoflOLqrHlCGoVVFPBdnnvsAhv2gc3EomXg9yM0
 

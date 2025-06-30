@@ -596,7 +596,7 @@ Content-Length: 235
 <blockquote>
 <p>Must-have: <code>org_id</code>, <code>user_token</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/groups -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;, &quot;description&quot;: &quot;&lt;group_description&gt;&quot;, &quot;metadata&quot;: {}}'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcthings/orgs/&lt;org_id&gt;/groups -d '{&quot;name&quot;: &quot;&lt;group_name&gt;&quot;, &quot;description&quot;: &quot;&lt;group_description&gt;&quot;, &quot;metadata&quot;: {}}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -649,7 +649,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>org_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/groups
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcthings/orgs/&lt;org_id&gt;/groups
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -976,11 +976,11 @@ Access-Control-Expose-Headers: Location
 <h3 id="create-thing-with-external-id">Create Thing with external ID<a class="headerlink" href="#create-thing-with-external-id" title="Permanent link">#</a></h3>
 <p>It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
 There are two limitations - the existing ID have to be in UUID V4 format, and it has to be unique in the Mainflux domain.</p>
-<p>To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a <code>user_token</code>, metadata, <code>group_id</code> and the profile ID assigned to it.</p>
+<p>To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a <code>user_token</code>, metadata, and the profile ID assigned to it.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>profile_id</code></p>
+<p>Must-have: <code>user_token</code>, <code>profile_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -994,11 +994,11 @@ Access-Control-Expose-Headers: Location
 {&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
 </code></pre>
 <h3 id="create-things">Create Things<a class="headerlink" href="#create-things" title="Permanent link">#</a></h3>
-<p>You can create multiple things at once by entering a series of things structures, <code>group_id</code> and a <code>user_token</code></p>
+<p>You can create multiple things at once by entering a series of things structures and a <code>user_token</code></p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and things</p>
+<p>Must-have: <code>user_token</code>, series of things</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -1014,9 +1014,9 @@ Access-Control-Expose-Headers: Location
 <h3 id="create-things-with-external-id">Create Things with external ID<a class="headerlink" href="#create-things-with-external-id" title="Permanent link">#</a></h3>
 <p>The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a <code>user_token</code> and <code>group_id</code></p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code> and things</p>
+<p>Must-have: <code>user_token</code>, series of things</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;}]'
 </code></pre>
 <h3 id="view-thing">View Thing<a class="headerlink" href="#view-thing" title="Permanent link">#</a></h3>
 <p>You can get thing entity by entering the thing ID and <code>user_token</code></p>
@@ -1112,7 +1112,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>org_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/things
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcthings/orgs/&lt;org_id&gt;/things
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK

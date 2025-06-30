@@ -54,7 +54,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-2-install-the-cli">Step 2 - Install the CLI</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#build-mainflux-cli">Build mainflux-cli</a>
+    <li class="toctree-l3"><a class="reference internal" href="#build-mainfluxlabs-cli">Build mainfluxlabs-cli</a>
     </li>
         </ul>
     </li>
@@ -154,16 +154,14 @@
 <h2 id="step-2-install-the-cli">Step 2 - Install the CLI<a class="headerlink" href="#step-2-install-the-cli" title="Permanent link">#</a></h2>
 <p>Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI,
 which can be downloaded as a tarball from GitHub (here we use release <code>0.12.1</code> but be sure to use the <a href="https://github.com/MainfluxLabs/mainflux/releases">latest CLI release</a>):</p>
-<pre><code class="language-bash">wget -O- https://github.com/MainfluxLabs/mainflux/releases/download/0.12.1/mainflux-cli_0.12.1_linux-amd64.tar.gz | tar xvz -C $GOBIN
-</code></pre>
 <blockquote>
-<p>Make sure that <code>$GOBIN</code> is added to your <code>$PATH</code> so that <code>mainflux-cli</code> command can be accessible system-wide</p>
+<p>Make sure that <code>$GOBIN</code> is added to your <code>$PATH</code> so that <code>mainfluxlabs-cli</code> command can be accessible system-wide</p>
 </blockquote>
-<h4 id="build-mainflux-cli">Build mainflux-cli<a class="headerlink" href="#build-mainflux-cli" title="Permanent link">#</a></h4>
-<p>Build <code>mainflux-cli</code> if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the <a href="../cli/">CLI</a> for further details.</p>
+<h4 id="build-mainfluxlabs-cli">Build mainfluxlabs-cli<a class="headerlink" href="#build-mainfluxlabs-cli" title="Permanent link">#</a></h4>
+<p>Build <code>mainfluxlabs-cli</code> if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the <a href="../cli/">CLI</a> for further details.</p>
 <h2 id="step-3-provision-the-system">Step 3 - Provision the System<a class="headerlink" href="#step-3-provision-the-system" title="Permanent link">#</a></h2>
 <p>Once installed, you can use the CLI to quick-provision the system for testing:</p>
-<pre><code class="language-bash">mainflux-cli provision test
+<pre><code class="language-bash">mainfluxlabs-cli provision test
 </code></pre>
 <p>This command actually creates a temporary testing user, logs it in, then creates two things and two profiles on behalf of this user.
 This quickly provisions a Mainflux system with one simple testing scenario.</p>
@@ -217,10 +215,10 @@ mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;
 <p>This proves that these provisioning commands were sent from the CLI to the Mainflux system.</p>
 <h2 id="step-4-send-messages">Step 4 - Send Messages<a class="headerlink" href="#step-4-send-messages" title="Permanent link">#</a></h2>
 <p>Once system is provisioned, a <code>thing</code> can start sending messages:</p>
-<pre><code class="language-bash">mainflux-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' &lt;thing_key&gt;
+<pre><code class="language-bash">mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' &lt;thing_key&gt;
 </code></pre>
 <p>For example:</p>
-<pre><code class="language-bash">mainflux-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' 69590b3a-9d76-4baa-adae-9b5fec0ea14f
+<pre><code class="language-bash">mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' 69590b3a-9d76-4baa-adae-9b5fec0ea14f
 </code></pre>
 <p>In the Mainflux system terminal you should see following logs:</p>
 <pre><code class="language-bash">mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method get_pub_conf_by_key for thing 513d02d2-16c1-4f23-98be-9e12f8fee898 took 1.410194ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:19:30.148097648Z&quot;}
