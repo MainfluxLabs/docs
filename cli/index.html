@@ -371,19 +371,131 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 </code></pre>
 <h3 id="system-provisioning">System Provisioning<a class="headerlink" href="#system-provisioning" title="Permanent link">#</a></h3>
 <h4 id="provision-things">Provision Things<a class="headerlink" href="#provision-things" title="Permanent link">#</a></h4>
+<p>Provision multiple Things in bulk from a JSON / CSV input file.</p>
 <pre><code class="language-bash">mainfluxlabs-cli provision things &lt;file&gt; &lt;user_token&gt;
 </code></pre>
 <ul>
-<li><code>file</code> - A CSV or JSON file containing things (must have extension <code>.csv</code> or <code>.json</code>)</li>
+<li><code>file</code> - A path to a CSV or JSON file containing Things (must have the <code>.json</code> or <code>.csv</code> extension)</li>
 <li><code>user_token</code> - A valid user auth token for the current system</li>
 </ul>
+<h5 id="input-file-structure-json">Input file structure (JSON):<a class="headerlink" href="#input-file-structure-json" title="Permanent link">#</a></h5>
+<p>The root of the JSON input file must be an array containing objects, each one representing a separate Thing,
+each of which can have the following fields:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>id</code></li>
+<li><code>group_id</code></li>
+<li><code>profile_id</code></li>
+<li><code>metadata</code></li>
+</ul>
+<p>See <a href="../api/#things">API -&gt; Things</a> for the meaning and explanation of these fields.</p>
+<p>Example:</p>
+<pre><code class="language-json">[
+    {
+        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
+        &quot;profile_id&quot;: &quot;30afa89c-decc-479c-8783-6b0c8813df0d&quot;,
+        &quot;name&quot;: &quot;thing0&quot;,
+        &quot;metadata&quot;: {
+            &quot;locationCountry&quot;: &quot;Poland&quot;,
+            &quot;locationCity&quot;: &quot;Warsaw&quot;,
+            &quot;a&quot;: &quot;1&quot;
+        }
+    },
+    {
+        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
+        &quot;profile_id&quot;: &quot;efc59216-733d-41e7-af9a-e94a11ff39ee&quot;,
+        &quot;name&quot;: &quot;thing1&quot;,
+        &quot;metadata&quot;: {
+            &quot;b&quot;: 2
+        }
+    },
+  ...
+]
+</code></pre>
+<h5 id="input-file-structure-csv">Input file structure (CSV):<a class="headerlink" href="#input-file-structure-csv" title="Permanent link">#</a></h5>
+<p>The mandatory columns of each CSV record are the following, in order:</p>
+<ul>
+<li>ID</li>
+<li>Name</li>
+<li>Group ID</li>
+<li>Profile ID</li>
+</ul>
+<p>Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.</p>
+<p>Example:</p>
+<pre><code>,thing0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,30afa89c-decc-479c-8783-6b0c8813df0d,locationCountry,Poland,locationCity,Warsaw,a,1
+</code></pre>
+<p>The above CSV record and the first object in the JSON example represent the same Thing.</p>
 <h4 id="provision-profiles">Provision Profiles<a class="headerlink" href="#provision-profiles" title="Permanent link">#</a></h4>
+<p>Provision multiple Profiles in bulk from a JSON / CSV input file.</p>
 <pre><code class="language-bash">mainfluxlabs-cli provision profiles &lt;file&gt; &lt;user_token&gt;
 </code></pre>
 <ul>
-<li><code>file</code> - A CSV or JSON file containing profiles</li>
+<li><code>file</code> - A path to a CSV or JSON file containing profiles (must have the <code>.json</code> or <code>.csv</code> extension)</li>
 <li><code>user_token</code> - A valid user auth token for the current system</li>
 </ul>
+<h5 id="input-file-structure-json_1">Input file structure (JSON):<a class="headerlink" href="#input-file-structure-json_1" title="Permanent link">#</a></h5>
+<p>The root of the JSON input file must be an array containing objects, each one representing a separate Profile,
+each of which can have the following fields:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>id</code></li>
+<li><code>group_id</code></li>
+<li><code>config</code></li>
+<li><code>metadata</code></li>
+</ul>
+<p>See <a href="../api/#profiles">API -&gt; Profiles</a> for the meaning and explanation of these fields.</p>
+<p>Example:</p>
+<pre><code class="language-json">[
+    {
+        &quot;id&quot;: &quot;473c97ca-ac23-4e0f-b679-c34bcde98491&quot;,
+        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
+        &quot;name&quot;: &quot;profile0&quot;,
+        &quot;config&quot;: {
+          &quot;content_type&quot;: &quot;application/json&quot;,
+          &quot;write&quot;: false,
+          &quot;transformer&quot;: {
+            &quot;data_filters&quot;: [&quot;val1&quot;, &quot;val2&quot;],
+            &quot;data_field&quot;: &quot;data.data.data&quot;,
+            &quot;time_field&quot;: &quot;t&quot;,
+            &quot;time_format&quot;: &quot;unix&quot;,
+            &quot;time_location&quot;: &quot;UTC&quot;
+          },
+        },
+        &quot;metadata&quot;: {
+            &quot;a&quot;: &quot;1&quot;
+        }
+    },
+    {
+        &quot;id&quot;: &quot;33da57ee-f072-4eef-a860-c3d2292e8c07&quot;,
+        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
+        &quot;name&quot;: &quot;profile1&quot;,
+        &quot;config&quot;: {...},
+        &quot;metadata&quot;: {
+            &quot;b&quot;: 2
+        }
+    },
+  ...
+]
+</code></pre>
+<h5 id="input-file-structure-csv_1">Input file structure (CSV):<a class="headerlink" href="#input-file-structure-csv_1" title="Permanent link">#</a></h5>
+<p>The mandatory columns of each CSV record are the following, in order:</p>
+<ul>
+<li>ID</li>
+<li>Name</li>
+<li>Group ID</li>
+<li>Config - "content_type"</li>
+<li>Config - "write"</li>
+<li>Config - "transformer" - "data_filters"</li>
+<li>Config - "transformer" - "data_field"</li>
+<li>Config - "transformer" - "time_field"</li>
+<li>Config - "transformer" - "time_format"</li>
+<li>Config - "transformer" - "time_location"</li>
+</ul>
+<p>Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.</p>
+<p>Example:</p>
+<pre><code>473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,&quot;val1,val2&quot;,&quot;data.data.data&quot;,t,unix,UTC,a,1
+</code></pre>
+<p>The above CSV record and the first object in the JSON example represent the same Profile.</p>
 <h3 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h3>
 <h4 id="create-thing">Create Thing<a class="headerlink" href="#create-thing" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;user_token&gt;
