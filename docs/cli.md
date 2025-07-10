@@ -234,7 +234,6 @@ Example:
         "config": {
           "content_type": "application/json",
           "write": false,
-          "webhook": true,
           "transformer": {
             "data_filters": ["val1", "val2"],
             "data_field": "data.data.data",
@@ -242,7 +241,6 @@ Example:
             "time_format": "unix",
             "time_location": "UTC"
           },
-          "smtp_id": "some_smtp_id"
         },
         "metadata": {
             "a": "1"
@@ -270,20 +268,18 @@ The mandatory columns of each CSV record are the following, in order:
 * Group ID
 * Config - "content_type"
 * Config - "write"
-* Config - "webhook"
 * Config - "transformer" - "data_filters"
 * Config - "transformer" - "data_field"
 * Config - "transformer" - "time_field"
 * Config - "transformer" - "time_format"
 * Config - "transformer" - "time_location"
-* Config - "smtp_id"
 
 Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.
 
 Example:
 
 ```
-473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,true,"val1,val2","data.data.data",t,unix,UTC,some_smtp_id,a,1
+473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,"val1,val2","data.data.data",t,unix,UTC,a,1
 ```
 
 The above CSV record and the first object in the JSON example represent the same Profile.
