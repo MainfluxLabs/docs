@@ -28,7 +28,6 @@ nav:
   - API: api.md
   - Messaging: messaging.md
   - Storage: storage.md
-  - Edge: edge.md
   - Security: security.md
   - CLI: cli.md
   - Tracing: tracing.md
