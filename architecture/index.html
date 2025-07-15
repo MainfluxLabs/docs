@@ -52,8 +52,6 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#messaging">Messaging</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#edge">Edge</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#unified-iot-platform">Unified IoT Platform</a>
     </li>
     </ul>
@@ -81,10 +79,6 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../edge/">Edge</a>
                 </li>
               </ul>
               <ul>
@@ -199,13 +193,6 @@ channel unique identifier.</p>
 <p>In general, there is no constrained put on content that is being exchanged
 through channels. However, in order to be post-processed and normalized,
 messages should be formatted using <a href="https://tools.ietf.org/html/draft-ietf-core-senml-08">SenML</a>.</p>
-<h2 id="edge">Edge<a class="headerlink" href="#edge" title="Permanent link">#</a></h2>
-<p>Mainflux platform can be run on the edge as well. Deploying Mainflux on a gateway makes it able to collect, store and analyze data, organize and authenticate devices.
-To connect Mainflux instances running on a gateway with Mainflux in a cloud we can use two gateway services developed for that purpose:</p>
-<ul>
-<li><a href="../edge/#agent">Agent</a></li>
-<li><a href="../edge/#export">Export</a></li>
-</ul>
 <h2 id="unified-iot-platform">Unified IoT Platform<a class="headerlink" href="#unified-iot-platform" title="Permanent link">#</a></h2>
 <p>Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.
 Since we can deploy same Mainflux code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once the engineers understand how to deploy and maintain the platform, they will have the same known work across the whole edge-fog-cloud continuum.

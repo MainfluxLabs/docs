@@ -1,0 +1,13 @@
+apis:
+  api1@v1:
+    root: openapi/api1.yaml
+  api2@v1:
+    root: openapi/api2.yaml
+
+theme:
+  openapi:
+    hideDownloadButton: true
+    hideLoading: true
+
+output: dist  # Output folder
+
