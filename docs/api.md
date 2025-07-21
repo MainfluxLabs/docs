@@ -264,10 +264,20 @@ Content-Length: 456
 
 ### Create Memberships
 
-To create org memberships, you need the org ID, member emails, member roles and a `user_token`
-Only roles defined on [Roles Section](authorization.md#roles) are allowed.
+To create org memberships, you need the org ID, member email addresses, their roles and a `user_token`.
 
-> Must-have: `user_token`, `org_id`,`email` and `role`
+> Must-have: `user_token`, `org_id`, `email` and `role`
+
+The `org_memberships` field is a list of membership objects,
+each representing a user you want to add to the organization.
+
+Each object must include:
+
+- **email**: The email address of the user to be added to the organization.  
+  Must refer to an existing registered user.
+
+- **role**: The role you want to assign to the user within the organization.  
+  Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>","role": "user_role"}]}'
@@ -300,9 +310,17 @@ Date: Mon, 17 Jul 2023 08:44:58 GMT
 
 ### Update Memberships
 
-To update org memberships, you need the org ID, member emails, member roles and a `user_token`
+To update org memberships, you need the org ID, member email addresses, their new roles and a `user_token`.
 
-> Must-have: `user_token`, `org_id`,`user_email` and `role`
+> Must-have: `user_token`, `org_id`, `email` and `role`
+
+The `org_memberships` field is a list of membership objects representing users whose roles you want to update.
+
+Each object must include:
+
+- **email**: The email address of an existing member whose role is being changed.
+- **role**: The new role to assign. Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
+
 
 ```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>", "role":"new_role"}]}'
@@ -531,10 +549,20 @@ Access-Control-Expose-Headers: Location
 ## Group Memberships
 
 ### Create Memberships
-To create group memberships, you need the group ID, member IDs, member roles and a `user_token`
-Only roles defined on [Roles Section](authorization.md#roles) are allowed.
+To create group memberships, you need the group ID, member IDs, their roles and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `member_id` and `role`
+
+The `group_memberships` field is a list of membership objects,
+each representing a user you want to **add** to the group.
+
+Each object must include:
+
+- **member_id**: The UUID of the user to be added to the group.  
+  Must refer to an existing registered user.
+
+- **role**: The role to assign to the user within the group.  
+  Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
 curl -isSX POST http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
@@ -567,9 +595,17 @@ Date: Wed, 03 Nov 2021 13:00:05 GMT
 ```
 
 ### Update Memberships
-To update group memberships, you need the group ID, member IDs, member roles and a `user_token`
+To update group memberships, you need the group ID, member IDs, new roles and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `member_id`, `role`
+
+The `group_memberships` field is a list of membership objects representing users whose roles you want to update.
+
+Each object must include:
+
+- **member_id**: The UUID of an existing group member whose role you want to change.
+
+- **role**: The new role to assign. Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}'
