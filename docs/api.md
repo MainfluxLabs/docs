@@ -260,17 +260,17 @@ Content-Length: 456
 {"limit":10,"offset":0,"total":2,"orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822", "metadata":{"meta":"test1"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","metadata":{"meta":"test2"},"created_at":"2023-07-13T09:29:41.718Z","updated_at":"2023-07-13T11:08:22.586Z"}]}
 ```
 
-## Org Members
+## Org Memberships
 
-### Assign Members
+### Create Memberships
 
-To assign members to an org, you need the org ID, member emails, member roles and a `user_token`
+To create org memberships, you need the org ID, member emails, member roles and a `user_token`
 Only roles defined on [Roles Section](authorization.md#roles) are allowed.
 
-> Must-have:  `email`, `user_token` and `org_id`
+> Must-have: `user_token`, `org_id`,`email` and `role`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members -d '{"org_members":[{"email": "<user_email>","role": "user_role"}]}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>","role": "user_role"}]}'
 ```
 
 Response:
@@ -281,14 +281,14 @@ Date: Mon, 17 Jul 2023 08:24:44 GMT
 Content-Length: 0
 ```
 
-### Unassign Members
+### Remove Memberships
 
-To unassign members from an org, you need the org ID, member IDs and a `user_token`
+To remove org memberships, you need the org ID, member IDs and a `user_token`
 
 > Must-have: `user_token`, `org_id` and `member_id`
 
 ```bash
-curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members -d '{"member_ids":["<member_id>"]}'
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships -d '{"member_ids":["<member_id>"]}'
 ```
 
 Response:
@@ -297,19 +297,20 @@ HTTP/1.1 204 No Content
 Content-Type: application/json
 Date: Mon, 17 Jul 2023 08:44:58 GMT
 ```
-### Update Members
 
-To update members of an org, you need the org ID, member ids, role and a `user_token`
+### Update Memberships
 
-> Must-have: `user_token`, `org_id` and `user_email`
+To update org memberships, you need the org ID, member emails, member roles and a `user_token`
+
+> Must-have: `user_token`, `org_id`,`user_email` and `role`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/members -d '{"org_members":[{"member_id":"<member_id>", "role":"new_role"}]}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>", "role":"new_role"}]}'
 ```
 
-### View Member
+### View Membership
 
-To view member of an org, you need the org ID, member ID and a `user_token`
+To view org membership, you need the org ID, member ID and a `user_token`
 
 > Must-have: `user_token`, `member_id`, `org_id`
 
@@ -324,7 +325,7 @@ Content-Type: application/json
 Date: Mon, 24 Mar 2025 09:10:20 GMT
 Content-Length: 87
 
-{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"}
+{"member_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"}
 ```
 
 Response:
@@ -335,14 +336,14 @@ Date: Mon, 17 Jul 2023 08:54:12 GMT
 Content-Length: 0
 ```
 
-### List Members
+### List Memberships
 
-To list members of an org, you need the org ID and a `user_token`
+To list org memberships, you need the org ID and a `user_token`
 
 > Must-have: `user_token` and `org_id`
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/members
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships
 ```
 
 Response:
@@ -352,7 +353,7 @@ Content-Type: application/json
 Date: Mon, 17 Jul 2023 09:13:22 GMT
 Content-Length: 235
 
-{"limit":10,"offset":0,"total":2,"members":[{"id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}
+{"limit":10,"offset":0,"total":2,"org_memberships":[{"member_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"member_id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}
 ```
 
 ## Groups
@@ -527,16 +528,16 @@ Access-Control-Expose-Headers: Location
 {"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}
 ```
 
-## Group Members
+## Group Memberships
 
-### Assign Members
-In order to assign members to a group, you need the group ID, member roles and a `user_token`
+### Create Memberships
+To create group memberships, you need the group ID, member IDs, member roles and a `user_token`
 Only roles defined on [Roles Section](authorization.md#roles) are allowed.
 
-> Must-have: `user_token`, `group_id`, group_members
+> Must-have: `user_token`, `group_id`, `member_id` and `role`
 
 ```bash
-curl -isSX POST http://localhost/groups/<group_id>/members -d '{"group_members":{"id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
+curl -isSX POST http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
 ```
 
 Response:
@@ -549,13 +550,13 @@ Content-Length: 3
 {}
 ```
 
-### Unassign Members
-To unassign members from a group, you need the group ID, member IDs, role and a `user_token`
+### Remove Memberships
+To remove group memberships, you need the group ID, member IDs and a `user_token`
 
-> Must-have: `user_token`, `group_id`, member_ids
+> Must-have: `user_token`, `group_id`, `member_ids`
 
 ```bash
-curl -isSX PATCH http://localhost/groups/<group_id>/members -d '{"member_ids":["987fbc97-4bed-5078-9f07-9141ba07c9f3","c9bf9e57-1685-4c89-bafb-ff5af830be8a"]}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
+curl -isSX PATCH http://localhost/groups/<group_id>/memberships -d '{"member_ids":["987fbc97-4bed-5078-9f07-9141ba07c9f3","c9bf9e57-1685-4c89-bafb-ff5af830be8a"]}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
 ```
 
 Response:
@@ -565,13 +566,13 @@ Content-Type: application/json
 Date: Wed, 03 Nov 2021 13:00:05 GMT
 ```
 
-### Update Members
-To update members of an group, you need the group ID, member ids and a `user_token`
+### Update Memberships
+To update group memberships, you need the group ID, member IDs, member roles and a `user_token`
 
-> Must-have: `user_token`, `group_id`
+> Must-have: `user_token`, `group_id`, `member_id`, `role`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members -d '{"group_members":{"id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}'
 ```
 
 Response:
@@ -585,13 +586,13 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
-### List Members by Group
-To list members by group, you need the group ID and a `user_token`
+### List Memberships
+To list group memberships, you need the group ID and a `user_token`
 
 > Must-have: `user_token`, `group_id`
 
 ```bash
-curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/members
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships
 ```
 
 Response:
@@ -604,7 +605,7 @@ Content-Length: 225
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":2,"limit":10,"offset":0,"group_members":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","email":"user@gmail.com","role":"viewer"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","email":"user2@gmail.com","role":"editor"}]}
+{"total":2,"limit":10,"offset":0,"group_memberships":[{"member_id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","email":"user@gmail.com","role":"viewer"},{"member_id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","email":"user2@gmail.com","role":"editor"}]}
 ```
 
 ## Profiles
@@ -1432,4 +1433,3 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
-

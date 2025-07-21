@@ -428,6 +428,27 @@ mainfluxlabs-cli groups profiles <group_id> <user_token>
 mainfluxlabs-cli groups profile <profile_id> <user_token>
 ```
 
+### Group Memberships
+#### Create Group Memberships
+```bash
+mainfluxlabs-cli group_memberships create '[{"member_id":"<member_id>","role":"<role>"}]' <group_id> <user_token>
+```
+
+#### Remove Group Memberships
+```bash
+mainfluxlabs-cli group_memberships delete '["<member_id>"]' <group_id> <user_token>
+```
+
+#### Update Group Memberships
+```bash
+mainfluxlabs-cli group_memberships update '[{"member_id":"<member_id>","role":"<new_role>"}]' <group_id> <user_token>
+```
+
+#### List Group Memberships
+```bash
+mainfluxlabs-cli group_memberships get <group_id> <user_token>
+```
+
 ### Orgs
 #### Create Org
 ```bash
@@ -454,29 +475,25 @@ mainfluxlabs-cli orgs update '{"name":"<new_name>"}' <org_id> <user_token>
 mainfluxlabs-cli orgs delete <org_id> <user_token>
 ```
 
-#### Assign Member to Org
+### Org Memberships
+#### Create Org Memberships
 ```bash
-mainfluxlabs-cli orgs assign '[{"member_id":"<member_id>","email":"<email>","role":"<role>"}]' <org_id> <user_token>
+mainfluxlabs-cli org_memberships create '[{"email":"<email>","role":"<role>"}]' <org_id> <user_token>
 ```
 
-#### Unassign Member from Org
+#### Remove Org Memberships
 ```bash
-mainfluxlabs-cli orgs unassign '["<member_id>"]' <org_id> <user_token>
+mainfluxlabs-cli org_memberships delete '["<member_id>"]' <org_id> <user_token>
 ```
 
-#### Get Member from Org
+#### Get Org Membership(s)
 ```bash
-mainfluxlabs-cli orgs member <org_id> <member_id> <user_token>
+mainfluxlabs-cli org_memberships get <all | member_id> <org_id> <user_token>
 ```
 
-#### Update Members
+#### Update Org Memberships
 ```bash
-mainfluxlabs-cli orgs update-members '[{"member_id":"<member_id>","role":"<new_role>"}]' <org_id> <user_token>
-```
-
-#### List Members by Org
-```bash
-mainfluxlabs-cli orgs members <org_id> <user_token>
+mainfluxlabs-cli org_memberships update '[{"email":"<email>","role":"<new_role>"}]' <org_id> <user_token>
 ```
 
 ### Webhooks
