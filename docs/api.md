@@ -1101,9 +1101,17 @@ Sends message via HTTP protocol
 
 > Must-have: `thing_key`
 
+For SenML:
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Thing <thing_key>" http://localhost/http/messages -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+curl -s -S -i -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
+
+
+For JSON:
+```bash
+curl -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{"n":"temperature","v":21},{"n":"humidity","v":68}]'
+```
+
 
 Response:
 ```bash
@@ -1120,7 +1128,7 @@ Reads messages from database
 > Must-have: `thing_key`
 
 ```bash
-curl -s -S -i -H "Authorization: Thing <thing_key>" http://localhost:<service_port>/messages?offset=0&limit=5
+curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/reader/messages"
 ```
 
 Response:
@@ -1132,6 +1140,54 @@ Content-Length: 660
 
 {"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
 ```
+
+
+### Delete Messages
+
+> Must have: `thing_key`, `<start_timestamp> and <end_timestamp>
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/reader/messages?from=<start_timestamp>&to=<end_timestamp>"
+```
+
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Content-Type: application/json
+Date: Fri, 01 Aug 2025 11:11:33 GMT
+Content-Length: 5
+Connection: keep-alive
+```
+
+Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
+
+
+### Backup Messages
+
+Backs up messages to a file.
+
+> Must have: `user_token`, <file_name>
+
+```bash
+curl -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "<file_name>.csv"
+```
+
+Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
+
+### Restore Messages
+
+Restores messages from a file.
+
+> Must have: `user_token`, <file_name>
+
+```bash
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" --data-binary @<file_name>.csv
+```
+
+
+### Backup Messages
 
 ## API Key
 
