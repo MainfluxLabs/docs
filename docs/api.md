@@ -1144,7 +1144,7 @@ Content-Length: 660
 
 ### Delete Messages
 
-> Must have: `thing_key`, `<start_timestamp> and <end_timestamp>
+> Must have: `thing_key`, `start_timestamp` and `end_timestamp`
 
 ```bash
 curl -s -S -i -X DELETE -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/reader/messages?from=<start_timestamp>&to=<end_timestamp>"
@@ -1168,7 +1168,7 @@ Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
 
 Backs up messages to a file.
 
-> Must have: `user_token`, <file_name>
+> Must have: `user_token`, `file_name`
 
 ```bash
 curl -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "<file_name>.csv"
