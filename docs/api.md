@@ -1180,7 +1180,7 @@ Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
 
 Restores messages from a file.
 
-> Must have: `user_token`, <file_name>
+> Must have: `user_token`, `file_name`
 
 ```bash
 curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" --data-binary @<file_name>.csv
