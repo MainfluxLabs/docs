@@ -1109,7 +1109,7 @@ curl -s -S -i -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: ap
 
 For JSON:
 ```bash
-curl -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{"n":"temperature","v":21},{"n":"humidity","v":68}]'
+curl -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{ "name": "temperature", "value": 20.5, "unit": "°C"}, {"name": "humidity", "value": 68, "unit": "%"}]'
 ```
 
 
