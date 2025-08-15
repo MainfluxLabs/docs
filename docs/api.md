@@ -1162,10 +1162,10 @@ Connection: keep-alive
 ### Read Messages
 Reads messages from database
 
-> Must-have: `thing_key`
+> Must-have: `user_token` and `format` and `format`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/reader/messages"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>"
 ```
 
 Response:
@@ -1179,12 +1179,15 @@ Content-Length: 660
 ```
 
 
+Note: Currently supported formats are `json` and `senml`
+
+
 ### Delete Messages
 
-> Must have: `thing_key`, `start_timestamp` and `end_timestamp`
+> Must have: `user_token`, `format`, `start_timestamp` and `end_timestamp`
 
 ```bash
-curl -s -S -i -X DELETE -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/reader/messages?from=<start_timestamp>&to=<end_timestamp>"
+curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>?from=<start_timestamp>&to=<end_timestamp>"  
 ```
 
 
@@ -1198,8 +1201,7 @@ Content-Length: 5
 Connection: keep-alive
 ```
 
-Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
-
+Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds. Currently supported formats are `json` and `senml`.
 
 ### Backup Messages
 
@@ -1208,23 +1210,28 @@ Backs up messages to a file.
 > Must have: `user_token`, `file_name`
 
 ```bash
-curl -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "<file_name>.csv"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/backup?convert=<file_type>" -o "<file_name>.json"
 ```
 
-Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds.
+Note: You can use `csv` or `json` for file_type (but then the file should have the same extension). Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
 
 ### Restore Messages
 
 Restores messages from a file.
 
-> Must have: `user_token`, `file_name`
+> Must have: `user_token`, `format`, `file_name`
 
+For CSV file:
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" --data-binary @<file_name>.csv
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: text/csv" "http://localhost/reader/<format>/restore" --data-binary @<file_name>.csv
 ```
 
+For JSON file:
+```bash
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/restore" -d @<file_name>.json
+```
 
-### Backup Messages
+Note:  Currently supported formats are `json` and `senml`.
 
 ## API Key
 
