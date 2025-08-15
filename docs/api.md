@@ -1207,13 +1207,13 @@ Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds. C
 
 Backs up messages to a file.
 
-> Must have: `user_token`, `file_name`
+> Must have: `user_token`, `file_name`, `file_type`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/backup?convert=<file_type>" -o "<file_name>.json"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/backup?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
-Note: You can use `csv` or `json` for file_type (but then the file should have the same extension). Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
+Note: You can use `csv` or `json` for `file_type`. Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
 
 ### Restore Messages
 
