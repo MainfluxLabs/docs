@@ -1160,12 +1160,18 @@ Connection: keep-alive
 ```
 
 ### Read Messages
-Reads messages from database
 
-> Must-have: `user_token` and `format` and `format`
+Reads messages from database with optional filtering and pagination.
+> Must-have: `user_token` and `format`.
 
+For SenML:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml"
+```
+
+For JSON:
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json"
 ```
 
 Response:
@@ -1178,18 +1184,19 @@ Content-Length: 660
 {"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
 ```
 
-
-Note: Currently supported formats are `json` and `senml`
-
-
 ### Delete Messages
 
 > Must have: `user_token`, `format`, `start_timestamp` and `end_timestamp`
 
+For SenML:
 ```bash
-curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>?from=<start_timestamp>&to=<end_timestamp>"  
+curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml?from=<start_timestamp>&to=<end_timestamp>"  
 ```
 
+For JSON:
+```bash
+curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json?from=<start_timestamp>&to=<end_timestamp>"  
+```
 
 Response:
 ```bash
@@ -1209,8 +1216,14 @@ Backs up messages to a file.
 
 > Must have: `user_token`, `file_name`, `file_type`
 
+For SenML:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/backup?convert=<file_type>" -o "<file_name>.<file_type>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml/backup?convert=<file_type>" -o "<file_name>.<file_type>"
+```
+
+For JSON:
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json/backup?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
 Note: You can use `csv` or `json` for `file_type`. Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
@@ -1230,8 +1243,6 @@ For JSON file:
 ```bash
 curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/restore" -d @<file_name>.json
 ```
-
-Note:  Currently supported formats are `json` and `senml`.
 
 ## API Key
 
