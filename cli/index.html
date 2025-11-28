@@ -174,6 +174,18 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#group-memberships">Group Memberships</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#create-group-memberships">Create Group Memberships</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#remove-group-memberships">Remove Group Memberships</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#update-group-memberships">Update Group Memberships</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#list-group-memberships">List Group Memberships</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#orgs">Orgs</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#create-org">Create Org</a>
@@ -186,15 +198,17 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#delete-org">Delete Org</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#assign-member-to-org">Assign Member to Org</a>
+        </ul>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#unassign-member-from-org">Unassign Member from Org</a>
+    <li class="toctree-l3"><a class="reference internal" href="#org-memberships">Org Memberships</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#create-org-memberships">Create Org Memberships</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#get-member-from-org">Get Member from Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#remove-org-memberships">Remove Org Memberships</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#update-members">Update Members</a>
+    <li class="toctree-l4"><a class="reference internal" href="#get-org-memberships">Get Org Membership(s)</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#list-members-by-org">List Members by Org</a>
+    <li class="toctree-l4"><a class="reference internal" href="#update-org-memberships">Update Org Memberships</a>
     </li>
         </ul>
     </li>
@@ -583,6 +597,19 @@ each of which can have the following fields:</p>
 <h4 id="view-group-by-profile">View Group by Profile<a class="headerlink" href="#view-group-by-profile" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli groups profile &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
+<h3 id="group-memberships">Group Memberships<a class="headerlink" href="#group-memberships" title="Permanent link">#</a></h3>
+<h4 id="create-group-memberships">Create Group Memberships<a class="headerlink" href="#create-group-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli group_memberships create '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;role&quot;:&quot;&lt;role&gt;&quot;}]' &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="remove-group-memberships">Remove Group Memberships<a class="headerlink" href="#remove-group-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli group_memberships delete '[&quot;&lt;member_id&gt;&quot;]' &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="update-group-memberships">Update Group Memberships<a class="headerlink" href="#update-group-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli group_memberships update '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;role&quot;:&quot;&lt;new_role&gt;&quot;}]' &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
+<h4 id="list-group-memberships">List Group Memberships<a class="headerlink" href="#list-group-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli group_memberships get &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
 <h3 id="orgs">Orgs<a class="headerlink" href="#orgs" title="Permanent link">#</a></h3>
 <h4 id="create-org">Create Org<a class="headerlink" href="#create-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs create '{&quot;name&quot;:&quot;&lt;org_name&gt;&quot;,&quot;description&quot;:&quot;&lt;description&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;value&quot;,...}}' &lt;user_token&gt;
@@ -599,20 +626,18 @@ each of which can have the following fields:</p>
 <h4 id="delete-org">Delete Org<a class="headerlink" href="#delete-org" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli orgs delete &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="assign-member-to-org">Assign Member to Org<a class="headerlink" href="#assign-member-to-org" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs assign '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;email&quot;:&quot;&lt;email&gt;&quot;,&quot;role&quot;:&quot;&lt;role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
+<h3 id="org-memberships">Org Memberships<a class="headerlink" href="#org-memberships" title="Permanent link">#</a></h3>
+<h4 id="create-org-memberships">Create Org Memberships<a class="headerlink" href="#create-org-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli org_memberships create '[{&quot;email&quot;:&quot;&lt;email&gt;&quot;,&quot;role&quot;:&quot;&lt;role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="unassign-member-from-org">Unassign Member from Org<a class="headerlink" href="#unassign-member-from-org" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs unassign '[&quot;&lt;member_id&gt;&quot;]' &lt;org_id&gt; &lt;user_token&gt;
+<h4 id="remove-org-memberships">Remove Org Memberships<a class="headerlink" href="#remove-org-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli org_memberships delete '[&quot;&lt;member_id&gt;&quot;]' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="get-member-from-org">Get Member from Org<a class="headerlink" href="#get-member-from-org" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs member &lt;org_id&gt; &lt;member_id&gt; &lt;user_token&gt;
+<h4 id="get-org-memberships">Get Org Membership(s)<a class="headerlink" href="#get-org-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli org_memberships get &lt;all | member_id&gt; &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<h4 id="update-members">Update Members<a class="headerlink" href="#update-members" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs update-members '[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;,&quot;role&quot;:&quot;&lt;new_role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
-</code></pre>
-<h4 id="list-members-by-org">List Members by Org<a class="headerlink" href="#list-members-by-org" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli orgs members &lt;org_id&gt; &lt;user_token&gt;
+<h4 id="update-org-memberships">Update Org Memberships<a class="headerlink" href="#update-org-memberships" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli org_memberships update '[{&quot;email&quot;:&quot;&lt;email&gt;&quot;,&quot;role&quot;:&quot;&lt;new_role&gt;&quot;}]' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
 <h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
 <h4 id="create-webhooks">Create Webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h4>

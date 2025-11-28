@@ -94,17 +94,17 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#org-members">Org Members</a>
+    <li class="toctree-l2"><a class="reference internal" href="#org-memberships">Org Memberships</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#assign-members">Assign Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#create-memberships">Create Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#unassign-members">Unassign Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-memberships">Remove Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-members">Update Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#update-memberships">Update Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#view-member">View Member</a>
+    <li class="toctree-l3"><a class="reference internal" href="#view-membership">View Membership</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#list-members">List Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-memberships">List Memberships</a>
     </li>
         </ul>
     </li>
@@ -128,15 +128,15 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#group-members">Group Members</a>
+    <li class="toctree-l2"><a class="reference internal" href="#group-memberships">Group Memberships</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#assign-members_1">Assign Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#create-memberships_1">Create Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#unassign-members_1">Unassign Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-memberships_1">Remove Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-members_1">Update Members</a>
+    <li class="toctree-l3"><a class="reference internal" href="#update-memberships_1">Update Memberships</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#list-members-by-group">List Members by Group</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-memberships_1">List Memberships</a>
     </li>
         </ul>
     </li>
@@ -199,6 +199,12 @@
     <li class="toctree-l3"><a class="reference internal" href="#send-messages">Send Messages</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#read-messages">Read Messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-messages">Delete Messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-messages">Backup Messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#restore-messages">Restore Messages</a>
     </li>
         </ul>
     </li>
@@ -516,14 +522,26 @@ Content-Length: 456
 
 {&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;orgs&quot;:[{&quot;id&quot;:&quot;9883c534-eeb5-4e30-aec9-bd6cf1639f95&quot;,&quot;name&quot;:&quot;org_name_1&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;, &quot;metadata&quot;:{&quot;meta&quot;:&quot;test1&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:35:40.116Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T10:58:32.523Z&quot;},{&quot;id&quot;:&quot;49114ab9-acbb-4d0b-be01-0dc2f396136c&quot;,&quot;name&quot;:&quot;org_name_2&quot;,&quot;owner_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;metadata&quot;:{&quot;meta&quot;:&quot;test2&quot;},&quot;created_at&quot;:&quot;2023-07-13T09:29:41.718Z&quot;,&quot;updated_at&quot;:&quot;2023-07-13T11:08:22.586Z&quot;}]}
 </code></pre>
-<h2 id="org-members">Org Members<a class="headerlink" href="#org-members" title="Permanent link">#</a></h2>
-<h3 id="assign-members">Assign Members<a class="headerlink" href="#assign-members" title="Permanent link">#</a></h3>
-<p>To assign members to an org, you need the org ID, member emails, member roles and a <code>user_token</code>
-Only roles defined on <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+<h2 id="org-memberships">Org Memberships<a class="headerlink" href="#org-memberships" title="Permanent link">#</a></h2>
+<h3 id="create-memberships">Create Memberships<a class="headerlink" href="#create-memberships" title="Permanent link">#</a></h3>
+<p>To create org memberships, you need the org ID, member email addresses, their roles and a <code>user_token</code>.</p>
 <blockquote>
-<p>Must-have:  <code>email</code>, <code>user_token</code> and <code>org_id</code></p>
+<p>Must-have: <code>user_token</code>, <code>org_id</code>, <code>email</code> and <code>role</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;org_members&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;,&quot;role&quot;: &quot;user_role&quot;}]}'
+<p>The <code>org_memberships</code> field is a list of membership objects,
+each representing a user you want to add to the organization.</p>
+<p>Each object must include:</p>
+<ul>
+<li>
+<p><strong>email</strong>: The email address of the user to be added to the organization.<br />
+  Must refer to an existing registered user.</p>
+</li>
+<li>
+<p><strong>role</strong>: The role you want to assign to the user within the organization.<br />
+  Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+</li>
+</ul>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships -d '{&quot;org_memberships&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;,&quot;role&quot;: &quot;user_role&quot;}]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -531,27 +549,33 @@ Content-Type: application/json
 Date: Mon, 17 Jul 2023 08:24:44 GMT
 Content-Length: 0
 </code></pre>
-<h3 id="unassign-members">Unassign Members<a class="headerlink" href="#unassign-members" title="Permanent link">#</a></h3>
-<p>To unassign members from an org, you need the org ID, member IDs and a <code>user_token</code></p>
+<h3 id="remove-memberships">Remove Memberships<a class="headerlink" href="#remove-memberships" title="Permanent link">#</a></h3>
+<p>To remove org memberships, you need the org ID, member IDs and a <code>user_token</code></p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>member_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;&lt;member_id&gt;&quot;]}'
+<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships -d '{&quot;member_ids&quot;:[&quot;&lt;member_id&gt;&quot;]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 204 No Content
 Content-Type: application/json
 Date: Mon, 17 Jul 2023 08:44:58 GMT
 </code></pre>
-<h3 id="update-members">Update Members<a class="headerlink" href="#update-members" title="Permanent link">#</a></h3>
-<p>To update members of an org, you need the org ID, member ids, role and a <code>user_token</code></p>
+<h3 id="update-memberships">Update Memberships<a class="headerlink" href="#update-memberships" title="Permanent link">#</a></h3>
+<p>To update org memberships, you need the org ID, member email addresses, their new roles and a <code>user_token</code>.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>org_id</code> and <code>user_email</code></p>
+<p>Must-have: <code>user_token</code>, <code>org_id</code>, <code>email</code> and <code>role</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_id&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members -d '{&quot;org_members&quot;:[{&quot;member_id&quot;:&quot;&lt;member_id&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
+<p>The <code>org_memberships</code> field is a list of membership objects representing users whose roles you want to update.</p>
+<p>Each object must include:</p>
+<ul>
+<li><strong>email</strong>: The email address of an existing member whose role is being changed.</li>
+<li><strong>role</strong>: The new role to assign. Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</li>
+</ul>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_id&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships -d '{&quot;org_memberships&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
 </code></pre>
-<h3 id="view-member">View Member<a class="headerlink" href="#view-member" title="Permanent link">#</a></h3>
-<p>To view member of an org, you need the org ID, member ID and a <code>user_token</code></p>
+<h3 id="view-membership">View Membership<a class="headerlink" href="#view-membership" title="Permanent link">#</a></h3>
+<p>To view org membership, you need the org ID, member ID and a <code>user_token</code></p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>member_id</code>, <code>org_id</code></p>
 </blockquote>
@@ -563,7 +587,7 @@ Content-Type: application/json
 Date: Mon, 24 Mar 2025 09:10:20 GMT
 Content-Length: 87
 
-{&quot;id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;}
+{&quot;member_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;}
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -571,12 +595,12 @@ Content-Type: application/json
 Date: Mon, 17 Jul 2023 08:54:12 GMT
 Content-Length: 0
 </code></pre>
-<h3 id="list-members">List Members<a class="headerlink" href="#list-members" title="Permanent link">#</a></h3>
-<p>To list members of an org, you need the org ID and a <code>user_token</code></p>
+<h3 id="list-memberships">List Memberships<a class="headerlink" href="#list-memberships" title="Permanent link">#</a></h3>
+<p>To list org memberships, you need the org ID and a <code>user_token</code></p>
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>org_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/members
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -584,7 +608,7 @@ Content-Type: application/json
 Date: Mon, 17 Jul 2023 09:13:22 GMT
 Content-Length: 235
 
-{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;members&quot;:[{&quot;id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}
+{&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;member_id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}
 </code></pre>
 <h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h2>
 <h3 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h3>
@@ -725,14 +749,26 @@ Access-Control-Expose-Headers: Location
 
 {&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;org_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;description&quot;:&quot;desc&quot;,&quot;created_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;,&quot;updated_at&quot;:&quot;2021-03-10T16:58:09.579Z&quot;}
 </code></pre>
-<h2 id="group-members">Group Members<a class="headerlink" href="#group-members" title="Permanent link">#</a></h2>
-<h3 id="assign-members_1">Assign Members<a class="headerlink" href="#assign-members_1" title="Permanent link">#</a></h3>
-<p>In order to assign members to a group, you need the group ID, member roles and a <code>user_token</code>
-Only roles defined on <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+<h2 id="group-memberships">Group Memberships<a class="headerlink" href="#group-memberships" title="Permanent link">#</a></h2>
+<h3 id="create-memberships_1">Create Memberships<a class="headerlink" href="#create-memberships_1" title="Permanent link">#</a></h3>
+<p>To create group memberships, you need the group ID, member IDs, their roles and a <code>user_token</code>.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code>, group_members</p>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>member_id</code> and <code>role</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_members&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
+<p>The <code>group_memberships</code> field is a list of membership objects,
+each representing a user you want to <strong>add</strong> to the group.</p>
+<p>Each object must include:</p>
+<ul>
+<li>
+<p><strong>member_id</strong>: The UUID of the user to be added to the group.<br />
+  Must refer to an existing registered user.</p>
+</li>
+<li>
+<p><strong>role</strong>: The role to assign to the user within the group.<br />
+  Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+</li>
+</ul>
+<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -742,24 +778,34 @@ Content-Length: 3
 
 {}
 </code></pre>
-<h3 id="unassign-members_1">Unassign Members<a class="headerlink" href="#unassign-members_1" title="Permanent link">#</a></h3>
-<p>To unassign members from a group, you need the group ID, member IDs, role and a <code>user_token</code></p>
+<h3 id="remove-memberships_1">Remove Memberships<a class="headerlink" href="#remove-memberships_1" title="Permanent link">#</a></h3>
+<p>To remove group memberships, you need the group ID, member IDs and a <code>user_token</code></p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code>, member_ids</p>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>member_ids</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -isSX PATCH http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;member_ids&quot;:[&quot;987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;,&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;]}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
+<pre><code class="language-bash">curl -isSX PATCH http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;member_ids&quot;:[&quot;987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;,&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;]}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 204 No Content
 Content-Type: application/json
 Date: Wed, 03 Nov 2021 13:00:05 GMT
 </code></pre>
-<h3 id="update-members_1">Update Members<a class="headerlink" href="#update-members_1" title="Permanent link">#</a></h3>
-<p>To update members of an group, you need the group ID, member ids and a <code>user_token</code></p>
+<h3 id="update-memberships_1">Update Memberships<a class="headerlink" href="#update-memberships_1" title="Permanent link">#</a></h3>
+<p>To update group memberships, you need the group ID, member IDs, new roles and a <code>user_token</code>.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, <code>group_id</code></p>
+<p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>member_id</code>, <code>role</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members -d '{&quot;group_members&quot;:{&quot;id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}'
+<p>The <code>group_memberships</code> field is a list of membership objects representing users whose roles you want to update.</p>
+<p>Each object must include:</p>
+<ul>
+<li>
+<p><strong>member_id</strong>: The UUID of an existing group member whose role you want to change.</p>
+</li>
+<li>
+<p><strong>role</strong>: The new role to assign. Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
+</li>
+</ul>
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -770,12 +816,12 @@ Content-Length: 0
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
-<h3 id="list-members-by-group">List Members by Group<a class="headerlink" href="#list-members-by-group" title="Permanent link">#</a></h3>
-<p>To list members by group, you need the group ID and a <code>user_token</code></p>
+<h3 id="list-memberships_1">List Memberships<a class="headerlink" href="#list-memberships_1" title="Permanent link">#</a></h3>
+<p>To list group memberships, you need the group ID and a <code>user_token</code></p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>group_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/members
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/memberships
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -786,7 +832,7 @@ Content-Length: 225
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;group_members&quot;:[{&quot;id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;role&quot;:&quot;viewer&quot;},{&quot;id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;email&quot;:&quot;user2@gmail.com&quot;,&quot;role&quot;:&quot;editor&quot;}]}
+{&quot;total&quot;:2,&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;group_memberships&quot;:[{&quot;member_id&quot;:&quot;5316d843-abf8-4db4-93fd-bdc8917d42ec&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;role&quot;:&quot;viewer&quot;},{&quot;member_id&quot;:&quot;2513d843-abf8-4db4-93fd-bdc8917d42mm&quot;,&quot;email&quot;:&quot;user2@gmail.com&quot;,&quot;role&quot;:&quot;editor&quot;}]}
 </code></pre>
 <h2 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">#</a></h2>
 <h3 id="create-profile-with-external-id">Create Profile with external ID<a class="headerlink" href="#create-profile-with-external-id" title="Permanent link">#</a></h3>
@@ -1192,7 +1238,11 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>thing_key</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost/http/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09,&quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5,&quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<p>For SenML:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/http/messages&quot; -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09,&quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5,&quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+</code></pre>
+<p>For JSON:</p>
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/http/messages&quot; -d '[{ &quot;name&quot;: &quot;temperature&quot;, &quot;value&quot;: 20.5, &quot;unit&quot;: &quot;°C&quot;}, {&quot;name&quot;: &quot;humidity&quot;, &quot;value&quot;: 68, &quot;unit&quot;: &quot;%&quot;}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 202 Accepted
@@ -1202,11 +1252,15 @@ Content-Length: 0
 Connection: keep-alive
 </code></pre>
 <h3 id="read-messages">Read Messages<a class="headerlink" href="#read-messages" title="Permanent link">#</a></h3>
-<p>Reads messages from database</p>
+<p>Reads messages from database with optional filtering and pagination.</p>
 <blockquote>
-<p>Must-have: <code>thing_key</code></p>
+<p>Must-have: <code>user_token</code> and <code>format</code>.</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost:&lt;service_port&gt;/messages?offset=0&amp;limit=5
+<p>For SenML:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/senml&quot;
+</code></pre>
+<p>For JSON:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/json&quot;
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1215,6 +1269,48 @@ Date: Wed, 10 Mar 2021 16:54:58 GMT
 Content-Length: 660
 
 {&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;format&quot;:&quot;messages&quot;,&quot;total&quot;:3,&quot;messages&quot;:[{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:voltage&quot;,&quot;unit&quot;:&quot;V&quot;,&quot;time&quot;:1276020076.001,&quot;value&quot;:120.1},{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020072.001,&quot;value&quot;:1.3},{&quot;publisher&quot;:&quot;33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e&quot;,&quot;protocol&quot;:&quot;http&quot;,&quot;name&quot;:&quot;some-base-name:current&quot;,&quot;unit&quot;:&quot;A&quot;,&quot;time&quot;:1276020071.001,&quot;value&quot;:1.2}]}
+</code></pre>
+<h3 id="delete-messages">Delete Messages<a class="headerlink" href="#delete-messages" title="Permanent link">#</a></h3>
+<blockquote>
+<p>Must have: <code>user_token</code>, <code>format</code>, <code>start_timestamp</code> and <code>end_timestamp</code></p>
+</blockquote>
+<p>For SenML:</p>
+<pre><code class="language-bash">curl -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/senml?from=&lt;start_timestamp&gt;&amp;to=&lt;end_timestamp&gt;&quot;  
+</code></pre>
+<p>For JSON:</p>
+<pre><code class="language-bash">curl -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/json?from=&lt;start_timestamp&gt;&amp;to=&lt;end_timestamp&gt;&quot;  
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Content-Type: application/json
+Date: Fri, 01 Aug 2025 11:11:33 GMT
+Content-Length: 5
+Connection: keep-alive
+</code></pre>
+<p>Note: <code>&lt;start_timestamp&gt;</code> and <code>&lt;end_timestamp&gt;</code> are int values in nanoseconds. Currently supported formats are <code>json</code> and <code>senml</code>.</p>
+<h3 id="backup-messages">Backup Messages<a class="headerlink" href="#backup-messages" title="Permanent link">#</a></h3>
+<p>Backs up messages to a file.</p>
+<blockquote>
+<p>Must have: <code>user_token</code>, <code>file_name</code>, <code>file_type</code></p>
+</blockquote>
+<p>For SenML:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/senml/backup?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
+</code></pre>
+<p>For JSON:</p>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/json/backup?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
+</code></pre>
+<p>Note: You can use <code>csv</code> or <code>json</code> for <code>file_type</code>. Currently supported formats are <code>json</code> and <code>senml</code>. You can also send a request without the <code>?convert</code> parameter but then you will get only json format.</p>
+<h3 id="restore-messages">Restore Messages<a class="headerlink" href="#restore-messages" title="Permanent link">#</a></h3>
+<p>Restores messages from a file.</p>
+<blockquote>
+<p>Must have: <code>user_token</code>, <code>format</code>, <code>file_name</code></p>
+</blockquote>
+<p>For CSV file:</p>
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: text/csv&quot; &quot;http://localhost/reader/&lt;format&gt;/restore&quot; --data-binary @&lt;file_name&gt;.csv
+</code></pre>
+<p>For JSON file:</p>
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/&lt;format&gt;/restore&quot; -d @&lt;file_name&gt;.json
 </code></pre>
 <h2 id="api-key">API Key<a class="headerlink" href="#api-key" title="Permanent link">#</a></h2>
 <h3 id="issue-api-key">Issue API Key<a class="headerlink" href="#issue-api-key" title="Permanent link">#</a></h3>
