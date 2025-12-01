@@ -1,7 +1,7 @@
 # MainfluxLabs
 
-[Getting Started](/docs/getting-started.md)
-[API](/docs/api.md)
+[Getting Started](getting-started.md)
+[API](api.md)
 
 
 Mainflux is modern, scalable, secure open source and patent-free IoT cloud platform written in Go.

@@ -1,9 +1,9 @@
 # API
 
 ## Reference
-API reference in the Swagger UI can be found at:
+A complete API reference in the Swagger UI is available at:
 
-[https://mainfluxlabs.github.io/mainflux](https://mainfluxlabs.github.io/docs/)
+[https://mainfluxlabs.github.io/mainflux/docs/swagger](https://mainfluxlabs.github.io/docs/swagger)
 
 ## Users
 

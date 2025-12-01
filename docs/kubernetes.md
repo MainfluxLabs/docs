@@ -156,7 +156,7 @@ and add in spec->ports:
 
 ## TLS & mTLS
 
-For testing purposes you can generate certificates as explained in detail in [authentication](/authentication) chapter of this document. So, you can use [this script](https://github.com/MainfluxLabs/mainflux/blob/master/docker/ssl/Makefile) and after replacing all `localhost` with your hostname, run:
+For testing purposes you can generate certificates as explained in detail in [authentication](authentication.md) chapter of this document. So, you can use [this script](https://github.com/MainfluxLabs/mainflux/blob/master/docker/ssl/Makefile) and after replacing all `localhost` with your hostname, run:
 
 ```
 make ca
