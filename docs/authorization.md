@@ -56,7 +56,7 @@ For a simpler understanding of access control in an Org, the table below provide
 
 The operation 'Create Org' is omitted from the table because every registered (and logged-in) user has the right to do so.
 
-*An example of assigning Members to an Organization can be found at [Org Members API](api.md#org-members).*
+*An example of assigning Members to an Organization can be found at [Org Members API](api.md#org-memberships).*
 
 ### Examples of unauthorized access
 
@@ -123,4 +123,4 @@ Based on the above examples of unauthorized access within the Organization, the 
 In addition to the basic access rights that apply to Members, note the case of Thing creation.
 When creating a Thing, it needs to be assigned a specific Profile by specifying its ID. The Profile being assigned and the Thing <u> must belong to the same Group. </u>
 
-*An example of assigning Members to a Group can be found at [Group Members API](api.md#group-members).*
+*An example of assigning Members to a Group can be found at [Group Members API](api.md#group-memberships).*
