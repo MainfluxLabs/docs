@@ -421,7 +421,7 @@ cd devops/charts/mainflux
     targetPort: 8883
 </code></pre>
 <h2 id="tls-mtls">TLS &amp; mTLS<a class="headerlink" href="#tls-mtls" title="Permanent link">#</a></h2>
-<p>For testing purposes you can generate certificates as explained in detail in <a href="/authentication">authentication</a> chapter of this document. So, you can use <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/ssl/Makefile">this script</a> and after replacing all <code>localhost</code> with your hostname, run:</p>
+<p>For testing purposes you can generate certificates as explained in detail in <a href="../authentication/">authentication</a> chapter of this document. So, you can use <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/ssl/Makefile">this script</a> and after replacing all <code>localhost</code> with your hostname, run:</p>
 <pre><code>make ca
 make server_cert
 make thing_cert KEY=&lt;thing_key&gt;
