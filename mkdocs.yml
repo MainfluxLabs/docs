@@ -32,6 +32,5 @@ nav:
   - CLI: cli.md
   - Tracing: tracing.md
   - Developer's Guide: dev-guide.md
-  - Kubernetes: kubernetes.md
   - Benchmark: benchmark.md
   - Enterprise: enterprise.md
