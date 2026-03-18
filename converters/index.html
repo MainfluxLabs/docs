@@ -78,6 +78,12 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Converters</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#senml-csv">SenML CSV</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#json-csv">JSON CSV</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -153,21 +159,41 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="converters">Converters<a class="headerlink" href="#converters" title="Permanent link">#</a></h1>
-<p>Converters provide bulk CSV ingestion by parsing uploaded CSV files and publishing their rows as messages to the platform. Two formats are supported:</p>
+<p>Converters service provides bulk CSV ingestion by parsing uploaded CSV files and publishing their rows as platform messages. It is intended for batch import of historical or bulk-collected sensor data without requiring device-level publishing.</p>
+<p>Two input formats are supported:</p>
 <ul>
-<li><strong>SenML</strong> (<code>POST /csv/senml</code>) — first row is the header (column names = measurement names), first column is a Unix timestamp, remaining columns are numeric values.</li>
-<li><strong>JSON</strong> (<code>POST /csv/json</code>) — must include a <code>created</code> column; remaining columns are field names; values are auto-parsed as numbers where possible.</li>
+<li><strong>SenML</strong> — the first row is the header where column names become measurement names. The first column must be a Unix timestamp. All remaining columns are treated as numeric measurement values.</li>
+<li><strong>JSON</strong> — the file must include a <code>created</code> column containing the timestamp. All remaining columns become JSON field names. Values are auto-parsed as numbers where possible, otherwise treated as strings.</li>
 </ul>
-<p>Large files are processed in batches of 50,000 records with a 30-second pause between batches to avoid overloading the broker.</p>
-<p>Authentication uses the Thing key:</p>
+<p>Large files are processed in batches of 50,000 records with a 30-second pause between batches to avoid overloading the message broker.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h2>
+<p>Authentication uses the Thing key in the <code>Authorization</code> header. The thing must have a valid profile with the appropriate <code>content_type</code> configured.</p>
+<h2 id="senml-csv">SenML CSV<a class="headerlink" href="#senml-csv" title="Permanent link">#</a></h2>
+<p>The first column must be a Unix timestamp. Subsequent columns are measurement names taken from the header row.</p>
+<p>Example file (<code>readings.csv</code>):</p>
+<pre><code>time,voltage,current,power
+1709635200,120.1,1.2,144.12
+1709635260,119.8,1.3,155.74
+</code></pre>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  -F &quot;file=@data.csv&quot; \
-  http://localhost:8180/csv/senml
+  -F &quot;file=@readings.csv&quot; \
+  https://localhost/csv/senml
 </code></pre>
-<p>To start the Converters service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/converters/docker-compose.yml up -d
+<p>Each row is published as a SenML message with the column names as measurement names and the timestamp column as the base time. The example above produces two messages, each carrying <code>voltage</code>, <code>current</code>, and <code>power</code> measurements.</p>
+<h2 id="json-csv">JSON CSV<a class="headerlink" href="#json-csv" title="Permanent link">#</a></h2>
+<p>The file must include a <code>created</code> column with the timestamp. All other columns become JSON field names. String values that cannot be parsed as numbers are preserved as-is.</p>
+<p>Example file (<code>events.csv</code>):</p>
+<pre><code>created,temperature,humidity,status
+2024-03-05T08:00:00Z,21.5,60,ok
+2024-03-05T08:05:00Z,22.1,58,ok
 </code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -F &quot;file=@events.csv&quot; \
+  https://localhost/csv/json
+</code></pre>
+<p>Each row is published as a JSON message. The <code>created</code> field is used as the message timestamp. The remaining columns — <code>temperature</code>, <code>humidity</code>, and <code>status</code> — become fields in the JSON payload.</p>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>

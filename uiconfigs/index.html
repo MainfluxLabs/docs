@@ -86,6 +86,12 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">UIConfigs</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#org-configs">Org configs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#thing-configs">Thing configs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#backup-and-restore">Backup and restore</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -153,13 +159,87 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="uiconfigs">UIConfigs<a class="headerlink" href="#uiconfigs" title="Permanent link">#</a></h1>
-<p>UIConfigs stores schema-free JSON configuration objects scoped to organizations and things. This allows frontends and dashboards to persist arbitrary display or layout settings without requiring schema changes.</p>
-<ul>
-<li><strong>Org configs</strong> — stored per organization ID; free-form JSON.</li>
-<li><strong>Thing configs</strong> — stored per thing ID (with group ID); free-form JSON.</li>
-</ul>
-<p>To start the UIConfigs service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/uiconfigs/docker-compose.yml up -d
+<p>UIConfigs service stores and retrieves schema-free JSON configuration objects scoped to organizations and things. It is intended for frontends and dashboards that need to persist display or layout settings without requiring database schema changes.</p>
+<p>Configuration objects are free-form JSON — any structure is accepted, allowing frontends to store arbitrary settings without schema constraints. Each organization has a single config object, and each thing has a single config object. Both are upserted on write, so a PUT always creates or replaces the full config.</p>
+<p>The service also exposes backup and restore endpoints for exporting and re-importing the full configuration state.</p>
+<h2 id="org-configs">Org configs<a class="headerlink" href="#org-configs" title="Permanent link">#</a></h2>
+<p>Each organization has a single config object accessible to any member of that org.</p>
+<pre><code class="language-bash"># Retrieve org config
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/uiconfigs/orgs/&lt;org_id&gt;/configs
+</code></pre>
+<pre><code class="language-json">{
+  &quot;theme&quot;: &quot;dark&quot;,
+  &quot;sidebar&quot;: {&quot;collapsed&quot;: false},
+  &quot;defaultView&quot;: &quot;dashboard&quot;
+}
+</code></pre>
+<pre><code class="language-bash"># Update org config
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;theme&quot;: &quot;dark&quot;, &quot;sidebar&quot;: {&quot;collapsed&quot;: false}, &quot;defaultView&quot;: &quot;dashboard&quot;}' \
+  https://localhost/uiconfigs/orgs/&lt;org_id&gt;/configs
+</code></pre>
+<p>Administrators can retrieve configs for all organizations:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/uiconfigs/orgs/configs
+</code></pre>
+<h2 id="thing-configs">Thing configs<a class="headerlink" href="#thing-configs" title="Permanent link">#</a></h2>
+<p>Each thing has a single config object, accessible to users authorized for that thing's group. Thing configs are typically used to store per-widget display settings in dashboards.</p>
+<pre><code class="language-bash"># Retrieve thing config
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/uiconfigs/things/&lt;thing_id&gt;/configs
+</code></pre>
+<pre><code class="language-json">{
+  &quot;chartType&quot;: &quot;line&quot;,
+  &quot;unit&quot;: &quot;°C&quot;,
+  &quot;color&quot;: &quot;#ff6600&quot;
+}
+</code></pre>
+<pre><code class="language-bash"># Update thing config
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;, &quot;color&quot;: &quot;#ff6600&quot;}' \
+  https://localhost/uiconfigs/things/&lt;thing_id&gt;/configs
+</code></pre>
+<p>Administrators can retrieve configs for all things:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/uiconfigs/things/configs
+</code></pre>
+<h2 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
+<p>The service exposes backup and restore endpoints for exporting and re-importing the full configuration state. This is useful for migrations, environment snapshots, or disaster recovery.</p>
+<pre><code class="language-bash"># Export all configs
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/uiconfigs/backup
+</code></pre>
+<pre><code class="language-json">{
+  &quot;org_configs&quot;: [
+    {
+      &quot;org_id&quot;: &quot;511e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;config&quot;: {&quot;theme&quot;: &quot;dark&quot;, &quot;defaultView&quot;: &quot;dashboard&quot;}
+    }
+  ],
+  &quot;thing_configs&quot;: [
+    {
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;config&quot;: {&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;}
+    }
+  ]
+}
+</code></pre>
+<pre><code class="language-bash"># Restore from backup
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '&lt;backup_json&gt;' \
+  https://localhost/uiconfigs/restore
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               

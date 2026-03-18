@@ -98,11 +98,13 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Downlinks</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#scheduling">Scheduling</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a>
+    <li class="toctree-l2"><a class="reference internal" href="#time-filters">Time filters</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    <li class="toctree-l2"><a class="reference internal" href="#creating-and-managing-downlinks">Creating and managing downlinks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#backup-and-restore">Backup and restore</a>
     </li>
     </ul>
                 </li>
@@ -159,166 +161,109 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="downlinks">Downlinks<a class="headerlink" href="#downlinks" title="Permanent link">#</a></h1>
-<p>Downlinks service manages scheduled outbound HTTP requests (downlinks) for things and groups, supporting cron-based and one-time scheduling with optional time-range parameter injection.</p>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
-<p>The service is configured using the environment variables presented in the following table. Note that any unset variables will be replaced with their default values.</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MF_DOWNLINKS_LOG_LEVEL</td>
-<td>Log level for the Downlinks service (debug, info, warn, error)</td>
-<td>error</td>
-</tr>
-<tr>
-<td>MF_BROKER_URL</td>
-<td>Message broker instance URL</td>
-<td>nats://localhost:4222</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_HTTP_PORT</td>
-<td>Downlinks service HTTP port</td>
-<td>9025</td>
-</tr>
-<tr>
-<td>MF_JAEGER_URL</td>
-<td>Jaeger server URL</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_HOST</td>
-<td>Database host address</td>
-<td>localhost</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_PORT</td>
-<td>Database host port</td>
-<td>5432</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_USER</td>
-<td>Database user</td>
-<td>mainflux</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_PASS</td>
-<td>Database password</td>
-<td>mainflux</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB</td>
-<td>Name of the database used by the service</td>
-<td>downlinks</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_SSL_MODE</td>
-<td>Database connection SSL mode (disable, require, verify-ca, verify-full)</td>
-<td>disable</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_SSL_CERT</td>
-<td>Path to the PEM encoded certificate file</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_SSL_KEY</td>
-<td>Path to the PEM encoded key file</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_DB_SSL_ROOT_CERT</td>
-<td>Path to the PEM encoded root certificate file</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_CLIENT_TLS</td>
-<td>Flag that indicates if TLS should be turned on</td>
-<td>false</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_CA_CERTS</td>
-<td>Path to trusted CAs in PEM format</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_SERVER_CERT</td>
-<td>Path to server certificate in PEM format</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_SERVER_KEY</td>
-<td>Path to server key in PEM format</td>
-<td></td>
-</tr>
-<tr>
-<td>MF_THINGS_AUTH_GRPC_URL</td>
-<td>Things service Auth gRPC URL</td>
-<td>localhost:8183</td>
-</tr>
-<tr>
-<td>MF_THINGS_AUTH_GRPC_TIMEOUT</td>
-<td>Things service Auth gRPC request timeout in seconds</td>
-<td>1s</td>
-</tr>
-<tr>
-<td>MF_AUTH_GRPC_URL</td>
-<td>Auth service gRPC URL</td>
-<td>localhost:8181</td>
-</tr>
-<tr>
-<td>MF_AUTH_GRPC_TIMEOUT</td>
-<td>Auth service gRPC request timeout in seconds</td>
-<td>1s</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_ES_URL</td>
-<td>Event store URL</td>
-<td>redis://localhost:6379/0</td>
-</tr>
-<tr>
-<td>MF_DOWNLINKS_EVENT_CONSUMER</td>
-<td>Event store consumer name</td>
-<td>downlinks</td>
-</tr>
-</tbody>
-</table>
-<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">#</a></h2>
-<p>The service itself is distributed as Docker container. Check the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml"><code>downlinks</code></a> service section in docker-compose to see how service is deployed.</p>
-<p>To start the service, execute the following shell script:</p>
-<pre><code class="language-bash"># download the latest version of the service
-git clone https://github.com/MainfluxLabs/mainflux
-
-cd mainflux
-
-# compile the downlinks service
-make downlinks
-
-# copy binary to bin
-make install
-
-# Set the environment variables and run the service
-MF_DOWNLINKS_LOG_LEVEL=[Downlinks log level] \
-MF_BROKER_URL=[Message broker instance URL] \
-MF_DOWNLINKS_HTTP_PORT=[Downlinks service HTTP port] \
-MF_DOWNLINKS_DB_HOST=[Database host address] \
-MF_DOWNLINKS_DB_PORT=[Database host port] \
-MF_DOWNLINKS_DB_USER=[Database user] \
-MF_DOWNLINKS_DB_PASS=[Database password] \
-MF_DOWNLINKS_DB=[Downlinks database name] \
-MF_THINGS_AUTH_GRPC_URL=[Things service Auth gRPC URL] \
-MF_THINGS_AUTH_GRPC_TIMEOUT=[Things service Auth gRPC request timeout] \
-MF_AUTH_GRPC_URL=[Auth service gRPC URL] \
-MF_AUTH_GRPC_TIMEOUT=[Auth service gRPC request timeout] \
-$GOBIN/mainfluxlabs-downlinks
+<p>Downlinks service manages scheduled outbound HTTP requests for things and groups. Each downlink defines a target URL, HTTP method, optional headers and payload, and a schedule. When a downlink fires, the service sends the configured HTTP request — enabling the platform to push data or commands to external systems on a timed basis.</p>
+<p>Downlinks support cron-like scheduling with automatic time-range parameter injection, making it straightforward to implement periodic data pulls from external APIs without any additional orchestration. On startup, the service loads all persisted downlinks from the database and schedules them according to their configured frequency.</p>
+<h2 id="scheduling">Scheduling<a class="headerlink" href="#scheduling" title="Permanent link">#</a></h2>
+<p>The <code>scheduler</code> object controls when and how often a downlink fires. Supported frequencies are <code>once</code>, <code>minutely</code>, <code>hourly</code>, <code>daily</code>, and <code>weekly</code>.</p>
+<p>One-time downlinks require a <code>date_time</code> field in ISO 8601 format. An optional <code>time_zone</code> can be provided — if omitted the system default is used.</p>
+<pre><code class="language-json">{
+  &quot;scheduler&quot;: {
+    &quot;frequency&quot;: &quot;daily&quot;,
+    &quot;time_zone&quot;: &quot;Europe/Berlin&quot;
+  }
+}
 </code></pre>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
-<p>Starting the service will load all persisted downlinks and schedule them according to their configured frequency (repeating cron or one-time). Each scheduled execution sends an HTTP request to the configured URL with the specified method, headers, and payload. Time filter parameters can be injected automatically into the request based on the schedule interval.</p>
+<pre><code class="language-json">{
+  &quot;scheduler&quot;: {
+    &quot;frequency&quot;: &quot;once&quot;,
+    &quot;date_time&quot;: &quot;2025-06-01T08:00:00&quot;
+  }
+}
+</code></pre>
+<p>For <code>weekly</code> frequency, a <code>week</code> object can be included to target specific days.</p>
+<h2 id="time-filters">Time filters<a class="headerlink" href="#time-filters" title="Permanent link">#</a></h2>
+<p>When a downlink needs to carry a time window — for example, fetching external data since the last execution — the optional <code>time_filter</code> object configures which query parameters or payload fields receive the start and end of the current schedule interval. The service substitutes these values automatically at execution time.</p>
+<h2 id="creating-and-managing-downlinks">Creating and managing downlinks<a class="headerlink" href="#creating-and-managing-downlinks" title="Permanent link">#</a></h2>
+<p>Downlinks are created per thing. The required fields are <code>name</code>, <code>url</code>, <code>method</code>, and <code>scheduler</code>.</p>
+<pre><code class="language-bash"># Create downlinks for a thing
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '[
+    {
+      &quot;name&quot;: &quot;Push readings to external API&quot;,
+      &quot;url&quot;: &quot;https://api.example.com/ingest&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;headers&quot;: {&quot;Authorization&quot;: &quot;Bearer &lt;external_token&gt;&quot;},
+      &quot;payload&quot;: &quot;{\&quot;source\&quot;: \&quot;mainflux\&quot;}&quot;,
+      &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;, &quot;time_zone&quot;: &quot;UTC&quot;}
+    }
+  ]' \
+  https://localhost/downlinks/things/&lt;thing_id&gt;/downlinks
+</code></pre>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+    &quot;name&quot;: &quot;Push readings to external API&quot;,
+    &quot;url&quot;: &quot;https://api.example.com/ingest&quot;,
+    &quot;method&quot;: &quot;POST&quot;,
+    &quot;headers&quot;: {&quot;Authorization&quot;: &quot;Bearer &lt;external_token&gt;&quot;},
+    &quot;payload&quot;: &quot;{\&quot;source\&quot;: \&quot;mainflux\&quot;}&quot;,
+    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;, &quot;time_zone&quot;: &quot;UTC&quot;},
+    &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+    &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+  }
+]
+</code></pre>
+<pre><code class="language-bash"># List downlinks for a thing
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/downlinks/things/&lt;thing_id&gt;/downlinks
+
+# List downlinks for a group
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/downlinks/groups/&lt;group_id&gt;/downlinks
+
+# View a specific downlink
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/downlinks/downlinks/&lt;downlink_id&gt;
+
+# Update a downlink
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;Push readings to external API&quot;,
+    &quot;url&quot;: &quot;https://api.example.com/ingest&quot;,
+    &quot;method&quot;: &quot;POST&quot;,
+    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;daily&quot;}
+  }' \
+  https://localhost/downlinks/downlinks/&lt;downlink_id&gt;
+
+# Remove downlinks
+curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;downlink_ids&quot;: [&quot;&lt;downlink_id&gt;&quot;]}' \
+  https://localhost/downlinks/downlinks
+</code></pre>
+<h2 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
+<p>The service exposes backup and restore endpoints for exporting and re-importing all downlink definitions. This is useful for migrations, environment snapshots, or disaster recovery.</p>
+<pre><code class="language-bash"># Export all downlinks
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/downlinks/backup
+
+# Restore from backup
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '&lt;backup_json&gt;' \
+  https://localhost/downlinks/restore
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
           </div><footer>

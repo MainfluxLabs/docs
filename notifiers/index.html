@@ -90,6 +90,10 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Notifiers</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#enabling-notifications">Enabling notifications</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-notifiers">Managing notifiers</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -153,23 +157,81 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h1>
-<p>Notifiers service provides a service for sending notifications. Two delivery backends are supported:</p>
+<p>Notifiers service sends notifications when platform messages are received. The service consumes messages from the broker and dispatches them to the configured delivery backends. Two backends are supported:</p>
 <ul>
-<li><strong>SMTP</strong> — sends email notifications to one or more email addresses.</li>
+<li><strong>SMTP</strong> — sends email notifications to one or more addresses.</li>
 <li><strong>SMPP</strong> — sends SMS notifications to one or more phone numbers via an SMPP gateway.</li>
 </ul>
-<p>Notifiers are group-scoped records that carry a list of contact addresses (emails or phone numbers). They are managed via the <a href="https://mainfluxlabs.github.io/docs/swagger/">Notifiers API</a>.</p>
-<p>Notification can be enabled by setting the appropriate notifier ID to the <code>smtp_id</code> field within the Profile Config (for email notifications):</p>
+<p>Notifiers are group-scoped records that carry a list of contact addresses (emails or phone numbers). When a message arrives for a group whose profile has a notifier configured, the service dispatches the notification to all addresses in that notifier's list.</p>
+<h2 id="enabling-notifications">Enabling notifications<a class="headerlink" href="#enabling-notifications" title="Permanent link">#</a></h2>
+<p>Notifications are enabled by attaching a notifier ID to the <code>smtp_id</code> field in the Profile Config. When a message is published to that profile, the service will dispatch an email to all addresses registered in the notifier.</p>
 <pre><code class="language-json">{
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: false,
+    &quot;write&quot;: true,
     &quot;webhook&quot;: false,
     &quot;smtp_id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;
   }
 }
 </code></pre>
-<p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, notifications will be sent without storing the message in the database.</p>
+<p>If <code>write</code> is set to <code>false</code>, the notification is sent but the message is not stored in the database.</p>
+<h2 id="managing-notifiers">Managing notifiers<a class="headerlink" href="#managing-notifiers" title="Permanent link">#</a></h2>
+<p>Notifiers are group-scoped. Each notifier carries a name and a list of contact addresses. A single notifier can target multiple recipients simultaneously — all addresses in the list receive the notification when a matching message arrives.</p>
+<pre><code class="language-bash"># Create a notifier for a group
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;Ops team alerts&quot;,
+    &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;]
+  }' \
+  https://localhost/notifiers/groups/&lt;group_id&gt;/notifiers
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,
+  &quot;name&quot;: &quot;Ops team alerts&quot;,
+  &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;],
+  &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+}
+</code></pre>
+<pre><code class="language-bash"># List notifiers for a group
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/notifiers/groups/&lt;group_id&gt;/notifiers
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 1,
+  &quot;notifiers&quot;: [
+    {
+      &quot;id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,
+      &quot;name&quot;: &quot;Ops team alerts&quot;,
+      &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;],
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+    }
+  ]
+}
+</code></pre>
+<pre><code class="language-bash"># View a specific notifier
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/notifiers/notifiers/&lt;notifier_id&gt;
+
+# Update a notifier
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;Ops team alerts&quot;,
+    &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;, &quot;manager@example.com&quot;]
+  }' \
+  https://localhost/notifiers/notifiers/&lt;notifier_id&gt;
+
+# Delete a notifier
+curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/notifiers/notifiers/&lt;notifier_id&gt;
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
           </div><footer>

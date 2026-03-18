@@ -82,6 +82,10 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Filestore</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#thing-scoped-files">Thing-scoped files</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#group-scoped-files">Group-scoped files</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -153,26 +157,81 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h1>
-<p>Filestore allows things and groups to store and retrieve arbitrary files.</p>
+<p>Filestore service provides file storage for things and groups. Files are stored on the local filesystem organised by thing or group ID, with metadata (name, content type, size) persisted to a PostgreSQL database. Both things and users can upload, retrieve, update, and delete files within their authorised scope.</p>
+<p>Two scopes are supported:</p>
 <ul>
-<li><strong>Thing-scoped files</strong> — authenticated with a Thing key (<code>Authorization: Thing &lt;key&gt;</code>). Files are stored under the thing and its group.</li>
-<li><strong>Group-scoped files</strong> — authenticated with a Bearer token. Files are stored under the group.</li>
-<li><strong>Group file by key</strong> — a thing can retrieve a group file using its Thing key (<code>GET /groupfiles/{name}</code>).</li>
+<li><strong>Thing-scoped files</strong> — authenticated with a Thing key (<code>Authorization: Thing &lt;key&gt;</code>). A thing can manage its own files and read group files.</li>
+<li><strong>Group-scoped files</strong> — authenticated with a Bearer token. Users with appropriate group access can manage files shared across the group.</li>
 </ul>
-<pre><code class="language-bash"># Upload a file for a thing
+<h2 id="thing-scoped-files">Thing-scoped files<a class="headerlink" href="#thing-scoped-files" title="Permanent link">#</a></h2>
+<p>A thing authenticates using its key to upload and retrieve files scoped to itself.</p>
+<pre><code class="language-bash"># Upload a file
 curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data.csv&quot; \
-  -F 'metadata={&quot;sensor&quot;:&quot;temperature&quot;}' \
-  http://localhost:&lt;filestore_port&gt;/files
+  -F 'metadata={&quot;type&quot;:&quot;readings&quot;,&quot;sensor&quot;:&quot;temperature&quot;}' \
+  https://localhost/filestore/files
+</code></pre>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;sensor-data.csv&quot;,
+  &quot;content_type&quot;: &quot;text/csv&quot;,
+  &quot;size&quot;: 1024,
+  &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;
+}
+</code></pre>
+<pre><code class="language-bash"># List files
+curl -s -S -i \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  https://localhost/filestore/files
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 2,
+  &quot;files&quot;: [
+    {&quot;name&quot;: &quot;sensor-data.csv&quot;, &quot;content_type&quot;: &quot;text/csv&quot;, &quot;size&quot;: 1024},
+    {&quot;name&quot;: &quot;calibration.json&quot;, &quot;content_type&quot;: &quot;application/json&quot;, &quot;size&quot;: 256}
+  ]
+}
+</code></pre>
+<pre><code class="language-bash"># Download a file
+curl -s -S -i \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  https://localhost/filestore/files/&lt;name&gt;
 
-# List files for a thing
-curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  http://localhost:&lt;filestore_port&gt;/files
+# Update a file
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -F &quot;file=@sensor-data-v2.csv&quot; \
+  https://localhost/filestore/files/&lt;name&gt;
+
+# Delete a file
+curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  https://localhost/filestore/files/&lt;name&gt;
 </code></pre>
-<p>To start the Filestore service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/filestore/docker-compose.yml up -d
+<h2 id="group-scoped-files">Group-scoped files<a class="headerlink" href="#group-scoped-files" title="Permanent link">#</a></h2>
+<p>Users with group access can manage files shared across the group using a Bearer token. Group files are accessible to all things and users within the group.</p>
+<pre><code class="language-bash"># Upload a group file
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -F &quot;file=@config.json&quot; \
+  https://localhost/filestore/groups/&lt;group_id&gt;/files
+
+# List group files
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/filestore/groups/&lt;group_id&gt;/files
+
+# Download a group file
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
 </code></pre>
+<p>A thing can also retrieve a group file directly using its Thing key:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  https://localhost/filestore/groupfiles/&lt;name&gt;
+</code></pre>
+<p>This is useful for things that need to fetch shared configuration or firmware files published by the group without requiring a user token.</p>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
