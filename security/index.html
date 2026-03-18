@@ -71,6 +71,30 @@
                 <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Security</a>
     <ul class="current">
@@ -95,6 +119,14 @@
     <li class="toctree-l2"><a class="reference internal" href="#securing-postgresql-connections">Securing PostgreSQL Connections</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#securing-grpc">Securing gRPC</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#adapter-things-grpc">Adapter → Things gRPC</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#other-services-things-grpc">Other Services → Things gRPC</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -112,11 +144,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -172,15 +204,80 @@ If a secured connection is required, you can select the SSL mode and set paths t
 <code>MF_THINGS_DB_SSL_CERT</code> the path to the certificate file for Things.
 <code>MF_THINGS_DB_SSL_KEY</code> the path to the key file for Things.
 <code>MF_THINGS_DB_SSL_ROOT_CERT</code> the path to the root certificate file for Things.</p>
-<p>Supported database connection modes are: <code>disabled</code> (default), <code>required</code>, <code>verify-ca</code> and <code>verify-full</code>.</p>
+<p>Supported database connection modes are: <code>disable</code> (default), <code>require</code>, <code>verify-ca</code> and <code>verify-full</code>.</p>
 <h2 id="securing-grpc">Securing gRPC<a class="headerlink" href="#securing-grpc" title="Permanent link">#</a></h2>
-<p>By default gRPC communication is not secure as Mainflux system is most often run in a private network behind the reverse proxy.</p>
-<p>However, TLS can be activated and configured.</p>
+<p>By default, gRPC communication is not secure as Mainflux is most often run in a private network behind a reverse proxy.</p>
+<p>TLS can be activated per service using the <code>_CLIENT_TLS</code> and <code>_CA_CERTS</code> environment variables. When <code>_CLIENT_TLS</code> is set to <code>true</code>, the service will require a valid CA certificate for the gRPC connection.</p>
+<h3 id="adapter-things-grpc">Adapter → Things gRPC<a class="headerlink" href="#adapter-things-grpc" title="Permanent link">#</a></h3>
+<p>Each adapter has its own pair of variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MF_HTTP_ADAPTER_CLIENT_TLS</code></td>
+<td>Enable TLS for HTTP adapter → Things gRPC</td>
+</tr>
+<tr>
+<td><code>MF_HTTP_ADAPTER_CA_CERTS</code></td>
+<td>Path to CA cert for HTTP adapter</td>
+</tr>
+<tr>
+<td><code>MF_MQTT_ADAPTER_CLIENT_TLS</code></td>
+<td>Enable TLS for MQTT adapter → Things gRPC</td>
+</tr>
+<tr>
+<td><code>MF_MQTT_ADAPTER_CA_CERTS</code></td>
+<td>Path to CA cert for MQTT adapter</td>
+</tr>
+<tr>
+<td><code>MF_WS_ADAPTER_CLIENT_TLS</code></td>
+<td>Enable TLS for WS adapter → Things gRPC</td>
+</tr>
+<tr>
+<td><code>MF_WS_ADAPTER_CA_CERTS</code></td>
+<td>Path to CA cert for WS adapter</td>
+</tr>
+<tr>
+<td><code>MF_COAP_ADAPTER_CLIENT_TLS</code></td>
+<td>Enable TLS for CoAP adapter → Things gRPC</td>
+</tr>
+<tr>
+<td><code>MF_COAP_ADAPTER_CA_CERTS</code></td>
+<td>Path to CA cert for CoAP adapter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-services-things-grpc">Other Services → Things gRPC<a class="headerlink" href="#other-services-things-grpc" title="Permanent link">#</a></h3>
+<p>Services that communicate with Things over gRPC follow the same convention:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MF_THINGS_CA_CERTS</code></td>
+<td>Path to CA cert for outbound Things gRPC connections</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">MF_HTTP_ADAPTER_CLIENT_TLS=true \
+MF_HTTP_ADAPTER_CA_CERTS=/path/to/ca.crt \
+$GOBIN/mainfluxlabs-http
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../storage/" class="btn btn-neutral float-left" title="Storage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../webhooks/" class="btn btn-neutral float-left" title="Webhooks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -209,7 +306,7 @@ If a secured connection is required, you can select the SSL mode and set paths t
         </span>
     
     
-      <span><a href="../storage/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../webhooks/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>

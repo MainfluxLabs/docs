@@ -166,8 +166,6 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#things">Things</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#create-thing-with-external-id">Create Thing with external ID</a>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-things">Create Things</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-things-with-external-id">Create Things with external ID</a>
@@ -185,6 +183,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#list-things-by-org">List Things by Org</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#update-thing">Update Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-thing-group-and-profile">Update Thing Group and Profile</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#update-things-metadata">Update Things Metadata</a>
     </li>
@@ -214,7 +214,29 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#view-api-key-details">View API key details</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#revoke-api-key-identified-by-the-given-id">Revoke API key identified by the given ID</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-api-keys">List API Keys</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#revoke-api-key">Revoke API Key</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#org-invites">Org Invites</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-org-invite">Create Org Invite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-org-invites">List Org Invites</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-org-invite">View Org Invite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#accept-org-invite">Accept Org Invite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#decline-org-invite">Decline Org Invite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#revoke-org-invite">Revoke Org Invite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-invites-received-by-user">List Invites Received by User</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-invites-sent-by-user">List Invites Sent by User</a>
     </li>
         </ul>
     </li>
@@ -260,6 +282,30 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
                 </li>
               </ul>
@@ -276,11 +322,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -568,7 +614,7 @@ Date: Mon, 17 Jul 2023 08:44:58 GMT
 <li><strong>email</strong>: The email address of an existing member whose role is being changed.</li>
 <li><strong>role</strong>: The new role to assign. Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</li>
 </ul>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_id&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships -d '{&quot;org_memberships&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/memberships -d '{&quot;org_memberships&quot;:[{&quot;email&quot;: &quot;&lt;user_email&gt;&quot;, &quot;role&quot;:&quot;new_role&quot;}]}'
 </code></pre>
 <h3 id="view-membership">View Membership<a class="headerlink" href="#view-membership" title="Permanent link">#</a></h3>
 <p>To view org membership, you need the org ID, member ID and a <code>user_token</code></p>
@@ -584,12 +630,6 @@ Date: Mon, 24 Mar 2025 09:10:20 GMT
 Content-Length: 87
 
 {&quot;member_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;}
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 08:54:12 GMT
-Content-Length: 0
 </code></pre>
 <h3 id="list-memberships">List Memberships<a class="headerlink" href="#list-memberships" title="Permanent link">#</a></h3>
 <p>To list org memberships, you need the org ID and a <code>user_token</code></p>
@@ -764,7 +804,7 @@ each representing a user you want to <strong>add</strong> to the group.</p>
   Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
 </li>
 </ul>
-<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
+<pre><code class="language-bash">curl -isSX POST http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:[{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}]}' -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H 'Content-Type: application/json'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -801,7 +841,7 @@ Date: Wed, 03 Nov 2021 13:00:05 GMT
 <p><strong>role</strong>: The new role to assign. Only roles listed in the <a href="../authorization/#roles">Roles Section</a> are allowed.</p>
 </li>
 </ul>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;viewer&quot;}}'
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/memberships -d '{&quot;group_memberships&quot;:[{&quot;member_id&quot;:&quot;123e4567-e89b-12d3-a456-426614174000&quot;,&quot;role&quot;:&quot;editor&quot;}]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -966,7 +1006,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>&lt;org_id&gt;</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/profiles
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcthings/orgs/&lt;org_id&gt;/profiles
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1011,50 +1051,38 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
 <h2 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h2>
-<h3 id="create-thing-with-external-id">Create Thing with external ID<a class="headerlink" href="#create-thing-with-external-id" title="Permanent link">#</a></h3>
-<p>It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
-There are two limitations - the existing ID have to be in UUID V4 format, and it has to be unique in the Mainflux domain.</p>
-<p>To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a <code>user_token</code>, metadata, and the profile ID assigned to it.</p>
-<blockquote>
-<p>Must-have: <code>user_token</code>, <code>profile_id</code></p>
-</blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
-</code></pre>
-<p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:18:37 GMT
-Content-Type: application/json
-Content-Length: 199
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
-</code></pre>
+<p>A thing represents a physical or virtual device — a sensor, actuator, gateway, or any connected asset — registered in the platform. Every thing belongs to a group and must be assigned to a <strong>profile</strong>, which defines its communication schema and behaviour. The <code>key</code> returned at creation is the thing's secret credential, used to authenticate all device-side API calls (messaging, metadata, commands).</p>
 <h3 id="create-things">Create Things<a class="headerlink" href="#create-things" title="Permanent link">#</a></h3>
-<p>You can create multiple things at once by entering a series of things structures and a <code>user_token</code></p>
+<p>One or more things can be created in a single request. Each thing must specify a <code>name</code>, a <code>type</code>, and is implicitly associated with the profile in the URL path.</p>
+<p>Valid values for <code>type</code>: <code>device</code>, <code>sensor</code>, <code>actuator</code>, <code>controller</code>, <code>gateway</code>.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, series of things</p>
+<p>Must-have: <code>user_token</code>, <code>profile_id</code>, <code>name</code>, <code>type</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/profiles/&lt;profile_id&gt;/things \
+  -d '[{&quot;name&quot;:&quot;&lt;thing_name_1&gt;&quot;,&quot;type&quot;:&quot;device&quot;},{&quot;name&quot;:&quot;&lt;thing_name_2&gt;&quot;,&quot;type&quot;:&quot;sensor&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:19:48 GMT
 Content-Type: application/json
-Content-Length: 365
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
 
-{&quot;things&quot;:[{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;x9bf9e57-1685-4c89-bafb-ff5af830be8x&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
+{&quot;things&quot;:[{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;type&quot;:&quot;device&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;type&quot;:&quot;sensor&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}}]}
 </code></pre>
 <h3 id="create-things-with-external-id">Create Things with external ID<a class="headerlink" href="#create-things-with-external-id" title="Permanent link">#</a></h3>
-<p>The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a <code>user_token</code> and <code>group_id</code></p>
+<p>When integrating an existing asset registry (e.g. a device management system or ERP), you can supply your own UUID v4 as the thing ID. This avoids introducing an artificial cross-platform indirection — the same ID used in your external system becomes the thing ID in Mainflux, making the two records directly interchangeable without extra mapping.</p>
+<p>Two constraints apply: the ID must be in <strong>UUID v4 format</strong>, and it must be <strong>unique</strong> across the Mainflux domain.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code>, series of things</p>
+<p>Must-have: <code>user_token</code>, <code>profile_id</code>, <code>id</code>, <code>name</code>, <code>type</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things -d '[{&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_1&gt;&quot;}, {&quot;id&quot;: &quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;name&quot;: &quot;&lt;thing_name_2&gt;&quot;}]'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/profiles/&lt;profile_id&gt;/things \
+  -d '[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0001&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name_1&gt;&quot;,&quot;type&quot;:&quot;device&quot;},{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0002&gt;&quot;,&quot;name&quot;:&quot;&lt;thing_name_2&gt;&quot;,&quot;type&quot;:&quot;sensor&quot;}]'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Content-Type: application/json
+
+{&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0001&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;type&quot;:&quot;device&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;},{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0002&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;type&quot;:&quot;sensor&quot;,&quot;key&quot;:&quot;840c1ea1-2e8d-4809-a6d3-3433a5c489d2&quot;}]}
 </code></pre>
 <h3 id="view-thing">View Thing<a class="headerlink" href="#view-thing" title="Permanent link">#</a></h3>
 <p>You can get thing entity by entering the thing ID and <code>user_token</code></p>
@@ -1164,11 +1192,27 @@ Access-Control-Expose-Headers: Location
 {&quot;total&quot;:3,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;things&quot;:[{&quot;id&quot;:&quot;64140f0b-6448-41cf-967e-1bbcc703c332&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;val&quot;}},{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;key&quot;:&quot;828c6985-c2d6-419e-a124-ba99147b9920&quot;},{&quot;id&quot;:&quot;38aa33fe-39e5-4ee3-97ba-4227cfac63f6&quot;,&quot;group_id&quot;:&quot;550e8400-e29b-41d4-a716-446655440000&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;key&quot;:&quot;f73e7342-06c1-499a-9584-35de495aa338&quot;}]}
 </code></pre>
 <h3 id="update-thing">Update Thing<a class="headerlink" href="#update-thing" title="Permanent link">#</a></h3>
-<p>Updating a thing entity</p>
+<p>Updates a thing's name, type, key, or metadata. To reassign a thing to a different profile or group, use the <a href="#update-thing-group-and-profile">Update Thing Group and Profile</a> endpoint instead.</p>
 <blockquote>
-<p>Must-have: <code>user_token</code> and <code>thing_id</code></p>
+<p>Must-have: <code>user_token</code>, <code>thing_id</code>, <code>name</code>, <code>key</code>, <code>type</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt; -d '{&quot;name&quot;: &quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}'
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt; -d '{&quot;name&quot;: &quot;&lt;thing_name&gt;&quot;,&quot;key&quot;:&quot;&lt;thing_key&gt;&quot;,&quot;type&quot;:&quot;device&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:23:36 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+</code></pre>
+<h3 id="update-thing-group-and-profile">Update Thing Group and Profile<a class="headerlink" href="#update-thing-group-and-profile" title="Permanent link">#</a></h3>
+<p>Reassigns a thing to a different profile and/or group. The profile must belong to the target group.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>thing_id</code>, <code>profile_id</code>, <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt; -d '{&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;group_id&quot;:&quot;&lt;group_id&gt;&quot;}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1211,11 +1255,11 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
 <h3 id="identify">Identify<a class="headerlink" href="#identify" title="Permanent link">#</a></h3>
-<p>Validates thing's key and returns its ID if key is valid</p>
+<p>Validates a thing's key and returns its ID. The <code>type</code> field must be <code>internal</code> or <code>external</code>, depending on which key type is being submitted.</p>
 <blockquote>
-<p>Must-have: <code>thing_key</code></p>
+<p>Must-have: <code>thing_key</code>, <code>type</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/identify -d '{&quot;token&quot;: &quot;&lt;thing_key&gt;&quot;}'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; http://localhost/identify -d '{&quot;key&quot;: &quot;&lt;thing_key&gt;&quot;, &quot;type&quot;: &quot;internal&quot;}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1345,9 +1389,27 @@ Access-Control-Expose-Headers: Location
 
 {&quot;id&quot;:&quot;f630f594-d967-4c54-85ef-af58efe8e8ed&quot;,&quot;issuer_id&quot;:&quot;c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0&quot;,&quot;subject&quot;:&quot;test@email.com&quot;,&quot;type&quot;:2,&quot;issued_at&quot;:&quot;2021-12-19T17:42:40.884521Z&quot;,&quot;expires_at&quot;:&quot;2021-12-20T21:29:20.884521Z&quot;}
 </code></pre>
-<h3 id="revoke-api-key-identified-by-the-given-id">Revoke API key identified by the given ID<a class="headerlink" href="#revoke-api-key-identified-by-the-given-id" title="Permanent link">#</a></h3>
+<h3 id="list-api-keys">List API Keys<a class="headerlink" href="#list-api-keys" title="Permanent link">#</a></h3>
+<p>Returns a paginated list of API keys issued by the authenticated user.</p>
 <blockquote>
-<p>Must-have: 'user_token' and 'key_id'</p>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -isSX GET http://localhost/keys -H 'Authorization: Bearer &lt;user_token&gt;'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Sun, 19 Dec 2021 17:50:00 GMT
+Content-Type: application/json
+Content-Length: 320
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;keys&quot;:[{&quot;id&quot;:&quot;f630f594-d967-4c54-85ef-af58efe8e8ed&quot;,&quot;issuer_id&quot;:&quot;c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0&quot;,&quot;subject&quot;:&quot;test@email.com&quot;,&quot;type&quot;:2,&quot;issued_at&quot;:&quot;2021-12-19T17:42:40.884521Z&quot;,&quot;expires_at&quot;:&quot;2021-12-20T21:29:20.884521Z&quot;}]}
+</code></pre>
+<h3 id="revoke-api-key">Revoke API Key<a class="headerlink" href="#revoke-api-key" title="Permanent link">#</a></h3>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>key_id</code></p>
 </blockquote>
 <pre><code class="language-bash">curl -isSX DELETE  http://localhost/keys/&lt;key_id&gt; -H 'Content-Type: application/json' -H 'Authorization: Bearer &lt;user_token&gt;'
 </code></pre>
@@ -1358,6 +1420,118 @@ Date: Sun, 19 Dec 2021 17:47:11 GMT
 Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
+</code></pre>
+<h2 id="org-invites">Org Invites<a class="headerlink" href="#org-invites" title="Permanent link">#</a></h2>
+<p>Org Invites allow organization administrators to invite registered users to join an organization. An invitation is delivered via email and must be explicitly accepted or declined by the recipient.</p>
+<h3 id="create-org-invite">Create Org Invite<a class="headerlink" href="#create-org-invite" title="Permanent link">#</a></h3>
+<p>Creates an invitation for a registered user to join the specified organization with a given role. An optional list of groups and roles can be included; the invitee will be automatically added to those groups upon acceptance.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>org_id</code>, <code>email</code>, <code>role</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/invites -d '{&quot;email&quot;:&quot;&lt;invitee_email&gt;&quot;,&quot;role&quot;:&quot;editor&quot;,&quot;redirect_path&quot;:&quot;/invite-view&quot;}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:03:14 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="list-org-invites">List Org Invites<a class="headerlink" href="#list-org-invites" title="Permanent link">#</a></h3>
+<p>Returns a paginated list of invitations for the specified organization.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/orgs/&lt;org_id&gt;/invites
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:05:00 GMT
+Content-Length: 350
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;invites&quot;:[{&quot;id&quot;:&quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,&quot;invitee_email&quot;:&quot;&lt;invitee_email&gt;&quot;,&quot;inviter_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;inviter_email&quot;:&quot;admin@example.com&quot;,&quot;org_id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;org_name&quot;:&quot;my_org&quot;,&quot;invitee_role&quot;:&quot;editor&quot;,&quot;state&quot;:&quot;pending&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;expires_at&quot;:&quot;2023-07-21T14:03:14.897Z&quot;}]}
+</code></pre>
+<h3 id="view-org-invite">View Org Invite<a class="headerlink" href="#view-org-invite" title="Permanent link">#</a></h3>
+<p>Returns the details of a specific invitation.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>invite_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/invites/&lt;invite_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:06:00 GMT
+Content-Length: 310
+
+{&quot;id&quot;:&quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,&quot;invitee_email&quot;:&quot;&lt;invitee_email&gt;&quot;,&quot;inviter_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;inviter_email&quot;:&quot;admin@example.com&quot;,&quot;org_id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;org_name&quot;:&quot;my_org&quot;,&quot;invitee_role&quot;:&quot;editor&quot;,&quot;state&quot;:&quot;pending&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;expires_at&quot;:&quot;2023-07-21T14:03:14.897Z&quot;}
+</code></pre>
+<h3 id="accept-org-invite">Accept Org Invite<a class="headerlink" href="#accept-org-invite" title="Permanent link">#</a></h3>
+<p>The invitee accepts the invitation. Upon acceptance, the invitee is added to the organization (and any groups specified in the invite) with the assigned role.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (of the invitee), <code>invite_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/invites/&lt;invite_id&gt;/accept
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:10:00 GMT
+Content-Length: 0
+</code></pre>
+<h3 id="decline-org-invite">Decline Org Invite<a class="headerlink" href="#decline-org-invite" title="Permanent link">#</a></h3>
+<p>The invitee declines the invitation.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (of the invitee), <code>invite_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/invites/&lt;invite_id&gt;/decline
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:11:00 GMT
+</code></pre>
+<h3 id="revoke-org-invite">Revoke Org Invite<a class="headerlink" href="#revoke-org-invite" title="Permanent link">#</a></h3>
+<p>The inviter cancels a pending invitation. Only the user who created the invite can revoke it.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (of the inviter), <code>invite_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/invites/&lt;invite_id&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:12:00 GMT
+</code></pre>
+<h3 id="list-invites-received-by-user">List Invites Received by User<a class="headerlink" href="#list-invites-received-by-user" title="Permanent link">#</a></h3>
+<p>Returns a paginated list of invitations received by the specified user (as invitee).</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>user_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users/&lt;user_id&gt;/invites/received
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:13:00 GMT
+Content-Length: 350
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;invites&quot;:[{&quot;id&quot;:&quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,&quot;invitee_email&quot;:&quot;&lt;invitee_email&gt;&quot;,&quot;inviter_email&quot;:&quot;admin@example.com&quot;,&quot;org_id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;org_name&quot;:&quot;my_org&quot;,&quot;invitee_role&quot;:&quot;editor&quot;,&quot;state&quot;:&quot;pending&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;expires_at&quot;:&quot;2023-07-21T14:03:14.897Z&quot;}]}
+</code></pre>
+<h3 id="list-invites-sent-by-user">List Invites Sent by User<a class="headerlink" href="#list-invites-sent-by-user" title="Permanent link">#</a></h3>
+<p>Returns a paginated list of invitations sent by the specified user (as inviter).</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>user_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users/&lt;user_id&gt;/invites/sent
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:14:00 GMT
+Content-Length: 350
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;invites&quot;:[{&quot;id&quot;:&quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,&quot;invitee_email&quot;:&quot;&lt;invitee_email&gt;&quot;,&quot;inviter_email&quot;:&quot;admin@example.com&quot;,&quot;org_id&quot;:&quot;25da5d7a-d3f5-435e-bcad-0cf22343121a&quot;,&quot;org_name&quot;:&quot;my_org&quot;,&quot;invitee_role&quot;:&quot;editor&quot;,&quot;state&quot;:&quot;pending&quot;,&quot;created_at&quot;:&quot;2023-07-14T14:03:14.897Z&quot;,&quot;expires_at&quot;:&quot;2023-07-21T14:03:14.897Z&quot;}]}
 </code></pre>
 <h2 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h2>
 <h3 id="create-webhooks">Create Webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h3>

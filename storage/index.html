@@ -82,6 +82,12 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#readers">Readers</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#endpoints">Endpoints</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#query-parameters">Query Parameters</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#mongodb-reader">MongoDB Reader</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#postgresql-reader">PostgreSQL Reader</a>
@@ -91,6 +97,30 @@
         </ul>
     </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
                 </li>
               </ul>
               <ul>
@@ -110,11 +140,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -166,55 +196,122 @@
 </code></pre>
 <p>MongoDB default port (27017) is exposed, so you can use various tools for database inspection and data visualization.</p>
 <h2 id="readers">Readers<a class="headerlink" href="#readers" title="Permanent link">#</a></h2>
-<p>Readers provide an implementation of various <code>message readers</code>.
-Message readers are services that consume normalized (in <code>SenML</code> format) Mainflux messages from data storage and opens HTTP API for message consumption.
-Installing corresponding writer before reader is implied.</p>
-<p>Each of the Reader services exposes the same <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/readers.yml">HTTP API</a> for fetching messages on its default port.</p>
-<p>To read sent messages you should send <code>GET</code> request to <code>/messages</code> with thing access token in <code>Authorization</code> header.</p>
-<p>Response should look like this:</p>
-<pre><code class="language-http">HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Tue, 18 Sep 2018 18:56:19 GMT
-Content-Length: 228
-
-{
-    &quot;messages&quot;: [
-        {
-            &quot;Publisher&quot;: 1,
-            &quot;Protocol&quot;: &quot;mqtt&quot;,
-            &quot;Name&quot;: &quot;name:voltage&quot;,
-            &quot;Unit&quot;: &quot;V&quot;,
-            &quot;Value&quot;: 5.6,
-            &quot;Time&quot;: 48.56
-        },
-        {
-            &quot;Publisher&quot;: 1,
-            &quot;Protocol&quot;: &quot;mqtt&quot;,
-            &quot;Name&quot;: &quot;name:temperature&quot;,
-            &quot;Unit&quot;: &quot;C&quot;,
-            &quot;Value&quot;: 24.3,
-            &quot;Time&quot;: 48.56
-        }
-    ]
+<p>Readers provide an implementation of various <code>message readers</code>. Message readers are services that expose an HTTP API for querying messages persisted by the Writers. Installing the corresponding writer before the reader is implied.</p>
+<p>Authentication is performed using the Thing key in the <code>Authorization</code> header:</p>
+<pre><code>Authorization: Thing &lt;thing_key&gt;
+</code></pre>
+<h3 id="endpoints">Endpoints<a class="headerlink" href="#endpoints" title="Permanent link">#</a></h3>
+<p>Each Reader service exposes the same HTTP API. Two message formats are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>List</th>
+<th>Search</th>
+<th>Export</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SenML</td>
+<td><code>GET /senml</code></td>
+<td><code>POST /senml/search</code></td>
+<td><code>GET /senml/export</code></td>
+</tr>
+<tr>
+<td>JSON</td>
+<td><code>GET /json</code></td>
+<td><code>POST /json/search</code></td>
+<td><code>GET /json/export</code></td>
+</tr>
+</tbody>
+</table>
+<p>To scope results to a specific publisher (thing ID):</p>
+<ul>
+<li><code>GET /senml/{publisherId}</code></li>
+<li><code>GET /json/{publisherId}</code></li>
+</ul>
+<h3 id="query-parameters">Query Parameters<a class="headerlink" href="#query-parameters" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>Number of messages to skip</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Maximum number of messages to return (max 1000)</td>
+<td>10</td>
+</tr>
+<tr>
+<td><code>subtopic</code></td>
+<td>Filter by subtopic</td>
+<td></td>
+</tr>
+<tr>
+<td><code>publisher</code></td>
+<td>Filter by publisher (thing ID)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>protocol</code></td>
+<td>Filter by protocol</td>
+<td></td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>Start of time range (Unix timestamp, seconds)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>End of time range (Unix timestamp, seconds)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For SenML messages, additional parameters are available: <code>name</code>, <code>v</code>, <code>vb</code>, <code>vs</code>, <code>vd</code>, <code>comparator</code> (<code>eq</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>), <code>aggregation</code> (<code>min</code>, <code>max</code>, <code>avg</code>, <code>count</code>), and <code>interval</code>.</p>
+<p>Add <code>convert=csv</code> to any export request to download results as a CSV file.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost:&lt;reader_port&gt;/senml?offset=0&amp;limit=5&quot;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;total&quot;: 2,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 5,
+  &quot;messages&quot;: [
+    {
+      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;protocol&quot;: &quot;mqtt&quot;,
+      &quot;name&quot;: &quot;voltage&quot;,
+      &quot;unit&quot;: &quot;V&quot;,
+      &quot;value&quot;: 120.1,
+      &quot;time&quot;: 1.276020076e+09
+    }
+  ]
 }
 </code></pre>
-<p>Note that you will receive only those messages that were sent by authorization token's owner.
-You can specify <code>offset</code> and <code>limit</code> parameters in order to fetch specific group of messages. An example of HTTP request looks like:</p>
-<pre><code class="language-bash">curl -s -S -i  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; http://localhost:&lt;service_port&gt;/messages?offset=0&amp;limit=5&amp;format=json
-</code></pre>
-<p>If you don't provide <code>offset</code> and <code>limit</code> parameters, default values will be used instead: 0 for <code>offset</code> and 10 for <code>limit</code>.
-The <code>format</code> parameter indicates in which format the messages will be returned. 
-The default format is <code>senml</code> if the format is not defined, and if the desired format is JSON, you need to specify <code>json</code> for the format.</p>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
 <h3 id="mongodb-reader">MongoDB Reader<a class="headerlink" href="#mongodb-reader" title="Permanent link">#</a></h3>
-<p>To start MongoDB reader, execute the following command:</p>
+<p>To start MongoDB reader:</p>
 <pre><code class="language-bash">docker-compose -f docker/addons/mongodb-reader/docker-compose.yml up -d
 </code></pre>
 <h3 id="postgresql-reader">PostgreSQL Reader<a class="headerlink" href="#postgresql-reader" title="Permanent link">#</a></h3>
-<p>To start PostgreSQL reader, execute the following command:</p>
+<p>To start PostgreSQL reader:</p>
 <pre><code class="language-bash">docker-compose -f docker/addons/postgres-reader/docker-compose.yml up -d
 </code></pre>
 <h3 id="timescale-reader">Timescale Reader<a class="headerlink" href="#timescale-reader" title="Permanent link">#</a></h3>
-<p>To start Timescale reader, execute the following command:</p>
+<p>To start Timescale reader:</p>
 <pre><code class="language-bash">docker-compose -f docker/addons/timescale-reader/docker-compose.yml up -d
 </code></pre>
               
@@ -222,7 +319,7 @@ The default format is <code>senml</code> if the format is not defined, and if th
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../messaging/" class="btn btn-neutral float-left" title="Messaging"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../security/" class="btn btn-neutral float-right" title="Security">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../alarms/" class="btn btn-neutral float-right" title="Alarms">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -253,7 +350,7 @@ The default format is <code>senml</code> if the format is not defined, and if th
       <span><a href="../messaging/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../security/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../alarms/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

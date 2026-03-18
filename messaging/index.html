@@ -68,10 +68,6 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#configure-profile-config">Configure Profile Config</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#notifiers">Notifiers</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#webhooks">Webhooks</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#subtopics">Subtopics</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#http">HTTP</a>
@@ -87,6 +83,30 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
                 </li>
               </ul>
               <ul>
@@ -106,11 +126,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -253,36 +273,7 @@ For the previous example, we can filter the extracted payload and save only the 
 }
 </code></pre>
 <p>If the <code>data_filters</code> and <code>data_field</code> fields are empty, the whole payload will be used.</p>
-<p>The explanations for the <code>webhook</code> and <code>smtp_id</code> fields of the <code>config</code> can be found in the <a href="#webhooks">Webhooks</a> and <a href="#notifiers">Notifiers</a> sections.</p>
-<hr />
-<h3 id="notifiers">Notifiers<a class="headerlink" href="#notifiers" title="Permanent link">#</a></h3>
-<p>Notifiers service provides a service for sending notifications. It can be configured to send email notifications over SMTP (Simple Mail Transfer Protocol).</p>
-<p>Notification can be enabled by setting the appropriate notifier ID to the <code>smtp_id</code> field within the Profile Config.</p>
-<p>Here is an example with the value of the <code>smtp_id</code> field:</p>
-<pre><code class="language-json">{
-  &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: false,
-    &quot;webhook&quot;: false,
-    &quot;smtp_id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;
-  }
-}
-</code></pre>
-<p><strong>Note:</strong> If <code>write</code> is set to <code>false</code>, notifications will be sent without storing the message in the database.</p>
-<hr />
-<h3 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h3>
-<p>Webhooks service provides forwarding received messages to other platforms.
-Setting the value <code>true</code> or <code>false</code> in the <code>webhook</code> field within Profile Config determines whether messages will be forwarded.</p>
-<p>Here is an example with the value of the <code>webhook</code> field:</p>
-<pre><code class="language-json">{
-  &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: false,
-    &quot;webhook&quot;: true,
-    &quot;smtp_id&quot;: &quot;&quot;
-  }
-}
-</code></pre>
+<p>The explanations for the <code>webhook</code> and <code>smtp_id</code> fields of the <code>config</code> can be found in the <a href="../webhooks/">Webhooks</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
 <hr />
 <h3 id="subtopics">Subtopics<a class="headerlink" href="#subtopics" title="Permanent link">#</a></h3>
 <p>In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base <code>/messages</code> topic.</p>
@@ -298,12 +289,28 @@ Every empty part of subtopic will be removed. What this means is that subtopic <
 When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>&gt;</code>. Every subtopic part can have <code>*</code> or <code>&gt;</code> as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as <code>a.b*c.d</code> will be invalid, while <code>a.b.*.c.d</code> will be valid.</p>
 <p><strong>Note:</strong> When using MQTT, it's recommended that you use standard MQTT wildcards <code>+</code> and <code>#</code>.</p>
 <p><em>For more information and examples checkout <a href="https://nats.io/documentation/writing_applications/subscribing/">official nats.io documentation</a></em></p>
+<hr />
 <h2 id="http">HTTP<a class="headerlink" href="#http" title="Permanent link">#</a></h2>
-<p>To publish message, a thing with proper profile should send following request:</p>
+<p>To publish a message, a thing with a proper profile should send the following request:</p>
 <pre><code>curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; -H &quot;Content-Type: application/senml+json&quot; https://localhost/http/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <p><strong>Note:</strong> If you're going to use senml message format, you should always send messages as an array.</p>
-<p><em>For more information about the HTTP messaging service API, please check out the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/api/openapi/http.yml">API documentation</a>.</em></p>
+<p>The HTTP adapter also supports sending <strong>commands</strong> to a specific thing or all things in a group:</p>
+<pre><code class="language-bash"># Send a command to a thing
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  https://localhost/http/things/&lt;thing_id&gt;/commands \
+  -d '{&quot;command&quot;:&quot;reboot&quot;,&quot;params&quot;:{&quot;delay&quot;:5}}'
+
+# Send a command to all things in a group
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  https://localhost/http/groups/&lt;group_id&gt;/commands \
+  -d '{&quot;command&quot;:&quot;set_threshold&quot;,&quot;params&quot;:{&quot;value&quot;:80}}'
+</code></pre>
+<p><em>For more information about the HTTP messaging service API, please check out the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</em></p>
 <h2 id="mqtt">MQTT<a class="headerlink" href="#mqtt" title="Permanent link">#</a></h2>
 <p>To send and receive messages over MQTT you could use <a href="https://mosquitto.org">Mosquitto tools</a>,
 or <a href="https://www.eclipse.org/paho/">Paho</a> if you want to use MQTT over WebSocket.</p>

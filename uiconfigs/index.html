@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/enterprise/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/uiconfigs/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Enterprise - MainfluxLabs</title>
+    <title>UIConfigs - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Enterprise";
-        var mkdocs_page_input_path = "enterprise.md";
-        var mkdocs_page_url = "/index.html/enterprise/";
+        var mkdocs_page_name = "UIConfigs";
+        var mkdocs_page_input_path = "uiconfigs.md";
+        var mkdocs_page_url = "/index.html/uiconfigs/";
       </script>
     
     <!--[if lt IE 9]>
@@ -72,6 +72,32 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">UIConfigs</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
                 </li>
               </ul>
@@ -88,17 +114,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Enterprise</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#downlinks">Downlinks</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#filestore">Filestore</a>
-    </li>
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -115,7 +135,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Enterprise</li>
+      <li class="breadcrumb-item active">UIConfigs</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -124,28 +144,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="enterprise">Enterprise<a class="headerlink" href="#enterprise" title="Permanent link">#</a></h1>
-<p>These services are exclusively available to users with a <strong>premium subscription</strong>. If you'd like to learn more or activate these services, please contact us at <a href="mailto:infos@mainflux.com">infos@mainflux.com</a>.</p>
-<hr />
-<h2 id="downlinks">Downlinks<a class="headerlink" href="#downlinks" title="Permanent link">#</a></h2>
-<p>The Downlink service enables the integration of data from different platforms/services into Mainflux. In a situation where certain platforms do not have a way to send data via Webhook or in some other way, then the Downlink service comes to the rescue.</p>
-<p>The Downlink service provides data retrieval from certain services for a previously defined frequency. Downlink configuration offers the possibility of getting data for different frequencies, which are minutely, hourly, daily, and weekly. In addition to frequency-defined recurring fetches, it is possible to fetch one-time data for a specific date and time in the future. </p>
-<p>Downlink service supports retrieval data in <code>JSON</code> and <code>XML</code> format.</p>
-<p><strong>Note:</strong> Detailed API documentation is available to users with a premium plan.</p>
-<h2 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h2>
-<p>The Filestore Service provides secure File storage for both individual devices (Things) and Groups. This service allows you to upload, update, view, list, and delete Files associated with Things or Groups in a structured and efficient manner.</p>
-<p><strong>Key Features:</strong>
-* Thing-Specific File Management:
-Store and manage Files tied to individual Things.
-* Group-Specific File Management:
-Manage Files shared across device Groups.</p>
-<p>The Filestore Service is useful for storing configuration files or logs for individual devices, ensuring easy access and updates. It also facilitates sharing firmware updates or other files across multiple devices within a Group, streamlining Group File management.</p>
-<p><strong>Note:</strong> Detailed API documentation is available to users with a premium plan.</p>
+                <h1 id="uiconfigs">UIConfigs<a class="headerlink" href="#uiconfigs" title="Permanent link">#</a></h1>
+<p>UIConfigs stores schema-free JSON configuration objects scoped to organizations and things. This allows frontends and dashboards to persist arbitrary display or layout settings without requiring schema changes.</p>
+<ul>
+<li><strong>Org configs</strong> — stored per organization ID; free-form JSON.</li>
+<li><strong>Thing configs</strong> — stored per thing ID (with group ID); free-form JSON.</li>
+</ul>
+<p>To start the UIConfigs service:</p>
+<pre><code class="language-bash">docker-compose -f docker/addons/uiconfigs/docker-compose.yml up -d
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../benchmark/" class="btn btn-neutral float-left" title="Benchmark"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../filestore/" class="btn btn-neutral float-left" title="Filestore"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../notifiers/" class="btn btn-neutral float-right" title="Notifiers">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -173,8 +187,10 @@ Manage Files shared across device Groups.</p>
         </span>
     
     
-      <span><a href="../benchmark/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../filestore/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
+    
+      <span><a href="../notifiers/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

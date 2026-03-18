@@ -82,6 +82,30 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
                 </li>
               </ul>
@@ -98,11 +122,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -152,6 +176,10 @@
 <td style="text-align: left;">Manages platform's things, profiles, groups and group members</td>
 </tr>
 <tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/certs">certs</a></td>
+<td style="text-align: left;">Issues and manages X.509 certificates for mTLS device authentication</td>
+</tr>
+<tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/http">http-adapter</a></td>
 <td style="text-align: left;">Provides an HTTP interface for sending messages</td>
 </tr>
@@ -164,7 +192,75 @@
 <td style="text-align: left;">Provides a CoAP interface for sending messages</td>
 </tr>
 <tr>
-<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/cli">mainfluxlabs-cli</a></td>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/ws">ws-adapter</a></td>
+<td style="text-align: left;">Provides a WebSocket interface for sending and receiving messages</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/modbus">modbus</a></td>
+<td style="text-align: left;">Polls Modbus TCP devices on a schedule and publishes readings as messages</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/rules">rules</a></td>
+<td style="text-align: left;">Evaluates threshold rules and Lua scripts against incoming device messages</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/alarms">alarms</a></td>
+<td style="text-align: left;">Persists alarms triggered by the rules engine or Lua scripts to PostgreSQL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/downlinks">downlinks</a></td>
+<td style="text-align: left;">Manages scheduled outbound HTTP requests (downlinks) for things and groups</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/webhooks">webhooks</a></td>
+<td style="text-align: left;">Forwards device messages to external HTTP endpoints</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/cmd/smtp-notifier">smtp-notifier</a></td>
+<td style="text-align: left;">Sends email notifications to contacts defined on notifier records</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/cmd/smpp-notifier">smpp-notifier</a></td>
+<td style="text-align: left;">Sends SMS notifications to contacts defined on notifier records</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/converters">converters</a></td>
+<td style="text-align: left;">Accepts CSV uploads and publishes parsed rows as messages for bulk ingestion</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/filestore">filestore</a></td>
+<td style="text-align: left;">Provides file storage for things and groups</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/uiconfigs">uiconfigs</a></td>
+<td style="text-align: left;">Persists and manages UI configuration settings scoped per org and per thing</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/writers/mongodb">mongodb-writer</a></td>
+<td style="text-align: left;">Persists messages to MongoDB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/readers/mongodb">mongodb-reader</a></td>
+<td style="text-align: left;">Provides an HTTP API for querying messages from MongoDB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/writers/postgres">postgres-writer</a></td>
+<td style="text-align: left;">Persists messages to PostgreSQL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/readers/postgres">postgres-reader</a></td>
+<td style="text-align: left;">Provides an HTTP API for querying messages from PostgreSQL</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/writers/timescale">timescale-writer</a></td>
+<td style="text-align: left;">Persists messages to TimescaleDB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/readers/timescale">timescale-reader</a></td>
+<td style="text-align: left;">Provides an HTTP API for querying messages from TimescaleDB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/cli">cli</a></td>
 <td style="text-align: left;">Command line interface</td>
 </tr>
 </tbody>
@@ -178,14 +274,14 @@ an access token. Once logged into the system, user can manage his resources (i.e
 things and profiles) in CRUD fashion and define access control.</p>
 <p><code>Org</code> represents the highest entity in the system hierarchy consisting of its <code>members</code> and <code>groups</code>. It unites all the elements into a whole.</p>
 <p><code>Group</code> within an organization represents a set of Things, Profiles, Notifiers, Webhooks, Downlinks. Access to these entities requires appropriate rights, which are obtained when assigning a user to a group.</p>
-<p><code>Profile</code> determines message topics that can be consumed by all things to which it is assigned.</p>
+<p><code>Profile</code> defines the message format and processing rules for all things assigned to it. Things within the same profile share the same communication contract (content type, data transformation, filtering, and routing settings).</p>
 <p><code>Thing</code> represents devices (or applications) connected to Mainflux that uses the
 platform for message exchange with other "things".</p>
 <h2 id="messaging">Messaging<a class="headerlink" href="#messaging" title="Permanent link">#</a></h2>
 <p>Mainflux uses <a href="https://nats.io">NATS</a> as its messaging backbone, due to its
-lightweight and performant nature. You can treat its <em>subjects</em> as physical
-representation of Mainflux channels, where subject name is constructed using
-channel unique identifier.</p>
+lightweight and performant nature. NATS subjects are derived from the message
+content type and optional subtopic, following the format
+<code>&lt;format&gt;.messages.&lt;optional_subtopic&gt;</code> (e.g. <code>senml.messages.bedroom.temperature</code>).</p>
 <p>In general, there is no constrained put on content that is being exchanged
 through channels. However, in order to be post-processed and normalized,
 messages should be formatted using <a href="https://tools.ietf.org/html/draft-ietf-core-senml-08">SenML</a>.</p>

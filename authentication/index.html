@@ -54,9 +54,9 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Authentication</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#user-authentication">User authentication</a>
+    <li class="toctree-l2"><a class="reference internal" href="#user-authentication">User Authentication</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#authentication-with-mainflux-keys">Authentication with Mainflux keys</a>
+    <li class="toctree-l2"><a class="reference internal" href="#device-authentication">Device Authentication</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#mutual-tls-authentication-with-x509-certificates">Mutual TLS Authentication with X.509 Certificates</a>
         <ul>
@@ -92,6 +92,30 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
                 </li>
               </ul>
@@ -108,11 +132,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                <li class="toctree-l1"><a class="reference internal" href="../kubernetes/">Kubernetes</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../enterprise/">Enterprise</a>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
                 </li>
               </ul>
       </div>
@@ -139,28 +163,111 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h1>
-<h2 id="user-authentication">User authentication<a class="headerlink" href="#user-authentication" title="Permanent link">#</a></h2>
-<p>For user authentication Mainflux uses Authentication keys.
-There are three types of authentication keys:</p>
-<ul>
-<li>User key - keys issued to the user upon login request</li>
-<li>API key - keys issued upon the user request</li>
-<li>Recovery key - password recovery key</li>
-</ul>
-<p>Authentication keys are represented and distributed by the corresponding <a href="https://jwt.io/">JWT</a>.
-User keys are issued when user logs in. Each user request (other than registration and login) contains user key that is used to authenticate the user.</p>
-<p>API keys are similar to the User keys. The main difference is that API keys have configurable expiration time. If no time is set, the key will never expire. API keys are the only key type that <em>can be revoked</em>. This also means that, despite being used as a JWT, it requires a query to the database to validate the API key. The user with API key can perform all the same actions as the user with login key (can act on behalf of the user for Thing, Profile, or user profile management), <em>except issuing new API keys</em>. </p>
-<p>Recovery key is the password recovery key. It's short-lived token used for password recovery process.</p>
-<p>The following actions are supported:</p>
-<ul>
-<li>create (all key types)</li>
-<li>verify (all key types)</li>
-<li>obtain (API keys only; secret is never obtained)</li>
-<li>revoke (API keys only)</li>
-</ul>
-<h2 id="authentication-with-mainflux-keys">Authentication with Mainflux keys<a class="headerlink" href="#authentication-with-mainflux-keys" title="Permanent link">#</a></h2>
-<p>By default, Mainflux uses Mainflux Thing keys for authentication. The Thing key is a secret key that's generated at the Thing creation. In order to authenticate, the Thing needs to send its key with the message. The way the key is passed depends on the protocol used to send a message and differs from adapter to adapter. For more details on how this key is passed around, please check out <a href="https://mainflux.readthedocs.io/en/latest/messaging">messaging section</a>.
-This is the default Mainflux authentication mechanism and this method is used if the composition is started using the following command:</p>
+<h2 id="user-authentication">User Authentication<a class="headerlink" href="#user-authentication" title="Permanent link">#</a></h2>
+<p>Mainflux uses JWT-based authentication keys for all user-facing operations. There are three types of authentication keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key type</th>
+<th>Issued by</th>
+<th>Expiry</th>
+<th>Revocable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Login key</strong></td>
+<td>Login endpoint</td>
+<td>Short-lived (session)</td>
+<td>No</td>
+<td>Authenticates interactive sessions</td>
+</tr>
+<tr>
+<td><strong>API key</strong></td>
+<td>User request</td>
+<td>Configurable (default: never)</td>
+<td>Yes</td>
+<td>Long-lived programmatic access</td>
+</tr>
+<tr>
+<td><strong>Recovery key</strong></td>
+<td>Password reset flow</td>
+<td>Short-lived</td>
+<td>No</td>
+<td>Password recovery only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Login keys</strong> are issued automatically when a user logs in. They expire after a short session period and cannot be revoked individually. Every authenticated request (other than registration and login) must carry a valid key in the <code>Authorization: Bearer &lt;key&gt;</code> header.</p>
+<p><strong>API keys</strong> are created on demand and provide stable, long-lived access for scripts, integrations, and automated workflows. They can be given an explicit expiration time; if none is set, they never expire. Because API keys must be validated against the database on each request (unlike login keys, which are self-contained JWTs), they are the only key type that supports revocation. An API key holder can perform all the same operations as a logged-in user — managing things, profiles, groups, and the user's own profile — <strong>except</strong> creating additional API keys.</p>
+<p><strong>Recovery keys</strong> are short-lived tokens generated during the password reset flow. They are single-use and expire quickly.</p>
+<p>Supported operations per key type:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th style="text-align: center;">Login key</th>
+<th style="text-align: center;">API key</th>
+<th style="text-align: center;">Recovery key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Verify</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>List</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Revoke</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="device-authentication">Device Authentication<a class="headerlink" href="#device-authentication" title="Permanent link">#</a></h2>
+<p>Mainflux authenticates devices using <strong>Thing keys</strong> — secret keys generated by the platform when a thing is provisioned. There are two thing key types:</p>
+<table>
+<thead>
+<tr>
+<th>Key type</th>
+<th>Header scheme</th>
+<th>Set by</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Internal key</strong></td>
+<td><code>Authorization: Thing &lt;key&gt;</code></td>
+<td>Platform at provisioning</td>
+<td>Standard device authentication</td>
+</tr>
+<tr>
+<td><strong>External key</strong></td>
+<td><code>Authorization: External &lt;key&gt;</code></td>
+<td>User or hardware provisioner</td>
+<td>Hardware-provisioned or pre-shared keys</td>
+</tr>
+</tbody>
+</table>
+<p>The platform resolves either key type to the thing's identity when processing inbound messages. The external key can be updated or removed independently via the API without reprovisioning the thing.</p>
+<p>For details on how keys are passed per protocol (HTTP, MQTT, CoAP), see the <a href="../messaging/">messaging section</a>.</p>
+<p>This is the default device authentication mechanism and it is active when the composition is started using the following command:</p>
 <pre><code class="language-bash">docker-compose -f docker/docker-compose.yml up
 </code></pre>
 <h2 id="mutual-tls-authentication-with-x509-certificates">Mutual TLS Authentication with X.509 Certificates<a class="headerlink" href="#mutual-tls-authentication-with-x509-certificates" title="Permanent link">#</a></h2>
