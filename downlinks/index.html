@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/filestore/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/downlinks/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Filestore - MainfluxLabs</title>
+    <title>Downlinks - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Filestore";
-        var mkdocs_page_input_path = "filestore.md";
-        var mkdocs_page_url = "/index.html/filestore/";
+        var mkdocs_page_name = "Downlinks";
+        var mkdocs_page_input_path = "downlinks.md";
+        var mkdocs_page_url = "/index.html/downlinks/";
       </script>
     
     <!--[if lt IE 9]>
@@ -79,10 +79,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Filestore</a>
-    <ul class="current">
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
                 </li>
               </ul>
               <ul>
@@ -97,8 +95,16 @@
                 <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Downlinks</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -143,7 +149,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Filestore</li>
+      <li class="breadcrumb-item active">Downlinks</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -152,34 +158,173 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h1>
-<p>Filestore allows things and groups to store and retrieve arbitrary files.</p>
-<ul>
-<li><strong>Thing-scoped files</strong> — authenticated with a Thing key (<code>Authorization: Thing &lt;key&gt;</code>). Files are stored under the thing and its group.</li>
-<li><strong>Group-scoped files</strong> — authenticated with a Bearer token. Files are stored under the group.</li>
-<li><strong>Group file by key</strong> — a thing can retrieve a group file using its Thing key (<code>GET /groupfiles/{name}</code>).</li>
-</ul>
-<pre><code class="language-bash"># Upload a file for a thing
-curl -s -S -i -X POST \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  -F &quot;file=@sensor-data.csv&quot; \
-  -F 'metadata={&quot;sensor&quot;:&quot;temperature&quot;}' \
-  http://localhost:&lt;filestore_port&gt;/files
+                <h1 id="downlinks">Downlinks<a class="headerlink" href="#downlinks" title="Permanent link">#</a></h1>
+<p>Downlinks service manages scheduled outbound HTTP requests (downlinks) for things and groups, supporting cron-based and one-time scheduling with optional time-range parameter injection.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<p>The service is configured using the environment variables presented in the following table. Note that any unset variables will be replaced with their default values.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MF_DOWNLINKS_LOG_LEVEL</td>
+<td>Log level for the Downlinks service (debug, info, warn, error)</td>
+<td>error</td>
+</tr>
+<tr>
+<td>MF_BROKER_URL</td>
+<td>Message broker instance URL</td>
+<td>nats://localhost:4222</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_HTTP_PORT</td>
+<td>Downlinks service HTTP port</td>
+<td>9025</td>
+</tr>
+<tr>
+<td>MF_JAEGER_URL</td>
+<td>Jaeger server URL</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_HOST</td>
+<td>Database host address</td>
+<td>localhost</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_PORT</td>
+<td>Database host port</td>
+<td>5432</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_USER</td>
+<td>Database user</td>
+<td>mainflux</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_PASS</td>
+<td>Database password</td>
+<td>mainflux</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB</td>
+<td>Name of the database used by the service</td>
+<td>downlinks</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_SSL_MODE</td>
+<td>Database connection SSL mode (disable, require, verify-ca, verify-full)</td>
+<td>disable</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_SSL_CERT</td>
+<td>Path to the PEM encoded certificate file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_SSL_KEY</td>
+<td>Path to the PEM encoded key file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_DB_SSL_ROOT_CERT</td>
+<td>Path to the PEM encoded root certificate file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_CLIENT_TLS</td>
+<td>Flag that indicates if TLS should be turned on</td>
+<td>false</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_CA_CERTS</td>
+<td>Path to trusted CAs in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_SERVER_CERT</td>
+<td>Path to server certificate in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_SERVER_KEY</td>
+<td>Path to server key in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_THINGS_AUTH_GRPC_URL</td>
+<td>Things service Auth gRPC URL</td>
+<td>localhost:8183</td>
+</tr>
+<tr>
+<td>MF_THINGS_AUTH_GRPC_TIMEOUT</td>
+<td>Things service Auth gRPC request timeout in seconds</td>
+<td>1s</td>
+</tr>
+<tr>
+<td>MF_AUTH_GRPC_URL</td>
+<td>Auth service gRPC URL</td>
+<td>localhost:8181</td>
+</tr>
+<tr>
+<td>MF_AUTH_GRPC_TIMEOUT</td>
+<td>Auth service gRPC request timeout in seconds</td>
+<td>1s</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_ES_URL</td>
+<td>Event store URL</td>
+<td>redis://localhost:6379/0</td>
+</tr>
+<tr>
+<td>MF_DOWNLINKS_EVENT_CONSUMER</td>
+<td>Event store consumer name</td>
+<td>downlinks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">#</a></h2>
+<p>The service itself is distributed as Docker container. Check the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml"><code>downlinks</code></a> service section in docker-compose to see how service is deployed.</p>
+<p>To start the service, execute the following shell script:</p>
+<pre><code class="language-bash"># download the latest version of the service
+git clone https://github.com/MainfluxLabs/mainflux
 
-# List files for a thing
-curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  http://localhost:&lt;filestore_port&gt;/files
+cd mainflux
+
+# compile the downlinks service
+make downlinks
+
+# copy binary to bin
+make install
+
+# Set the environment variables and run the service
+MF_DOWNLINKS_LOG_LEVEL=[Downlinks log level] \
+MF_BROKER_URL=[Message broker instance URL] \
+MF_DOWNLINKS_HTTP_PORT=[Downlinks service HTTP port] \
+MF_DOWNLINKS_DB_HOST=[Database host address] \
+MF_DOWNLINKS_DB_PORT=[Database host port] \
+MF_DOWNLINKS_DB_USER=[Database user] \
+MF_DOWNLINKS_DB_PASS=[Database password] \
+MF_DOWNLINKS_DB=[Downlinks database name] \
+MF_THINGS_AUTH_GRPC_URL=[Things service Auth gRPC URL] \
+MF_THINGS_AUTH_GRPC_TIMEOUT=[Things service Auth gRPC request timeout] \
+MF_AUTH_GRPC_URL=[Auth service gRPC URL] \
+MF_AUTH_GRPC_TIMEOUT=[Auth service gRPC request timeout] \
+$GOBIN/mainfluxlabs-downlinks
 </code></pre>
-<p>To start the Filestore service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/filestore/docker-compose.yml up -d
-</code></pre>
-<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
+<p>Starting the service will load all persisted downlinks and schedule them according to their configured frequency (repeating cron or one-time). Each scheduled execution sends an HTTP request to the configured URL with the specified method, headers, and payload. Time filter parameters can be injected automatically into the request based on the schedule interval.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../converters/" class="btn btn-neutral float-left" title="Converters"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../uiconfigs/" class="btn btn-neutral float-right" title="UIConfigs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../webhooks/" class="btn btn-neutral float-left" title="Webhooks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../modbus/" class="btn btn-neutral float-right" title="Modbus">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -207,10 +352,10 @@ curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
         </span>
     
     
-      <span><a href="../converters/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../webhooks/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../uiconfigs/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../modbus/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

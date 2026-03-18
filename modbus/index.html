@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/filestore/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/modbus/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Filestore - MainfluxLabs</title>
+    <title>Modbus - MainfluxLabs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Filestore";
-        var mkdocs_page_input_path = "filestore.md";
-        var mkdocs_page_url = "/index.html/filestore/";
+        var mkdocs_page_name = "Modbus";
+        var mkdocs_page_input_path = "modbus.md";
+        var mkdocs_page_url = "/index.html/modbus/";
       </script>
     
     <!--[if lt IE 9]>
@@ -79,10 +79,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Filestore</a>
-    <ul class="current">
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
                 </li>
               </ul>
               <ul>
@@ -101,8 +99,16 @@
                 <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Modbus</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -143,7 +149,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Filestore</li>
+      <li class="breadcrumb-item active">Modbus</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -152,34 +158,161 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h1>
-<p>Filestore allows things and groups to store and retrieve arbitrary files.</p>
-<ul>
-<li><strong>Thing-scoped files</strong> — authenticated with a Thing key (<code>Authorization: Thing &lt;key&gt;</code>). Files are stored under the thing and its group.</li>
-<li><strong>Group-scoped files</strong> — authenticated with a Bearer token. Files are stored under the group.</li>
-<li><strong>Group file by key</strong> — a thing can retrieve a group file using its Thing key (<code>GET /groupfiles/{name}</code>).</li>
-</ul>
-<pre><code class="language-bash"># Upload a file for a thing
-curl -s -S -i -X POST \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  -F &quot;file=@sensor-data.csv&quot; \
-  -F 'metadata={&quot;sensor&quot;:&quot;temperature&quot;}' \
-  http://localhost:&lt;filestore_port&gt;/files
+                <h1 id="modbus">Modbus<a class="headerlink" href="#modbus" title="Permanent link">#</a></h1>
+<p>Modbus service manages Modbus TCP clients for things and groups, polling registers or coils on a schedule and publishing the results as messages to the platform.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<p>The service is configured using the environment variables presented in the following table. Note that any unset variables will be replaced with their default values.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MF_MODBUS_LOG_LEVEL</td>
+<td>Log level for the Modbus service (debug, info, warn, error)</td>
+<td>error</td>
+</tr>
+<tr>
+<td>MF_BROKER_URL</td>
+<td>Message broker instance URL</td>
+<td>nats://localhost:4222</td>
+</tr>
+<tr>
+<td>MF_MODBUS_HTTP_PORT</td>
+<td>Modbus service HTTP port</td>
+<td>9028</td>
+</tr>
+<tr>
+<td>MF_JAEGER_URL</td>
+<td>Jaeger server URL</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_HOST</td>
+<td>Database host address</td>
+<td>localhost</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_PORT</td>
+<td>Database host port</td>
+<td>5432</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_USER</td>
+<td>Database user</td>
+<td>mainflux</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_PASS</td>
+<td>Database password</td>
+<td>mainflux</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB</td>
+<td>Name of the database used by the service</td>
+<td>modbus</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_SSL_MODE</td>
+<td>Database connection SSL mode (disable, require, verify-ca, verify-full)</td>
+<td>disable</td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_SSL_CERT</td>
+<td>Path to the PEM encoded certificate file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_SSL_KEY</td>
+<td>Path to the PEM encoded key file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_DB_SSL_ROOT_CERT</td>
+<td>Path to the PEM encoded root certificate file</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_CLIENT_TLS</td>
+<td>Flag that indicates if TLS should be turned on</td>
+<td>false</td>
+</tr>
+<tr>
+<td>MF_MODBUS_CA_CERTS</td>
+<td>Path to trusted CAs in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_SERVER_CERT</td>
+<td>Path to server certificate in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_MODBUS_SERVER_KEY</td>
+<td>Path to server key in PEM format</td>
+<td></td>
+</tr>
+<tr>
+<td>MF_THINGS_AUTH_GRPC_URL</td>
+<td>Things service Auth gRPC URL</td>
+<td>localhost:8183</td>
+</tr>
+<tr>
+<td>MF_THINGS_AUTH_GRPC_TIMEOUT</td>
+<td>Things service Auth gRPC request timeout in seconds</td>
+<td>1s</td>
+</tr>
+<tr>
+<td>MF_MODBUS_ES_URL</td>
+<td>Event store URL</td>
+<td>redis://localhost:6379/0</td>
+</tr>
+<tr>
+<td>MF_MODBUS_EVENT_CONSUMER</td>
+<td>Event store consumer name</td>
+<td>modbus</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">#</a></h2>
+<p>The service itself is distributed as Docker container. Check the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml"><code>modbus</code></a> service section in docker-compose to see how service is deployed.</p>
+<p>To start the service, execute the following shell script:</p>
+<pre><code class="language-bash"># download the latest version of the service
+git clone https://github.com/MainfluxLabs/mainflux
 
-# List files for a thing
-curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  http://localhost:&lt;filestore_port&gt;/files
+cd mainflux
+
+# compile the modbus service
+make modbus
+
+# copy binary to bin
+make install
+
+# Set the environment variables and run the service
+MF_MODBUS_LOG_LEVEL=[Modbus log level] \
+MF_BROKER_URL=[Message broker instance URL] \
+MF_MODBUS_HTTP_PORT=[Modbus service HTTP port] \
+MF_MODBUS_DB_HOST=[Database host address] \
+MF_MODBUS_DB_PORT=[Database host port] \
+MF_MODBUS_DB_USER=[Database user] \
+MF_MODBUS_DB_PASS=[Database password] \
+MF_MODBUS_DB=[Modbus database name] \
+MF_THINGS_AUTH_GRPC_URL=[Things service Auth gRPC URL] \
+MF_THINGS_AUTH_GRPC_TIMEOUT=[Things service Auth gRPC request timeout] \
+$GOBIN/mainfluxlabs-modbus
 </code></pre>
-<p>To start the Filestore service:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/filestore/docker-compose.yml up -d
-</code></pre>
-<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
+<p>Starting the service will load all persisted Modbus clients and begin scheduling polls according to each client's configured frequency (repeating cron or one-time). Each poll reads the specified registers or coils from the Modbus TCP device using the configured function code, formats the result as a JSON payload, and publishes it as a platform message scoped to the associated thing. Supported data types are <code>bool</code>, <code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code>, <code>float32</code>, and <code>string</code>. Byte order (<code>ABCD</code>, <code>DCBA</code>, <code>CDAB</code>, <code>BADC</code>) can be configured per data field.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../converters/" class="btn btn-neutral float-left" title="Converters"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../uiconfigs/" class="btn btn-neutral float-right" title="UIConfigs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../downlinks/" class="btn btn-neutral float-left" title="Downlinks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../security/" class="btn btn-neutral float-right" title="Security">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -207,10 +340,10 @@ curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
         </span>
     
     
-      <span><a href="../converters/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../downlinks/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../uiconfigs/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../security/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
