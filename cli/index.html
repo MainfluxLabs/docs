@@ -583,17 +583,25 @@ each of which can have the following fields:</p>
 </code></pre>
 <h3 id="messaging">Messaging<a class="headerlink" href="#messaging" title="Permanent link">#</a></h3>
 <h4 id="send-a-message-over-http">Send a message over HTTP<a class="headerlink" href="#send-a-message-over-http" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli messages send [subtopic] '[{&quot;bn&quot;:&quot;Dev1&quot;,&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}, {&quot;bn&quot;:&quot;Dev2&quot;, &quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20}, {&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}]' &lt;thing_key&gt;
+<p>The <code>key_type</code> argument is either <code>internal</code> (platform-generated key) or <code>external</code> (custom key). An optional subtopic can be prepended as the first argument.</p>
+<pre><code class="language-bash"># Without subtopic
+mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;Dev1&quot;,&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:20},{&quot;n&quot;:&quot;hum&quot;,&quot;v&quot;:40}]' internal &lt;thing_key&gt;
+
+# With subtopic
+mainfluxlabs-cli messages send temperature '[{&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:25.3}]' internal &lt;thing_key&gt;
 </code></pre>
 <h4 id="read-messages-over-http">Read messages over HTTP<a class="headerlink" href="#read-messages-over-http" title="Permanent link">#</a></h4>
-<ul>
-<li>Read messages from a specific subtopic by adding a flag <code>-s=&lt;subtopic&gt;</code></li>
-<li>Reading SenML messages is the default. To read JSON messages add the flag <code>-f=json</code></li>
-<li>Setting the <code>by-admin</code> flag allows the admin to list all messages of a certain format, from all publishers</li>
-<li>If <code>by-admin</code> is set, <code>auth_token</code> will be <code>admin_token</code>, otherwise <code>auth_token</code> is <code>thing_key</code></li>
-</ul>
-<pre><code class="language-bash">mainfluxlabs-cli messages read [by-admin] &lt;auth_token&gt;
+<pre><code class="language-bash"># Read SenML messages (as thing)
+mainfluxlabs-cli messages read senml internal &lt;thing_key&gt; &lt;user_token&gt;
+
+# Read JSON messages (as thing)
+mainfluxlabs-cli messages read json internal &lt;thing_key&gt; &lt;user_token&gt;
+
+# Read as admin (no thing key required)
+mainfluxlabs-cli messages read senml &lt;user_token&gt;
+mainfluxlabs-cli messages read json &lt;user_token&gt;
 </code></pre>
+<p>Use <code>-s=&lt;subtopic&gt;</code> to filter by subtopic.</p>
 <h3 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h3>
 <h4 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli groups create '{&quot;name&quot;:&quot;&lt;group_name&gt;&quot;,&quot;description&quot;:&quot;&lt;description&gt;&quot;,&quot;metadata&quot;:{&quot;key&quot;:&quot;value&quot;,...}}' &lt;org_id&gt; &lt;user_token&gt;

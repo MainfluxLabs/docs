@@ -53,12 +53,14 @@
     <li class="toctree-l2"><a class="reference internal" href="#step-1-run-the-system">Step 1 - Run the System</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-2-install-the-cli">Step 2 - Install the CLI</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#build-mainfluxlabs-cli">Build mainfluxlabs-cli</a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-3-provision-the-system">Step 3 - Provision the System</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#quick-provision-for-testing">Quick provision for testing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#manual-provisioning-step-by-step">Manual provisioning step by step</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-4-send-messages">Step 4 - Send Messages</a>
     </li>
@@ -174,81 +176,154 @@
 <p>Once everything is installed, execute the following command from project root:</p>
 <pre><code class="language-bash">make run
 </code></pre>
-<p>This will start Mainflux docker composition, which will output the logs from the containers.</p>
+<p>This will start Mainflux docker composition in detached mode.</p>
 <h2 id="step-2-install-the-cli">Step 2 - Install the CLI<a class="headerlink" href="#step-2-install-the-cli" title="Permanent link">#</a></h2>
-<p>Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI,
-which can be downloaded as a tarball from GitHub (here we use release <code>0.12.1</code> but be sure to use the <a href="https://github.com/MainfluxLabs/mainflux/releases">latest CLI release</a>):</p>
+<p>Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI, which can be downloaded as a pre-built binary from the <a href="https://github.com/MainfluxLabs/mainflux/releases">latest release page</a>.</p>
 <blockquote>
-<p>Make sure that <code>$GOBIN</code> is added to your <code>$PATH</code> so that <code>mainfluxlabs-cli</code> command can be accessible system-wide</p>
+<p>Make sure that <code>$GOBIN</code> is added to your <code>$PATH</code> so that <code>mainfluxlabs-cli</code> command can be accessible system-wide.</p>
 </blockquote>
-<h4 id="build-mainfluxlabs-cli">Build mainfluxlabs-cli<a class="headerlink" href="#build-mainfluxlabs-cli" title="Permanent link">#</a></h4>
-<p>Build <code>mainfluxlabs-cli</code> if the pre-built CLI is not compatible with your OS, i.e MacOS. Please see the <a href="../cli/">CLI</a> for further details.</p>
+<p>To build the CLI from source instead:</p>
+<pre><code class="language-bash">git clone https://github.com/MainfluxLabs/mainflux
+cd mainflux
+make cli
+</code></pre>
+<p>The binary will be placed at <code>build/mainfluxlabs-cli</code>. See the <a href="../cli/">CLI</a> page for more details.</p>
 <h2 id="step-3-provision-the-system">Step 3 - Provision the System<a class="headerlink" href="#step-3-provision-the-system" title="Permanent link">#</a></h2>
+<h3 id="quick-provision-for-testing">Quick provision for testing<a class="headerlink" href="#quick-provision-for-testing" title="Permanent link">#</a></h3>
 <p>Once installed, you can use the CLI to quick-provision the system for testing:</p>
 <pre><code class="language-bash">mainfluxlabs-cli provision test
 </code></pre>
-<p>This command actually creates a temporary testing user, logs it in, then creates two things and two profiles on behalf of this user.
-This quickly provisions a Mainflux system with one simple testing scenario.</p>
+<p>This command creates a temporary test user, logs them in, then creates one org, one group, two profiles, and three things on behalf of the user.</p>
 <p>Output of the command follows this pattern:</p>
-<pre><code class="language-bash">{
+<pre><code class="language-json">{
   &quot;email&quot;: &quot;friendly_beaver@email.com&quot;,
   &quot;password&quot;: &quot;12345678&quot;
 }
 
+&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
 
-&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDcwMjE3ODAsImlhdCI6MTU0Njk4NTc4MCwiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJmcmllbmRseV9iZWF2ZXJAZW1haWwuY29tIn0.Tyk31Ae680KqMrDqP895PRZg_GUytLE0IMIR_o3oO7o&quot;
-
-[
-  {
-    &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;name&quot;: &quot;p0&quot;
-  },
-  {
-    &quot;id&quot;: &quot;378678cd-891b-4a39-b026-869938783f54&quot;,
-    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;name&quot;: &quot;p1&quot;
-  }
-]
+{
+  &quot;id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+  &quot;name&quot;: &quot;gr&quot;
+}
 
 [
   {
     &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
-    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;profile_id&quot;:&quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
     &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;,
     &quot;name&quot;: &quot;d0&quot;
   },
   {
     &quot;id&quot;: &quot;bf78ca98-2fef-4cfc-9f26-e02da5ecdf67&quot;,
-    &quot;group_id&quot;:&quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;profile_id&quot;:&quot;378678cd-891b-4a39-b026-869938783f54&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
     &quot;key&quot;: &quot;840c1ea1-2e8d-4809-a6d3-3433a5c489d2&quot;,
     &quot;name&quot;: &quot;d1&quot;
+  },
+  {
+    &quot;id&quot;: &quot;c389fa12-3e41-4b22-a891-d5f3e0a12cd8&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;key&quot;: &quot;f1c82b3d-9e54-4a11-b77e-3a9012345678&quot;,
+    &quot;name&quot;: &quot;d2&quot;
+  }
+]
+
+[
+  {
+    &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;name&quot;: &quot;p0&quot;
+  },
+  {
+    &quot;id&quot;: &quot;378678cd-891b-4a39-b026-869938783f54&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;name&quot;: &quot;p1&quot;
   }
 ]
 </code></pre>
-<p>In the Mainflux system terminal (where docker compose is running) you should see following logs:</p>
-<pre><code class="language-bash">mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method register for user friendly_beaver@email.com took 97.573974ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.745989495Z&quot;}
-mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method login for user friendly_beaver@email.com took 69.308406ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.820610461Z&quot;}
-mainflux-users  | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method identity for client friendly_beaver@email.com took 50.903µs to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.822208948Z&quot;}
-mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method create_things for things [{513d02d2-16c1-4f23-98be-9e12f8fee898 737d2200-64a1-482f-839d-64906b0bd80e b7bfc4b6-c18d-47c5-b343-98235c5acc19 d0 69590b3a-9d76-4baa-adae-9b5fec0ea14f map[]},{bf78ca98-2fef-4cfc-9f26-e02da5ecdf67 737d2200-64a1-482f-839d-64906b0bd80e 378678cd-891b-4a39-b026-869938783f54 d1 840c1ea1-2e8d-4809-a6d3-3433a5c489d2 map[]}] took 4.865299ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:16:20.826786175Z&quot;}
-
-...
+<h3 id="manual-provisioning-step-by-step">Manual provisioning step by step<a class="headerlink" href="#manual-provisioning-step-by-step" title="Permanent link">#</a></h3>
+<p>For production setups or when you need full control over entity configuration, provision each resource individually. The entity hierarchy is: <strong>Org → Group → Profile → Thing</strong>.</p>
+<p><strong>1. Get a user token</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli users token &lt;user_email&gt; &lt;user_password&gt;
 </code></pre>
-<p>This proves that these provisioning commands were sent from the CLI to the Mainflux system.</p>
+<pre><code class="language-json">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
+</code></pre>
+<p><strong>2. Create an organization</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli orgs create '{&quot;name&quot;:&quot;my-org&quot;,&quot;description&quot;:&quot;My organisation&quot;}' &lt;user_token&gt;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;511e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;owner_id&quot;: &quot;a22c0a31-...&quot;,
+  &quot;name&quot;: &quot;my-org&quot;,
+  &quot;description&quot;: &quot;My organisation&quot;
+}
+</code></pre>
+<p><strong>3. Create a group inside the org</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli groups create '{&quot;name&quot;:&quot;my-group&quot;}' &lt;org_id&gt; &lt;user_token&gt;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+  &quot;org_id&quot;: &quot;511e4567-...&quot;,
+  &quot;name&quot;: &quot;my-group&quot;
+}
+</code></pre>
+<p><strong>4. Create a profile inside the group</strong></p>
+<p>A profile defines how messages from assigned things are handled. The <code>content_type</code> field controls the expected message format (<code>application/json</code>, <code>application/senml+json</code>, or <code>application/senml+cbor</code>). Setting <code>write</code> to <code>true</code> persists messages in the database.</p>
+<pre><code class="language-bash">mainfluxlabs-cli profiles create '{
+  &quot;name&quot;: &quot;my-profile&quot;,
+  &quot;config&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+json&quot;,
+    &quot;write&quot;: true
+  }
+}' &lt;group_id&gt; &lt;user_token&gt;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+  &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+  &quot;name&quot;: &quot;my-profile&quot;,
+  &quot;config&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+json&quot;,
+    &quot;write&quot;: true
+  }
+}
+</code></pre>
+<p><strong>5. Create a thing and assign it to the profile</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;my-device&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;user_token&gt;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+  &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+  &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+  &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;,
+  &quot;name&quot;: &quot;my-device&quot;
+}
+</code></pre>
+<p>Note the <code>id</code> and <code>key</code> from the response — these are the credentials the device uses to connect and publish.</p>
 <h2 id="step-4-send-messages">Step 4 - Send Messages<a class="headerlink" href="#step-4-send-messages" title="Permanent link">#</a></h2>
-<p>Once system is provisioned, a <code>thing</code> can start sending messages:</p>
-<pre><code class="language-bash">mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' &lt;thing_key&gt;
+<p>Once the system is provisioned, a thing can start sending messages. The <code>messages send</code> command requires a <code>key_type</code> argument — use <code>internal</code> for the platform-generated key returned when creating a thing.</p>
+<pre><code class="language-bash">mainfluxlabs-cli messages send \
+  '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09,&quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5,&quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1},{&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2},{&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' \
+  internal &lt;thing_key&gt;
 </code></pre>
-<p>For example:</p>
-<pre><code class="language-bash">mainfluxlabs-cli messages send '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]' 69590b3a-9d76-4baa-adae-9b5fec0ea14f
+<p>To publish to a specific subtopic, pass it as the first argument:</p>
+<pre><code class="language-bash">mainfluxlabs-cli messages send temperature \
+  '[{&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:25.3,&quot;u&quot;:&quot;Cel&quot;}]' \
+  internal &lt;thing_key&gt;
 </code></pre>
 <p>In the Mainflux system terminal you should see following logs:</p>
 <pre><code class="language-bash">mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method get_pub_conf_by_key for thing 513d02d2-16c1-4f23-98be-9e12f8fee898 took 1.410194ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:19:30.148097648Z&quot;}
 mainflux-http   | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method publish took 336.685µs to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:19:30.148689601Z&quot;}
 </code></pre>
-<p>This proves that messages have been correctly sent through the system via the protocol adapter (<code>mainflux-http</code>).</p>
+<p>To verify messages were stored, read them back:</p>
+<pre><code class="language-bash"># Read SenML messages (default format)
+mainfluxlabs-cli messages read senml internal &lt;thing_key&gt; &lt;user_token&gt;
+
+# Read JSON messages
+mainfluxlabs-cli messages read json internal &lt;thing_key&gt; &lt;user_token&gt;
+</code></pre>
               
             </div>
           </div><footer>
