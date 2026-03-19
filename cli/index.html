@@ -536,10 +536,11 @@ each of which can have the following fields:</p>
 <p>The above CSV record and the first object in the JSON example represent the same Profile.</p>
 <h3 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h3>
 <h4 id="create-thing">Create Thing<a class="headerlink" href="#create-thing" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;user_token&gt;
+<p>The <code>type</code> field is required (<code>device</code>, <code>sensor</code>, <code>actuator</code>, <code>controller</code>, <code>gateway</code>). The <code>profile_id</code> is a separate CLI argument, not part of the JSON.</p>
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;type&quot;:&quot;device&quot;}' &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="create-thing-with-metadata">Create Thing with metadata<a class="headerlink" href="#create-thing-with-metadata" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;,&quot;metadata&quot;: {&quot;key1&quot;:&quot;value1&quot;}}' &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;type&quot;:&quot;device&quot;,&quot;metadata&quot;:{&quot;key1&quot;:&quot;value1&quot;}}' &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="update-thing">Update Thing<a class="headerlink" href="#update-thing" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli things update '{&quot;name&quot;:&quot;&lt;new_name&gt;&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;thing_id&gt; &lt;user_token&gt;

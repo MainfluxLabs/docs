@@ -55,12 +55,6 @@
     <li class="toctree-l2"><a class="reference internal" href="#step-2-install-the-cli">Step 2 - Install the CLI</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-3-provision-the-system">Step 3 - Provision the System</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#quick-provision-for-testing">Quick provision for testing</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#manual-provisioning-step-by-step">Manual provisioning step by step</a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-4-send-messages">Step 4 - Send Messages</a>
     </li>
@@ -189,96 +183,31 @@ make cli
 </code></pre>
 <p>The binary will be placed at <code>build/mainfluxlabs-cli</code>. See the <a href="../cli/">CLI</a> page for more details.</p>
 <h2 id="step-3-provision-the-system">Step 3 - Provision the System<a class="headerlink" href="#step-3-provision-the-system" title="Permanent link">#</a></h2>
-<h3 id="quick-provision-for-testing">Quick provision for testing<a class="headerlink" href="#quick-provision-for-testing" title="Permanent link">#</a></h3>
-<p>Once installed, you can use the CLI to quick-provision the system for testing:</p>
-<pre><code class="language-bash">mainfluxlabs-cli provision test
-</code></pre>
-<p>This command creates a temporary test user, logs them in, then creates one org, one group, two profiles, and three things on behalf of the user.</p>
-<p>Output of the command follows this pattern:</p>
-<pre><code class="language-json">{
-  &quot;email&quot;: &quot;friendly_beaver@email.com&quot;,
-  &quot;password&quot;: &quot;12345678&quot;
-}
-
-&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
-
-{
-  &quot;id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-  &quot;name&quot;: &quot;gr&quot;
-}
-
-[
-  {
-    &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
-    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-    &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;,
-    &quot;name&quot;: &quot;d0&quot;
-  },
-  {
-    &quot;id&quot;: &quot;bf78ca98-2fef-4cfc-9f26-e02da5ecdf67&quot;,
-    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-    &quot;key&quot;: &quot;840c1ea1-2e8d-4809-a6d3-3433a5c489d2&quot;,
-    &quot;name&quot;: &quot;d1&quot;
-  },
-  {
-    &quot;id&quot;: &quot;c389fa12-3e41-4b22-a891-d5f3e0a12cd8&quot;,
-    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-    &quot;key&quot;: &quot;f1c82b3d-9e54-4a11-b77e-3a9012345678&quot;,
-    &quot;name&quot;: &quot;d2&quot;
-  }
-]
-
-[
-  {
-    &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;name&quot;: &quot;p0&quot;
-  },
-  {
-    &quot;id&quot;: &quot;378678cd-891b-4a39-b026-869938783f54&quot;,
-    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-    &quot;name&quot;: &quot;p1&quot;
-  }
-]
-</code></pre>
-<h3 id="manual-provisioning-step-by-step">Manual provisioning step by step<a class="headerlink" href="#manual-provisioning-step-by-step" title="Permanent link">#</a></h3>
-<p>For production setups or when you need full control over entity configuration, provision each resource individually. The entity hierarchy is: <strong>Org → Group → Profile → Thing</strong>.</p>
-<p><strong>1. Get a user token</strong></p>
-<pre><code class="language-bash">mainfluxlabs-cli users token &lt;user_email&gt; &lt;user_password&gt;
+<p>The entity hierarchy in Mainflux is <strong>Org → Group → Profile → Thing</strong>. Each resource must be created in this order, as each step requires the ID from the previous one.</p>
+<p>User management requires an admin token. The default admin credentials are configured via <code>MF_USERS_ADMIN_EMAIL</code> and <code>MF_USERS_ADMIN_PASSWORD</code> in <code>docker/.env</code>.</p>
+<p><strong>1. Get an admin token</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli users token admin@example.com 12345678
 </code></pre>
 <pre><code class="language-json">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
 </code></pre>
-<p><strong>2. Create an organization</strong></p>
+<p><strong>2. Create a user</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli users create user@example.com password123 &lt;admin_token&gt;
+</code></pre>
+<p><strong>3. Get a user token</strong></p>
+<pre><code class="language-bash">mainfluxlabs-cli users token user@example.com password123
+</code></pre>
+<p><strong>4. Create an organization</strong></p>
 <pre><code class="language-bash">mainfluxlabs-cli orgs create '{&quot;name&quot;:&quot;my-org&quot;,&quot;description&quot;:&quot;My organisation&quot;}' &lt;user_token&gt;
 </code></pre>
-<pre><code class="language-json">{
-  &quot;id&quot;: &quot;511e4567-e89b-12d3-a456-426614174000&quot;,
-  &quot;owner_id&quot;: &quot;a22c0a31-...&quot;,
-  &quot;name&quot;: &quot;my-org&quot;,
-  &quot;description&quot;: &quot;My organisation&quot;
-}
+<p>The org ID is returned in the <code>Location</code> response header and also visible with:</p>
+<pre><code class="language-bash">mainfluxlabs-cli orgs get all &lt;user_token&gt;
 </code></pre>
-<p><strong>3. Create a group inside the org</strong></p>
+<p><strong>5. Create a group inside the org</strong></p>
 <pre><code class="language-bash">mainfluxlabs-cli groups create '{&quot;name&quot;:&quot;my-group&quot;}' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
-<pre><code class="language-json">{
-  &quot;id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-  &quot;org_id&quot;: &quot;511e4567-...&quot;,
-  &quot;name&quot;: &quot;my-group&quot;
-}
-</code></pre>
-<p><strong>4. Create a profile inside the group</strong></p>
+<p><strong>6. Create a profile inside the group</strong></p>
 <p>A profile defines how messages from assigned things are handled. The <code>content_type</code> field controls the expected message format (<code>application/json</code>, <code>application/senml+json</code>, or <code>application/senml+cbor</code>). Setting <code>write</code> to <code>true</code> persists messages in the database.</p>
-<pre><code class="language-bash">mainfluxlabs-cli profiles create '{
-  &quot;name&quot;: &quot;my-profile&quot;,
-  &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: true
-  }
-}' &lt;group_id&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli profiles create '{&quot;name&quot;:&quot;my-profile&quot;,&quot;config&quot;:{&quot;content_type&quot;:&quot;application/senml+json&quot;,&quot;write&quot;:true}}' &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <pre><code class="language-json">{
   &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
@@ -290,18 +219,22 @@ make cli
   }
 }
 </code></pre>
-<p><strong>5. Create a thing and assign it to the profile</strong></p>
-<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;my-device&quot;,&quot;profile_id&quot;:&quot;&lt;profile_id&gt;&quot;}' &lt;user_token&gt;
+<p><strong>7. Create a thing and assign it to the profile</strong></p>
+<p>The <code>type</code> field is required. Valid values are <code>device</code>, <code>sensor</code>, <code>actuator</code>, <code>controller</code>, and <code>gateway</code>. The <code>profile_id</code> is passed as a separate CLI argument, not inside the JSON.</p>
+<pre><code class="language-bash">mainfluxlabs-cli things create '{&quot;name&quot;:&quot;my-device&quot;,&quot;type&quot;:&quot;device&quot;}' &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <pre><code class="language-json">{
-  &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
-  &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
-  &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
-  &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;,
-  &quot;name&quot;: &quot;my-device&quot;
+  &quot;things&quot;: [{
+    &quot;id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+    &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
+    &quot;profile_id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
+    &quot;name&quot;: &quot;my-device&quot;,
+    &quot;type&quot;: &quot;device&quot;,
+    &quot;key&quot;: &quot;69590b3a-9d76-4baa-adae-9b5fec0ea14f&quot;
+  }]
 }
 </code></pre>
-<p>Note the <code>id</code> and <code>key</code> from the response — these are the credentials the device uses to connect and publish.</p>
+<p>Note the <code>id</code> and <code>key</code> — these are the credentials the device uses to connect and publish.</p>
 <h2 id="step-4-send-messages">Step 4 - Send Messages<a class="headerlink" href="#step-4-send-messages" title="Permanent link">#</a></h2>
 <p>Once the system is provisioned, a thing can start sending messages. The <code>messages send</code> command requires a <code>key_type</code> argument — use <code>internal</code> for the platform-generated key returned when creating a thing.</p>
 <pre><code class="language-bash">mainfluxlabs-cli messages send \
@@ -313,13 +246,12 @@ make cli
   '[{&quot;n&quot;:&quot;temp&quot;,&quot;v&quot;:25.3,&quot;u&quot;:&quot;Cel&quot;}]' \
   internal &lt;thing_key&gt;
 </code></pre>
-<p>In the Mainflux system terminal you should see following logs:</p>
-<pre><code class="language-bash">mainflux-things | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method get_pub_conf_by_key for thing 513d02d2-16c1-4f23-98be-9e12f8fee898 took 1.410194ms to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:19:30.148097648Z&quot;}
-mainflux-http   | {&quot;level&quot;:&quot;info&quot;,&quot;message&quot;:&quot;Method publish took 336.685µs to complete without errors.&quot;,&quot;ts&quot;:&quot;2019-01-08T22:19:30.148689601Z&quot;}
-</code></pre>
 <p>To verify messages were stored, read them back:</p>
-<pre><code class="language-bash"># Read SenML messages (default format)
+<pre><code class="language-bash"># Read SenML messages (as thing)
 mainfluxlabs-cli messages read senml internal &lt;thing_key&gt; &lt;user_token&gt;
+
+# Filter by subtopic
+mainfluxlabs-cli messages read senml -s temperature internal &lt;thing_key&gt; &lt;user_token&gt;
 
 # Read JSON messages
 mainfluxlabs-cli messages read json internal &lt;thing_key&gt; &lt;user_token&gt;
