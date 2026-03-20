@@ -94,9 +94,23 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Webhooks</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#enabling-webhooks">Enabling webhooks</a>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#managing-webhooks">Managing webhooks</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-webhooks">Create webhooks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-webhooks">List webhooks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-a-webhook">View a webhook</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-webhook">Update a webhook</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-webhooks">Remove webhooks</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#webhook-fields">Webhook fields</a>
     </li>
     </ul>
                 </li>
@@ -157,24 +171,19 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">#</a></h1>
-<p>Webhooks service forwards received platform messages to external HTTP endpoints. When a message is published to a profile with webhooks enabled, the service delivers that message as an HTTP POST to each webhook URL registered for the thing's group.</p>
-<p>Webhooks are group-scoped records that define a target URL, optional HTTP headers, and a name. Multiple webhooks can be registered per group, and all of them receive a copy of each matching message.</p>
-<h2 id="enabling-webhooks">Enabling webhooks<a class="headerlink" href="#enabling-webhooks" title="Permanent link">#</a></h2>
-<p>Webhooks are enabled by setting the <code>webhook</code> field to <code>true</code> in the Profile Config. When a message is received for that profile, the service will forward it to all webhooks registered for the thing's group.</p>
-<pre><code class="language-json">{
-  &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: true,
-    &quot;webhook&quot;: true,
-    &quot;smtp_id&quot;: &quot;&quot;
-  }
-}
-</code></pre>
-<p>If <code>write</code> is set to <code>false</code>, the message is forwarded to webhooks but not stored in the database.</p>
+<p>Webhooks allow the platform to push device messages to external systems in real time. Whenever a device publishes a message, the platform delivers that message as an HTTP POST request to every webhook URL you have configured for that device. This enables seamless integration with third-party services, data pipelines, and custom applications without polling.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<ol>
+<li>A device publishes a message to the platform.</li>
+<li>The Webhooks service looks up all webhooks registered for that device.</li>
+<li>Each webhook receives an HTTP POST with the message payload as the request body.</li>
+<li>Custom HTTP headers defined on the webhook are included in every request, allowing authentication with the receiving system.</li>
+</ol>
+<p>No additional configuration is required on the device or its profile — forwarding is automatic as long as webhooks are registered.</p>
 <h2 id="managing-webhooks">Managing webhooks<a class="headerlink" href="#managing-webhooks" title="Permanent link">#</a></h2>
-<p>Webhooks are group-scoped. To register a webhook, you supply a name, target URL, and an optional map of HTTP headers to include in the forwarded request. Headers can carry authentication credentials for the receiving system.</p>
-<pre><code class="language-bash"># Create webhooks for a group
-curl -s -S -i -X POST \
+<p>Webhooks are registered per device and scoped to the group that device belongs to. You can register multiple webhooks for a single device; each one will receive a copy of every message that device publishes.</p>
+<h3 id="create-webhooks">Create webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '[{
@@ -184,6 +193,7 @@ curl -s -S -i -X POST \
   }]' \
   https://localhost/webhooks/things/&lt;thing_id&gt;/webhooks
 </code></pre>
+<p><strong>Response</strong></p>
 <pre><code class="language-json">[
   {
     &quot;id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
@@ -194,23 +204,24 @@ curl -s -S -i -X POST \
   }
 ]
 </code></pre>
-<pre><code class="language-bash"># List webhooks for a thing
+<h3 id="list-webhooks">List webhooks<a class="headerlink" href="#list-webhooks" title="Permanent link">#</a></h3>
+<pre><code class="language-bash"># All webhooks for a specific device
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/webhooks/things/&lt;thing_id&gt;/webhooks
 
-# List webhooks for a group
+# All webhooks for a group
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/webhooks/groups/&lt;group_id&gt;/webhooks
-
-# View a specific webhook
-curl -s -S -i \
+</code></pre>
+<h3 id="view-a-webhook">View a webhook<a class="headerlink" href="#view-a-webhook" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/webhooks/webhooks/&lt;webhook_id&gt;
-
-# Update a webhook
-curl -s -S -i -X PUT \
+</code></pre>
+<h3 id="update-a-webhook">Update a webhook<a class="headerlink" href="#update-a-webhook" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{
@@ -219,14 +230,45 @@ curl -s -S -i -X PUT \
     &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
   }' \
   https://localhost/webhooks/webhooks/&lt;webhook_id&gt;
-
-# Remove webhooks
-curl -s -S -i -X DELETE \
+</code></pre>
+<h3 id="remove-webhooks">Remove webhooks<a class="headerlink" href="#remove-webhooks" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;webhook_ids&quot;: [&quot;&lt;webhook_id&gt;&quot;]}' \
   https://localhost/webhooks/webhooks
 </code></pre>
+<h2 id="webhook-fields">Webhook fields<a class="headerlink" href="#webhook-fields" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique identifier assigned by the platform</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>A label to help identify the webhook</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>The destination URL. Must be a valid HTTP or HTTPS address.</td>
+</tr>
+<tr>
+<td><code>headers</code></td>
+<td>Optional HTTP headers sent with every request (e.g. API keys, tokens)</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>Optional key-value pairs for custom attributes</td>
+</tr>
+</tbody>
+</table>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>

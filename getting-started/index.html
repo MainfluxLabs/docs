@@ -206,16 +206,15 @@ make cli
 <pre><code class="language-bash">mainfluxlabs-cli groups create '{&quot;name&quot;:&quot;my-group&quot;}' &lt;org_id&gt; &lt;user_token&gt;
 </code></pre>
 <p><strong>6. Create a profile inside the group</strong></p>
-<p>A profile defines how messages from assigned things are handled. The <code>content_type</code> field controls the expected message format (<code>application/json</code>, <code>application/senml+json</code>, or <code>application/senml+cbor</code>). Setting <code>write</code> to <code>true</code> persists messages in the database.</p>
-<pre><code class="language-bash">mainfluxlabs-cli profiles create '{&quot;name&quot;:&quot;my-profile&quot;,&quot;config&quot;:{&quot;content_type&quot;:&quot;application/senml+json&quot;,&quot;write&quot;:true}}' &lt;group_id&gt; &lt;user_token&gt;
+<p>A profile defines how messages from assigned things are handled. The <code>content_type</code> field controls the expected message format (<code>application/json</code>, <code>application/senml+json</code>, or <code>application/senml+cbor</code>).</p>
+<pre><code class="language-bash">mainfluxlabs-cli profiles create '{&quot;name&quot;:&quot;my-profile&quot;,&quot;config&quot;:{&quot;content_type&quot;:&quot;application/senml+json&quot;}}' &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <pre><code class="language-json">{
   &quot;id&quot;: &quot;b7bfc4b6-c18d-47c5-b343-98235c5acc19&quot;,
   &quot;group_id&quot;: &quot;737d2200-64a1-482f-839d-64906b0bd80e&quot;,
   &quot;name&quot;: &quot;my-profile&quot;,
   &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: true
+    &quot;content_type&quot;: &quot;application/senml+json&quot;
   }
 }
 </code></pre>

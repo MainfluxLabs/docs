@@ -82,9 +82,37 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Filestore</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#thing-scoped-files">Thing-scoped files</a>
+    <li class="toctree-l2"><a class="reference internal" href="#file-metadata">File metadata</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#scopes">Scopes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#device-scoped-files">Device-scoped files</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#upload-a-file">Upload a file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-files">List files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#download-a-file">Download a file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-file">Update a file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-a-file">Delete a file</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#group-scoped-files">Group-scoped files</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#upload-a-group-file">Upload a group file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-group-files">List group files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#download-a-group-file">Download a group file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-group-file">Update a group file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-a-group-file">Delete a group file</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -157,81 +185,145 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h1>
-<p>Filestore service provides file storage for things and groups. Files are stored on the local filesystem organised by thing or group ID, with metadata (name, content type, size) persisted to a PostgreSQL database. Both things and users can upload, retrieve, update, and delete files within their authorised scope.</p>
-<p>Two scopes are supported:</p>
-<ul>
-<li><strong>Thing-scoped files</strong> — authenticated with a Thing key (<code>Authorization: Thing &lt;key&gt;</code>). A thing can manage its own files and read group files.</li>
-<li><strong>Group-scoped files</strong> — authenticated with a Bearer token. Users with appropriate group access can manage files shared across the group.</li>
-</ul>
-<h2 id="thing-scoped-files">Thing-scoped files<a class="headerlink" href="#thing-scoped-files" title="Permanent link">#</a></h2>
-<p>A thing authenticates using its key to upload and retrieve files scoped to itself.</p>
-<pre><code class="language-bash"># Upload a file
-curl -s -S -i -X POST \
+<p>The Filestore service provides file storage for things and groups. File contents are written to the local filesystem, while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token at editor level or above).</p>
+<h2 id="file-metadata">File metadata<a class="headerlink" href="#file-metadata" title="Permanent link">#</a></h2>
+<p>Every file stored in the platform carries the following metadata fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>File name; serves as the unique identifier within the thing or group scope</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td>Logical file class (e.g. <code>image</code>, <code>document</code>, <code>bim</code>, <code>pointcloud</code>, <code>binary</code>)</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>File format (e.g. <code>csv</code>, <code>pdf</code>, <code>png</code>, <code>ifc</code>, <code>json</code>)</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Unix timestamp (floating-point seconds) associated with the file</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>Optional key-value pairs for custom attributes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Authentication</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thing files</td>
+<td><code>Authorization: Thing &lt;thing_key&gt;</code></td>
+<td>Files private to a specific device</td>
+</tr>
+<tr>
+<td>Group files</td>
+<td><code>Authorization: Bearer &lt;token&gt;</code></td>
+<td>Files shared across a group; require editor-level access</td>
+</tr>
+</tbody>
+</table>
+<p>A device can also read its own group's files directly using its thing key, without requiring a user token.</p>
+<h2 id="device-scoped-files">Device-scoped files<a class="headerlink" href="#device-scoped-files" title="Permanent link">#</a></h2>
+<p>A device authenticates using its thing key to upload and manage files scoped to itself.</p>
+<h3 id="upload-a-file">Upload a file<a class="headerlink" href="#upload-a-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data.csv&quot; \
-  -F 'metadata={&quot;type&quot;:&quot;readings&quot;,&quot;sensor&quot;:&quot;temperature&quot;}' \
+  -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;csv&quot;,&quot;time&quot;:1710000000.0}' \
   https://localhost/filestore/files
 </code></pre>
+<p><strong>Response</strong></p>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;sensor-data.csv&quot;,
-  &quot;content_type&quot;: &quot;text/csv&quot;,
-  &quot;size&quot;: 1024,
-  &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;
+  &quot;class&quot;: &quot;document&quot;,
+  &quot;format&quot;: &quot;csv&quot;,
+  &quot;time&quot;: 1710000000.0
 }
 </code></pre>
-<pre><code class="language-bash"># List files
-curl -s -S -i \
+<h3 id="list-files">List files<a class="headerlink" href="#list-files" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/filestore/files
 </code></pre>
+<p><strong>Response</strong></p>
 <pre><code class="language-json">{
   &quot;total&quot;: 2,
   &quot;files&quot;: [
-    {&quot;name&quot;: &quot;sensor-data.csv&quot;, &quot;content_type&quot;: &quot;text/csv&quot;, &quot;size&quot;: 1024},
-    {&quot;name&quot;: &quot;calibration.json&quot;, &quot;content_type&quot;: &quot;application/json&quot;, &quot;size&quot;: 256}
+    {&quot;name&quot;: &quot;sensor-data.csv&quot;,   &quot;class&quot;: &quot;document&quot;, &quot;format&quot;: &quot;csv&quot;,  &quot;time&quot;: 1710000000.0},
+    {&quot;name&quot;: &quot;calibration.json&quot;,  &quot;class&quot;: &quot;document&quot;, &quot;format&quot;: &quot;json&quot;, &quot;time&quot;: 1709900000.0}
   ]
 }
 </code></pre>
-<pre><code class="language-bash"># Download a file
-curl -s -S -i \
+<h3 id="download-a-file">Download a file<a class="headerlink" href="#download-a-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/filestore/files/&lt;name&gt;
-
-# Update a file
-curl -s -S -i -X PUT \
+</code></pre>
+<h3 id="update-a-file">Update a file<a class="headerlink" href="#update-a-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data-v2.csv&quot; \
   https://localhost/filestore/files/&lt;name&gt;
-
-# Delete a file
-curl -s -S -i -X DELETE \
+</code></pre>
+<h3 id="delete-a-file">Delete a file<a class="headerlink" href="#delete-a-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/filestore/files/&lt;name&gt;
 </code></pre>
 <h2 id="group-scoped-files">Group-scoped files<a class="headerlink" href="#group-scoped-files" title="Permanent link">#</a></h2>
-<p>Users with group access can manage files shared across the group using a Bearer token. Group files are accessible to all things and users within the group.</p>
-<pre><code class="language-bash"># Upload a group file
-curl -s -S -i -X POST \
+<p>Users with editor-level group access can upload and manage files shared across all devices in a group.</p>
+<h3 id="upload-a-group-file">Upload a group file<a class="headerlink" href="#upload-a-group-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -F &quot;file=@config.json&quot; \
+  -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;json&quot;,&quot;time&quot;:1710000000.0}' \
   https://localhost/filestore/groups/&lt;group_id&gt;/files
-
-# List group files
-curl -s -S -i \
+</code></pre>
+<h3 id="list-group-files">List group files<a class="headerlink" href="#list-group-files" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/filestore/groups/&lt;group_id&gt;/files
-
-# Download a group file
+</code></pre>
+<h3 id="download-a-group-file">Download a group file<a class="headerlink" href="#download-a-group-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash"># Using a user token
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
-</code></pre>
-<p>A thing can also retrieve a group file directly using its Thing key:</p>
-<pre><code class="language-bash">curl -s -S -i \
+
+# Using a thing key (useful for devices fetching shared config or firmware)
+curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/filestore/groupfiles/&lt;name&gt;
 </code></pre>
-<p>This is useful for things that need to fetch shared configuration or firmware files published by the group without requiring a user token.</p>
+<h3 id="update-a-group-file">Update a group file<a class="headerlink" href="#update-a-group-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -F &quot;file=@config-v2.json&quot; \
+  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
+</code></pre>
+<h3 id="delete-a-group-file">Delete a group file<a class="headerlink" href="#delete-a-group-file" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
+</code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>

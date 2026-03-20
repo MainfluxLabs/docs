@@ -102,11 +102,27 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Modbus</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#function-codes">Function codes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#poll-schedule">Poll schedule</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#data-fields">Data fields</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#creating-and-managing-clients">Creating and managing clients</a>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-clients">Managing clients</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-clients">Create clients</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-clients">List clients</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-a-client">View a client</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-client">Update a client</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-clients">Remove clients</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -159,79 +175,133 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="modbus">Modbus<a class="headerlink" href="#modbus" title="Permanent link">#</a></h1>
-<p>Modbus service manages Modbus TCP clients for things and groups. Each client defines a device address, slave ID, function code, poll schedule, and one or more data fields describing how to interpret the register values. On each scheduled poll the service reads the configured registers or coils from the Modbus TCP device, formats the result as a JSON payload, and publishes it as a platform message scoped to the associated thing.</p>
-<p>On startup, the service loads all persisted Modbus clients and begins scheduling polls according to each client's configured frequency.</p>
+<p>The Modbus service manages Modbus TCP polling clients for devices and groups. Each client connects to a Modbus TCP device on a configured schedule, reads the specified registers or coils, formats the result as a JSON payload, and publishes it as a platform message on behalf of the associated device.</p>
+<p>On startup, the service loads all persisted clients and begins scheduling polls according to each client's frequency setting.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<ol>
+<li>You create a Modbus client linked to a device, specifying the target device address, slave ID, function code, poll schedule, and the data fields to read.</li>
+<li>On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions.</li>
+<li>The result is published to the platform as a JSON object keyed by field name, for example:</li>
+</ol>
+<pre><code class="language-json">{&quot;temperature&quot;: 23.5, &quot;humidity&quot;: 61, &quot;status&quot;: true}
+</code></pre>
+<p>This message is then available to the rest of the platform — including storage, rules, and webhooks — just like any other device message.</p>
 <h2 id="function-codes">Function codes<a class="headerlink" href="#function-codes" title="Permanent link">#</a></h2>
-<p>The following Modbus function codes are supported:</p>
 <table>
 <thead>
 <tr>
 <th>Function code</th>
+<th style="text-align: center;">Modbus FC</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>ReadCoils</code></td>
-<td>Read output coils (FC 01)</td>
+<td style="text-align: center;">01</td>
+<td>Read output coils (digital output)</td>
 </tr>
 <tr>
 <td><code>ReadDiscreteInputs</code></td>
-<td>Read discrete input coils (FC 02)</td>
-</tr>
-<tr>
-<td><code>ReadInputRegisters</code></td>
-<td>Read input registers (FC 04)</td>
+<td style="text-align: center;">02</td>
+<td>Read discrete inputs (digital input)</td>
 </tr>
 <tr>
 <td><code>ReadHoldingRegisters</code></td>
-<td>Read holding registers (FC 03)</td>
+<td style="text-align: center;">03</td>
+<td>Read holding registers (analog R/W)</td>
+</tr>
+<tr>
+<td><code>ReadInputRegisters</code></td>
+<td style="text-align: center;">04</td>
+<td>Read input registers (analog R/O)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="data-fields">Data fields<a class="headerlink" href="#data-fields" title="Permanent link">#</a></h2>
-<p>Each client specifies a list of data fields that describe how to decode the register values into named measurements.</p>
-<p>Supported types: <code>bool</code>, <code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code>, <code>float32</code>, <code>string</code>.</p>
-<p>Byte order can be configured per field to handle different device conventions:</p>
+<h2 id="poll-schedule">Poll schedule<a class="headerlink" href="#poll-schedule" title="Permanent link">#</a></h2>
+<p>The <code>scheduler</code> object controls when and how often the client polls the device.</p>
 <table>
 <thead>
 <tr>
-<th>Byte order</th>
+<th>Field</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ABCD</code></td>
-<td>Big-endian (default)</td>
+<td><code>frequency</code></td>
+<td>Poll frequency: <code>once</code>, <code>minutely</code>, <code>hourly</code>, <code>daily</code>, or <code>weekly</code></td>
 </tr>
 <tr>
-<td><code>DCBA</code></td>
-<td>Little-endian</td>
+<td><code>time_zone</code></td>
+<td>IANA timezone name (e.g. <code>Europe/Berlin</code>, <code>UTC</code>)</td>
 </tr>
 <tr>
-<td><code>CDAB</code></td>
-<td>Big-endian, swapped words</td>
+<td><code>date_time</code></td>
+<td>ISO 8601 date-time. Required when <code>frequency</code> is <code>once</code>; ignored otherwise</td>
 </tr>
 <tr>
-<td><code>BADC</code></td>
-<td>Little-endian, swapped words</td>
+<td><code>minute</code></td>
+<td>Minute interval. Used with <code>minutely</code> frequency</td>
+</tr>
+<tr>
+<td><code>hour</code></td>
+<td>Hour interval. Used with <code>hourly</code> frequency</td>
+</tr>
+<tr>
+<td><code>day_time</code></td>
+<td>Time of day in <code>HH:MM</code> format. Used with <code>daily</code> frequency</td>
+</tr>
+<tr>
+<td><code>week</code></td>
+<td>Weekly schedule: <code>{"days": [...], "time": "HH:MM"}</code>. Used with <code>weekly</code> frequency</td>
 </tr>
 </tbody>
 </table>
-<p>An optional <code>scale</code> factor can be applied to numeric values after reading.</p>
-<pre><code class="language-json">{
-  &quot;data_fields&quot;: [
-    {&quot;name&quot;: &quot;temperature&quot;, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;},
-    {&quot;name&quot;: &quot;humidity&quot;,    &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;%&quot;},
-    {&quot;name&quot;: &quot;status&quot;,      &quot;type&quot;: &quot;bool&quot;}
-  ]
-}
-</code></pre>
-<h2 id="creating-and-managing-clients">Creating and managing clients<a class="headerlink" href="#creating-and-managing-clients" title="Permanent link">#</a></h2>
-<p>Modbus clients are created per thing. The required fields are <code>name</code>, <code>ip_address</code>, <code>port</code>, <code>function_code</code>, <code>scheduler</code>, and <code>data_fields</code>.</p>
-<pre><code class="language-bash"># Create Modbus clients for a thing
-curl -s -S -i -X POST \
+<h2 id="data-fields">Data fields<a class="headerlink" href="#data-fields" title="Permanent link">#</a></h2>
+<p>Each entry in <code>data_fields</code> describes one register or coil to read and how to decode it.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Field name used as the JSON key in the published message</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>Starting register or coil address</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Data type: <code>bool</code>, <code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code>, <code>float32</code>, or <code>string</code></td>
+</tr>
+<tr>
+<td><code>byte_order</code></td>
+<td>Word order for multi-byte values: <code>ABCD</code> (big-endian), <code>DCBA</code> (little-endian), <code>CDAB</code>, or <code>BADC</code></td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>Optional unit label (e.g. <code>°C</code>, <code>%</code>, <code>bar</code>)</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td>Optional multiplier applied to the raw numeric value before publishing</td>
+</tr>
+<tr>
+<td><code>length</code></td>
+<td>Register count. Calculated automatically from <code>type</code> for numeric types; set manually for <code>string</code> only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="managing-clients">Managing clients<a class="headerlink" href="#managing-clients" title="Permanent link">#</a></h2>
+<p>Modbus clients are registered per device. Multiple clients can be registered for a single device.</p>
+<h3 id="create-clients">Create clients<a class="headerlink" href="#create-clients" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '[
@@ -243,13 +313,14 @@ curl -s -S -i -X POST \
       &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
       &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;},
       &quot;data_fields&quot;: [
-        {&quot;name&quot;: &quot;temperature&quot;, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;},
-        {&quot;name&quot;: &quot;pressure&quot;,    &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
+        {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;, &quot;unit&quot;: &quot;°C&quot;},
+        {&quot;name&quot;: &quot;pressure&quot;,    &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
       ]
     }
   ]' \
   https://localhost/modbus/things/&lt;thing_id&gt;/clients
 </code></pre>
+<p><strong>Response</strong></p>
 <pre><code class="language-json">[
   {
     &quot;id&quot;: &quot;b2c3d4e5-f6a7-8901-bcde-f12345678901&quot;,
@@ -260,31 +331,32 @@ curl -s -S -i -X POST \
     &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
     &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;},
     &quot;data_fields&quot;: [
-      {&quot;name&quot;: &quot;temperature&quot;, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;},
-      {&quot;name&quot;: &quot;pressure&quot;,    &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
+      {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;, &quot;unit&quot;: &quot;°C&quot;},
+      {&quot;name&quot;: &quot;pressure&quot;,    &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
     ],
     &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
     &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
   }
 ]
 </code></pre>
-<pre><code class="language-bash"># List clients for a thing
+<h3 id="list-clients">List clients<a class="headerlink" href="#list-clients" title="Permanent link">#</a></h3>
+<pre><code class="language-bash"># All clients for a specific device
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/modbus/things/&lt;thing_id&gt;/clients
 
-# List clients for a group
+# All clients for a group
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/modbus/groups/&lt;group_id&gt;/clients
-
-# View a specific client
-curl -s -S -i \
+</code></pre>
+<h3 id="view-a-client">View a client<a class="headerlink" href="#view-a-client" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/modbus/clients/&lt;client_id&gt;
-
-# Update a client
-curl -s -S -i -X PUT \
+</code></pre>
+<h3 id="update-a-client">Update a client<a class="headerlink" href="#update-a-client" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{
@@ -295,13 +367,13 @@ curl -s -S -i -X PUT \
     &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
     &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;},
     &quot;data_fields&quot;: [
-      {&quot;name&quot;: &quot;temperature&quot;, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;}
+      {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;}
     ]
   }' \
   https://localhost/modbus/clients/&lt;client_id&gt;
-
-# Remove clients
-curl -s -S -i -X DELETE \
+</code></pre>
+<h3 id="remove-clients">Remove clients<a class="headerlink" href="#remove-clients" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;client_ids&quot;: [&quot;&lt;client_id&gt;&quot;]}' \
