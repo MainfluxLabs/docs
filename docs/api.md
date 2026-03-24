@@ -855,6 +855,47 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
+### Search Profiles
+Full-text and field search across all profiles the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"total":1,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a"}]}
+```
+
+### Search Profiles by Group
+Search profiles filtered by a specific group.
+
+> Must-have: `user_token` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/groups/<group_id>/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
+```
+
+### Search Profiles by Org
+Search profiles filtered by a specific organization.
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/orgs/<org_id>/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
+```
+
 ## Things
 
 A thing represents a physical or virtual device — a sensor, actuator, gateway, or any connected asset — registered in the platform. Every thing belongs to a group and must be assigned to a **profile**, which defines its communication schema and behaviour. The `key` returned at creation is the thing's secret credential, used to authenticate all device-side API calls (messaging, metadata, commands).
@@ -1240,47 +1281,6 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
   -d '{"name":"<thing_name>","limit":10,"offset":0}'
 ```
 
-### Search Profiles
-Full-text and field search across all profiles the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
-
-> Must-have: `user_token`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/profiles/search \
-  -d '{"name":"<profile_name>","limit":10,"offset":0}'
-```
-
-Response:
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"total":1,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a"}]}
-```
-
-### Search Profiles by Group
-Search profiles filtered by a specific group.
-
-> Must-have: `user_token` and `group_id`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/groups/<group_id>/profiles/search \
-  -d '{"name":"<profile_name>","limit":10,"offset":0}'
-```
-
-### Search Profiles by Org
-Search profiles filtered by a specific organization.
-
-> Must-have: `user_token` and `org_id`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/orgs/<org_id>/profiles/search \
-  -d '{"name":"<profile_name>","limit":10,"offset":0}'
-```
-
 ## Messages
 
 ### Send Messages
@@ -1334,64 +1334,106 @@ Content-Length: 660
 {"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
 ```
 
-### Delete Messages
+### Delete All Messages
 
-> Must have: `user_token`, `format`, `start_timestamp` and `end_timestamp`
+Deletes all messages for the authenticated thing, with an optional time range filter.
+
+> Must-have: `user_token`
 
 For SenML:
 ```bash
-curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml?from=<start_timestamp>&to=<end_timestamp>"  
+curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 For JSON:
 ```bash
-curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json?from=<start_timestamp>&to=<end_timestamp>"  
+curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 Response:
 ```bash
-HTTP/1.1 200 OK
-Server: nginx/1.20.0
-Content-Type: application/json
-Date: Fri, 01 Aug 2025 11:11:33 GMT
-Content-Length: 5
-Connection: keep-alive
+HTTP/1.1 204 No Content
+```
+
+### Delete Messages by Publisher
+
+Deletes messages from a specific publisher, with an optional time range filter.
+
+> Must-have: `user_token`, `publisher_id`
+
+For SenML:
+```bash
+curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
+```
+
+For JSON:
+```bash
+curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
 ```
 
 Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds. Currently supported formats are `json` and `senml`.
 
 ### Backup Messages
 
-Backs up messages to a file.
+Exports a full backup of all stored messages as a single file (format-agnostic).
 
-> Must have: `user_token`, `file_name`, `file_type`
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "backup.json"
+```
+
+### Export Messages
+
+Exports messages in a specific format, optionally converting to CSV.
+
+> Must-have: `user_token`
 
 For SenML:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml/export?convert=<file_type>" -o "<file_name>.<file_type>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
 For JSON:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json/export?convert=<file_type>" -o "<file_name>.<file_type>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
-Note: You can use `csv` or `json` for `file_type`. Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
+Note: You can use `csv` or `json` for `file_type`. If `?convert` is omitted, the response is returned as JSON.
 
 ### Restore Messages
 
-Restores messages from a file.
+Restores messages from a backup file. Requires `Content-Type: application/octet-stream`.
 
-> Must have: `user_token`, `format`, `file_name`
+> Must-have: `user_token`, `file_name`
 
-For CSV file:
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: text/csv" "http://localhost/reader/restore" --data-binary @<file_name>.csv
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/octet-stream" "http://localhost/reader/restore" --data-binary @<file_name>
 ```
 
-For JSON file:
+### Search Messages
+
+Searches messages with field-level filtering. Accepts `publisher`, `protocol`, `name`, `from`, `to`, `limit`, and `offset`.
+
+> Must-have: `user_token`
+
+For SenML:
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" -d @<file_name>.json
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  "http://localhost/reader/senml/search" \
+  -d '{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}'
+```
+
+For JSON:
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  "http://localhost/reader/json/search" \
+  -d '{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}'
 ```
 
 ## API Key
@@ -1530,7 +1572,7 @@ Returns the details of a specific invitation.
 > Must-have: `user_token`, `invite_id`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>
 ```
 
 Response:
@@ -1550,7 +1592,7 @@ The invitee accepts the invitation. Upon acceptance, the invitee is added to the
 > Must-have: `user_token` (of the invitee), `invite_id`
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>/accept
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>/accept
 ```
 
 Response:
@@ -1568,7 +1610,7 @@ The invitee declines the invitation.
 > Must-have: `user_token` (of the invitee), `invite_id`
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>/decline
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>/decline
 ```
 
 Response:
@@ -1585,7 +1627,7 @@ The inviter cancels a pending invitation. Only the user who created the invite c
 > Must-have: `user_token` (of the inviter), `invite_id`
 
 ```bash
-curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>
 ```
 
 Response:
@@ -1602,7 +1644,7 @@ Returns a paginated list of invitations received by the specified user (as invit
 > Must-have: `user_token`, `user_id`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/invites/received
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/users/<user_id>/invites/received
 ```
 
 Response:
@@ -1622,7 +1664,7 @@ Returns a paginated list of invitations sent by the specified user (as inviter).
 > Must-have: `user_token`, `user_id`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/invites/sent
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/users/<user_id>/invites/sent
 ```
 
 Response:
@@ -1633,6 +1675,60 @@ Date: Fri, 14 Jul 2023 14:14:00 GMT
 Content-Length: 350
 
 {"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","inviter_email":"admin@example.com","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
+```
+
+## Platform Invites
+
+Platform Invites allow administrators to invite unregistered users to the platform, optionally pre-assigning them to an organization and groups. Unlike Org Invites (which target already-registered users), Platform Invites are for onboarding new users.
+
+### Create Platform Invite
+
+> Must-have: `user_token`, `invitee_email`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/svcauth/invites \
+  -d '{"invitee_email":"<invitee_email>","org_id":"<org_id>","role":"editor","group_invites":[{"group_id":"<group_id>","member_role":"viewer"}]}'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /invites/a1b2c3d4-e5f6-7890-abcd-ef1234567890
+```
+
+### List Platform Invites
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
+```
+
+### Register via Platform Invite
+
+Completes registration for a user who received a Platform Invite. The submitted email must match the invite.
+
+> Must-have: `invite_id`, `email`, `password`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" \
+  http://localhost/register/invite/<invite_id> \
+  -d '{"email":"<invitee_email>","password":"<password>"}'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
 ```
 
 ## Webhooks

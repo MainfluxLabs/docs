@@ -58,19 +58,21 @@ curl -s -S -i -X POST \
 ```
 
 ```json
-[
-  {
-    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "name": "Push readings to external API",
-    "url": "https://api.example.com/ingest",
-    "method": "POST",
-    "headers": {"Authorization": "Bearer <external_token>"},
-    "payload": "{\"source\": \"mainflux\"}",
-    "scheduler": {"frequency": "hourly", "hour": 1, "time_zone": "UTC"},
-    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
-    "group_id": "211e4567-e89b-12d3-a456-426614174000"
-  }
-]
+{
+  "downlinks": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Push readings to external API",
+      "url": "https://api.example.com/ingest",
+      "method": "POST",
+      "headers": {"Authorization": "Bearer <external_token>"},
+      "payload": "{\"source\": \"mainflux\"}",
+      "scheduler": {"frequency": "hourly", "hour": 1, "time_zone": "UTC"},
+      "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+      "group_id": "211e4567-e89b-12d3-a456-426614174000"
+    }
+  ]
+}
 ```
 
 ```bash
@@ -102,7 +104,7 @@ curl -s -S -i -X PUT \
   https://localhost/downlinks/<downlink_id>
 
 # Remove downlinks
-curl -s -S -i -X DELETE \
+curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"downlink_ids": ["<downlink_id>"]}' \
@@ -122,8 +124,8 @@ curl -s -S -i \
 # Restore from backup
 curl -s -S -i -X POST \
   -H "Authorization: Bearer <user_token>" \
-  -H "Content-Type: application/json" \
-  -d '<backup_json>' \
+  -H "Content-Type: application/octet-stream" \
+  --data-binary '<backup_json>' \
   https://localhost/svcdownlinks/restore
 ```
 
