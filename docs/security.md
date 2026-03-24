@@ -50,9 +50,41 @@ If a secured connection is required, you can select the SSL mode and set paths t
 `MF_THINGS_DB_SSL_KEY` the path to the key file for Things.
 `MF_THINGS_DB_SSL_ROOT_CERT` the path to the root certificate file for Things.
 
-Supported database connection modes are: `disabled` (default), `required`, `verify-ca` and `verify-full`.
+Supported database connection modes are: `disable` (default), `require`, `verify-ca` and `verify-full`.
 
 ## Securing gRPC
-By default gRPC communication is not secure as Mainflux system is most often run in a private network behind the reverse proxy.
 
-However, TLS can be activated and configured.
+By default, gRPC communication is not secure as Mainflux is most often run in a private network behind a reverse proxy.
+
+TLS can be activated per service using the `_CLIENT_TLS` and `_CA_CERTS` environment variables. When `_CLIENT_TLS` is set to `true`, the service will require a valid CA certificate for the gRPC connection.
+
+### Adapter → Things gRPC
+
+Each adapter has its own pair of variables:
+
+| Variable | Description                                                   |
+|----------|-------------|
+| `MF_HTTP_ADAPTER_CLIENT_TLS` | Enable TLS for HTTP adapter → Things gRPC |
+| `MF_HTTP_ADAPTER_CA_CERTS` | Path to CA cert for HTTP adapter            |
+| `MF_MQTT_ADAPTER_CLIENT_TLS` | Enable TLS for MQTT adapter → Things gRPC |
+| `MF_MQTT_ADAPTER_CA_CERTS` | Path to CA cert for MQTT adapter            |
+| `MF_WS_ADAPTER_CLIENT_TLS` | Enable TLS for WS adapter → Things gRPC     |
+| `MF_WS_ADAPTER_CA_CERTS` | Path to CA cert for WS adapter                |
+| `MF_COAP_ADAPTER_CLIENT_TLS` | Enable TLS for CoAP adapter → Things gRPC |
+| `MF_COAP_ADAPTER_CA_CERTS` | Path to CA cert for CoAP adapter            |
+
+### Other Services → Things gRPC
+
+Services that communicate with Things over gRPC follow the same convention:
+
+| Variable | Description                                                      |
+|----------|-------------|
+| `MF_THINGS_CA_CERTS` | Path to CA cert for outbound Things gRPC connections |
+
+### Example
+
+```bash
+MF_HTTP_ADAPTER_CLIENT_TLS=true \
+MF_HTTP_ADAPTER_CA_CERTS=/path/to/ca.crt \
+$GOBIN/mainfluxlabs-http
+```

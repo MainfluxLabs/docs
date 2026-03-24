@@ -323,7 +323,7 @@ Each object must include:
 
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_id>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>", "role":"new_role"}]}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>", "role":"new_role"}]}'
 ```
 
 ### View Membership
@@ -344,14 +344,6 @@ Date: Mon, 24 Mar 2025 09:10:20 GMT
 Content-Length: 87
 
 {"member_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"}
-```
-
-Response:
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Mon, 17 Jul 2023 08:54:12 GMT
-Content-Length: 0
 ```
 
 ### List Memberships
@@ -565,7 +557,7 @@ Each object must include:
   Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
-curl -isSX POST http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
+curl -isSX POST http://localhost/groups/<group_id>/memberships -d '{"group_memberships":[{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}]}' -H "Authorization: Bearer <user_token>" -H 'Content-Type: application/json'
 ```
 
 Response:
@@ -608,7 +600,7 @@ Each object must include:
 - **role**: The new role to assign. Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships -d '{"group_memberships":{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"viewer"}}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships -d '{"group_memberships":[{"member_id":"123e4567-e89b-12d3-a456-426614174000","role":"editor"}]}'
 ```
 
 Response:
@@ -808,7 +800,7 @@ Get all profiles by a certain organization
 > Must-have: `user_token`, `<org_id>`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/profiles
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/profiles
 ```
 
 Response:
@@ -865,59 +857,87 @@ Access-Control-Expose-Headers: Location
 
 ## Things
 
-### Create Thing with external ID
-It is often the case that the user will want to integrate the existing solutions, e.g. an asset management system, with the Mainflux platform. To simplify the integration between the systems and avoid artificial cross-platform reference, such as special fields in Mainflux Things metadata, it is possible to set Mainflux Thing ID with an existing unique ID while create the Thing. This way, the user can set the existing ID as the Thing ID of a newly created Thing to keep reference between Thing and the asset that Thing represents.
-There are two limitations - the existing ID have to be in UUID V4 format, and it has to be unique in the Mainflux domain.
+A thing represents a physical or virtual device — a sensor, actuator, gateway, or any connected asset — registered in the platform. Every thing belongs to a group and must be assigned to a **profile**, which defines its communication schema and behaviour. The `key` returned at creation is the thing's secret credential, used to authenticate all device-side API calls (messaging, metadata, commands).
 
-To create a thing with an external ID, you need provide the UUID v4 format ID together with thing name, and other fields as well as a `user_token`, metadata, and the profile ID assigned to it.
-
-> Must-have: `user_token`, `profile_id`
-
-```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","profile_id":"<profile_id>","name":"<thing_name>","metadata":{"key":"val"}}]'
-```
-
-Response:
-```bash
-HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:18:37 GMT
-Content-Type: application/json
-Content-Length: 199
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
-
-{"things":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}}]}
-```
 ### Create Things
-You can create multiple things at once by entering a series of things structures and a `user_token`
 
-> Must-have: `user_token`, series of things
+One or more things can be created in a single request. Each thing must specify a `name`, a `type`, and is implicitly associated with the profile in the URL path.
+
+Valid values for `type`: `device`, `sensor`, `actuator`, `controller`, `gateway`.
+
+> Must-have: `user_token`, `profile_id`, `name`, `type`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"profile_id":"<profile_id>","name": "<thing_name_1>"}, {"profile_id":"<profile_id>","name": "<thing_name_2>","metadata":{"key":"val"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/<profile_id>/things \
+  -d '[{"name":"<thing_name_1>","type":"device"},{"name":"<thing_name_2>","type":"sensor","metadata":{"key":"val"}}]'
 ```
 
 Response:
 ```bash
 HTTP/1.1 201 Created
-Server: nginx/1.16.0
-Date: Wed, 10 Mar 2021 15:19:48 GMT
 Content-Type: application/json
-Content-Length: 365
-Connection: keep-alive
-Access-Control-Expose-Headers: Location
 
-{"things":[{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"x9bf9e57-1685-4c89-bafb-ff5af830be8x","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338","metadata":{"key":"val"}}]}
+{"things":[{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","type":"device","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","type":"sensor","key":"f73e7342-06c1-499a-9584-35de495aa338","metadata":{"key":"val"}}]}
 ```
 
 ### Create Things with external ID
-The same as creating a Thing with external ID the user can create multiple things at once by providing UUID v4 format unique ID in a series of things together with a `user_token` and `group_id`
 
-> Must-have: `user_token`, series of things
+When integrating an existing asset registry (e.g. a device management system or ERP), you can supply your own UUID v4 as the thing ID. This avoids introducing an artificial cross-platform indirection — the same ID used in your external system becomes the thing ID in Mainflux, making the two records directly interchangeable without extra mapping.
+
+Two constraints apply: the ID must be in **UUID v4 format**, and it must be **unique** across the Mainflux domain.
+
+> Must-have: `user_token`, `profile_id`, `id`, `name`, `type`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/things -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","profile_id":"<profile_id>","name": "<thing_name_1>"}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","profile_id":"<profile_id>","name": "<thing_name_2>"}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/<profile_id>/things \
+  -d '[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0001>","name":"<thing_name_1>","type":"device"},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0002>","name":"<thing_name_2>","type":"sensor"}]'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"things":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0001>","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","type":"device","key":"659aa6ca-1781-4a69-9a20-689ddb235506"},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0002>","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","type":"sensor","key":"840c1ea1-2e8d-4809-a6d3-3433a5c489d2"}]}
+```
+
+### Create Things with external key
+
+An `external_key` is a freeform, unique identifier you assign from an external system — for example, a serial number, device EUI, or asset tag. It lets external systems authenticate on behalf of a thing using their own identifier rather than the Mainflux-generated internal key. Must be at least 5 characters and unique across the platform.
+
+The external key can be provided at creation time:
+
+> Must-have: `user_token`, `profile_id`, `name`, `type`, `external_key`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/<profile_id>/things \
+  -d '[{"name":"<thing_name>","type":"device","external_key":"<external_key>"}]'
+```
+
+It can also be set or replaced on an existing thing:
+
+```bash
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/things/<thing_id>/external-key \
+  -d '{"key":"<external_key>"}'
+```
+
+And removed when no longer needed:
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" \
+  http://localhost/things/<thing_id>/external-key
+```
+
+Once set, the thing can authenticate using its external key:
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" \
+  http://localhost/identify \
+  -d '{"key":"<external_key>","type":"external"}'
 ```
 
 ### View Thing
@@ -1052,12 +1072,32 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Update Thing
-Updating a thing entity
+Updates a thing's name, type, key, or metadata. To reassign a thing to a different profile or group, use the [Update Thing Group and Profile](#update-thing-group-and-profile) endpoint instead.
 
-> Must-have: `user_token` and `thing_id`
+> Must-have: `user_token`, `thing_id`, `name`, `key`, `type`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id> -d '{"name": "<thing_name>","profile_id":"<profile_id>"}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id> -d '{"name": "<thing_name>","key":"<thing_key>","type":"device"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Wed, 10 Mar 2021 15:23:36 GMT
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+```
+
+### Update Thing Group and Profile
+Reassigns a thing to a different profile and/or group. The profile must belong to the target group.
+
+> Must-have: `user_token`, `thing_id`, `profile_id`, `group_id`
+
+```bash
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/things/<thing_id> -d '{"profile_id":"<profile_id>","group_id":"<group_id>"}'
 ```
 
 Response:
@@ -1111,11 +1151,11 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Identify
-Validates thing's key and returns its ID if key is valid
+Validates a thing's key and returns its ID. The `type` field must be `internal` or `external`, depending on which key type is being submitted.
 
-> Must-have: `thing_key`
+> Must-have: `thing_key`, `type`
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify -d '{"token": "<thing_key>"}'
+curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify -d '{"key": "<thing_key>", "type": "internal"}'
 ```
 
 Response:
@@ -1129,6 +1169,116 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
 {"id":"d69d0098-072b-41bf-8c6e-ce4dbb12d333"}
+```
+
+### Get Groups by Thing
+Returns the group a thing belongs to.
+
+> Must-have: `user_token` and `thing_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things/<thing_id>/groups
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"groups":[{"id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","org_id":"...","description":"..."}]}
+```
+
+### Search Things
+Full-text and field search across all things the user can access. Accepts `name`, `type`, `metadata`, `limit`, and `offset` in the request body.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/things/search \
+  -d '{"name":"<thing_name>","limit":10,"offset":0}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"total":1,"offset":0,"limit":10,"things":[{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","name":"thing_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","type":"device"}]}
+```
+
+### Search Things by Profile
+Search things filtered by a specific profile.
+
+> Must-have: `user_token` and `profile_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/<profile_id>/things/search \
+  -d '{"name":"<thing_name>","limit":10,"offset":0}'
+```
+
+### Search Things by Group
+Search things filtered by a specific group.
+
+> Must-have: `user_token` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/groups/<group_id>/things/search \
+  -d '{"name":"<thing_name>","limit":10,"offset":0}'
+```
+
+### Search Things by Org
+Search things filtered by a specific organization.
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/orgs/<org_id>/things/search \
+  -d '{"name":"<thing_name>","limit":10,"offset":0}'
+```
+
+### Search Profiles
+Full-text and field search across all profiles the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"total":1,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a"}]}
+```
+
+### Search Profiles by Group
+Search profiles filtered by a specific group.
+
+> Must-have: `user_token` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/groups/<group_id>/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
+```
+
+### Search Profiles by Org
+Search profiles filtered by a specific organization.
+
+> Must-have: `user_token` and `org_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+  http://localhost/orgs/<org_id>/profiles/search \
+  -d '{"name":"<profile_name>","limit":10,"offset":0}'
 ```
 
 ## Messages
@@ -1218,12 +1368,12 @@ Backs up messages to a file.
 
 For SenML:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml/backup?convert=<file_type>" -o "<file_name>.<file_type>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
 For JSON:
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json/backup?convert=<file_type>" -o "<file_name>.<file_type>"
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
 Note: You can use `csv` or `json` for `file_type`. Currently supported formats are `json` and `senml`. You can also send a request without the `?convert` parameter but then you will get only json format.
@@ -1236,12 +1386,12 @@ Restores messages from a file.
 
 For CSV file:
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: text/csv" "http://localhost/reader/<format>/restore" --data-binary @<file_name>.csv
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: text/csv" "http://localhost/reader/restore" --data-binary @<file_name>.csv
 ```
 
 For JSON file:
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/<format>/restore" -d @<file_name>.json
+curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" -d @<file_name>.json
 ```
 
 ## API Key
@@ -1290,9 +1440,32 @@ Access-Control-Expose-Headers: Location
 {"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","issuer_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","subject":"test@email.com","type":2,"issued_at":"2021-12-19T17:42:40.884521Z","expires_at":"2021-12-20T21:29:20.884521Z"}
 ```
 
-### Revoke API key identified by the given ID
+### List API Keys
 
-> Must-have: 'user_token' and 'key_id'
+Returns a paginated list of API keys issued by the authenticated user.
+
+> Must-have: `user_token`
+
+```bash
+curl -isSX GET http://localhost/keys -H 'Authorization: Bearer <user_token>'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.20.0
+Date: Sun, 19 Dec 2021 17:50:00 GMT
+Content-Type: application/json
+Content-Length: 320
+Connection: keep-alive
+Access-Control-Expose-Headers: Location
+
+{"total":1,"offset":0,"limit":10,"keys":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","issuer_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","subject":"test@email.com","type":2,"issued_at":"2021-12-19T17:42:40.884521Z","expires_at":"2021-12-20T21:29:20.884521Z"}]}
+```
+
+### Revoke API Key
+
+> Must-have: `user_token` and `key_id`
 
 ```bash
 curl -isSX DELETE  http://localhost/keys/<key_id> -H 'Content-Type: application/json' -H 'Authorization: Bearer <user_token>'
@@ -1308,6 +1481,160 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
+## Org Invites
+
+Org Invites allow organization administrators to invite registered users to join an organization. An invitation is delivered via email and must be explicitly accepted or declined by the recipient.
+
+### Create Org Invite
+
+Creates an invitation for a registered user to join the specified organization with a given role. An optional list of groups and roles can be included; the invitee will be automatically added to those groups upon acceptance.
+
+> Must-have: `user_token`, `org_id`, `email`, `role`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/invites -d '{"email":"<invitee_email>","role":"editor","redirect_path":"/invite-view"}'
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:03:14 GMT
+Content-Length: 0
+```
+
+### List Org Invites
+
+Returns a paginated list of invitations for the specified organization.
+
+> Must-have: `user_token`, `org_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/invites
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:05:00 GMT
+Content-Length: 350
+
+{"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","inviter_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","inviter_email":"admin@example.com","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
+```
+
+### View Org Invite
+
+Returns the details of a specific invitation.
+
+> Must-have: `user_token`, `invite_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:06:00 GMT
+Content-Length: 310
+
+{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","inviter_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","inviter_email":"admin@example.com","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}
+```
+
+### Accept Org Invite
+
+The invitee accepts the invitation. Upon acceptance, the invitee is added to the organization (and any groups specified in the invite) with the assigned role.
+
+> Must-have: `user_token` (of the invitee), `invite_id`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>/accept
+```
+
+Response:
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:10:00 GMT
+Content-Length: 0
+```
+
+### Decline Org Invite
+
+The invitee declines the invitation.
+
+> Must-have: `user_token` (of the invitee), `invite_id`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>/decline
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:11:00 GMT
+```
+
+### Revoke Org Invite
+
+The inviter cancels a pending invitation. Only the user who created the invite can revoke it.
+
+> Must-have: `user_token` (of the inviter), `invite_id`
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/invites/<invite_id>
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:12:00 GMT
+```
+
+### List Invites Received by User
+
+Returns a paginated list of invitations received by the specified user (as invitee).
+
+> Must-have: `user_token`, `user_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/invites/received
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:13:00 GMT
+Content-Length: 350
+
+{"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","inviter_email":"admin@example.com","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
+```
+
+### List Invites Sent by User
+
+Returns a paginated list of invitations sent by the specified user (as inviter).
+
+> Must-have: `user_token`, `user_id`
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/invites/sent
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:14:00 GMT
+Content-Length: 350
+
+{"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","inviter_email":"admin@example.com","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
+```
+
 ## Webhooks
 
 ### Create Webhooks
@@ -1318,7 +1645,7 @@ You can create multiple Webhooks at once by entering a series of Webhooks struct
 
 > Must-have: `user_token`, `thing_id`, `name` and `url`
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/groups/<group_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/groups/<group_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
 ```
 
 Response:
@@ -1340,7 +1667,7 @@ You can get all Webhooks for certain Group by entering `user_token` and `group_i
 
 > Must-have: `user_token` and `group_id`
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/groups/<group_id>/webhooks
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/groups/<group_id>/webhooks
 ```
 
 Response:
@@ -1361,7 +1688,7 @@ You can get all Webhooks for certain Thing by entering `user_token` and `thing_i
 
 > Must-have: `user_token` and `thing_id`
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/things/<thing_id>/webhooks
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks
 ```
 
 Response:
@@ -1446,7 +1773,7 @@ You can create multiple Notifiers at once by entering a series of Notifiers stru
 
 > Must-have: `user_token`, `group_id`, `name` and `contacts`
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/groups/<group_id>/notifiers -d '{"notifiers: [{"name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}]}'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers -d '{"notifiers: [{"name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}]}'
 ```
 
 Response:
@@ -1469,7 +1796,7 @@ You can get all Notifiers for certain Group by entering `user_token` and `group_
 
 > Must-have: `user_token` and `group_id`
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/groups/<group_id>/notifiers
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers
 ```
 
 Response:
@@ -1490,7 +1817,7 @@ View details of a certain Notifier by entering `user_token` and `notifier_id`.
 
 > Must-have: `user_token` and `group_id`
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/notifiers/<notifier_id>
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/notifiers/<notifier_id>
 ```
 
 Response:
@@ -1511,7 +1838,7 @@ Update data of notifier with provided ID and `user_token`
 > Must-have: `user_token` and `notifier_id`
 
 ```bash
-curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/notifiers/<notifier_id> -d '{"name": "<new_notifier_name>"}'
+curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/svcsmtp/notifiers/<notifier_id> -d '{"name": "<new_notifier_name>"}'
 ```
 
 Response:
@@ -1531,7 +1858,7 @@ Delete notifiers by given IDs
 > Must-have: `user_token`,`group_id`, notifier_ids
 
 ```bash
-curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/notifiers -d '{"notifier_ids":["a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1","b513d843-abf8-4db4-93fd-bdc8917d42m2"]}'
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/svcsmtp/notifiers -d '{"notifier_ids":["a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1","b513d843-abf8-4db4-93fd-bdc8917d42m2"]}'
 ```
 
 Response:

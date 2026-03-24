@@ -62,12 +62,12 @@ The operation 'Create Org' is omitted from the table because every registered (a
 
 Let's imagine that we have one Organization and four Members of that Organization with different roles:
  
-| org_id                               | member_id                            | role   |
+| org_id                               | member_id                            | role     |
   |--------------------------------------|--------------------------------------|--------|
   | 550e8400-e29b-41d4-a716-446655440000 | 3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8 | viewer |
-| 550e8400-e29b-41d4-a716-446655440000 | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | editor |
-| 550e8400-e29b-41d4-a716-446655440000 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | admin  |
-| 550e8400-e29b-41d4-a716-446655440000 | f1c6e7b3-4b29-496a-810b-bf7397dc3842 | owner  |
+| 550e8400-e29b-41d4-a716-446655440000 | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | editor   |
+| 550e8400-e29b-41d4-a716-446655440000 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | admin    |
+| 550e8400-e29b-41d4-a716-446655440000 | f1c6e7b3-4b29-496a-810b-bf7397dc3842 | owner    |
 
 - If a `Viewer` tries to create a Group within that Organization, they will receive a message indicating that the creation has failed:
 
@@ -95,9 +95,9 @@ For a simpler understanding of access control in a Group, the table below provid
 | Delete Group            | ❌      | ❌      | ❌     | ✅     | ✅          | 
 | Assign/Unassign Members | ❌      | ❌      | ✅     | ✅     | ✅          | 
 | Create Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅          | 
-| View Group Entities     | ✅      | ✅      | ✅     | ✅     | ✅          |
-| Update Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅          |
-| Delete Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅          |
+| View Group Entities     | ✅      | ✅      | ✅     | ✅     | ✅           |
+| Update Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
+| Delete Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
 
 The 'Create Group' operation is omitted from the table because the rights are defined in the Org table, where it can be clearly seen that everyone except the Organization Viewer can create a Group.
 

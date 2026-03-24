@@ -28,10 +28,17 @@ nav:
   - API: api.md
   - Messaging: messaging.md
   - Storage: storage.md
+  - Alarms: alarms.md
+  - Converters: converters.md
+  - Filestore: filestore.md
+  - UIConfigs: uiconfigs.md
+  - Notifiers: notifiers.md
+  - Webhooks: webhooks.md
+  - Downlinks: downlinks.md
+  - Modbus: modbus.md
   - Security: security.md
   - CLI: cli.md
   - Tracing: tracing.md
   - Developer's Guide: dev-guide.md
   - Kubernetes: kubernetes.md
   - Benchmark: benchmark.md
-  - Enterprise: enterprise.md
