@@ -8,7 +8,7 @@ Downlinks support cron-like scheduling with automatic time-range parameter injec
 
 The `scheduler` object controls when and how often a downlink fires. Supported frequencies are `once`, `minutely`, `hourly`, `daily`, and `weekly`.
 
-One-time downlinks require a `date_time` field in `YYYY-MM-DD HH:MM` format. An optional `time_zone` can be provided — if omitted the system default is used.
+One-time downlinks require a `date_time` field in `YYYY-MM-DD HH:MM` format. An optional `time_zone` can be provided — if omitted the system default (UTC) is used.
 
 ```json
 {

@@ -83,7 +83,8 @@ curl -s -S -i -X POST \
 **Response**
 
 ```json
-[
+{
+  "clients": [
   {
     "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
     "name": "Boiler sensor",
@@ -99,7 +100,8 @@ curl -s -S -i -X POST \
     "thing_id": "111e4567-e89b-12d3-a456-426614174000",
     "group_id": "211e4567-e89b-12d3-a456-426614174000"
   }
-]
+  ]
+}
 ```
 
 ### List clients
@@ -147,7 +149,7 @@ curl -s -S -i -X PUT \
 ### Remove clients
 
 ```bash
-curl -s -S -i -X DELETE \
+curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"client_ids": ["<client_id>"]}' \

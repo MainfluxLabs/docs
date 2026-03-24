@@ -1171,7 +1171,7 @@ Access-Control-Expose-Headers: Location
 {"id":"d69d0098-072b-41bf-8c6e-ce4dbb12d333"}
 ```
 
-### Get Groups by Thing
+### Get Group by Thing
 Returns the group a thing belongs to.
 
 > Must-have: `user_token` and `thing_id`
@@ -1185,11 +1185,11 @@ Response:
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"groups":[{"id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","org_id":"...","description":"..."}]}
+{"id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","org_id":"...","description":"...","metadata":{},"created_at":"...","updated_at":"..."}
 ```
 
 ### Search Things
-Full-text and field search across all things the user can access. Accepts `name`, `type`, `metadata`, `limit`, and `offset` in the request body.
+Full-text and field search across all things the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
 
 > Must-have: `user_token`
 
@@ -1204,7 +1204,7 @@ Response:
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"total":1,"offset":0,"limit":10,"things":[{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","name":"thing_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","type":"device"}]}
+{"total":1,"offset":0,"limit":10,"things":[{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","name":"thing_name","key":"828c6985-c2d6-419e-a124-ba99147b9920","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","type":"device"}]}
 ```
 
 ### Search Things by Profile
