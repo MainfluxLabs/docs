@@ -164,21 +164,22 @@
 <h2 id="step-1-run-the-system">Step 1 - Run the System<a class="headerlink" href="#step-1-run-the-system" title="Permanent link">#</a></h2>
 <p>Before proceeding, install the following prerequisites:</p>
 <ul>
-<li><a href="https://docs.docker.com/install/">Docker</a> (version 24.0.7)</li>
-<li><a href="https://docs.docker.com/compose/install/">Docker compose</a> (version 2.23.3)</li>
+<li><a href="https://docs.docker.com/install/">Docker</a> (v24 or later)</li>
+<li><a href="https://docs.docker.com/compose/install/">Docker Compose</a> (v2.23 or later)</li>
 </ul>
-<p>Once everything is installed, execute the following command from project root:</p>
-<pre><code class="language-bash">make run
+<p>Clone the repository and start the platform:</p>
+<pre><code class="language-bash">git clone https://github.com/MainfluxLabs/mainflux
+cd mainflux
+make run
 </code></pre>
 <p>This will start Mainflux docker composition in detached mode.</p>
 <h2 id="step-2-install-the-cli">Step 2 - Install the CLI<a class="headerlink" href="#step-2-install-the-cli" title="Permanent link">#</a></h2>
 <p>Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI, which can be downloaded as a pre-built binary from the <a href="https://github.com/MainfluxLabs/mainflux/releases">latest release page</a>.</p>
 <blockquote>
-<p>Make sure that <code>$GOBIN</code> is added to your <code>$PATH</code> so that <code>mainfluxlabs-cli</code> command can be accessible system-wide.</p>
+<p>Move the binary to a directory in your <code>$PATH</code> (e.g. <code>/usr/local/bin</code>) to make <code>mainfluxlabs-cli</code> accessible system-wide.</p>
 </blockquote>
 <p>To build the CLI from source instead:</p>
-<pre><code class="language-bash">git clone https://github.com/MainfluxLabs/mainflux
-cd mainflux
+<pre><code class="language-bash">cd mainflux
 make cli
 </code></pre>
 <p>The binary will be placed at <code>build/mainfluxlabs-cli</code>. See the <a href="../cli/">CLI</a> page for more details.</p>
@@ -199,7 +200,7 @@ make cli
 <p><strong>4. Create an organization</strong></p>
 <pre><code class="language-bash">mainfluxlabs-cli orgs create '{&quot;name&quot;:&quot;my-org&quot;,&quot;description&quot;:&quot;My organisation&quot;}' &lt;user_token&gt;
 </code></pre>
-<p>The org ID is returned in the <code>Location</code> response header and also visible with:</p>
+<p>The org ID is included in the response and also visible with:</p>
 <pre><code class="language-bash">mainfluxlabs-cli orgs get all &lt;user_token&gt;
 </code></pre>
 <p><strong>5. Create a group inside the org</strong></p>

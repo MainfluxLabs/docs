@@ -238,7 +238,7 @@
 </tr>
 <tr>
 <td><code>date_time</code></td>
-<td>ISO 8601 date-time. Required when <code>frequency</code> is <code>once</code>; ignored otherwise</td>
+<td>Date and time in <code>YYYY-MM-DD HH:MM</code> format. Required when <code>frequency</code> is <code>once</code>; ignored otherwise</td>
 </tr>
 <tr>
 <td><code>minute</code></td>
@@ -311,14 +311,14 @@
       &quot;port&quot;: &quot;502&quot;,
       &quot;slave_id&quot;: 1,
       &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
-      &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;},
+      &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;, &quot;minute&quot;: 5},
       &quot;data_fields&quot;: [
         {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;, &quot;unit&quot;: &quot;°C&quot;},
         {&quot;name&quot;: &quot;pressure&quot;,    &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
       ]
     }
   ]' \
-  https://localhost/modbus/things/&lt;thing_id&gt;/clients
+  https://localhost/svcmodbus/things/&lt;thing_id&gt;/clients
 </code></pre>
 <p><strong>Response</strong></p>
 <pre><code class="language-json">[
@@ -329,7 +329,7 @@
     &quot;port&quot;: &quot;502&quot;,
     &quot;slave_id&quot;: 1,
     &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
-    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;},
+    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;, &quot;minute&quot;: 5},
     &quot;data_fields&quot;: [
       {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;, &quot;unit&quot;: &quot;°C&quot;},
       {&quot;name&quot;: &quot;pressure&quot;,    &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
@@ -343,17 +343,17 @@
 <pre><code class="language-bash"># All clients for a specific device
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/modbus/things/&lt;thing_id&gt;/clients
+  https://localhost/svcmodbus/things/&lt;thing_id&gt;/clients
 
 # All clients for a group
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/modbus/groups/&lt;group_id&gt;/clients
+  https://localhost/svcmodbus/groups/&lt;group_id&gt;/clients
 </code></pre>
 <h3 id="view-a-client">View a client<a class="headerlink" href="#view-a-client" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/modbus/clients/&lt;client_id&gt;
+  https://localhost/svcmodbus/clients/&lt;client_id&gt;
 </code></pre>
 <h3 id="update-a-client">Update a client<a class="headerlink" href="#update-a-client" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
@@ -365,19 +365,19 @@ curl -s -S -i \
     &quot;port&quot;: &quot;502&quot;,
     &quot;slave_id&quot;: 1,
     &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
-    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;},
+    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;, &quot;hour&quot;: 1},
     &quot;data_fields&quot;: [
       {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;unit&quot;: &quot;°C&quot;}
     ]
   }' \
-  https://localhost/modbus/clients/&lt;client_id&gt;
+  https://localhost/svcmodbus/clients/&lt;client_id&gt;
 </code></pre>
 <h3 id="remove-clients">Remove clients<a class="headerlink" href="#remove-clients" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;client_ids&quot;: [&quot;&lt;client_id&gt;&quot;]}' \
-  https://localhost/modbus/clients
+  https://localhost/svcmodbus/clients
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               

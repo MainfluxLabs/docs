@@ -167,7 +167,7 @@
 <pre><code class="language-bash"># Retrieve org config
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/uiconfigs/orgs/&lt;org_id&gt;/configs
+  https://localhost/svcuiconfigs/orgs/&lt;org_id&gt;/configs
 </code></pre>
 <pre><code class="language-json">{
   &quot;theme&quot;: &quot;dark&quot;,
@@ -180,19 +180,19 @@ curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;theme&quot;: &quot;dark&quot;, &quot;sidebar&quot;: {&quot;collapsed&quot;: false}, &quot;defaultView&quot;: &quot;dashboard&quot;}' \
-  https://localhost/uiconfigs/orgs/&lt;org_id&gt;/configs
+  https://localhost/svcuiconfigs/orgs/&lt;org_id&gt;/configs
 </code></pre>
 <p>Administrators can retrieve configs for all organizations:</p>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/uiconfigs/orgs/configs
+  https://localhost/svcuiconfigs/orgs/configs
 </code></pre>
 <h2 id="thing-configs">Thing configs<a class="headerlink" href="#thing-configs" title="Permanent link">#</a></h2>
 <p>Each thing has a single config object, accessible to users authorized for that thing's group. Thing configs are typically used to store per-widget display settings in dashboards.</p>
 <pre><code class="language-bash"># Retrieve thing config
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/uiconfigs/things/&lt;thing_id&gt;/configs
+  https://localhost/svcuiconfigs/things/&lt;thing_id&gt;/configs
 </code></pre>
 <pre><code class="language-json">{
   &quot;chartType&quot;: &quot;line&quot;,
@@ -205,19 +205,19 @@ curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;, &quot;color&quot;: &quot;#ff6600&quot;}' \
-  https://localhost/uiconfigs/things/&lt;thing_id&gt;/configs
+  https://localhost/svcuiconfigs/things/&lt;thing_id&gt;/configs
 </code></pre>
 <p>Administrators can retrieve configs for all things:</p>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/uiconfigs/things/configs
+  https://localhost/svcuiconfigs/things/configs
 </code></pre>
 <h2 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
 <p>The service exposes backup and restore endpoints for exporting and re-importing the full configuration state. This is useful for migrations, environment snapshots, or disaster recovery.</p>
 <pre><code class="language-bash"># Export all configs
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/uiconfigs/backup
+  https://localhost/svcuiconfigs/backup
 </code></pre>
 <pre><code class="language-json">{
   &quot;org_configs&quot;: [
@@ -239,7 +239,7 @@ curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '&lt;backup_json&gt;' \
-  https://localhost/uiconfigs/restore
+  https://localhost/svcuiconfigs/restore
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               

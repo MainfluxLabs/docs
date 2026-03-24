@@ -248,7 +248,7 @@
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data.csv&quot; \
   -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;csv&quot;,&quot;time&quot;:1710000000.0}' \
-  https://localhost/filestore/files
+  https://localhost/files
 </code></pre>
 <p><strong>Response</strong></p>
 <pre><code class="language-json">{
@@ -261,7 +261,7 @@
 <h3 id="list-files">List files<a class="headerlink" href="#list-files" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  https://localhost/filestore/files
+  https://localhost/files
 </code></pre>
 <p><strong>Response</strong></p>
 <pre><code class="language-json">{
@@ -275,18 +275,18 @@
 <h3 id="download-a-file">Download a file<a class="headerlink" href="#download-a-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  https://localhost/filestore/files/&lt;name&gt;
+  https://localhost/files/&lt;name&gt;
 </code></pre>
 <h3 id="update-a-file">Update a file<a class="headerlink" href="#update-a-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data-v2.csv&quot; \
-  https://localhost/filestore/files/&lt;name&gt;
+  https://localhost/files/&lt;name&gt;
 </code></pre>
 <h3 id="delete-a-file">Delete a file<a class="headerlink" href="#delete-a-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  https://localhost/filestore/files/&lt;name&gt;
+  https://localhost/files/&lt;name&gt;
 </code></pre>
 <h2 id="group-scoped-files">Group-scoped files<a class="headerlink" href="#group-scoped-files" title="Permanent link">#</a></h2>
 <p>Users with editor-level group access can upload and manage files shared across all devices in a group.</p>
@@ -295,34 +295,34 @@
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -F &quot;file=@config.json&quot; \
   -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;json&quot;,&quot;time&quot;:1710000000.0}' \
-  https://localhost/filestore/groups/&lt;group_id&gt;/files
+  https://localhost/fs/groups/&lt;group_id&gt;/files
 </code></pre>
 <h3 id="list-group-files">List group files<a class="headerlink" href="#list-group-files" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/filestore/groups/&lt;group_id&gt;/files
+  https://localhost/fs/groups/&lt;group_id&gt;/files
 </code></pre>
 <h3 id="download-a-group-file">Download a group file<a class="headerlink" href="#download-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash"># Using a user token
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
+  https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 
 # Using a thing key (useful for devices fetching shared config or firmware)
 curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  https://localhost/filestore/groupfiles/&lt;name&gt;
+  https://localhost/fs/groupfiles/&lt;name&gt;
 </code></pre>
 <h3 id="update-a-group-file">Update a group file<a class="headerlink" href="#update-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -F &quot;file=@config-v2.json&quot; \
-  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
+  https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 </code></pre>
 <h3 id="delete-a-group-file">Delete a group file<a class="headerlink" href="#delete-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/filestore/groups/&lt;group_id&gt;/files/&lt;name&gt;
+  https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               

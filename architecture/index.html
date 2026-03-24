@@ -290,8 +290,8 @@ platform for message exchange with other "things".</p>
 lightweight and performant nature. NATS subjects are derived from the message
 content type and optional subtopic, following the format
 <code>&lt;format&gt;.messages.&lt;optional_subtopic&gt;</code> (e.g. <code>senml.messages.bedroom.temperature</code>).</p>
-<p>In general, there is no constrained put on content that is being exchanged
-through channels. However, in order to be post-processed and normalized,
+<p>In general, there is no constraint on the content exchanged between things.
+However, in order to be post-processed and normalized,
 messages should be formatted using <a href="https://tools.ietf.org/html/draft-ietf-core-senml-08">SenML</a>.</p>
 <h2 id="unified-iot-platform">Unified IoT Platform<a class="headerlink" href="#unified-iot-platform" title="Permanent link">#</a></h2>
 <p>Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.

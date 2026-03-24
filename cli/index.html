@@ -316,12 +316,10 @@
               
                 <h1 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">#</a></h1>
 <p>Mainflux CLI makes it easy to manage users, things, profiles, groups, orgs, webhooks and messages.</p>
-<p>CLI can be downloaded as separate asset from <a href="https://github.com/MainfluxLabs/mainflux/releases">project realeses</a> or it can be built with <code>GNU Make</code> tool:</p>
-<p>Get the mainflux code</p>
-<pre><code class="language-bash">go get github.com/MainfluxLabs/mainflux
-</code></pre>
-<p>Build the mainfluxlabs-cli</p>
-<pre><code class="language-bash">make cli
+<p>CLI can be downloaded as a pre-built binary from the <a href="https://github.com/MainfluxLabs/mainflux/releases">project releases</a> or it can be built with <code>GNU Make</code> tool:</p>
+<pre><code class="language-bash">git clone https://github.com/MainfluxLabs/mainflux
+cd mainflux
+make cli
 </code></pre>
 <p>which will build <code>mainfluxlabs-cli</code> in <code>&lt;project_root&gt;/build</code> folder.</p>
 <p>Executing <code>build/mainfluxlabs-cli</code> without any arguments will output help with all available commands and flags:</p>
@@ -330,7 +328,7 @@
 
 Available Commands:
   certs       Certificates management
-  group_roles Group roles management
+  group_memberships Group memberships management
   groups      Groups management
   health      Health Check
   help        Help about any command

@@ -2,90 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mainflux.com/index.html/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/alarms/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/api/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/architecture/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/authentication/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/authorization/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/benchmark/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/cli/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/converters/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/dev-guide/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/downlinks/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/filestore/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/getting-started/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/kubernetes/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/messaging/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/modbus/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/notifiers/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/security/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/storage/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/tracing/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/uiconfigs/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
     <url>
          <loc>https://mainflux.com/index.html/webhooks/</loc>
-         <lastmod>2026-03-20</lastmod>
+         <lastmod>2026-03-24</lastmod>
     </url>
 </urlset>

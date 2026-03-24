@@ -191,7 +191,7 @@
     &quot;url&quot;: &quot;https://ingest.example.com/mainflux&quot;,
     &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
   }]' \
-  https://localhost/webhooks/things/&lt;thing_id&gt;/webhooks
+  https://localhost/svcwebhooks/things/&lt;thing_id&gt;/webhooks
 </code></pre>
 <p><strong>Response</strong></p>
 <pre><code class="language-json">[
@@ -208,17 +208,17 @@
 <pre><code class="language-bash"># All webhooks for a specific device
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/webhooks/things/&lt;thing_id&gt;/webhooks
+  https://localhost/svcwebhooks/things/&lt;thing_id&gt;/webhooks
 
 # All webhooks for a group
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/webhooks/groups/&lt;group_id&gt;/webhooks
+  https://localhost/svcwebhooks/groups/&lt;group_id&gt;/webhooks
 </code></pre>
 <h3 id="view-a-webhook">View a webhook<a class="headerlink" href="#view-a-webhook" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/webhooks/webhooks/&lt;webhook_id&gt;
+  https://localhost/webhooks/&lt;webhook_id&gt;
 </code></pre>
 <h3 id="update-a-webhook">Update a webhook<a class="headerlink" href="#update-a-webhook" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
@@ -229,14 +229,14 @@ curl -s -S -i \
     &quot;url&quot;: &quot;https://ingest.example.com/mainflux-v2&quot;,
     &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
   }' \
-  https://localhost/webhooks/webhooks/&lt;webhook_id&gt;
+  https://localhost/webhooks/&lt;webhook_id&gt;
 </code></pre>
 <h3 id="remove-webhooks">Remove webhooks<a class="headerlink" href="#remove-webhooks" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;webhook_ids&quot;: [&quot;&lt;webhook_id&gt;&quot;]}' \
-  https://localhost/webhooks/webhooks
+  https://localhost/webhooks
 </code></pre>
 <h2 id="webhook-fields">Webhook fields<a class="headerlink" href="#webhook-fields" title="Permanent link">#</a></h2>
 <table>

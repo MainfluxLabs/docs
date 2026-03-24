@@ -169,47 +169,36 @@
 The following sections will provide an example of message publishing for each of the supported protocols.</p>
 <h3 id="configure-profile-config">Configure Profile Config<a class="headerlink" href="#configure-profile-config" title="Permanent link">#</a></h3>
 <p>For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure <code>config</code>.
-The <code>config</code> structure consists of the following fields: <code>content_type</code>, <code>write</code>, <code>webhook</code>, <code>transformer</code>, <code>smtp_id</code>.</p>
+The <code>config</code> structure consists of the following fields: <code>content_type</code> and <code>transformer</code>.</p>
 <p>A <code>content_type</code> field defines the payload format of messages in order to transform and store them properly.
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values <code>application/senml+json</code>, <code>application/senml+cbor</code> and <code>application/json</code>.</p>
-<p>A <code>write</code> field determines whether messages should be stored in the database. When <code>write</code> is set to <code>true</code>, messages will be saved in the database.
-Conversely, if <code>write</code> is set to <code>false</code>, messages will be sent without storing them.</p>
-<p>Here's an example of <code>SenML-JSON</code> metadata:</p>
+<p>Here's an example of a SenML-JSON profile <code>config</code>:</p>
 <pre><code class="language-json">{
   &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/senml+json&quot;,
-    &quot;write&quot;: true,
-    &quot;webhook&quot;: false,
-    &quot;smtp_id&quot;: &quot;&quot;
+    &quot;content_type&quot;: &quot;application/senml+json&quot;
   }
 }
 </code></pre>
-<p>Here's an example of <code>SenML-CBOR</code> metadata:</p>
+<p>Here's an example of a SenML-CBOR profile <code>config</code>:</p>
 <pre><code class="language-json">{
   &quot;config&quot;: {
-    &quot;content_type&quot;: &quot;application/senml+cbor&quot;,
-    &quot;write&quot;: true,
-    &quot;webhook&quot;: false,
-    &quot;smtp_id&quot;: &quot;&quot;
+    &quot;content_type&quot;: &quot;application/senml+cbor&quot;
   }
 }
 </code></pre>
 <p>The payload of the IoT message often contains message time. It can be in different formats (like base time and record time in the case of SenML) and the message field can be under the arbitrary key. Usually, we would want to map that time to the Mainflux Message field <code>created</code>, and for that reason, we need to configure the <code>transformer</code> to be able to read the field, parse it using proper format and location (if devices time is different from the service time), and map it to Mainflux Message.</p>
 <p>When <code>content_type</code> is defined as <code>application/json</code>, inside the <code>transformer</code> structure it is possible to configure the field <code>time_field</code> which is the name of the JSON key to use as a timestamp, <code>time_format</code> to use for the field value and <code>time_location</code>.</p>
-<p>Here's an example of <code>JSON</code> metadata:</p>
+<p>Here's an example of a JSON profile <code>config</code>:</p>
 <pre><code class="language-json">{
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: true,
-    &quot;webhook&quot;: false,
     &quot;transformer&quot;: {
       &quot;data_filters&quot;: [&quot;val1&quot;, &quot;val2&quot;],
       &quot;data_field&quot;:&quot;field1&quot;,
       &quot;time_field&quot;: &quot;t&quot;,
       &quot;time_format&quot;: &quot;unix&quot;,
       &quot;time_location&quot;: &quot;UTC&quot;
-    },
-    &quot;smtp_id&quot;: &quot;&quot;
+    }
   }
 }
 </code></pre>
@@ -218,7 +207,6 @@ Conversely, if <code>write</code> is set to <code>false</code>, messages will be
 <pre><code class="language-json">{
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: true,
     &quot;transformer&quot;: {
       &quot;data_filters&quot;: [],
       &quot;data_field&quot;: &quot;root.params&quot;,
@@ -269,7 +257,6 @@ For the previous example, we can filter the extracted payload and save only the 
 <pre><code class="language-json">{
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
-    &quot;write&quot;: true,
     &quot;transformer&quot;: {
       &quot;data_filters&quot;: [&quot;field&quot;,&quot;value&quot;],
       &quot;data_field&quot;: &quot;root.params&quot;,
@@ -281,7 +268,7 @@ For the previous example, we can filter the extracted payload and save only the 
 }
 </code></pre>
 <p>If the <code>data_filters</code> and <code>data_field</code> fields are empty, the whole payload will be used.</p>
-<p>The explanations for the <code>webhook</code> and <code>smtp_id</code> fields of the <code>config</code> can be found in the <a href="../webhooks/">Webhooks</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
+<p>Webhook forwarding and notifications are configured via rule actions — see the <a href="../webhooks/">Webhooks</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
 <hr />
 <h3 id="subtopics">Subtopics<a class="headerlink" href="#subtopics" title="Permanent link">#</a></h3>
 <p>In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base <code>/messages</code> topic.</p>
@@ -407,7 +394,7 @@ i.e. connection URL should be <code>ws://&lt;host_addr&gt;/mqtt</code>.</p>
     })
 &lt;/script&gt;
 </code></pre>
-<p><strong>N.B.</strong> Eclipse Paho lib adds sub-URL <code>/mqtt</code> automaticlly, so procedure for connecting to the server can be something like this:</p>
+<p><strong>N.B.</strong> Eclipse Paho lib adds sub-URL <code>/mqtt</code> automatically, so procedure for connecting to the server can be something like this:</p>
 <pre><code class="language-javascript">var loc = { hostname: 'localhost', port: 80 }
 // Create a client instance
 client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), &quot;clientId&quot;)

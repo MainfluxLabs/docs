@@ -170,6 +170,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#create-things-with-external-id">Create Things with external ID</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-things-with-external-key">Create Things with external key</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#view-thing">View Thing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#view-metadata-by-key">View Metadata by Key</a>
@@ -191,6 +193,22 @@
     <li class="toctree-l3"><a class="reference internal" href="#delete-thing">Delete Thing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#identify">Identify</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-groups-by-thing">Get Groups by Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-things">Search Things</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-things-by-profile">Search Things by Profile</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-things-by-group">Search Things by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-things-by-org">Search Things by Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-profiles">Search Profiles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-profiles-by-group">Search Profiles by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-profiles-by-org">Search Profiles by Org</a>
     </li>
         </ul>
     </li>
@@ -1092,6 +1110,30 @@ Content-Type: application/json
 
 {&quot;things&quot;:[{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0001&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_1&quot;,&quot;type&quot;:&quot;device&quot;,&quot;key&quot;:&quot;659aa6ca-1781-4a69-9a20-689ddb235506&quot;},{&quot;id&quot;:&quot;&lt;xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx0002&gt;&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;name&quot;:&quot;thing_name_2&quot;,&quot;type&quot;:&quot;sensor&quot;,&quot;key&quot;:&quot;840c1ea1-2e8d-4809-a6d3-3433a5c489d2&quot;}]}
 </code></pre>
+<h3 id="create-things-with-external-key">Create Things with external key<a class="headerlink" href="#create-things-with-external-key" title="Permanent link">#</a></h3>
+<p>An <code>external_key</code> is a freeform, unique identifier you assign from an external system — for example, a serial number, device EUI, or asset tag. It lets external systems authenticate on behalf of a thing using their own identifier rather than the Mainflux-generated internal key. Must be at least 5 characters and unique across the platform.</p>
+<p>The external key can be provided at creation time:</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>profile_id</code>, <code>name</code>, <code>type</code>, <code>external_key</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/profiles/&lt;profile_id&gt;/things \
+  -d '[{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;type&quot;:&quot;device&quot;,&quot;external_key&quot;:&quot;&lt;external_key&gt;&quot;}]'
+</code></pre>
+<p>It can also be set or replaced on an existing thing:</p>
+<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/things/&lt;thing_id&gt;/external-key \
+  -d '{&quot;key&quot;:&quot;&lt;external_key&gt;&quot;}'
+</code></pre>
+<p>And removed when no longer needed:</p>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/things/&lt;thing_id&gt;/external-key
+</code></pre>
+<p>Once set, the thing can authenticate using its external key:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; \
+  http://localhost/identify \
+  -d '{&quot;key&quot;:&quot;&lt;external_key&gt;&quot;,&quot;type&quot;:&quot;external&quot;}'
+</code></pre>
 <h3 id="view-thing">View Thing<a class="headerlink" href="#view-thing" title="Permanent link">#</a></h3>
 <p>You can get thing entity by entering the thing ID and <code>user_token</code></p>
 <blockquote>
@@ -1280,6 +1322,94 @@ Access-Control-Expose-Headers: Location
 
 {&quot;id&quot;:&quot;d69d0098-072b-41bf-8c6e-ce4dbb12d333&quot;}
 </code></pre>
+<h3 id="get-groups-by-thing">Get Groups by Thing<a class="headerlink" href="#get-groups-by-thing" title="Permanent link">#</a></h3>
+<p>Returns the group a thing belongs to.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>thing_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/things/&lt;thing_id&gt;/groups
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+
+{&quot;groups&quot;:[{&quot;id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;name&quot;:&quot;group_name&quot;,&quot;org_id&quot;:&quot;...&quot;,&quot;description&quot;:&quot;...&quot;}]}
+</code></pre>
+<h3 id="search-things">Search Things<a class="headerlink" href="#search-things" title="Permanent link">#</a></h3>
+<p>Full-text and field search across all things the user can access. Accepts <code>name</code>, <code>type</code>, <code>metadata</code>, <code>limit</code>, and <code>offset</code> in the request body.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/things/search \
+  -d '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;things&quot;:[{&quot;id&quot;:&quot;4328f3e4-4c67-40b3-9491-0ab782c48d50&quot;,&quot;name&quot;:&quot;thing_name&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;,&quot;profile_id&quot;:&quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,&quot;type&quot;:&quot;device&quot;}]}
+</code></pre>
+<h3 id="search-things-by-profile">Search Things by Profile<a class="headerlink" href="#search-things-by-profile" title="Permanent link">#</a></h3>
+<p>Search things filtered by a specific profile.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>profile_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/profiles/&lt;profile_id&gt;/things/search \
+  -d '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<h3 id="search-things-by-group">Search Things by Group<a class="headerlink" href="#search-things-by-group" title="Permanent link">#</a></h3>
+<p>Search things filtered by a specific group.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/groups/&lt;group_id&gt;/things/search \
+  -d '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<h3 id="search-things-by-org">Search Things by Org<a class="headerlink" href="#search-things-by-org" title="Permanent link">#</a></h3>
+<p>Search things filtered by a specific organization.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/orgs/&lt;org_id&gt;/things/search \
+  -d '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<h3 id="search-profiles">Search Profiles<a class="headerlink" href="#search-profiles" title="Permanent link">#</a></h3>
+<p>Full-text and field search across all profiles the user can access. Accepts <code>name</code>, <code>metadata</code>, <code>limit</code>, and <code>offset</code> in the request body.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/profiles/search \
+  -d '{&quot;name&quot;:&quot;&lt;profile_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 200 OK
+Content-Type: application/json
+
+{&quot;total&quot;:1,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;profiles&quot;:[{&quot;id&quot;:&quot;db4b7428-e278-4fe3-b85a-d65554d6abe9&quot;,&quot;name&quot;:&quot;profile_name&quot;,&quot;group_id&quot;:&quot;c9bf9e57-1685-4c89-bafb-ff5af830be8a&quot;}]}
+</code></pre>
+<h3 id="search-profiles-by-group">Search Profiles by Group<a class="headerlink" href="#search-profiles-by-group" title="Permanent link">#</a></h3>
+<p>Search profiles filtered by a specific group.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>group_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/groups/&lt;group_id&gt;/profiles/search \
+  -d '{&quot;name&quot;:&quot;&lt;profile_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
+<h3 id="search-profiles-by-org">Search Profiles by Org<a class="headerlink" href="#search-profiles-by-org" title="Permanent link">#</a></h3>
+<p>Search profiles filtered by a specific organization.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and <code>org_id</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/orgs/&lt;org_id&gt;/profiles/search \
+  -d '{&quot;name&quot;:&quot;&lt;profile_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
+</code></pre>
 <h2 id="messages">Messages<a class="headerlink" href="#messages" title="Permanent link">#</a></h2>
 <h3 id="send-messages">Send Messages<a class="headerlink" href="#send-messages" title="Permanent link">#</a></h3>
 <p>Sends message via HTTP protocol</p>
@@ -1343,10 +1473,10 @@ Connection: keep-alive
 <p>Must have: <code>user_token</code>, <code>file_name</code>, <code>file_type</code></p>
 </blockquote>
 <p>For SenML:</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/senml/backup?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/senml/export?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
 </code></pre>
 <p>For JSON:</p>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/json/backup?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/json/export?convert=&lt;file_type&gt;&quot; -o &quot;&lt;file_name&gt;.&lt;file_type&gt;&quot;
 </code></pre>
 <p>Note: You can use <code>csv</code> or <code>json</code> for <code>file_type</code>. Currently supported formats are <code>json</code> and <code>senml</code>. You can also send a request without the <code>?convert</code> parameter but then you will get only json format.</p>
 <h3 id="restore-messages">Restore Messages<a class="headerlink" href="#restore-messages" title="Permanent link">#</a></h3>
@@ -1355,10 +1485,10 @@ Connection: keep-alive
 <p>Must have: <code>user_token</code>, <code>format</code>, <code>file_name</code></p>
 </blockquote>
 <p>For CSV file:</p>
-<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: text/csv&quot; &quot;http://localhost/reader/&lt;format&gt;/restore&quot; --data-binary @&lt;file_name&gt;.csv
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: text/csv&quot; &quot;http://localhost/reader/restore&quot; --data-binary @&lt;file_name&gt;.csv
 </code></pre>
 <p>For JSON file:</p>
-<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/&lt;format&gt;/restore&quot; -d @&lt;file_name&gt;.json
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/restore&quot; -d @&lt;file_name&gt;.json
 </code></pre>
 <h2 id="api-key">API Key<a class="headerlink" href="#api-key" title="Permanent link">#</a></h2>
 <h3 id="issue-api-key">Issue API Key<a class="headerlink" href="#issue-api-key" title="Permanent link">#</a></h3>
@@ -1548,7 +1678,7 @@ Content-Length: 350
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>thing_id</code>, <code>name</code> and <code>url</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/webhooks -d '{&quot;webhooks: [{&quot;name&quot;:&quot;webhook_name&quot;,&quot;url&quot;:&quot;https://webhook.com&quot;,&quot;headers&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcwebhooks/groups/&lt;group_id&gt;/webhooks -d '{&quot;webhooks: [{&quot;name&quot;:&quot;webhook_name&quot;,&quot;url&quot;:&quot;https://webhook.com&quot;,&quot;headers&quot;:{&quot;Content-Type&quot;:&quot;application/json&quot;}}]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -1567,7 +1697,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>group_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/webhooks
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcwebhooks/groups/&lt;group_id&gt;/webhooks
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1585,7 +1715,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>thing_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/things/&lt;thing_id&gt;/webhooks
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcwebhooks/things/&lt;thing_id&gt;/webhooks
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1654,7 +1784,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>group_id</code>, <code>name</code> and <code>contacts</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/notifiers -d '{&quot;notifiers: [{&quot;name&quot;:&quot;notifier_name&quot;,&quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],&quot;metadata&quot;:{}}]}'
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcsmtp/groups/&lt;group_id&gt;/notifiers -d '{&quot;notifiers: [{&quot;name&quot;:&quot;notifier_name&quot;,&quot;contacts&quot;: [&quot;email1@example.com&quot;, &quot;email2@example.com&quot;],&quot;metadata&quot;:{}}]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 201 Created
@@ -1674,7 +1804,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>group_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/groups/&lt;group_id&gt;/notifiers
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcsmtp/groups/&lt;group_id&gt;/notifiers
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1692,7 +1822,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>group_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/notifiers/&lt;notifier_id&gt;
+<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcsmtp/notifiers/&lt;notifier_id&gt;
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1710,7 +1840,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code> and <code>notifier_id</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/notifiers/&lt;notifier_id&gt; -d '{&quot;name&quot;: &quot;&lt;new_notifier_name&gt;&quot;}'
+<pre><code class="language-bash">curl -s -S -i -X PUT -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcsmtp/notifiers/&lt;notifier_id&gt; -d '{&quot;name&quot;: &quot;&lt;new_notifier_name&gt;&quot;}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 200 OK
@@ -1726,7 +1856,7 @@ Access-Control-Expose-Headers: Location
 <blockquote>
 <p>Must-have: <code>user_token</code>,<code>group_id</code>, notifier_ids</p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/groups/&lt;group_id&gt;/notifiers -d '{&quot;notifier_ids&quot;:[&quot;a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1&quot;,&quot;b513d843-abf8-4db4-93fd-bdc8917d42m2&quot;]}'
+<pre><code class="language-bash">curl -s -S -i -X PATCH -H &quot;Content-Type: application/json&quot; -H  &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcsmtp/notifiers -d '{&quot;notifier_ids&quot;:[&quot;a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1&quot;,&quot;b513d843-abf8-4db4-93fd-bdc8917d42m2&quot;]}'
 </code></pre>
 <p>Response:</p>
 <pre><code class="language-bash">HTTP/1.1 204 No Content

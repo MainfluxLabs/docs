@@ -163,9 +163,9 @@
 <p>Two input formats are supported:</p>
 <ul>
 <li><strong>SenML</strong> — the first row is the header where column names become measurement names. The first column must be a Unix timestamp. All remaining columns are treated as numeric measurement values.</li>
-<li><strong>JSON</strong> — column names become JSON field names. A <code>created</code> column is used as the timestamp if present; otherwise the first column is used. Values are auto-parsed as numbers where possible, otherwise treated as strings.</li>
+<li><strong>JSON</strong> — column names become JSON field names. The value from the column named by the thing's profile transformer <code>time_field</code> setting is parsed as a numeric Unix timestamp and stored as a <code>Created</code> field in the payload. The first column is excluded from the payload. Values are auto-parsed as numbers where possible, otherwise treated as strings.</li>
 </ul>
-<p>Large files are processed in batches of 50,000 records with a 30-second pause between batches to avoid overloading the message broker.</p>
+<p>Large files are processed in batches with a 30-second pause between batches to avoid overloading the message broker. For SenML, a batch is flushed every 50,000 SenML records (one record per value column per row). For JSON, a batch is flushed every 50,000 rows.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h2>
 <p>Requests must be authenticated with the device's internal key using the <code>Authorization: Thing &lt;key&gt;</code> header.</p>
 <h2 id="senml-csv">SenML CSV<a class="headerlink" href="#senml-csv" title="Permanent link">#</a></h2>
@@ -178,22 +178,24 @@
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@readings.csv&quot; \
-  https://localhost/csv/senml
+  https://localhost/converters/csv/senml
 </code></pre>
-<p>Each row is published as a SenML message with the column names as measurement names and the timestamp column as the base time. The example above produces two messages, each carrying <code>voltage</code>, <code>current</code>, and <code>power</code> measurements.</p>
+<p>Rows are collected and published as batched SenML messages. Each SenML record carries the measurement name (<code>n</code>), value (<code>v</code>), and timestamp (<code>t</code>) from its column and row.</p>
 <h2 id="json-csv">JSON CSV<a class="headerlink" href="#json-csv" title="Permanent link">#</a></h2>
-<p>Column names become JSON field names. If a <code>created</code> column is present, it is used as the message timestamp; otherwise the first column is used. Values that cannot be parsed as numbers are kept as strings.</p>
-<p>Example file (<code>events.csv</code>):</p>
-<pre><code>created,temperature,humidity,status
-2024-03-05T08:00:00Z,21.5,60,ok
-2024-03-05T08:05:00Z,22.1,58,ok
+<p>Column names become JSON field names. If the profile transformer <code>time_field</code> is set and matches a column name, that column's value is parsed as a numeric Unix timestamp (seconds or nanoseconds as a float) and stored as a <code>Created</code> field in the payload. The first column is always excluded from the payload. Values that cannot be parsed as numbers are kept as strings.</p>
+<p>Example file (<code>events.csv</code>), assuming <code>time_field</code> is set to <code>time</code> in the profile transformer config:</p>
+<pre><code>time,temperature,humidity,status
+1709635200,21.5,60,ok
+1709635260,22.1,58,ok
 </code></pre>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@events.csv&quot; \
-  https://localhost/csv/json
+  https://localhost/converters/csv/json
 </code></pre>
-<p>Each row is published as a JSON message. The <code>created</code> field is used as the message timestamp. The remaining columns — <code>temperature</code>, <code>humidity</code>, and <code>status</code> — become fields in the JSON payload.</p>
+<p>Rows are collected and published as batched JSON messages. The <code>time</code> column value is parsed as a float and stored as <code>Created</code> in the payload. The remaining columns — <code>temperature</code>, <code>humidity</code>, and <code>status</code> — become fields in the JSON payload. The resulting record looks like:</p>
+<pre><code class="language-json">{&quot;Created&quot;: 1709635200, &quot;temperature&quot;: 21.5, &quot;humidity&quot;: 60, &quot;status&quot;: &quot;ok&quot;}
+</code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>

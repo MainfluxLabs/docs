@@ -201,7 +201,7 @@
 </tr>
 <tr>
 <td><code>created</code></td>
-<td>Unix timestamp of when the alarm was triggered</td>
+<td>Unix nanosecond timestamp of when the alarm was triggered</td>
 </tr>
 </tbody>
 </table>
@@ -210,7 +210,7 @@
 <pre><code class="language-bash"># List alarms for a thing
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;https://localhost/alarms/things/&lt;thing_id&gt;/alarms?offset=0&amp;limit=20&quot;
+  &quot;https://localhost/svcalarms/things/&lt;thing_id&gt;/alarms?offset=0&amp;limit=20&quot;
 </code></pre>
 <pre><code class="language-json">{
   &quot;total&quot;: 3,
@@ -225,7 +225,7 @@ curl -s -S -i \
       &quot;subtopic&quot;: &quot;temperature&quot;,
       &quot;protocol&quot;: &quot;mqtt&quot;,
       &quot;payload&quot;: { &quot;temperature&quot;: 85.2, &quot;unit&quot;: &quot;C&quot; },
-      &quot;created&quot;: 1706786130
+      &quot;created&quot;: 1774342578003142691
     }
   ]
 }
@@ -233,24 +233,24 @@ curl -s -S -i \
 <pre><code class="language-bash"># List alarms for a group
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;https://localhost/alarms/groups/&lt;group_id&gt;/alarms&quot;
+  &quot;https://localhost/svcalarms/groups/&lt;group_id&gt;/alarms&quot;
 
 # List alarms for an organization
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;https://localhost/alarms/orgs/&lt;org_id&gt;/alarms&quot;
+  &quot;https://localhost/svcalarms/orgs/&lt;org_id&gt;/alarms&quot;
 
 # View a specific alarm
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;https://localhost/alarms/alarms/&lt;alarm_id&gt;&quot;
+  &quot;https://localhost/alarms/&lt;alarm_id&gt;&quot;
 </code></pre>
 <h2 id="removing-alarms">Removing alarms<a class="headerlink" href="#removing-alarms" title="Permanent link">#</a></h2>
 <pre><code class="language-bash">curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;alarm_ids&quot;: [&quot;123e4567-e89b-12d3-a456-426614174000&quot;]}' \
-  https://localhost/alarms/alarms
+  https://localhost/alarms
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
