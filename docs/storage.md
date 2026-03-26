@@ -44,58 +44,76 @@ MongoDB default port (27017) is exposed, so you can use various tools for databa
 
 ## Readers
 
-Readers provide an implementation of various `message readers`.
-Message readers are services that consume normalized (in `SenML` format) Mainflux messages from data storage and opens HTTP API for message consumption.
-Installing corresponding writer before reader is implied.
+Readers provide an implementation of various `message readers`. Message readers are services that expose an HTTP API for querying messages persisted by the Writers. Installing the corresponding writer before the reader is implied.
 
-Each of the Reader services exposes the same [HTTP API](https://github.com/MainfluxLabs/mainflux/blob/master/api/readers.yml) for fetching messages on its default port.
+Authentication is performed using the Thing key in the `Authorization` header:
 
-To read sent messages you should send `GET` request to `/messages` with thing access token in `Authorization` header.
+```
+Authorization: Thing <thing_key>
+```
 
-Response should look like this:
+### Endpoints
 
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-Date: Tue, 18 Sep 2018 18:56:19 GMT
-Content-Length: 228
+Each Reader service exposes the same HTTP API. Two message formats are supported:
 
+| Format | List | Search | Export                                    |
+|--------|------|--------|--------|
+| SenML  | `GET /senml` | `POST /senml/search` | `GET /senml/export` |
+| JSON   | `GET /json`  | `POST /json/search`  | `GET /json/export`  |
+
+To scope results to a specific publisher (thing ID):
+
+- `GET /senml/{publisherId}`
+- `GET /json/{publisherId}`
+
+### Query Parameters
+
+| Parameter    | Description                                     | Default |
+|--------------|-------------------------------------------------|---------|
+| `offset`     | Number of messages to skip                      | 0       |
+| `limit`      | Maximum number of messages to return (max 1000) | 10      |
+| `subtopic`   | Filter by subtopic                              |         |
+| `publisher`  | Filter by publisher (thing ID)                  |         |
+| `protocol`   | Filter by protocol                              |         |
+| `from`       | Start of time range (Unix timestamp, seconds)   |         |
+| `to`         | End of time range (Unix timestamp, seconds)     |         |
+
+For SenML messages, additional parameters are available: `name`, `v`, `vb`, `vs`, `vd`, `comparator` (`eq`, `lt`, `le`, `gt`, `ge`), `aggregation` (`min`, `max`, `avg`, `count`), and `interval`.
+
+Add `convert=csv` to any export request to download results as a CSV file.
+
+### Example
+
+```bash
+curl -s -S -i -H "Authorization: Thing <thing_key>" \
+  "http://localhost:<reader_port>/senml?offset=0&limit=5"
+```
+
+Response:
+
+```json
 {
-    "messages": [
-        {
-            "Publisher": 1,
-            "Protocol": "mqtt",
-            "Name": "name:voltage",
-            "Unit": "V",
-            "Value": 5.6,
-            "Time": 48.56
-        },
-        {
-            "Publisher": 1,
-            "Protocol": "mqtt",
-            "Name": "name:temperature",
-            "Unit": "C",
-            "Value": 24.3,
-            "Time": 48.56
-        }
-    ]
+  "total": 2,
+  "offset": 0,
+  "limit": 5,
+  "messages": [
+    {
+      "publisher": "513d02d2-16c1-4f23-98be-9e12f8fee898",
+      "protocol": "mqtt",
+      "name": "voltage",
+      "unit": "V",
+      "value": 120.1,
+      "time": 1.276020076e+09
+    }
+  ]
 }
 ```
 
-Note that you will receive only those messages that were sent by authorization token's owner.
-You can specify `offset` and `limit` parameters in order to fetch specific group of messages. An example of HTTP request looks like:
-
-```bash
-curl -s -S -i  -H "Authorization: Thing <thing_key>" http://localhost:<service_port>/messages?offset=0&limit=5&format=json
-```
-
-If you don't provide `offset` and `limit` parameters, default values will be used instead: 0 for `offset` and 10 for `limit`.
-The `format` parameter indicates in which format the messages will be returned. 
-The default format is `senml` if the format is not defined, and if the desired format is JSON, you need to specify `json` for the format.
+For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).
 
 ### MongoDB Reader
 
-To start MongoDB reader, execute the following command:
+To start MongoDB reader:
 
 ```bash
 docker-compose -f docker/addons/mongodb-reader/docker-compose.yml up -d
@@ -103,7 +121,7 @@ docker-compose -f docker/addons/mongodb-reader/docker-compose.yml up -d
 
 ### PostgreSQL Reader
 
-To start PostgreSQL reader, execute the following command:
+To start PostgreSQL reader:
 
 ```bash
 docker-compose -f docker/addons/postgres-reader/docker-compose.yml up -d
@@ -111,8 +129,9 @@ docker-compose -f docker/addons/postgres-reader/docker-compose.yml up -d
 
 ### Timescale Reader
 
-To start Timescale reader, execute the following command:
+To start Timescale reader:
 
 ```bash
 docker-compose -f docker/addons/timescale-reader/docker-compose.yml up -d
 ```
+

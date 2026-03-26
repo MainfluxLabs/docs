@@ -2,17 +2,11 @@
 
 Mainflux CLI makes it easy to manage users, things, profiles, groups, orgs, webhooks and messages.
 
-CLI can be downloaded as separate asset from [project realeses](https://github.com/MainfluxLabs/mainflux/releases) or it can be built with `GNU Make` tool:
-
-Get the mainflux code
+CLI can be downloaded as a pre-built binary from the [project releases](https://github.com/MainfluxLabs/mainflux/releases) or it can be built with `GNU Make` tool:
 
 ```bash
-go get github.com/MainfluxLabs/mainflux
-```
-
-Build the mainfluxlabs-cli
-
-```bash
+git clone https://github.com/MainfluxLabs/mainflux
+cd mainflux
 make cli
 ```
 
@@ -26,7 +20,7 @@ Usage:
 
 Available Commands:
   certs       Certificates management
-  group_roles Group roles management
+  group_memberships Group memberships management
   groups      Groups management
   health      Health Check
   help        Help about any command
@@ -287,13 +281,15 @@ The above CSV record and the first object in the JSON example represent the same
 ### Things
 
 #### Create Thing
+The `type` field is required (`device`, `sensor`, `actuator`, `controller`, `gateway`). The `profile_id` is a separate CLI argument, not part of the JSON.
+
 ```bash
-mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>"}' <user_token>
+mainfluxlabs-cli things create '{"name":"<thing_name>","type":"device"}' <profile_id> <user_token>
 ```
 
 #### Create Thing with metadata
 ```bash
-mainfluxlabs-cli things create '{"name":"<thing_name>","profile_id":"<profile_id>","metadata": {"key1":"value1"}}' <user_token>
+mainfluxlabs-cli things create '{"name":"<thing_name>","type":"device","metadata":{"key1":"value1"}}' <profile_id> <user_token>
 ```
 
 #### Update Thing
@@ -364,18 +360,32 @@ mainfluxlabs-cli profiles get by-thing <thing_id> <user_token>
 
 ### Messaging
 #### Send a message over HTTP
+
+The `key_type` argument is either `internal` (platform-generated key) or `external` (custom key). An optional subtopic can be prepended as the first argument.
+
 ```bash
-mainfluxlabs-cli messages send [subtopic] '[{"bn":"Dev1","n":"temp","v":20}, {"n":"hum","v":40}, {"bn":"Dev2", "n":"temp","v":20}, {"n":"hum","v":40}]' <thing_key>
+# Without subtopic
+mainfluxlabs-cli messages send '[{"bn":"Dev1","n":"temp","v":20},{"n":"hum","v":40}]' internal <thing_key>
+
+# With subtopic
+mainfluxlabs-cli messages send temperature '[{"n":"temp","v":25.3}]' internal <thing_key>
 ```
 
 #### Read messages over HTTP
-* Read messages from a specific subtopic by adding a flag `-s=<subtopic>`
-* Reading SenML messages is the default. To read JSON messages add the flag `-f=json`
-* Setting the `by-admin` flag allows the admin to list all messages of a certain format, from all publishers
-* If `by-admin` is set, `auth_token` will be `admin_token`, otherwise `auth_token` is `thing_key`
+
 ```bash
-mainfluxlabs-cli messages read [by-admin] <auth_token>
+# Read SenML messages (as thing)
+mainfluxlabs-cli messages read senml internal <thing_key> <user_token>
+
+# Read JSON messages (as thing)
+mainfluxlabs-cli messages read json internal <thing_key> <user_token>
+
+# Read as admin (no thing key required)
+mainfluxlabs-cli messages read senml <user_token>
+mainfluxlabs-cli messages read json <user_token>
 ```
+
+Use `-s=<subtopic>` to filter by subtopic.
 
 ### Groups
 #### Create Group
