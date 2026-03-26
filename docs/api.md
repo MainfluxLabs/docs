@@ -1741,7 +1741,11 @@ You can create multiple Webhooks at once by entering a series of Webhooks struct
 
 > Must-have: `user_token`, `thing_id`, `name` and `url`
 ```bash
+<<<<<<< Updated upstream
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/groups/<group_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
+=======
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/things/<thing_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
+>>>>>>> Stashed changes
 ```
 
 Response:
