@@ -239,6 +239,22 @@ Content-Type: application/json
 Date: Fri, 14 Jul 2023 14:47:24 GMT
 ```
 
+### Delete Orgs
+Delete multiple organizations by providing a list of org IDs.
+
+> Must-have: `user_token` and at least one `org_id`
+
+```bash
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs -d '{"org_ids":["<org_id_1>","<org_id_2>"]}'
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 14:47:24 GMT
+```
+
 ### List Orgs
 
 To list orgs, you need a `user_token`
@@ -260,6 +276,27 @@ Content-Length: 456
 {"limit":10,"offset":0,"total":2,"orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","name":"org_name_1","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822", "metadata":{"meta":"test1"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"},{"id":"49114ab9-acbb-4d0b-be01-0dc2f396136c","name":"org_name_2","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","metadata":{"meta":"test2"},"created_at":"2023-07-13T09:29:41.718Z","updated_at":"2023-07-13T11:08:22.586Z"}]}
 ```
 
+### Search Orgs
+Search organizations with filtering and pagination options.
+
+Supports `name`, `limit`, `offset`, `order`, and `dir` in the request body.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/search -d '{"name":"<org_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Fri, 14 Jul 2023 20:43:58 GMT
+Content-Length: 456
+
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<org_name>","orgs":[{"id":"9883c534-eeb5-4e30-aec9-bd6cf1639f95","owner_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","name":"org_name","description":"org_description","metadata":{"key":"value"},"created_at":"2023-07-13T09:35:40.116Z","updated_at":"2023-07-13T10:58:32.523Z"}]}
+```
+
 ## Org Memberships
 
 ### Create Memberships
@@ -273,10 +310,10 @@ each representing a user you want to add to the organization.
 
 Each object must include:
 
-- **email**: The email address of the user to be added to the organization.  
+- **email**: The email address of the user to be added to the organization.
   Must refer to an existing registered user.
 
-- **role**: The role you want to assign to the user within the organization.  
+- **role**: The role you want to assign to the user within the organization.
   Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
@@ -455,6 +492,46 @@ Access-Control-Expose-Headers: Location
 {"total":2,"limit":10,"offset":0,"groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"},{"id":"2513d843-abf8-4db4-93fd-bdc8917d42mm","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name_1","description":"desc","created_at":"2021-03-10T17:07:52.13Z","updated_at":"2021-03-10T17:07:52.13Z"}]}
 ```
 
+### Search Groups
+Search groups with filtering and pagination options.
+
+Supports `name`, `limit`, `offset`, `order`, and `dir` in the request body.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/search -d '{"name":"<group_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 10 Mar 2021 17:09:28 GMT
+Content-Length: 573
+
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<group_name>","groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","metadata":{"key":"value"},"created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}]}
+```
+
+### Search Groups by Org
+Search groups filtered by a specific organization.
+
+> Must-have: `user_token`, `org_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/groups/search -d '{"name":"<group_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 24 Mar 2025 15:10:28 GMT
+Content-Length: 573
+
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<group_name>","groups":[{"id":"5316d843-abf8-4db4-93fd-bdc8917d42ec","org_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"group_name","description":"desc","metadata":{"key":"value"},"created_at":"2021-03-10T16:58:09.579Z","updated_at":"2021-03-10T16:58:09.579Z"}]}
+```
+
 ### Update Group
 Update group entity
 
@@ -492,6 +569,22 @@ Date: Wed, 10 Mar 2021 17:14:13 GMT
 Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
+```
+
+### Delete Groups
+Delete multiple groups by providing a list of group IDs.
+
+> Must-have: `user_token` and at least one `group_id`
+
+```bash
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups -d '{"group_ids":["<group_id_1>","<group_id_2>"]}'
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Date: Wed, 10 Mar 2021 17:14:13 GMT
 ```
 
 ### View Group by Thing
@@ -550,10 +643,10 @@ each representing a user you want to **add** to the group.
 
 Each object must include:
 
-- **member_id**: The UUID of the user to be added to the group.  
+- **member_id**: The UUID of the user to be added to the group.
   Must refer to an existing registered user.
 
-- **role**: The role to assign to the user within the group.  
+- **role**: The role to assign to the user within the group.
   Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
 ```bash
@@ -773,7 +866,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Profiles by Group
-Get all profiles by a certain group where the user has access 
+Get all profiles by a certain group where the user has access
 
 > Must-have: `user_token`, `<group_id>`
 
@@ -1418,22 +1511,28 @@ curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: applicati
 
 ### Search Messages
 
-Searches messages with field-level filtering. Accepts `publisher`, `protocol`, `name`, `from`, `to`, `limit`, and `offset`.
+Search messages using one or more queries. Each query supports filtering, pagination, and aggregation options.
 
 > Must-have: `user_token`
 
 For SenML:
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  "http://localhost/reader/senml/search" \
-  -d '{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
 ```
 
 For JSON:
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  "http://localhost/reader/json/search" \
-  -d '{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 10 Mar 2021 16:54:58 GMT
+Content-Length: 660
+
+[{"total":1,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1}]}]
 ```
 
 ## API Key
@@ -1800,6 +1899,44 @@ Access-Control-Expose-Headers: Location
 {"total":1,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}]}
 ```
 
+### Search Webhooks by Group
+Search webhooks for a specific group with filtering and pagination options.
+
+> Must-have: `user_token` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcwebhooks/groups/<group_id>/webhooks/search -d '{"name":"<webhook_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 11 Apr 2024 11:44:57 GMT
+Content-Length: 488
+
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"},"metadata":{"key":"value"}}]}
+```
+
+### Search Webhooks by Thing
+Search webhooks for a specific thing with filtering and pagination options.
+
+> Must-have: `user_token` and `thing_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcwebhooks/things/<thing_id>/webhooks/search -d '{"name":"<webhook_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 24 Mar 2025 11:44:57 GMT
+Content-Length: 250
+
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"},"metadata":{"key":"value"}}]}
+```
+
 ### View Webhook
 View details of a certain Webhook by entering `user_token` and `webhook_id`.
 
@@ -1906,6 +2043,27 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
 {"total":2,"offset":0,"limit":10,"notifiers":[{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","contacts": ["test1@example.com"]},{"id":"2234f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","contacts": ["test2@example.com"]}]}
+```
+
+### Search Notifiers by Group
+Search Notifiers for a specific group with filtering and pagination.
+
+> Must-have: `user_token` and `group_id`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
+http://localhost/svcsmtp/groups/<group_id>/notifiers/search \
+-d '{"name":"<notifier_name>","limit":10,"offset":0,"order":"name","dir":"asc"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 11 Apr 2024 12:19:57 GMT
+Content-Length: 337
+
+{"total":2,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<notifier_name>","notifiers":[{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","contacts":["test1@example.com"],"metadata":{"key":"value"}},{"id":"2234f594-d967-4c54-85ef-af58efe8e8ed","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","contacts":["test2@example.com"],"metadata":{"key":"value"}}]}
 ```
 
 ### View Notifier
