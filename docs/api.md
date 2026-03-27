@@ -1714,6 +1714,41 @@ Content-Type: application/json
 {"total":1,"offset":0,"limit":10,"invites":[{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z"}]}
 ```
 
+### View Platform Invite
+
+Returns the details of a single Platform Invite. No authentication is required — the invite ID acts as a shared secret, allowing the link to be opened by the recipient before they have an account.
+
+> Must-have: `invite_id`
+
+```bash
+curl -s -S -i -X GET http://localhost/svcauth/invites/<invite_id>
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890","invitee_email":"<invitee_email>","state":"pending","created_at":"2023-07-14T14:03:14.897Z","expires_at":"2023-07-21T14:03:14.897Z","org_invite":{"id":"b2c3d4e5-f6a7-8901-bcde-f12345678901","org_id":"25da5d7a-d3f5-435e-bcad-0cf22343121a","org_name":"my_org","invitee_role":"editor","group_invites":[{"group_id":"c3d4e5f6-a7b8-9012-cdef-123456789012","member_role":"viewer"}]}}
+```
+
+The `org_invite` field is omitted when the Platform Invite has no org component.
+
+### Revoke Platform Invite
+
+Cancels a pending Platform Invite. Only the platform root admin can revoke.
+
+> Must-have: `user_token`, `invite_id`
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>
+```
+
+Response:
+```bash
+HTTP/1.1 204 No Content
+```
+
 ### Register via Platform Invite
 
 Completes registration for a user who received a Platform Invite. The submitted email must match the invite.
