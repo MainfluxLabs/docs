@@ -321,7 +321,8 @@
   https://localhost/svcmodbus/things/&lt;thing_id&gt;/clients
 </code></pre>
 <p><strong>Response</strong></p>
-<pre><code class="language-json">[
+<pre><code class="language-json">{
+  &quot;clients&quot;: [
   {
     &quot;id&quot;: &quot;b2c3d4e5-f6a7-8901-bcde-f12345678901&quot;,
     &quot;name&quot;: &quot;Boiler sensor&quot;,
@@ -337,7 +338,8 @@
     &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
     &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
   }
-]
+  ]
+}
 </code></pre>
 <h3 id="list-clients">List clients<a class="headerlink" href="#list-clients" title="Permanent link">#</a></h3>
 <pre><code class="language-bash"># All clients for a specific device
@@ -373,7 +375,7 @@ curl -s -S -i \
   https://localhost/svcmodbus/clients/&lt;client_id&gt;
 </code></pre>
 <h3 id="remove-clients">Remove clients<a class="headerlink" href="#remove-clients" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">curl -s -S -i -X DELETE \
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;client_ids&quot;: [&quot;&lt;client_id&gt;&quot;]}' \

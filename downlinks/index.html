@@ -165,7 +165,7 @@
 <p>Downlinks support cron-like scheduling with automatic time-range parameter injection, making it straightforward to implement periodic data pulls from external APIs without any additional orchestration. On startup, the service loads all persisted downlinks from the database and schedules them according to their configured frequency.</p>
 <h2 id="scheduling">Scheduling<a class="headerlink" href="#scheduling" title="Permanent link">#</a></h2>
 <p>The <code>scheduler</code> object controls when and how often a downlink fires. Supported frequencies are <code>once</code>, <code>minutely</code>, <code>hourly</code>, <code>daily</code>, and <code>weekly</code>.</p>
-<p>One-time downlinks require a <code>date_time</code> field in <code>YYYY-MM-DD HH:MM</code> format. An optional <code>time_zone</code> can be provided — if omitted the system default is used.</p>
+<p>One-time downlinks require a <code>date_time</code> field in <code>YYYY-MM-DD HH:MM</code> format. An optional <code>time_zone</code> can be provided — if omitted the system default (UTC) is used.</p>
 <pre><code class="language-json">{
   &quot;scheduler&quot;: {
     &quot;frequency&quot;: &quot;daily&quot;,
@@ -202,19 +202,21 @@ curl -s -S -i -X POST \
   ]' \
   https://localhost/svcdownlinks/things/&lt;thing_id&gt;/downlinks
 </code></pre>
-<pre><code class="language-json">[
-  {
-    &quot;id&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
-    &quot;name&quot;: &quot;Push readings to external API&quot;,
-    &quot;url&quot;: &quot;https://api.example.com/ingest&quot;,
-    &quot;method&quot;: &quot;POST&quot;,
-    &quot;headers&quot;: {&quot;Authorization&quot;: &quot;Bearer &lt;external_token&gt;&quot;},
-    &quot;payload&quot;: &quot;{\&quot;source\&quot;: \&quot;mainflux\&quot;}&quot;,
-    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;, &quot;hour&quot;: 1, &quot;time_zone&quot;: &quot;UTC&quot;},
-    &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
-    &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
-  }
-]
+<pre><code class="language-json">{
+  &quot;downlinks&quot;: [
+    {
+      &quot;id&quot;: &quot;a1b2c3d4-e5f6-7890-abcd-ef1234567890&quot;,
+      &quot;name&quot;: &quot;Push readings to external API&quot;,
+      &quot;url&quot;: &quot;https://api.example.com/ingest&quot;,
+      &quot;method&quot;: &quot;POST&quot;,
+      &quot;headers&quot;: {&quot;Authorization&quot;: &quot;Bearer &lt;external_token&gt;&quot;},
+      &quot;payload&quot;: &quot;{\&quot;source\&quot;: \&quot;mainflux\&quot;}&quot;,
+      &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;hourly&quot;, &quot;hour&quot;: 1, &quot;time_zone&quot;: &quot;UTC&quot;},
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+    }
+  ]
+}
 </code></pre>
 <pre><code class="language-bash"># List downlinks for a thing
 curl -s -S -i \
@@ -244,7 +246,7 @@ curl -s -S -i -X PUT \
   https://localhost/downlinks/&lt;downlink_id&gt;
 
 # Remove downlinks
-curl -s -S -i -X DELETE \
+curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;downlink_ids&quot;: [&quot;&lt;downlink_id&gt;&quot;]}' \
@@ -260,8 +262,8 @@ curl -s -S -i \
 # Restore from backup
 curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '&lt;backup_json&gt;' \
+  -H &quot;Content-Type: application/octet-stream&quot; \
+  --data-binary '&lt;backup_json&gt;' \
   https://localhost/svcdownlinks/restore
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
