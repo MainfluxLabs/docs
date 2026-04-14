@@ -324,11 +324,7 @@ curl -s -S -i -X GET "http://localhost/users/oauth/google?invite_id=<invite_id>&
 Response:
 ```bash
 {
-  "state": "<random_state_value>",
-  "verifier": "<code_verifier>",
-  "invite_id": "<invite_id>",
-  "redirect_path": "/dashboard",
-  "redirect_url": "https://accounts.google.com/o/oauth2/auth?client_id=...&state=<random_state_value>&code_challenge=<challenge>"
+  "url": "https://accounts.google.com/o/oauth2/auth?client_id=...&state=...&code_challenge=..."
 }
 ```
 
