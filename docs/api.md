@@ -411,7 +411,7 @@ To create a group, you need the group name, description, metadata, `org_id` and 
 > Must-have: `org_id`, `user_token`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/groups -d '{"name": "<group_name>", "description": "<group_description>", "metadata": {}}'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcthings/orgs/<org_id>/groups -d '[{"name": "<group_name>", "description": "<group_description>", "metadata": {}}]'
 ```
 
 Response:
