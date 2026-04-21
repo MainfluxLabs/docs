@@ -75,7 +75,7 @@ Time-based aggregation groups messages into time buckets and computes an aggrega
 
 | Parameter      | Description                                         | Values                                                                                   |
 |----------------|-----------------------------------------------------|------------------------------------------------------------------------------------------|
-| `agg_type`     | Aggregation function                                | `min`, `max`, `avg`, `count`, `first` (JSON only)                                        |
+| `agg_type`     | Aggregation function                                | `min`, `max`, `avg`, `count`, `first`, `last`                                            |
 | `agg_interval` | Time bucket unit                                    | `microsecond`, `millisecond`, `second`, `minute`, `hour`, `day`, `week`, `month`, `year` |
 | `agg_value`    | Number of interval units per bucket (default: `1`)  | See per-interval limits below                                                            |
 | `agg_field`    | Payload field(s) to aggregate (JSON only)           | dot-notation, comma-separated                                                            |
