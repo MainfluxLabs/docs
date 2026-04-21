@@ -62,6 +62,45 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 ```
 
+### Self-Register User
+Allows a new user to register themselves. The system sends an email verification link to complete registration.
+
+> Must-have: `user` object (with `email` and `password`) and `redirect_path` (URL for verification)
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/register \
+-d '{"user": { "email": "<user_email>", "password": "<user_password>"}, "redirect_path": "https://example.com/verify"}'
+```
+
+Response (on success, returns empty JSON `{}` but sends email verification link):
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Thu, 11 Apr 2024 12:00:00 GMT
+Content-Length: 2
+
+{}
+```
+
+### Verify Email
+Completes user registration by verifying the e-mail using the token sent during self-registration.
+
+> Must-have: `email_token` (from the verification email)
+
+```bash
+curl -s -S -i -X POST "http://localhost/register/verify?email_token=<email_token>"
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 11 Apr 2024 12:05:00 GMT
+Content-Length: 45
+
+{"created":true,"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8"}
+```
+
 ### View User
 You can always check the user entity that is logged in by entering the user ID and `user_token`.
 
@@ -87,6 +126,32 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
 {"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}
+```
+
+### View Profile
+Retrieve the profile of the currently logged-in user.
+
+> Must-have: `user_token` (Bearer token)
+
+```bash
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/users/profile
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 11 Apr 2024 12:10:00 GMT
+Content-Length: 120
+
+{
+  "id": "d782b42b-e317-4cd7-9dd0-4e2ea0f349c8",
+  "email": "test@email.com",
+  "metadata": {
+    "foo": "bar"
+  },
+  "role": "user"
+}
 ```
 
 ### List Users
@@ -116,6 +181,40 @@ Access-Control-Allow-Headers: *
 {"total":2,"offset":0,"limit":10,"Users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
 ```
 
+### Search Users
+Search users with optional filters such as status, email, and metadata. Supports pagination and ordering.
+
+> Must-have: `user_token` (Bearer token)
+> Optional JSON body fields: `offset`, `limit`, `order`, `dir`, `status`, `email`, `metadata`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" \ http://localhost/users/search -d '{"offset": 0,
+"limit": 10, "order": "id", "dir": "desc", "status": "enabled", "email": "example@email.com", "metadata": {"foo":"bar"}}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Thu, 11 Apr 2024 12:10:00 GMT
+Content-Type: application/json
+Content-Length: 120
+
+{
+  "total": 1,
+  "offset": 0,
+  "limit": 10,
+  "Users": [
+    {
+      "id": "d782b42b-e317-4cd7-9dd0-4e2ea0f349c8",
+      "email": "example@email.com",
+      "metadata": {"foo":"bar"},
+      "status": "enabled"
+    }
+  ]
+}
+```
+
 ### Update User
 Updating user's metadata
 
@@ -142,6 +241,48 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 ```
 
+#### Request Password Reset
+Request a password reset link to be sent to the user's email. The link will contain a token used for resetting the password.
+
+> Must-have: `email` and `redirect_path`
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" \ http://localhost/password/reset-request -d '{"email": "user@example.com",
+"redirect_path": "/reset-password"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Thu, 11 Apr 2024 12:30:00 GMT
+Content-Type: application/json
+Content-Length: 32
+
+{
+  "msg": "Password reset email sent"
+}
+```
+
+#### Reset Password
+Use the token received by email to set a new password. Both `password` and `confirm_password` must match.
+
+> Must-have: `token`, `password`, `confirm_password`
+
+```bash
+curl -s -S -i -X PUT -H "Content-Type: application/json" \ http://localhost/password/reset -d '{"token": "<reset_token>",
+"password": "<new_password>", "confirm_password": "<new_password>"}'
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Thu, 11 Apr 2024 12:31:00 GMT
+Content-Type: application/json
+Content-Length: 0
+```
+
 ### Change Password
 Changing the user password can be done by calling the update password function
 
@@ -165,6 +306,73 @@ X-Content-Type-Options: nosniff
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
+```
+
+### OAuth Login
+The Mainflux system supports login via OAuth providers such as Google and GitHub. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.
+
+#### Initiate OAuth Login
+Redirect the user to the OAuth provider's login page. You can optionally provide an `inviteID` and a `redirect_path` where the user should be redirected after login.
+
+> Must-have: `provider` (Google or GitHub)
+> Optional query params: `invite_id`, `redirect_path`
+
+```bash
+curl -s -S -i -X GET "http://localhost/users/oauth/google?invite_id=<invite_id>&redirect_path=/dashboard"
+```
+
+Response:
+```bash
+{
+  "url": "https://accounts.google.com/o/oauth2/auth?client_id=...&state=...&code_challenge=..."
+}
+```
+
+#### OAuth Callback
+After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and returns the final redirect URL.
+
+> Must-have: `provider` (Google or GitHub), `code`, `state` (from OAuth provider)
+> Cookies: `state` and `verifier` must be set
+
+```bash
+curl -s -S -i -X GET "http://localhost/users/oauth/google/callback?code=<auth_code>&state=<state_from_login>"
+```
+
+Response:
+```bash
+{
+  "redirect_url": "https://localhost/home?token=<user_token>"
+}
+```
+
+#### Enable User
+Activate a user account. Requires admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost/users/<user_id>/enable
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### Disable User
+Deactivate a user account. Requires admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost/users/<user_id>/disable
+```
+
+Response:
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json
 ```
 
 ## Orgs
