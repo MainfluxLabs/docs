@@ -305,13 +305,14 @@ curl -s -S -i -X POST \
 <h2 id="mqtt">MQTT<a class="headerlink" href="#mqtt" title="Permanent link">#</a></h2>
 <p>To send and receive messages over MQTT you could use <a href="https://mosquitto.org">Mosquitto tools</a>,
 or <a href="https://www.eclipse.org/paho/">Paho</a> if you want to use MQTT over WebSocket.</p>
-<p>To publish message, thing should call following command:</p>
-<pre><code>mosquitto_pub -u &lt;thing_id&gt; -P &lt;thing_key&gt; -t /messages -h localhost -m '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
+<p>For example, when using Mosquitto, one could publish a message using the following command:</p>
+<pre><code>mosquitto_pub -u [internal|external] -P &lt;key&gt; -t /messages -h localhost -m '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
-<p>To subscribe to a topic, thing should call following command:</p>
-<pre><code>mosquitto_sub -u &lt;thing_id&gt; -P &lt;thing_key&gt; -t /messages -h localhost
+<p>Note that the MQTT username should be either the literal <code>internal</code> or <code>external</code> depending on if you're authenticating with an internal or external thing key.</p>
+<p>To subcribe to a topic, for example:</p>
+<pre><code>mosquitto_sub -u [internal|external] -P &lt;key&gt; -t /messages -h localhost
 </code></pre>
-<p>If you want to use standard topic such as <code>/messages</code> with SenML content type (JSON or CBOR), you should use following topic <code>/messages</code>.</p>
+<p>If you want to use standard topic such as <code>/messages</code> with SenML content type (JSON or CBOR), you should use following topic: <code>/messages</code>.</p>
 <p>If you are using TLS to secure MQTT connection, add <code>--cafile docker/ssl/certs/ca.crt</code>
 to every command.</p>
 <h2 id="coap">CoAP<a class="headerlink" href="#coap" title="Permanent link">#</a></h2>

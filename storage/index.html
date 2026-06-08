@@ -71,28 +71,30 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Storage</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#writers">Writers</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#postgresql-and-postgresql-writer">PostgreSQL and PostgreSQL Writer</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#timescale-and-timescale-writer">Timescale and Timescale Writer</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#mongodb-and-mongodb-writer">MongoDB and MongoDB Writer</a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#readers">Readers</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#endpoints">Endpoints</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#query-parameters">Query Parameters</a>
+    <li class="toctree-l3"><a class="reference internal" href="#query-parameters">Query parameters</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    <li class="toctree-l3"><a class="reference internal" href="#aggregation">Aggregation</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#mongodb-reader">MongoDB Reader</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-messages">List messages</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#postgresql-reader">PostgreSQL Reader</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-messages-for-a-specific-thing">List messages for a specific thing</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#timescale-reader">Timescale Reader</a>
+    <li class="toctree-l3"><a class="reference internal" href="#list-messages-with-time-range">List messages with time range</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-messages-with-aggregation">List messages with aggregation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#search-messages">Search messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#export-messages">Export messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-messages">Delete messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-and-restore">Backup and restore</a>
     </li>
         </ul>
     </li>
@@ -175,67 +177,102 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">#</a></h1>
-<p>Mainflux supports various storage databases in which messages are stored:</p>
-<ul>
-<li>PostgreSQL</li>
-<li>TimescaleDB</li>
-<li>MongoDB</li>
-</ul>
-<p>These storages are activated via docker-compose add-ons.</p>
-<p>The <code>&lt;project_root&gt;/docker</code> folder contains an <code>addons</code> directory. This directory is used for various services that are not core to the Mainflux platform but could be used for providing additional features.</p>
-<p>In order to run these services, core services, as well as the network from the core composition, should be already running.</p>
+<p>Mainflux uses PostgreSQL as its primary message store. TimescaleDB is available as an optional add-on for time-series workloads.</p>
 <h2 id="writers">Writers<a class="headerlink" href="#writers" title="Permanent link">#</a></h2>
-<p>Writers provide an implementation of various <code>message writers</code>. Message writers are services that consume Mainflux messages, transform them to desired format and store them in certain data stores.</p>
+<p>Writers consume Mainflux messages, transform them to the desired format, and store them in the database.</p>
 <p>For proper consumption of messages based on subtopics and their transformation, see <a href="../messaging/#subtopics">Subtopics</a> and <a href="../messaging/#configure-profile-config">Configure Profile Config</a> sections on the messaging page.</p>
-<h3 id="postgresql-and-postgresql-writer">PostgreSQL and PostgreSQL Writer<a class="headerlink" href="#postgresql-and-postgresql-writer" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">docker-compose -f docker/addons/postgres-writer/docker-compose.yml up -d
-</code></pre>
-<p>Postgres default port (5432) is exposed, so you can use various tools for database inspection and data visualization.</p>
-<h3 id="timescale-and-timescale-writer">Timescale and Timescale Writer<a class="headerlink" href="#timescale-and-timescale-writer" title="Permanent link">#</a></h3>
+<p>PostgreSQL and the PostgreSQL Writer are part of the core composition and start automatically with the platform.</p>
+<p>TimescaleDB Writer is an optional add-on:</p>
 <pre><code class="language-bash">docker-compose -f docker/addons/timescale-writer/docker-compose.yml up -d
 </code></pre>
-<p>Timescale default port (5432) is exposed, so you can use various tools for database inspection and data visualization.</p>
-<h3 id="mongodb-and-mongodb-writer">MongoDB and MongoDB Writer<a class="headerlink" href="#mongodb-and-mongodb-writer" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">docker-compose -f docker/addons/mongodb-writer/docker-compose.yml up -d
-</code></pre>
-<p>MongoDB default port (27017) is exposed, so you can use various tools for database inspection and data visualization.</p>
 <h2 id="readers">Readers<a class="headerlink" href="#readers" title="Permanent link">#</a></h2>
-<p>Readers provide an implementation of various <code>message readers</code>. Message readers are services that expose an HTTP API for querying messages persisted by the Writers. Installing the corresponding writer before the reader is implied.</p>
-<p>Authentication is performed using the Thing key in the <code>Authorization</code> header:</p>
+<p>Readers expose an HTTP API for querying messages persisted by writers. Each reader authenticates requests using the Thing key:</p>
 <pre><code>Authorization: Thing &lt;thing_key&gt;
 </code></pre>
 <h3 id="endpoints">Endpoints<a class="headerlink" href="#endpoints" title="Permanent link">#</a></h3>
-<p>Each Reader service exposes the same HTTP API. Two message formats are supported:</p>
+<p>Each reader exposes the same API for both SenML and JSON formats:</p>
 <table>
 <thead>
 <tr>
-<th>Format</th>
-<th>List</th>
-<th>Search</th>
-<th>Export</th>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SenML</td>
-<td><code>GET /senml</code></td>
-<td><code>POST /senml/search</code></td>
-<td><code>GET /senml/export</code></td>
+<td><code>GET</code></td>
+<td><code>/senml</code></td>
+<td>List SenML messages</td>
 </tr>
 <tr>
-<td>JSON</td>
-<td><code>GET /json</code></td>
-<td><code>POST /json/search</code></td>
-<td><code>GET /json/export</code></td>
+<td><code>GET</code></td>
+<td><code>/senml/{publisherId}</code></td>
+<td>List SenML messages for a specific thing</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/senml/search</code></td>
+<td>Search SenML messages (request body)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/senml/export</code></td>
+<td>Export SenML messages</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/senml</code></td>
+<td>Delete all SenML messages (admin)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/senml/{publisherId}</code></td>
+<td>Delete SenML messages for a specific thing</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/json</code></td>
+<td>List JSON messages</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/json/{publisherId}</code></td>
+<td>List JSON messages for a specific thing</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/json/search</code></td>
+<td>Search JSON messages (request body)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/json/export</code></td>
+<td>Export JSON messages</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/json</code></td>
+<td>Delete all JSON messages (admin)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/json/{publisherId}</code></td>
+<td>Delete JSON messages for a specific thing</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/backup</code></td>
+<td>Export full message backup (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/restore</code></td>
+<td>Restore messages from backup (admin)</td>
 </tr>
 </tbody>
 </table>
-<p>To scope results to a specific publisher (thing ID):</p>
-<ul>
-<li><code>GET /senml/{publisherId}</code></li>
-<li><code>GET /json/{publisherId}</code></li>
-</ul>
-<h3 id="query-parameters">Query Parameters<a class="headerlink" href="#query-parameters" title="Permanent link">#</a></h3>
+<h3 id="query-parameters">Query parameters<a class="headerlink" href="#query-parameters" title="Permanent link">#</a></h3>
 <table>
 <thead>
 <tr>
@@ -272,25 +309,136 @@
 </tr>
 <tr>
 <td><code>from</code></td>
-<td>Start of time range (Unix timestamp, seconds)</td>
+<td>Start of time range (nanoseconds)</td>
 <td></td>
 </tr>
 <tr>
 <td><code>to</code></td>
-<td>End of time range (Unix timestamp, seconds)</td>
+<td>End of time range (nanoseconds)</td>
 <td></td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td>Sort direction</td>
+<td><code>desc</code></td>
 </tr>
 </tbody>
 </table>
-<p>For SenML messages, additional parameters are available: <code>name</code>, <code>v</code>, <code>vb</code>, <code>vs</code>, <code>vd</code>, <code>comparator</code> (<code>eq</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>), <code>aggregation</code> (<code>min</code>, <code>max</code>, <code>avg</code>, <code>count</code>), and <code>interval</code>.</p>
-<p>Add <code>convert=csv</code> to any export request to download results as a CSV file.</p>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">curl -s -S -i -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  &quot;http://localhost:&lt;reader_port&gt;/senml?offset=0&amp;limit=5&quot;
+<p>SenML-only parameters: <code>name</code>, <code>v</code>, <code>vb</code>, <code>vs</code>, <code>vd</code>, <code>comparator</code> (<code>eq</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>).</p>
+<p>JSON-only parameters: <code>filter</code> (dot-notation path to filter by payload field presence).</p>
+<p>Export-only parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Values</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>convert</code></td>
+<td>Output format</td>
+<td><code>json</code>, <code>csv</code></td>
+<td><code>json</code></td>
+</tr>
+<tr>
+<td><code>time_format</code></td>
+<td>Timestamp format in exported output</td>
+<td><code>rfc3339</code></td>
+<td>nanoseconds (int64)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="aggregation">Aggregation<a class="headerlink" href="#aggregation" title="Permanent link">#</a></h3>
+<p>Time-based aggregation groups messages into time buckets and computes an aggregate value per bucket. Both <code>agg_type</code> and <code>agg_interval</code> must be provided together.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agg_type</code></td>
+<td>Aggregation function</td>
+<td><code>min</code>, <code>max</code>, <code>avg</code>, <code>count</code>, <code>first</code>, <code>last</code></td>
+</tr>
+<tr>
+<td><code>agg_interval</code></td>
+<td>Time bucket unit</td>
+<td><code>microsecond</code>, <code>millisecond</code>, <code>second</code>, <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>month</code>, <code>year</code></td>
+</tr>
+<tr>
+<td><code>agg_value</code></td>
+<td>Number of interval units per bucket (default: <code>1</code>)</td>
+<td>See per-interval limits below</td>
+</tr>
+<tr>
+<td><code>agg_field</code></td>
+<td>Payload field(s) to aggregate (JSON only)</td>
+<td>dot-notation, comma-separated</td>
+</tr>
+</tbody>
+</table>
+<p><code>agg_value</code> maximum per interval:</p>
+<table>
+<thead>
+<tr>
+<th>Interval</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>microsecond</code></td>
+<td>1000</td>
+</tr>
+<tr>
+<td><code>millisecond</code></td>
+<td>1000</td>
+</tr>
+<tr>
+<td><code>second</code></td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>minute</code></td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>hour</code></td>
+<td>24</td>
+</tr>
+<tr>
+<td><code>day</code></td>
+<td>7</td>
+</tr>
+<tr>
+<td><code>week</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>month</code></td>
+<td>12</td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="list-messages">List messages<a class="headerlink" href="#list-messages" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml?limit=5&amp;offset=0&quot;
 </code></pre>
-<p>Response:</p>
+<p><strong>Response</strong></p>
 <pre><code class="language-json">{
-  &quot;total&quot;: 2,
+  &quot;total&quot;: 100,
   &quot;offset&quot;: 0,
   &quot;limit&quot;: 5,
   &quot;messages&quot;: [
@@ -300,24 +448,104 @@
       &quot;name&quot;: &quot;voltage&quot;,
       &quot;unit&quot;: &quot;V&quot;,
       &quot;value&quot;: 120.1,
-      &quot;time&quot;: 1.276020076e+09
+      &quot;time&quot;: 1715000000000000000
     }
   ]
 }
 </code></pre>
+<h3 id="list-messages-for-a-specific-thing">List messages for a specific thing<a class="headerlink" href="#list-messages-for-a-specific-thing" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml/&lt;publisher_id&gt;?limit=5&quot;
+</code></pre>
+<h3 id="list-messages-with-time-range">List messages with time range<a class="headerlink" href="#list-messages-with-time-range" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml?from=1715000000000000000&amp;to=1715003600000000000&amp;limit=100&quot;
+</code></pre>
+<h3 id="list-messages-with-aggregation">List messages with aggregation<a class="headerlink" href="#list-messages-with-aggregation" title="Permanent link">#</a></h3>
+<p>Average voltage per hour over the last day:</p>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml?agg_type=avg&amp;agg_interval=hour&amp;agg_value=1&amp;from=1715000000000000000&quot;
+</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-json">{
+  &quot;total&quot;: 24,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;messages&quot;: [
+    {
+      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;protocol&quot;: &quot;mqtt&quot;,
+      &quot;name&quot;: &quot;&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;value&quot;: 119.8,
+      &quot;time&quot;: 1715000000000000000
+    }
+  ]
+}
+</code></pre>
+<p>Max temperature per 5-second bucket from a JSON payload:</p>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/json?agg_type=max&amp;agg_interval=second&amp;agg_value=5&amp;agg_field=temperature&quot;
+</code></pre>
+<h3 id="search-messages">Search messages<a class="headerlink" href="#search-messages" title="Permanent link">#</a></h3>
+<p>Search accepts the same filters as query parameters but via a JSON request body, supporting multiple concurrent queries:</p>
+<pre><code class="language-bash">curl -s -S -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '[
+    {
+      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;name&quot;: &quot;voltage&quot;,
+      &quot;from&quot;: 1715000000000000000,
+      &quot;limit&quot;: 100
+    }
+  ]' \
+  &quot;http://localhost/reader/senml/search&quot;
+</code></pre>
+<h3 id="export-messages">Export messages<a class="headerlink" href="#export-messages" title="Permanent link">#</a></h3>
+<p>Export returns all matching messages without pagination. Append <code>convert=csv</code> to download as CSV:</p>
+<pre><code class="language-bash"># JSON format
+curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml/export?publisher=&lt;publisher_id&gt;&quot; \
+  -o messages.json
+
+# CSV format
+curl -s -S -X GET \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  &quot;http://localhost/reader/senml/export?publisher=&lt;publisher_id&gt;&amp;convert=csv&quot; \
+  -o messages.csv
+</code></pre>
+<h3 id="delete-messages">Delete messages<a class="headerlink" href="#delete-messages" title="Permanent link">#</a></h3>
+<p>Delete messages for a specific thing (requires user token):</p>
+<pre><code class="language-bash">curl -s -S -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/reader/senml/&lt;publisher_id&gt;&quot;
+</code></pre>
+<p>Delete all messages (requires admin token):</p>
+<pre><code class="language-bash">curl -s -S -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/reader/senml&quot;
+</code></pre>
+<h3 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h3>
+<p>Backup exports the full message store as JSON (requires admin token):</p>
+<pre><code class="language-bash">curl -s -S -X GET \
+  -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; \
+  &quot;http://localhost/reader/backup&quot; \
+  -o backup.json
+</code></pre>
+<p>Restore loads messages from a previously exported backup:</p>
+<pre><code class="language-bash">curl -s -S -X POST \
+  -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d @backup.json \
+  &quot;http://localhost/reader/restore&quot;
+</code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
-<h3 id="mongodb-reader">MongoDB Reader<a class="headerlink" href="#mongodb-reader" title="Permanent link">#</a></h3>
-<p>To start MongoDB reader:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/mongodb-reader/docker-compose.yml up -d
-</code></pre>
-<h3 id="postgresql-reader">PostgreSQL Reader<a class="headerlink" href="#postgresql-reader" title="Permanent link">#</a></h3>
-<p>To start PostgreSQL reader:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/postgres-reader/docker-compose.yml up -d
-</code></pre>
-<h3 id="timescale-reader">Timescale Reader<a class="headerlink" href="#timescale-reader" title="Permanent link">#</a></h3>
-<p>To start Timescale reader:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/timescale-reader/docker-compose.yml up -d
-</code></pre>
               
             </div>
           </div><footer>
