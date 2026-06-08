@@ -187,19 +187,21 @@ curl -s -S -i -X POST \
 To send and receive messages over MQTT you could use [Mosquitto tools](https://mosquitto.org),
 or [Paho](https://www.eclipse.org/paho/) if you want to use MQTT over WebSocket.
 
-To publish message, thing should call following command:
+For example, when using Mosquitto, one could publish a message using the following command:
 
 ```
-mosquitto_pub -u <thing_id> -P <thing_key> -t /messages -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
+mosquitto_pub -u [internal|external] -P <key> -t /messages -h localhost -m '[{"bn":"some-base-name:","bt":1.276020076001e+09, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-To subscribe to a topic, thing should call following command:
+Note that the MQTT username should be either the literal `internal` or `external` depending on if you're authenticating with an internal or external thing key.
+
+To subcribe to a topic, for example:
 
 ```
-mosquitto_sub -u <thing_id> -P <thing_key> -t /messages -h localhost
+mosquitto_sub -u [internal|external] -P <key> -t /messages -h localhost
 ```
 
-If you want to use standard topic such as `/messages` with SenML content type (JSON or CBOR), you should use following topic `/messages`.
+If you want to use standard topic such as `/messages` with SenML content type (JSON or CBOR), you should use following topic: `/messages`.
 
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
