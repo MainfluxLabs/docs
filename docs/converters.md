@@ -15,7 +15,7 @@ Large files are processed in batches with a 30-second pause between batches to a
 
 Requests must be authenticated with the device's internal key using the `Authorization: Thing <key>` header.
 
-## SenML CSV
+## CSV file to SenML Messages
 
 The first column must be a Unix timestamp. Subsequent columns are measurement names taken from the header row.
 
@@ -36,7 +36,7 @@ curl -s -S -i -X POST \
 
 Rows are collected and published as batched SenML messages. Each SenML record carries the measurement name (`n`), value (`v`), and timestamp (`t`) from its column and row.
 
-## JSON CSV
+## CSV file to JSON Messages
 
 Column names become JSON field names. If the profile transformer `time_field` is set and matches a column name, that column's value is parsed as a numeric Unix timestamp (seconds or nanoseconds as a float) and stored as a `Created` field in the payload. The first column is always excluded from the payload. Values that cannot be parsed as numbers are kept as strings.
 
@@ -61,7 +61,7 @@ Rows are collected and published as batched JSON messages. The `time` column val
 {"Created": 1709635200, "temperature": 21.5, "humidity": 60, "status": "ok"}
 ```
 
-## JSON SenML
+##  JSON file to SenML Messages
 
 Each object in the array must contain a `t` key (Unix timestamp as a float) and one or more numeric measurement keys. Each measurement key produces one SenML record.
 
@@ -83,7 +83,7 @@ curl -s -S -i -X POST \
 
 Records are collected and published as batched SenML messages. Each SenML record carries the measurement name (`n`), value (`v`), and timestamp (`t`).
 
-## JSON JSON
+## JSON file to JSON Messages
 
 Each object in the array becomes one JSON payload record. If the profile transformer `time_field` is set and matches a key, that key's value is stored as a `Created` field. All other keys are passed through with their original types.
 
