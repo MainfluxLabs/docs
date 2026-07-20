@@ -9,7 +9,7 @@ Webhooks allow the platform to push device messages to external systems in real 
 3. Each webhook receives an HTTP POST with the message payload as the request body.
 4. Custom HTTP headers defined on the webhook are included in every request, allowing authentication with the receiving system.
 
-No additional configuration is required on the device or its profile — forwarding is automatic as long as webhooks are registered.
+The thing's profile must have `webhook_enabled: true` set in its `config` (see [Dispatcher Flags](messaging.md#dispatcher-flags)) — otherwise messages never reach the webhooks pipeline, even if webhooks are registered for the thing.
 
 ## Managing webhooks
 

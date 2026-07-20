@@ -12,6 +12,7 @@ A `content_type` field defines the payload format of messages in order to transf
 Available formats are SenML, CBOR, and JSON and they can be defined correspondingly with values `application/senml+json`, `application/senml+cbor` and `application/json`.
 
 Here's an example of a SenML-JSON profile `config`:
+
 ```json
 {
   "config": {
@@ -21,6 +22,7 @@ Here's an example of a SenML-JSON profile `config`:
 ```
 
 Here's an example of a SenML-CBOR profile `config`:
+
 ```json
 {
   "config": {
@@ -34,13 +36,14 @@ The payload of the IoT message often contains message time. It can be in differe
 When `content_type` is defined as `application/json`, inside the `transformer` structure it is possible to configure the field `time_field` which is the name of the JSON key to use as a timestamp, `time_format` to use for the field value and `time_location`.
 
 Here's an example of a JSON profile `config`:
+
 ```json
 {
   "config": {
     "content_type": "application/json",
     "transformer": {
       "data_filters": ["val1", "val2"],
-      "data_field":"field1",
+      "data_field": "field1",
       "time_field": "t",
       "time_format": "unix",
       "time_location": "UTC"
@@ -52,6 +55,7 @@ Here's an example of a JSON profile `config`:
 In case it is necessary to extract the received payload and use a specific object within the payload, it is possible to define a value within the `data_field` field that will be used to extract the payload.
 
 If we have a payload from which we want to get a list of "params", then the `config` should look like this:
+
 ```json
 {
   "config": {
@@ -65,8 +69,10 @@ If we have a payload from which we want to get a list of "params", then the `con
     }
   }
 }
-``` 
+```
+
 Received payload with params:
+
 ```json
 {
   "root": {
@@ -85,7 +91,9 @@ Received payload with params:
   }
 }
 ```
+
 The extraction result is:
+
 ```bash
 [
       {
@@ -100,6 +108,7 @@ The extraction result is:
       }
 ]
 ```
+
 Field `data_field` represents a string containing dot-separated values, unless only first-level extraction is used, then only the field name is enough (for example, "root"). Each of those words represents the level of the JSON payload to be extracted, which is important to specify them correctly for nested objects.
 
 For the messages that contain _JSON array as the root element_, JSON Transformer does normalization of the data: it creates a separate JSON message for each JSON object in the root.
@@ -107,12 +116,13 @@ For the messages that contain _JSON array as the root element_, JSON Transformer
 The `data_filters` field inside the `transformer` contains the values based on which the transformer filters incoming payload messages.
 If there is certain data that you want to store, you can define it in the `data_filters` field.
 For the previous example, we can filter the extracted payload and save only the fields under the key "field" and "value", then the updated config structure would look like this:
+
 ```json
 {
   "config": {
     "content_type": "application/json",
     "transformer": {
-      "data_filters": ["field","value"],
+      "data_filters": ["field", "value"],
       "data_field": "root.params",
       "time_field": "created",
       "time_format": "rfc3339",
@@ -124,9 +134,33 @@ For the previous example, we can filter the extracted payload and save only the 
 
 If the `data_filters` and `data_field` fields are empty, the whole payload will be used.
 
-Webhook forwarding and notifications are configured via rule actions — see the [Webhooks](webhooks.md) and [Notifiers](notifiers.md) pages.
+### Dispatcher Flags
+
+In addition to `content_type` and `transformer`, the profile `config` accepts three boolean dispatcher flags that control where an incoming message is routed once it's received:
+
+| Flag              | Description                                                      |
+| ----------------- | ---------------------------------------------------------------- |
+| `write_enabled`   | Publish the message to storage (writers/readers)                 |
+| `webhook_enabled` | Forward the message to any webhooks registered for the thing     |
+| `rule_enabled`    | Evaluate the message against rules/scripts assigned to the thing |
+
+These flags are independent — a message can be written to storage without triggering rules, forwarded to webhooks without being persisted, etc. **They default to `false` on newly created profiles** — if you leave all three unset, published messages are received by the adapter but never written, forwarded, or evaluated (a silent no-op, with no error returned to the publisher). Set the ones you need explicitly:
+
+```json
+{
+  "config": {
+    "content_type": "application/senml+json",
+    "write_enabled": true,
+    "webhook_enabled": true,
+    "rule_enabled": true
+  }
+}
+```
+
+Webhook delivery itself is configured per-thing — see the [Webhooks](webhooks.md) page. Rule-triggered SMTP/SMPP notifications are configured via rule/script actions — see the [Rules](rules.md) and [Notifiers](notifiers.md) pages.
 
 ---
+
 ### Subtopics
 
 In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base `/messages` topic.
@@ -148,7 +182,7 @@ When you want to subscribe, you can use NATS wildcards `*` and `>`. Every subtop
 
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
-*For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)*
+_For more information and examples checkout [official nats.io documentation](https://nats.io/documentation/writing_applications/subscribing/)_
 
 ---
 
@@ -162,25 +196,40 @@ curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H "Authorization: Thing 
 
 **Note:** If you're going to use senml message format, you should always send messages as an array.
 
-The HTTP adapter also supports sending **commands** to a specific thing or all things in a group:
+The HTTP adapter also supports sending **downlink commands** to a specific thing or to every thing in a group. A command's payload is an arbitrary JSON body — there's no required envelope shape (the `{"command": ..., "params": ...}` shown below is just a convention, not an enforced schema). The command is published on NATS and delivered to the target thing over whichever protocol adapter (MQTT, CoAP, WS) it's currently connected through.
+
+Commands can be sent two ways:
+
+- **User token** (`Authorization: Bearer <user_token>`) — the caller must have `editor` role (or higher) on the target thing's/group's group. No thing-type restrictions apply.
+- **Thing key** (`Authorization: Thing <thing_key>`) — machine-to-machine (M2M). The _sending_ thing's type must be authorized to command the _target_ thing's type, per this same-group-only policy matrix:
+
+  | Publisher type | Can command                    |
+  | -------------- | ------------------------------ |
+  | `controller`   | `sensor`, `actuator`, `device` |
+  | `gateway`      | `sensor`, `actuator`, `device` |
+  | `device`       | `device`                       |
+  | `sensor`       | _(none)_                       |
+  | `actuator`     | _(none)_                       |
+
+  For group commands sent via thing key, only the publisher's type is checked (it must have _some_ command authority) — filtering by individual recipient type is left to the receiving things.
 
 ```bash
-# Send a command to a thing
+# Send a command to a thing (M2M, via thing key)
 curl -s -S -i -X POST \
   -H "Authorization: Thing <thing_key>" \
   -H "Content-Type: application/json" \
   https://localhost/http/things/<thing_id>/commands \
   -d '{"command":"reboot","params":{"delay":5}}'
 
-# Send a command to all things in a group
+# Send a command to all things in a group (as a user)
 curl -s -S -i -X POST \
-  -H "Authorization: Thing <thing_key>" \
+  -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   https://localhost/http/groups/<group_id>/commands \
   -d '{"command":"set_threshold","params":{"value":80}}'
 ```
 
-*For more information about the HTTP messaging service API, please check out the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).*
+_For more information about the HTTP messaging service API, please check out the [API documentation](https://mainfluxlabs.github.io/docs/swagger/)._
 
 ## MQTT
 
@@ -215,16 +264,20 @@ Examples:
 ```
 coap-cli get /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
 ```
+
 ```
 coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world"
 ```
+
 ```
 coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world" -h 0.0.0.0 -p 1234
 ```
+
 To send a message, use `POST` request.
 To subscribe, send `GET` request with Observe option (flag `o`) set to false. There are two ways to unsubscribe:
-1) Send `GET` request with Observe option set to true.
-2) Forget the token and send `RST` message as a response to `CONF` message received by the server.
+
+1. Send `GET` request with Observe option set to true.
+2. Forget the token and send `RST` message as a response to `CONF` message received by the server.
 
 The most of the notifications received from the Adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
 
@@ -232,8 +285,21 @@ The most of the notifications received from the Adapter are non-confirmable. By 
 
 CoAP Adapter sends these notifications every 12 hours. To configure this period, please check [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md) If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
 
+### Sending Commands
+
+Commands (see [Downlink Commands](#http) above) can also be sent over CoAP, using the same `things/<id>/commands` and `groups/<id>/commands` paths as the HTTP adapter, via `POST`. **CoAP only supports thing-key (M2M) authentication for commands** — there is no user-token path over CoAP.
+
+```
+coap-cli post things/<thing_id>/commands -auth <thing_key> -d '{"command":"reboot","params":{"delay":5}}'
+```
+
+```
+coap-cli post groups/<group_id>/commands -auth <thing_key> -d '{"command":"set_threshold","params":{"value":80}}'
+```
+
 ## WS
-Mainflux supports [MQTT-over-WS](https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).), rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.
+
+Mainflux supports [MQTT-over-WS](<https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).>), rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.
 
 There are 2 recommended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:
 
@@ -263,7 +329,7 @@ Here is an example of a browser application connecting to Mainflux server and se
         username: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
         password: 'ec82f341-d4b5-4c77-ae05-34877a62428f',
     }
-    
+
     var topic = '/messages'
 
     // Connect string, and specify the connection method by the protocol
@@ -297,10 +363,42 @@ Here is an example of a browser application connecting to Mainflux server and se
 ```
 
 **N.B.** Eclipse Paho lib adds sub-URL `/mqtt` automatically, so procedure for connecting to the server can be something like this:
+
 ```javascript
-var loc = { hostname: 'localhost', port: 80 }
+var loc = { hostname: "localhost", port: 80 };
 // Create a client instance
-client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), "clientId")
+client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), "clientId");
 // Connect the client
-client.connect({onSuccess:onConnect});
+client.connect({ onSuccess: onConnect });
+```
+
+### Native WebSocket Adapter (Commands)
+
+Sending [downlink commands](#http) over WebSocket uses a **separate** service from the MQTT-over-WS connection described above — the native `ws-adapter`, which speaks plain WebSocket (not MQTT) and listens on its own port (`MF_WS_ADAPTER_PORT`, default `8190`), not the nginx `/mqtt` path. Each WS connection is scoped to one thing or group; every text/binary frame the client sends over that connection becomes the payload of one command.
+
+Authentication can be supplied either via headers or, for browser clients that can't set custom headers on a WebSocket handshake, via query parameters:
+
+- Thing key (M2M): `Authorization: Thing <thing_key>` header, or `?key=<thing_key>&keyType=<internal|external>`
+- User token: `Authorization: Bearer <user_token>` header, or `?token=<user_token>`
+
+```javascript
+// Connect and send a command to a thing (M2M, via thing key query params)
+const ws = new WebSocket(
+  "ws://localhost:8190/things/<thing_id>/commands?key=<thing_key>&keyType=internal",
+);
+
+ws.onopen = () => {
+  ws.send(JSON.stringify({ command: "reboot", params: { delay: 5 } }));
+};
+```
+
+```javascript
+// Connect and send a command to a group, authenticated as a user
+const ws = new WebSocket(
+  "ws://localhost:8190/groups/<group_id>/commands?token=<user_token>",
+);
+
+ws.onopen = () => {
+  ws.send(JSON.stringify({ command: "set_threshold", params: { value: 80 } }));
+};
 ```

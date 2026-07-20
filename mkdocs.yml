@@ -25,9 +25,11 @@ nav:
   - Getting Started: getting-started.md
   - Authentication: authentication.md
   - Authorization: authorization.md
+  - Certs: certs.md
   - API: api.md
   - Messaging: messaging.md
   - Storage: storage.md
+  - Rules: rules.md
   - Alarms: alarms.md
   - Converters: converters.md
   - Filestore: filestore.md
@@ -36,6 +38,7 @@ nav:
   - Webhooks: webhooks.md
   - Downlinks: downlinks.md
   - Modbus: modbus.md
+  - Audit: audit.md
   - Security: security.md
   - CLI: cli.md
   - Tracing: tracing.md
