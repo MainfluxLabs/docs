@@ -1,6 +1,7 @@
 # API
 
 ## Reference
+
 A complete API reference in the Swagger UI is available at:
 
 [https://mainfluxlabs.github.io/mainflux/docs/swagger](https://mainfluxlabs.github.io/docs/swagger)
@@ -8,6 +9,7 @@ A complete API reference in the Swagger UI is available at:
 ## Users
 
 ### Create Token
+
 To log in to the Mainflux system, you need to create a `user_token`. The obtained token is used for access control in the system.
 
 > Must-have: registered `email` and `password`
@@ -18,6 +20,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/token
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -36,6 +39,7 @@ Access-Control-Allow-Headers: *
 ```
 
 ### Create User
+
 The predefined user within the Mainflux system is the `root admin`.
 In order to add users to the system, the `root` administrator must create accounts for them.
 
@@ -46,6 +50,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -63,6 +68,7 @@ Access-Control-Allow-Headers: *
 ```
 
 ### Self-Register User
+
 Allows a new user to register themselves. The system sends an email verification link to complete registration.
 
 > Must-have: `user` object (with `email` and `password`) and `redirect_path` (URL for verification)
@@ -73,6 +79,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/regis
 ```
 
 Response (on success, returns empty JSON `{}` but sends email verification link):
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -83,6 +90,7 @@ Content-Length: 2
 ```
 
 ### Verify Email
+
 Completes user registration by verifying the e-mail using the token sent during self-registration.
 
 > Must-have: `email_token` (from the verification email)
@@ -92,6 +100,7 @@ curl -s -S -i -X POST "http://localhost/register/verify?email_token=<email_token
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -102,6 +111,7 @@ Content-Length: 45
 ```
 
 ### View User
+
 You can always check the user entity that is logged in by entering the user ID and `user_token`.
 
 > Must-have: `user_id` and `user_token`
@@ -111,6 +121,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/us
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -129,6 +140,7 @@ Access-Control-Allow-Headers: *
 ```
 
 ### View Profile
+
 Retrieve the profile of the currently logged-in user.
 
 > Must-have: `user_token` (Bearer token)
@@ -138,6 +150,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/us
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -155,6 +168,7 @@ Content-Length: 120
 ```
 
 ### List Users
+
 You can get all users in the database by calling this function
 
 > Must-have: `user_token`
@@ -164,6 +178,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/us
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -182,6 +197,7 @@ Access-Control-Allow-Headers: *
 ```
 
 ### Search Users
+
 Search users with optional filters such as status, email, and metadata. Supports pagination and ordering.
 
 > Must-have: `user_token` (Bearer token)
@@ -193,6 +209,7 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: 
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -216,6 +233,7 @@ Content-Length: 120
 ```
 
 ### Update User
+
 Updating user's metadata
 
 > Must-have: `user_token`
@@ -226,6 +244,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -242,6 +261,7 @@ Access-Control-Allow-Headers: *
 ```
 
 #### Request Password Reset
+
 Request a password reset link to be sent to the user's email. The link will contain a token used for resetting the password.
 
 > Must-have: `email` and `redirect_path`
@@ -252,6 +272,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" \ http://localhost/pas
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -265,6 +286,7 @@ Content-Length: 32
 ```
 
 #### Reset Password
+
 Use the token received by email to set a new password. Both `password` and `confirm_password` must match.
 
 > Must-have: `token`, `password`, `confirm_password`
@@ -275,6 +297,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" \ http://localhost/pass
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -284,6 +307,7 @@ Content-Length: 0
 ```
 
 ### Change Password
+
 Changing the user password can be done by calling the update password function
 
 > Must-have: `user_token`, `old_password` and `password` (new_password)
@@ -293,6 +317,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Be
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -309,9 +334,11 @@ Access-Control-Allow-Headers: *
 ```
 
 ### OAuth Login
+
 The Mainflux system supports login via OAuth providers such as Google and GitHub. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.
 
 #### Initiate OAuth Login
+
 Redirect the user to the OAuth provider's login page. You can optionally provide an `inviteID` and a `redirect_path` where the user should be redirected after login.
 
 > Must-have: `provider` (Google or GitHub)
@@ -322,6 +349,7 @@ curl -s -S -i -X GET "http://localhost/users/oauth/google?invite_id=<invite_id>&
 ```
 
 Response:
+
 ```bash
 {
   "url": "https://accounts.google.com/o/oauth2/auth?client_id=...&state=...&code_challenge=..."
@@ -329,6 +357,7 @@ Response:
 ```
 
 #### OAuth Callback
+
 After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and returns the final redirect URL.
 
 > Must-have: `provider` (Google or GitHub), `code`, `state` (from OAuth provider)
@@ -339,6 +368,7 @@ curl -s -S -i -X GET "http://localhost/users/oauth/google/callback?code=<auth_co
 ```
 
 Response:
+
 ```bash
 {
   "redirect_url": "https://localhost/home?token=<user_token>"
@@ -346,6 +376,7 @@ Response:
 ```
 
 #### Enable User
+
 Activate a user account. Requires admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
@@ -355,12 +386,14 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
 #### Disable User
+
 Deactivate a user account. Requires admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
@@ -370,6 +403,7 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -378,6 +412,7 @@ Content-Type: application/json
 ## Orgs
 
 ### Create Org
+
 To create an org, you need the org name, description, metadata and a `user_token`
 
 > Must-have: `user_token`
@@ -387,6 +422,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -396,6 +432,7 @@ Content-Length: 0
 ```
 
 ### View Org
+
 To view an org, you need the org ID and a `user_token`
 
 > Must-have: `user_token` and `org_id`
@@ -405,6 +442,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -415,6 +453,7 @@ Content-Length: 250
 ```
 
 ### Update Org
+
 To update an org, you need the org ID, name, description, metadata and a `user_token`
 
 > Must-have: `user_token` and `org_id`
@@ -424,6 +463,7 @@ To update an org, you need the org ID, name, description, metadata and a `user_t
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -432,6 +472,7 @@ Content-Length: 0
 ```
 
 ### Delete Org
+
 To delete an org, you need the org ID and a `user_token`
 
 > Must-have: `user_token` and `org_id`
@@ -441,6 +482,7 @@ curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: B
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -448,6 +490,7 @@ Date: Fri, 14 Jul 2023 14:47:24 GMT
 ```
 
 ### Delete Orgs
+
 Delete multiple organizations by providing a list of org IDs.
 
 > Must-have: `user_token` and at least one `org_id`
@@ -457,6 +500,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Be
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -475,6 +519,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -485,6 +530,7 @@ Content-Length: 456
 ```
 
 ### Search Orgs
+
 Search organizations with filtering and pagination options.
 
 Supports `name`, `limit`, `offset`, `order`, and `dir` in the request body.
@@ -496,6 +542,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -529,6 +576,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -547,6 +595,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Be
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -566,7 +615,6 @@ Each object must include:
 - **email**: The email address of an existing member whose role is being changed.
 - **role**: The new role to assign. Only roles listed in the [Roles Section](authorization.md#roles) are allowed.
 
-
 ```bash
 curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships -d '{"org_memberships":[{"email": "<user_email>", "role":"new_role"}]}'
 ```
@@ -582,6 +630,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -593,15 +642,19 @@ Content-Length: 87
 
 ### List Memberships
 
-To list org memberships, you need the org ID and a `user_token`
+To list org memberships, you need the org ID and a `user_token`. Results can be filtered by `role` (e.g. `owner`, `admin`, `editor`, `viewer`), in addition to the usual `limit`/`offset` pagination.
 
 > Must-have: `user_token` and `org_id`
 
 ```bash
 curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/orgs/<org_id>/memberships
+
+# Filter by role
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/orgs/<org_id>/memberships?role=admin"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -614,6 +667,7 @@ Content-Length: 235
 ## Groups
 
 ### Create Group
+
 To create a group, you need the group name, description, metadata, `org_id` and a `user_token`
 
 > Must-have: `org_id`, `user_token`
@@ -623,6 +677,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -635,6 +690,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### View Group
+
 Get a group entity for a logged-in user
 
 > Must-have: `user_token` and `group_id`
@@ -644,6 +700,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -657,6 +714,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Groups
+
 Get all groups, list requests accepts limit and offset query parameters
 
 > Must-have: `user_token`
@@ -666,6 +724,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -679,6 +738,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Groups by Org
+
 Get groups by a specific organization
 
 > Must-have: `user_token`, `org_id`
@@ -688,6 +748,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -701,6 +762,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Search Groups
+
 Search groups with filtering and pagination options.
 
 Supports `name`, `limit`, `offset`, `order`, and `dir` in the request body.
@@ -712,6 +774,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -722,6 +785,7 @@ Content-Length: 573
 ```
 
 ### Search Groups by Org
+
 Search groups filtered by a specific organization.
 
 > Must-have: `user_token`, `org_id`
@@ -731,6 +795,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -741,6 +806,7 @@ Content-Length: 573
 ```
 
 ### Update Group
+
 Update group entity
 
 > Must-have: `user_token`, `group_id`
@@ -750,6 +816,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -761,6 +828,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Group
+
 Delete a group entity
 
 > Must-have: `user_token`, `group_id`
@@ -770,6 +838,7 @@ curl -s -S -i -X DELETE -H "Content-Type: application/json" -H "Authorization: B
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
@@ -780,6 +849,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Groups
+
 Delete multiple groups by providing a list of group IDs.
 
 > Must-have: `user_token` and at least one `group_id`
@@ -789,6 +859,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Be
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -796,6 +867,7 @@ Date: Wed, 10 Mar 2021 17:14:13 GMT
 ```
 
 ### View Group by Thing
+
 Get a group entity by thing
 
 > Must-have: `user_token`, `thing_id`
@@ -805,6 +877,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -818,6 +891,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### View Group by Profile
+
 Get a group entity by profile
 
 > Must-have: `user_token`, `profile_id`
@@ -827,6 +901,7 @@ curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bear
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -842,6 +917,7 @@ Access-Control-Expose-Headers: Location
 ## Group Memberships
 
 ### Create Memberships
+
 To create group memberships, you need the group ID, member IDs, their roles and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `member_id` and `role`
@@ -862,6 +938,7 @@ curl -isSX POST http://localhost/groups/<group_id>/memberships -d '{"group_membe
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -872,6 +949,7 @@ Content-Length: 3
 ```
 
 ### Remove Memberships
+
 To remove group memberships, you need the group ID, member IDs and a `user_token`
 
 > Must-have: `user_token`, `group_id`, `member_ids`
@@ -881,6 +959,7 @@ curl -isSX PATCH http://localhost/groups/<group_id>/memberships -d '{"member_ids
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -888,6 +967,7 @@ Date: Wed, 03 Nov 2021 13:00:05 GMT
 ```
 
 ### Update Memberships
+
 To update group memberships, you need the group ID, member IDs, new roles and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `member_id`, `role`
@@ -905,6 +985,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -916,15 +997,20 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Memberships
-To list group memberships, you need the group ID and a `user_token`
+
+To list group memberships, you need the group ID and a `user_token`. Results can be filtered by `role` (e.g. `owner`, `admin`, `editor`, `viewer`), in addition to the usual `limit`/`offset` pagination.
 
 > Must-have: `user_token`, `group_id`
 
 ```bash
 curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/memberships
+
+# Filter by role
+curl -s -S -i -X GET -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/groups/<group_id>/memberships?role=editor"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -944,6 +1030,7 @@ Access-Control-Expose-Headers: Location
 A profile is a set of configuration parameters that can be applied to a Thing within the same group.
 To create a profile with external ID, the user needs to provide a UUID v4 format unique ID, `group_id`, metadata, config and a `user_token`.
 The detailed configuration of the Profile Config can be found at [Profile Config](https://github.com/MainfluxLabs/docs/blob/master/docs/messaging.md#configure-profile-config).
+
 > Must-have: `user_token`,`group_id`
 
 ```bash
@@ -951,6 +1038,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -964,7 +1052,9 @@ Access-Control-Expose-Headers: Location
 {"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
 
 ```
+
 ### Create Profiles
+
 The same as creating a profile with external ID the user can create multiple profiles at once by providing UUID v4 format unique ID in a series of profiles together with a `user_token` and `<group_id>`.
 
 > Must-have: `user_token`, `group_id` and profiles
@@ -974,6 +1064,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -987,6 +1078,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Create Profiles with external ID
+
 You can create multiple profiles with external ID at once
 
 > Must-have: `user_token`, `group_id` and at least 2 profiles
@@ -996,6 +1088,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.16.0
@@ -1007,7 +1100,9 @@ Access-Control-Expose-Headers: Location
 
 {"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
 ```
+
 ### View Profile
+
 Get a profile entity for a logged-in user
 
 > Must-have: `user_token` and `profile_id`
@@ -1017,6 +1112,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/pr
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1030,6 +1126,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### View Profile by Thing
+
 Get a profile by a specific thing
 
 > Must-have: `user_token` and `thing_id`
@@ -1039,6 +1136,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/th
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1052,15 +1150,20 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Profiles
-Get all profiles that the user can access, list requests accepts limit and offset query parameters
+
+Get all profiles that the user can access. List endpoints accept `limit`, `offset`, `order`, `dir`, `name`, `metadata`, and `content_type` (filter by the profile's configured content type, e.g. `application/json`) query parameters.
 
 > Must-have: `user_token`
 
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/profiles
+
+# Filter by content type
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/profiles?content_type=application/json"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1070,10 +1173,11 @@ Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 ```
 
 ### List Profiles by Group
+
 Get all profiles by a certain group where the user has access
 
 > Must-have: `user_token`, `<group_id>`
@@ -1083,6 +1187,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/gr
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1096,6 +1201,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Profiles by Org
+
 Get all profiles by a certain organization
 
 > Must-have: `user_token`, `<org_id>`
@@ -1105,6 +1211,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1118,6 +1225,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Update Profile
+
 Update profile entity
 
 > Must-have: `user_token` and `profile_id`
@@ -1127,6 +1235,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1138,6 +1247,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Profile
+
 Delete a profile entity that is not assigned to any Thing
 
 > Must-have: `user_token` and `profile_id`
@@ -1147,6 +1257,7 @@ curl -s -S -i -X DELETE -H "Content-Type: application/json" -H  "Authorization: 
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
@@ -1157,6 +1268,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Search Profiles
+
 Full-text and field search across all profiles the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
 
 > Must-have: `user_token`
@@ -1168,6 +1280,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1176,6 +1289,7 @@ Content-Type: application/json
 ```
 
 ### Search Profiles by Group
+
 Search profiles filtered by a specific group.
 
 > Must-have: `user_token` and `group_id`
@@ -1187,6 +1301,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 ### Search Profiles by Org
+
 Search profiles filtered by a specific organization.
 
 > Must-have: `user_token` and `org_id`
@@ -1216,6 +1331,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -1238,6 +1354,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -1283,6 +1400,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" \
 ```
 
 ### View Thing
+
 You can get thing entity by entering the thing ID and `user_token`
 
 > Must-have: `user_token` and `thing_id`
@@ -1292,6 +1410,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/th
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1305,6 +1424,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### View Metadata by Key
+
 Get thing metadata by providing the `thing_key`
 
 > Must-have: `thing_key`
@@ -1314,6 +1434,7 @@ curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/meta
 ```
 
 Response:
+
 ```bash
 Server: nginx/1.20.0
 Date: Tue, 21 Jan 2025 15:46:10 GMT
@@ -1326,15 +1447,20 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Things
-Get all things that the user can access, list requests accepts limit and offset query parameters
+
+Get all things that the user can access. List endpoints accept `limit`, `offset`, `order`, `dir`, `name` (partial match), `metadata`, and `type` (filter by thing type: `device`, `sensor`, `actuator`, `controller`, `gateway`) query parameters. This applies to all "List Things" variants below (by group, by profile, by org) as well as the search endpoints.
 
 > Must-have: `user_token`
 
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/things
+
+# Filter by type
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/things?type=sensor"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1344,10 +1470,11 @@ Content-Length: 582
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
+{"total":3,"offset":0,"limit":10,"things":[{"id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name","type":"device","key":"659aa6ca-1781-4a69-9a20-689ddb235506","metadata":{"key":"val"}},{"id":"4328f3e4-4c67-40b3-9491-0ab782c48d50","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_1","type":"device","key":"828c6985-c2d6-419e-a124-ba99147b9920"},{"id":"38aa33fe-39e5-4ee3-97ba-4227cfac63f6","group_id":"550e8400-e29b-41d4-a716-446655440000","profile_id":"a9bf9e57-1685-4c89-bafb-ff5af830be8b","name":"thing_name_2","type":"sensor","key":"f73e7342-06c1-499a-9584-35de495aa338"}]}
 ```
 
 ### List Things by Group
+
 Get all things by a certain group
 
 > Must-have: `user_token`, `group_id`
@@ -1357,6 +1484,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/gr
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1370,6 +1498,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Things by Profile
+
 Get all things by a certain profile
 
 > Must-have: `user_token`, `profile_id`
@@ -1379,6 +1508,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/pr
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1392,6 +1522,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Things by Org
+
 Get all things by a certain organization
 
 > Must-have: `user_token`, `org_id`
@@ -1401,6 +1532,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1414,6 +1546,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Update Thing
+
 Updates a thing's name, type, key, or metadata. To reassign a thing to a different profile or group, use the [Update Thing Group and Profile](#update-thing-group-and-profile) endpoint instead.
 
 > Must-have: `user_token`, `thing_id`, `name`, `key`, `type`
@@ -1423,6 +1556,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1434,6 +1568,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Update Thing Group and Profile
+
 Reassigns a thing to a different profile and/or group. The profile must belong to the target group.
 
 > Must-have: `user_token`, `thing_id`, `profile_id`, `group_id`
@@ -1443,6 +1578,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: B
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1454,6 +1590,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Update Things Metadata
+
 Updating a things metadata
 
 > Must-have: `user_token`
@@ -1463,6 +1600,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1474,6 +1612,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Thing
+
 To delete a thing you need a `thing_id` and a `user_token`
 
 > Must-have: `user_token` and `thing_id`
@@ -1483,6 +1622,7 @@ curl -s -S -i -X DELETE -H "Content-Type: application/json" -H  "Authorization: 
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
@@ -1493,14 +1633,17 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Identify
+
 Validates a thing's key and returns its ID. The `type` field must be `internal` or `external`, depending on which key type is being submitted.
 
 > Must-have: `thing_key`, `type`
+
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" http://localhost/identify -d '{"key": "<thing_key>", "type": "internal"}'
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -1514,6 +1657,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Get Group by Thing
+
 Returns the group a thing belongs to.
 
 > Must-have: `user_token` and `thing_id`
@@ -1523,6 +1667,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/th
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1531,6 +1676,7 @@ Content-Type: application/json
 ```
 
 ### Search Things
+
 Full-text and field search across all things the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
 
 > Must-have: `user_token`
@@ -1542,6 +1688,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1550,6 +1697,7 @@ Content-Type: application/json
 ```
 
 ### Search Things by Profile
+
 Search things filtered by a specific profile.
 
 > Must-have: `user_token` and `profile_id`
@@ -1561,6 +1709,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 ### Search Things by Group
+
 Search things filtered by a specific group.
 
 > Must-have: `user_token` and `group_id`
@@ -1572,6 +1721,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 ### Search Things by Org
+
 Search things filtered by a specific organization.
 
 > Must-have: `user_token` and `org_id`
@@ -1585,23 +1735,25 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ## Messages
 
 ### Send Messages
+
 Sends message via HTTP protocol
 
 > Must-have: `thing_key`
 
 For SenML:
+
 ```bash
 curl -s -S -i -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{"bn":"some-base-name:","bt":1.276020076001e+09,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]'
 ```
 
-
 For JSON:
+
 ```bash
 curl -X POST -H "Authorization: Thing <thing_key>" -H "Content-Type: application/json" "http://localhost/http/messages" -d '[{ "name": "temperature", "value": 20.5, "unit": "°C"}, {"name": "humidity", "value": 68, "unit": "%"}]'
 ```
 
-
 Response:
+
 ```bash
 HTTP/1.1 202 Accepted
 Server: nginx/1.16.0
@@ -1613,19 +1765,23 @@ Connection: keep-alive
 ### Read Messages
 
 Reads messages from database with optional filtering and pagination.
+
 > Must-have: `user_token` and `format`.
 
 For SenML:
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml"
 ```
 
 For JSON:
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1642,16 +1798,19 @@ Deletes all messages for the authenticated thing, with an optional time range fi
 > Must-have: `user_token`
 
 For SenML:
+
 ```bash
 curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/senml?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 For JSON:
+
 ```bash
 curl -X DELETE -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/json?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 ```
@@ -1663,16 +1822,19 @@ Deletes messages from a specific publisher, with an optional time range filter.
 > Must-have: `user_token`, `publisher_id`
 
 For SenML:
+
 ```bash
 curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 For JSON:
+
 ```bash
 curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 ```
@@ -1696,11 +1858,13 @@ Exports messages in a specific format, optionally converting to CSV.
 > Must-have: `user_token`
 
 For SenML:
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
 
 For JSON:
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/export?convert=<file_type>" -o "<file_name>.<file_type>"
 ```
@@ -1724,16 +1888,19 @@ Search messages using one or more queries. Each query supports filtering, pagina
 > Must-have: `user_token`
 
 For SenML:
+
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
 ```
 
 For JSON:
+
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1746,6 +1913,7 @@ Content-Length: 660
 ## API Key
 
 ### Issue API Key
+
 Generates a new API key. Then new API key will be uniquely identified by its ID.
 Duration is expressed in seconds.
 
@@ -1756,6 +1924,7 @@ curl -isSX POST  http://localhost/keys -H "Content-Type: application/json" -H "A
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.20.0
@@ -1777,6 +1946,7 @@ curl -isSX GET  http://localhost/keys/<key_id> -H 'Content-Type: application/jso
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -1800,6 +1970,7 @@ curl -isSX GET http://localhost/keys -H 'Authorization: Bearer <user_token>'
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -1821,6 +1992,7 @@ curl -isSX DELETE  http://localhost/keys/<key_id> -H 'Content-Type: application/
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.20.0
@@ -1845,6 +2017,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -1863,6 +2036,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/or
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1883,6 +2057,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1903,6 +2078,7 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/s
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -1921,6 +2097,7 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/s
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -1938,6 +2115,7 @@ curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Content-Type: application/json
@@ -1955,6 +2133,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1975,6 +2154,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1999,6 +2179,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -2014,6 +2195,7 @@ curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/sv
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2032,6 +2214,7 @@ curl -s -S -i -X GET http://localhost/svcauth/invites/<invite_id>
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2052,6 +2235,7 @@ curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 ```
@@ -2069,6 +2253,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" \
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 ```
@@ -2082,11 +2267,13 @@ To forward a message to another platform, you need to create a Webhook with the 
 You can create multiple Webhooks at once by entering a series of Webhooks structures, `thing_id` and a `user_token`.
 
 > Must-have: `user_token`, `thing_id`, `name` and `url`
+
 ```bash
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.20.0
@@ -2101,14 +2288,17 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Webhooks by Group
+
 You can get all Webhooks for certain Group by entering `user_token` and `group_id`.
 
 > Must-have: `user_token` and `group_id`
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/groups/<group_id>/webhooks
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -2122,14 +2312,17 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### List Webhooks by Thing
+
 You can get all Webhooks for certain Thing by entering `user_token` and `thing_id`.
 
 > Must-have: `user_token` and `thing_id`
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -2143,6 +2336,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Search Webhooks by Group
+
 Search webhooks for a specific group with filtering and pagination options.
 
 > Must-have: `user_token` and `group_id`
@@ -2152,6 +2346,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2162,6 +2357,7 @@ Content-Length: 488
 ```
 
 ### Search Webhooks by Thing
+
 Search webhooks for a specific thing with filtering and pagination options.
 
 > Must-have: `user_token` and `thing_id`
@@ -2171,6 +2367,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2181,14 +2378,17 @@ Content-Length: 250
 ```
 
 ### View Webhook
+
 View details of a certain Webhook by entering `user_token` and `webhook_id`.
 
 > Must-have: `user_token` and `group_id`
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/webhooks/<webhook_id>
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -2200,7 +2400,9 @@ Access-Control-Expose-Headers: Location
 
 {"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}
 ```
+
 ### Update Webhook
+
 Update data of webhook with provided ID and `user_token`
 
 > Must-have: `user_token` and `webhook_id`
@@ -2210,6 +2412,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -2221,6 +2424,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Webhooks
+
 Delete webhooks by given IDs
 
 > Must-have: `user_token`, webhook_ids
@@ -2230,6 +2434,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: B
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
@@ -2248,11 +2453,13 @@ In order to send email notifications to certain contacts when a message arrives,
 You can create multiple Notifiers at once by entering a series of Notifiers structures, `group_id` and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `name` and `contacts`
+
 ```bash
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers -d '{"notifiers: [{"name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}]}'
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 201 Created
 Server: nginx/1.20.0
@@ -2265,17 +2472,21 @@ Access-Control-Expose-Headers: Location
 {"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}
 
 ```
+
 **Note:** The logged-in user who creates a Notifier for a certain Group must have the role of "editor" of that Group.
 
 ### List Notifiers by Group
+
 You can get all Notifiers for certain Group by entering `user_token` and `group_id`.
 
 > Must-have: `user_token` and `group_id`
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -2289,6 +2500,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Search Notifiers by Group
+
 Search Notifiers for a specific group with filtering and pagination.
 
 > Must-have: `user_token` and `group_id`
@@ -2300,6 +2512,7 @@ http://localhost/svcsmtp/groups/<group_id>/notifiers/search \
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2310,14 +2523,17 @@ Content-Length: 337
 ```
 
 ### View Notifier
+
 View details of a certain Notifier by entering `user_token` and `notifier_id`.
 
 > Must-have: `user_token` and `group_id`
+
 ```bash
 curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/notifiers/<notifier_id>
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.20.0
@@ -2329,7 +2545,9 @@ Access-Control-Expose-Headers: Location
 
 {"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","contacts": ["test1@example.com"]}}
 ```
+
 ### Update Notifier
+
 Update data of notifier with provided ID and `user_token`
 
 > Must-have: `user_token` and `notifier_id`
@@ -2339,6 +2557,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 200 OK
 Server: nginx/1.16.0
@@ -2350,6 +2569,7 @@ Access-Control-Expose-Headers: Location
 ```
 
 ### Delete Notifiers
+
 Delete notifiers by given IDs
 
 > Must-have: `user_token`,`group_id`, notifier_ids
@@ -2359,6 +2579,7 @@ curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: B
 ```
 
 Response:
+
 ```bash
 HTTP/1.1 204 No Content
 Server: nginx/1.16.0
