@@ -5,7 +5,7 @@
 Mainflux IoT platform is comprised of the following services:
 
 | Service                                                                                              | Description                                                                  |
-|:-----------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|
+| :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
 | [auth](https://github.com/MainfluxLabs/mainflux/tree/master/auth)                                    | Manages platform's orgs and auth concerns                                    |
 | [users](https://github.com/MainfluxLabs/mainflux/tree/master/users)                                  | Manages platform's users and auth concerns                                   |
 | [things](https://github.com/MainfluxLabs/mainflux/tree/master/things)                                | Manages platform's things, profiles, groups and group members                |
@@ -18,6 +18,7 @@ Mainflux IoT platform is comprised of the following services:
 | [rules](https://github.com/MainfluxLabs/mainflux/tree/master/rules)                                  | Evaluates threshold rules and Lua scripts against incoming device messages   |
 | [alarms](https://github.com/MainfluxLabs/mainflux/tree/master/consumers/alarms)                      | Persists alarms triggered by the rules engine or Lua scripts to PostgreSQL   |
 | [downlinks](https://github.com/MainfluxLabs/mainflux/tree/master/downlinks)                          | Manages scheduled outbound HTTP requests (downlinks) for things and groups   |
+| [shadows](https://github.com/MainfluxLabs/mainflux/tree/master/shadows)                              | Maintains a persisted desired/reported state record (shadow) for each thing  |
 | [webhooks](https://github.com/MainfluxLabs/mainflux/tree/master/webhooks)                            | Forwards device messages to external HTTP endpoints                          |
 | [smtp-notifier](https://github.com/MainfluxLabs/mainflux/tree/master/cmd/smtp-notifier)              | Sends email notifications to contacts defined on notifier records            |
 | [smpp-notifier](https://github.com/MainfluxLabs/mainflux/tree/master/cmd/smpp-notifier)              | Sends SMS notifications to contacts defined on notifier records              |
@@ -52,7 +53,6 @@ things and profiles) in CRUD fashion and define access control.
 `Thing` represents devices (or applications) connected to Mainflux that uses the
 platform for message exchange with other "things".
 
-
 ## Messaging
 
 Mainflux uses [NATS](https://nats.io) as its messaging backbone, due to its
@@ -65,6 +65,7 @@ However, in order to be post-processed and normalized,
 messages should be formatted using [SenML](https://tools.ietf.org/html/draft-ietf-core-senml-08).
 
 ## Unified IoT Platform
+
 Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.
 Since we can deploy same Mainflux code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once the engineers understand how to deploy and maintain the platform, they will have the same known work across the whole edge-fog-cloud continuum.
 Same set of tools can be used, same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.
