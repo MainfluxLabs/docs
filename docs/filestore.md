@@ -8,23 +8,23 @@ The backend is selected with `MF_FILESTORE_BACKEND` (`local` or `seaweedfs`). In
 
 Every file stored in the platform carries the following metadata fields:
 
-| Field      | Description                                                                          |
-|------------|--------------------------------------------------------------------------------------|
-| `name`     | File name; serves as the unique identifier within the thing or group scope           |
+| Field      | Description                                                                                              |
+|------------|----------------------------------------------------------------------------------------------------------|       
+| `name`     | File name; serves as the unique identifier within the thing or group scope                               |
 | `class`    | Logical file class, derived from the extension (`images`, `documents`, `BIM`, `pointclouds`, `binaries`) |
-| `format`   | File format, derived from the extension (e.g. `csv`, `pdf`, `png`, `ifc`)            |
-| `time`     | Unix timestamp (floating-point seconds) associated with the file                     |
-| `metadata` | Optional arbitrary key-value pairs for custom attributes                             |
+| `format`   | File format, derived from the extension (e.g. `csv`, `pdf`, `png`, `ifc`)                                |
+| `time`     | Unix timestamp (floating-point seconds) associated with the file                                         |
+| `metadata` | Optional arbitrary key-value pairs for custom attributes                                                 |
 
 `class` and `format` are **not** supplied by the client — they are derived from the uploaded file's extension. The supported extensions and the class each maps to are:
 
-| Class         | Extensions                                                                       |
-|---------------|----------------------------------------------------------------------------------|
-| `images`      | `jpg`, `jpeg`, `png`, `svg`                                                       |
+| Class         | Extensions                                                                                          |
+|---------------|-----------------------------------------------------------------------------------------------------|
+| `images`      | `jpg`, `jpeg`, `png`, `svg`                                                                         |
 | `documents`   | `pdf`, `csv`, `txt`, `doc`, `docx`, `odt`, `odf`, `odp`, `ods`, `xls`, `xlsx`, `ppt`, `pptx`, `xps` |
-| `BIM`         | `ifc`                                                                            |
-| `pointclouds` | `e57`                                                                            |
-| `binaries`    | `bin`                                                                            |
+| `BIM`         | `ifc`                                                                                               |
+| `pointclouds` | `e57`                                                                                               |
+| `binaries`    | `bin`                                                                                               |
 
 On upload the first bytes of the file are sniffed and checked against the declared class: `images` must sniff as `image/*`, `documents` as `text/*` or `application/*` (`pdf` → `application/pdf`, `csv`/`txt` → `text/*`). `BIM`, `pointclouds`, and `binaries` accept arbitrary payloads. A file whose extension is unsupported, or whose content does not match its class, is rejected with `415 Unsupported Media Type`.
 
