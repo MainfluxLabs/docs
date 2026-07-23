@@ -31,6 +31,7 @@ nav:
   - Storage: storage.md
   - Rules: rules.md
   - Alarms: alarms.md
+  - Shadows: shadows.md
   - Converters: converters.md
   - Filestore: filestore.md
   - UIConfigs: uiconfigs.md
