@@ -31,17 +31,17 @@ Each reader exposes the same API for both SenML and JSON formats:
 | Method   | Path                   | Description                                |
 |----------|------------------------|--------------------------------------------|
 | `GET`    | `/senml`               | List SenML messages                        |
-| `GET`    | `/senml/{publisherId}` | List SenML messages for a specific thing   |
+| `GET`    | `/senml/{thingId}`     | List SenML messages for a specific thing   |
 | `POST`   | `/senml/search`        | Search SenML messages (request body)       |
 | `GET`    | `/senml/export`        | Export SenML messages                      |
 | `DELETE` | `/senml`               | Delete all SenML messages (admin)          |
-| `DELETE` | `/senml/{publisherId}` | Delete SenML messages for a specific thing |
+| `DELETE` | `/senml/{thingId}`     | Delete SenML messages for a specific thing |
 | `GET`    | `/json`                | List JSON messages                         |
-| `GET`    | `/json/{publisherId}`  | List JSON messages for a specific thing    |
+| `GET`    | `/json/{thingId}`      | List JSON messages for a specific thing    |
 | `POST`   | `/json/search`         | Search JSON messages (request body)        |
 | `GET`    | `/json/export`         | Export JSON messages                       |
 | `DELETE` | `/json`                | Delete all JSON messages (admin)           |
-| `DELETE` | `/json/{publisherId}`  | Delete JSON messages for a specific thing  |
+| `DELETE` | `/json/{thingId}`      | Delete JSON messages for a specific thing  |
 | `GET`    | `/backup`              | Export full message backup (admin)         |
 | `POST`   | `/restore`             | Restore messages from backup (admin)       |
 
@@ -52,7 +52,7 @@ Each reader exposes the same API for both SenML and JSON formats:
 | `offset`     | Number of messages to skip                      | 0       |
 | `limit`      | Maximum number of messages to return (max 1000) | 10      |
 | `subtopic`   | Filter by subtopic                              |         |
-| `publisher`  | Filter by publisher (thing ID)                  |         |
+| `thing_id`   | Filter by thing ID                              |         |
 | `protocol`   | Filter by protocol                              |         |
 | `from`       | Start of time range (nanoseconds)               |         |
 | `to`         | End of time range (nanoseconds)                 |         |
@@ -111,7 +111,7 @@ curl -s -S -X GET \
   "limit": 5,
   "messages": [
     {
-      "publisher": "513d02d2-16c1-4f23-98be-9e12f8fee898",
+      "thing_id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
       "protocol": "mqtt",
       "name": "voltage",
       "unit": "V",
@@ -127,7 +127,7 @@ curl -s -S -X GET \
 ```bash
 curl -s -S -X GET \
   -H "Authorization: Thing <thing_key>" \
-  "http://localhost/reader/senml/<publisher_id>?limit=5"
+  "http://localhost/reader/senml/<thing_id>?limit=5"
 ```
 
 ### List messages with time range
@@ -157,7 +157,7 @@ curl -s -S -X GET \
   "limit": 10,
   "messages": [
     {
-      "publisher": "513d02d2-16c1-4f23-98be-9e12f8fee898",
+      "thing_id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
       "protocol": "mqtt",
       "name": "",
       "unit": "",
@@ -186,7 +186,7 @@ curl -s -S -X POST \
   -H "Content-Type: application/json" \
   -d '[
     {
-      "publisher": "513d02d2-16c1-4f23-98be-9e12f8fee898",
+      "thing_id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
       "name": "voltage",
       "from": 1715000000000000000,
       "limit": 100
@@ -203,13 +203,13 @@ Export returns all matching messages without pagination. Append `convert=csv` to
 # JSON format
 curl -s -S -X GET \
   -H "Authorization: Thing <thing_key>" \
-  "http://localhost/reader/senml/export?publisher=<publisher_id>" \
+  "http://localhost/reader/senml/export?thing_id=<thing_id>" \
   -o messages.json
 
 # CSV format
 curl -s -S -X GET \
   -H "Authorization: Thing <thing_key>" \
-  "http://localhost/reader/senml/export?publisher=<publisher_id>&convert=csv" \
+  "http://localhost/reader/senml/export?thing_id=<thing_id>&convert=csv" \
   -o messages.csv
 ```
 
@@ -220,7 +220,7 @@ Delete messages for a specific thing (requires user token):
 ```bash
 curl -s -S -X DELETE \
   -H "Authorization: Bearer <user_token>" \
-  "http://localhost/reader/senml/<publisher_id>"
+  "http://localhost/reader/senml/<thing_id>"
 ```
 
 Delete all messages (requires admin token):

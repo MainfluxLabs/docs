@@ -147,7 +147,7 @@ Each script execution receives an isolated Lua environment with an `mfx` global:
 | `mfx.message.payload`          | Parsed message payload (JSON object or array item)                             |
 | `mfx.message.subtopic`         | Message subtopic                                                               |
 | `mfx.message.created`          | Message creation timestamp (Unix)                                              |
-| `mfx.message.publisher_id`     | Thing ID that published the message                                            |
+| `mfx.message.thing_id`         | ID of the thing that published the message                                     |
 | `mfx.smtp_notify(notifier_id)` | Triggers an SMTP notification via the specified notifier. Max 2 calls per run. |
 | `mfx.create_alarm(level)`      | Creates an alarm at the given level (1–5). Max 1 call per run.                 |
 | `mfx.log(message)`             | Appends a message to the run log (max 256 lines, 2048 chars each).             |

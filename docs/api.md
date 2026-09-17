@@ -1788,7 +1788,7 @@ Content-Type: application/json
 Date: Wed, 10 Mar 2021 16:54:58 GMT
 Content-Length: 660
 
-{"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
+{"offset":0,"limit":10,"format":"messages","total":3,"messages":[{"thing_id":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1},{"thing_id":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020072.001,"value":1.3},{"thing_id":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:current","unit":"A","time":1276020071.001,"value":1.2}]}
 ```
 
 ### Delete All Messages
@@ -1815,22 +1815,22 @@ Response:
 HTTP/1.1 204 No Content
 ```
 
-### Delete Messages by Publisher
+### Delete Messages by Thing
 
-Deletes messages from a specific publisher, with an optional time range filter.
+Deletes messages from a specific thing, with an optional time range filter.
 
-> Must-have: `user_token`, `publisher_id`
+> Must-have: `user_token`, `thing_id`
 
 For SenML:
 
 ```bash
-curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
+curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/<thing_id>?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 For JSON:
 
 ```bash
-curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/<publisher_id>?from=<start_timestamp>&to=<end_timestamp>"
+curl -X DELETE -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/<thing_id>?from=<start_timestamp>&to=<end_timestamp>"
 ```
 
 Response:
@@ -1890,13 +1890,13 @@ Search messages using one or more queries. Each query supports filtering, pagina
 For SenML:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/senml/search" -d '[{"thing_id":"<thing_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
 ```
 
 For JSON:
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/search" -d '[{"publisher":"<publisher_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" "http://localhost/reader/json/search" -d '[{"thing_id":"<thing_id>","from":<start_timestamp>,"to":<end_timestamp>,"limit":10,"offset":0}]'
 ```
 
 Response:
@@ -1907,7 +1907,7 @@ Content-Type: application/json
 Date: Wed, 10 Mar 2021 16:54:58 GMT
 Content-Length: 660
 
-[{"total":1,"messages":[{"publisher":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1}]}]
+[{"total":1,"messages":[{"thing_id":"33eb28c3-4ca2-45c3-b1c5-d5d049c6c24e","protocol":"http","name":"some-base-name:voltage","unit":"V","time":1276020076.001,"value":120.1}]}]
 ```
 
 ## API Key
