@@ -11,26 +11,26 @@ On startup, the service loads all persisted clients and begins scheduling polls 
 3. The result is published to the platform as a JSON object keyed by field name, for example:
 
 ```json
-{"temperature": 23.5, "humidity": 61, "status": true}
+{ "temperature": 23.5, "humidity": 61, "status": true }
 ```
 
 This message is then available to the rest of the platform — including storage, rules, and webhooks — just like any other device message.
 
 ## Function codes
 
-| Function code            | Modbus FC | Description                          |
-|--------------------------|:---------:|--------------------------------------|
-| `ReadCoils`              | 01        | Read output coils (digital output)   |
-| `ReadDiscreteInputs`     | 02        | Read discrete inputs (digital input) |
-| `ReadHoldingRegisters`   | 03        | Read holding registers (analog R/W)  |
-| `ReadInputRegisters`     | 04        | Read input registers (analog R/O)    |
+| Function code          | Modbus FC | Description                          |
+| ---------------------- | :-------: | ------------------------------------ |
+| `ReadCoils`            |    01     | Read output coils (digital output)   |
+| `ReadDiscreteInputs`   |    02     | Read discrete inputs (digital input) |
+| `ReadHoldingRegisters` |    03     | Read holding registers (analog R/W)  |
+| `ReadInputRegisters`   |    04     | Read input registers (analog R/O)    |
 
 ## Poll schedule
 
 The `scheduler` object controls when and how often the client polls the device.
 
 | Field       | Description                                                                                        |
-|-------------|---------------------------------------------------------------------------------------------------|
+| ----------- | -------------------------------------------------------------------------------------------------- |
 | `frequency` | Poll frequency: `once`, `minutely`, `hourly`, `daily`, or `weekly`                                 |
 | `time_zone` | IANA timezone name (e.g. `Europe/Berlin`, `UTC`)                                                   |
 | `date_time` | Date and time in `YYYY-MM-DD HH:MM` format. Required when `frequency` is `once`; ignored otherwise |
@@ -44,7 +44,7 @@ The `scheduler` object controls when and how often the client polls the device.
 Each entry in `data_fields` describes one register or coil to read and how to decode it.
 
 | Field        | Description                                                                                            |
-|--------------|--------------------------------------------------------------------------------------------------------|
+| ------------ | ------------------------------------------------------------------------------------------------------ |
 | `name`       | Field name used as the JSON key in the published message                                               |
 | `address`    | Starting register or coil address                                                                      |
 | `type`       | Data type: `bool`, `int16`, `uint16`, `int32`, `uint32`, `float32`, or `string`                        |
@@ -52,6 +52,8 @@ Each entry in `data_fields` describes one register or coil to read and how to de
 | `unit`       | Optional unit label (e.g. `°C`, `%`, `bar`)                                                            |
 | `scale`      | Optional multiplier applied to the raw numeric value before publishing                                 |
 | `length`     | Register count. Calculated automatically from `type` for numeric types; set manually for `string` only |
+
+Data fields can be sent inline in the request body, or uploaded as a CSV or JSON file — see [Create a client from a file](#create-a-client-from-a-file).
 
 ## Managing clients
 
@@ -85,22 +87,119 @@ curl -s -S -i -X POST \
 ```json
 {
   "clients": [
-  {
-    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-    "name": "Boiler sensor",
-    "ip_address": "192.168.1.100",
-    "port": "502",
-    "slave_id": 1,
-    "function_code": "ReadHoldingRegisters",
-    "scheduler": {"frequency": "minutely", "minute": 5},
-    "data_fields": [
-      {"name": "temperature", "address": 100, "type": "float32", "byte_order": "ABCD", "unit": "°C"},
-      {"name": "pressure",    "address": 102, "type": "uint16",  "unit": "bar"}
-    ],
-    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
-    "group_id": "211e4567-e89b-12d3-a456-426614174000"
-  }
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Boiler sensor",
+      "ip_address": "192.168.1.100",
+      "port": "502",
+      "slave_id": 1,
+      "function_code": "ReadHoldingRegisters",
+      "scheduler": { "frequency": "minutely", "minute": 5 },
+      "data_fields": [
+        {
+          "name": "temperature",
+          "address": 100,
+          "type": "float32",
+          "byte_order": "ABCD",
+          "unit": "°C"
+        },
+        { "name": "pressure", "address": 102, "type": "uint16", "unit": "bar" }
+      ],
+      "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+      "group_id": "211e4567-e89b-12d3-a456-426614174000"
+    }
   ]
+}
+```
+
+### Create a client from a file
+
+Instead of listing every register inline, you can create a single client and upload its data fields as a **CSV** or **JSON** file. This is useful when register maps are large or exported from another tool.
+
+Both endpoints take a `multipart/form-data` body with two parts:
+
+| Part     | Description                                                                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `client` | JSON object with the client's connection info — every field accepted by _Create clients_ **except** `data_fields` (`name`, `ip_address`, `port`, `slave_id`, `function_code`, `scheduler`, `metadata`) |
+| `file`   | The CSV or JSON file describing the data fields, one entry per register or coil                                                                                                                        |
+
+Each request creates exactly one client and returns it with status `201`. A malformed `client` part or an invalid file (missing `address` column, an unparseable numeric cell, a row with no address) returns `400`.
+
+#### CSV file
+
+The first line is a header row naming the columns. Recognized columns are `name`, `type`, `unit`, `scale`, `byte_order`, `address`, and `length`, in any order. Header names are matched case-insensitively and unknown columns are ignored. Every row must supply `name`, `type`, and `address`; `length` is only needed for `string` fields.
+
+`registers.csv`:
+
+```csv
+name,type,unit,scale,byte_order,address,length
+temperature,float32,°C,0.1,ABCD,100,
+pressure,uint16,bar,,,102,
+label,string,,,,200,8
+```
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -F 'client={"name":"Boiler sensor","ip_address":"192.168.1.100","port":"502","slave_id":1,"function_code":"ReadHoldingRegisters","scheduler":{"frequency":"minutely","minute":5,"time_zone":"UTC"}}' \
+  -F "file=@registers.csv" \
+  https://localhost/svcmodbus/things/<thing_id>/clients/csv
+```
+
+#### JSON file
+
+The file holds a JSON array of objects, one per data field, each using the same keys as a `data_fields` entry in _Create clients_.
+
+`registers.json`:
+
+```json
+[
+  {
+    "name": "temperature",
+    "address": 100,
+    "type": "float32",
+    "byte_order": "ABCD",
+    "unit": "°C",
+    "scale": 0.1
+  },
+  { "name": "pressure", "address": 102, "type": "uint16", "unit": "bar" },
+  { "name": "label", "address": 200, "type": "string", "length": 8 }
+]
+```
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -F 'client={"name":"Boiler sensor","ip_address":"192.168.1.100","port":"502","slave_id":1,"function_code":"ReadHoldingRegisters","scheduler":{"frequency":"minutely","minute":5,"time_zone":"UTC"}}' \
+  -F "file=@registers.json" \
+  https://localhost/svcmodbus/things/<thing_id>/clients/json
+```
+
+**Response** (same shape for both)
+
+```json
+{
+  "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+  "name": "Boiler sensor",
+  "ip_address": "192.168.1.100",
+  "port": "502",
+  "slave_id": 1,
+  "function_code": "ReadHoldingRegisters",
+  "scheduler": { "frequency": "minutely", "minute": 5, "time_zone": "UTC" },
+  "data_fields": [
+    {
+      "name": "temperature",
+      "address": 100,
+      "type": "float32",
+      "byte_order": "ABCD",
+      "unit": "°C",
+      "scale": 0.1
+    },
+    { "name": "pressure", "address": 102, "type": "uint16", "unit": "bar" },
+    { "name": "label", "address": 200, "type": "string", "length": 8 }
+  ],
+  "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+  "group_id": "211e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
