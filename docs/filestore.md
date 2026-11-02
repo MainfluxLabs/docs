@@ -2,19 +2,21 @@
 
 The Filestore service provides file storage for things and groups. File contents are written to a pluggable object store — the local filesystem or a [SeaweedFS](https://github.com/seaweedfs/seaweedfs) filer — while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token at editor level or above).
 
-The backend is selected with `MF_FILESTORE_BACKEND` (`local` or `seaweedfs`). In the default docker-compose deployment the backend is `seaweedfs`, backed by SeaweedFS master, volume, and filer containers.
+The backend is selected with `MF_FILESTORE_BACKEND` (`local` or `seaweedfs`). The default is `local`, both in the service itself and in the docker-compose deployment (`docker/.env`). Setting it to `seaweedfs` also enables the SeaweedFS master, volume, and filer containers through the matching docker-compose profile.
 
 ## File metadata
 
 Every file stored in the platform carries the following metadata fields:
 
-| Field      | Description                                                                                              |
-|------------|----------------------------------------------------------------------------------------------------------|       
-| `name`     | File name; serves as the unique identifier within the thing or group scope                               |
-| `class`    | Logical file class, derived from the extension (`images`, `documents`, `BIM`, `pointclouds`, `binaries`) |
-| `format`   | File format, derived from the extension (e.g. `csv`, `pdf`, `png`, `ifc`)                                |
-| `time`     | Unix timestamp (floating-point seconds) associated with the file                                         |
-| `metadata` | Optional arbitrary key-value pairs for custom attributes                                                 |
+| Field      | Description                                                                                                          |
+|------------|----------------------------------------------------------------------------------------------------------------------|
+| `name`     | File name; serves as the unique identifier within the thing or group scope                                           |
+| `class`    | Logical file class, derived from the extension (`images`, `documents`, `BIM`, `pointclouds`, `binaries`, `archives`) |
+| `format`   | File format, derived from the extension (e.g. `csv`, `pdf`, `png`, `ifc`)                                            |
+| `time`     | Unix timestamp (floating-point seconds) associated with the file                                                     |
+| `metadata` | Optional arbitrary key-value pairs for custom attributes                                                             |
+| `checksum` | SHA256 checksum of the file content, computed by the server on upload (read-only)                                    |
+| `size`     | File size in bytes, recorded by the server on upload (read-only)                                                     |
 
 `class` and `format` are **not** supplied by the client — they are derived from the uploaded file's extension. The supported extensions and the class each maps to are:
 
@@ -24,9 +26,24 @@ Every file stored in the platform carries the following metadata fields:
 | `documents`   | `pdf`, `csv`, `txt`, `doc`, `docx`, `odt`, `odf`, `odp`, `ods`, `xls`, `xlsx`, `ppt`, `pptx`, `xps` |
 | `BIM`         | `ifc`                                                                                               |
 | `pointclouds` | `e57`                                                                                               |
-| `binaries`    | `bin`                                                                                               |
+| `binaries`    | `bin`, `hex`                                                                                        |
+| `archives`    | `zip`                                                                                               |
 
-On upload the first bytes of the file are sniffed and checked against the declared class: `images` must sniff as `image/*`, `documents` as `text/*` or `application/*` (`pdf` → `application/pdf`, `csv`/`txt` → `text/*`). `BIM`, `pointclouds`, and `binaries` accept arbitrary payloads. A file whose extension is unsupported, or whose content does not match its class, is rejected with `415 Unsupported Media Type`.
+On upload the first 512 bytes of the file are sniffed and checked against the class and format derived from its extension:
+
+| Class / format                  | Required sniffed type                                            |
+|---------------------------------|------------------------------------------------------------------|
+| `images` (`jpg`, `jpeg`, `png`) | `image/*`                                                        |
+| `images` (`svg`)                | `image/*` or `text/*` (SVG is XML, so it usually sniffs as text) |
+| `documents` (`pdf`)             | `application/pdf`                                                |
+| `documents` (`csv`, `txt`)      | `text/*`                                                         |
+| `documents` (other formats)     | `application/*` or `text/*`                                      |
+| `binaries` (`hex`)              | `text/*` (Intel HEX is a text encoding)                          |
+| `binaries` (`bin`)              | any                                                              |
+| `archives` (`zip`)              | `application/zip`                                                |
+| `BIM`, `pointclouds`            | any                                                              |
+
+A file whose extension is unsupported, or whose content does not match its class, is rejected with `415 Unsupported Media Type`.
 
 ## Scopes
 
@@ -37,7 +54,26 @@ On upload the first bytes of the file are sniffed and checked against the declar
 
 A device can also read its own group's files directly using its thing key, without requiring a user token.
 
-Group-file uploads compute a SHA256 checksum on ingest and store it. Group-file downloads stream from the backend and verify the checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download whose object is missing entirely (index row present, object gone) returns `404`.
+## Checksums, downloads and range requests
+
+The following applies to every file, in both the thing and group scopes.
+
+Every upload computes a SHA256 checksum of the content and stores it with the file. Every download (`/files/<name>`, `/fs/groups/<group_id>/files/<name>` and `/fs/groupfiles/<name>`) returns the content as `application/octet-stream` with a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download whose object is missing entirely (index row present, object gone) returns `404`.
+
+Downloads support single-range `Range` requests (RFC 9110), which lets constrained devices fetch large files such as firmware in chunks. The forms `bytes=<first>-<last>`, `bytes=<first>-`, and `bytes=-<suffix_length>` are accepted:
+
+```bash
+curl -s -S -i \
+  -H "Authorization: Thing <thing_key>" \
+  -H "Range: bytes=0-1023" \
+  https://localhost/files/<name>
+```
+
+- A satisfiable range returns `206 Partial Content` with a `Content-Range: bytes <first>-<last>/<size>` header and a `Content-Length` of the returned slice.
+- A range that lies outside the file returns `416 Range Not Satisfiable`.
+- Range headers that are malformed or request multiple ranges are ignored, and the whole file is returned with `200 OK`. The same happens for files stored before sizes were recorded.
+- Full responses for files with a known size include `Accept-Ranges: bytes` and `Content-Length`.
+- Range responses are **not** checksum-verified, because the checksum covers the whole object. Verify the reassembled file yourself against the `checksum` from the file listing if you need integrity guarantees.
 
 ## Device-scoped files
 
@@ -72,7 +108,7 @@ curl -s -S -i \
   https://localhost/files
 ```
 
-Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`time` or `name`, default `time`), `dir` (`asc` or `desc`, default `desc`), and the filters `name`, `format`, and `class`.
+Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`time` or `name`, default `time`), `dir` (`asc` or `desc`, default `desc`), and the filters `name`, `format`, `class`, and `metadata` (a URL-encoded JSON object; only files whose metadata contains the given key-value pairs are returned, e.g. `?metadata={"sensor":"temperature"}`).
 
 **Response**
 
@@ -84,8 +120,8 @@ Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`t
   "order": "time",
   "dir": "desc",
   "files_info": [
-    {"name": "photo.png",       "class": "images",    "format": "png", "time": 1710000200.0, "metadata": {}},
-    {"name": "sensor-data.csv", "class": "documents", "format": "csv", "time": 1710000000.0, "metadata": {"sensor": "temperature"}}
+    {"name": "photo.png",       "class": "images",    "format": "png", "time": 1710000200.0, "metadata": {},                         "checksum": "<sha256>", "size": 20480},
+    {"name": "sensor-data.csv", "class": "documents", "format": "csv", "time": 1710000000.0, "metadata": {"sensor": "temperature"}, "checksum": "<sha256>", "size": 512}
   ]
 }
 ```
@@ -98,7 +134,7 @@ curl -s -S -i \
   https://localhost/files/<name>
 ```
 
-The file content is returned as `application/octet-stream`.
+The file content is returned as `application/octet-stream`. Range requests are supported, see [Checksums, downloads and range requests](#checksums-downloads-and-range-requests).
 
 ### Update file metadata
 
@@ -163,7 +199,7 @@ curl -s -S -i \
   https://localhost/fs/groupfiles/<name>
 ```
 
-Group-file downloads set a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names) and verify the stored SHA256 checksum at end-of-stream.
+Group-file downloads behave like thing-file downloads, including the checksum verification and range support described in [Checksums, downloads and range requests](#checksums-downloads-and-range-requests).
 
 ### Update a group file
 
