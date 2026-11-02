@@ -120,8 +120,24 @@ Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`t
   "order": "time",
   "dir": "desc",
   "files_info": [
-    {"name": "photo.png",       "class": "images",    "format": "png", "time": 1710000200.0, "metadata": {},                         "checksum": "<sha256>", "size": 20480},
-    {"name": "sensor-data.csv", "class": "documents", "format": "csv", "time": 1710000000.0, "metadata": {"sensor": "temperature"}, "checksum": "<sha256>", "size": 512}
+    {
+      "name": "photo.png",
+      "class": "images",
+      "format": "png",
+      "time": 1710000200.0,
+      "metadata": {},
+      "checksum": "<sha256>",
+      "size": 20480
+    },
+    {
+      "name": "sensor-data.csv",
+      "class": "documents",
+      "format": "csv",
+      "time": 1710000000.0,
+      "metadata": {"sensor": "temperature"},
+      "checksum": "<sha256>",
+      "size": 512
+    }
   ]
 }
 ```
