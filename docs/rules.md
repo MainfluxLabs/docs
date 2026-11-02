@@ -10,16 +10,16 @@ The engine is driven by the event stream: every message published by a thing is 
 
 A rule evaluates a set of conditions against an incoming payload. When conditions are met according to the configured operator (`AND` or `OR`), the rule triggers one or more actions.
 
-| Field         | Description                                                                                                                                          |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Unique rule identifier                                                                                                                               |
-| `group_id`    | ID of the group the rule belongs to                                                                                                                  |
-| `name`        | Human-readable rule name                                                                                                                             |
-| `description` | Optional free-form description                                                                                                                       |
-| `input`       | What triggers evaluation — `type` (`message` or `alarm`), `thing_ids`, and an optional `config` (e.g. `subtopic` filter)                             |
-| `conditions`  | List of conditions to evaluate — `threshold` comparisons or `script` runs (see below)                                                                |
-| `operator`    | `AND` or `OR` — required when more than one condition is defined                                                                                     |
-| `actions`     | List of `{type, id, level}` — `type` is `alarm`, `smtp`, or `smpp`; `id` is the notifier ID for `smtp`/`smpp`; `level` (1–5) is required for `alarm` |
+| Field         | Description                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `id`          | Unique rule identifier                                                                                                   |
+| `group_id`    | ID of the group the rule belongs to                                                                                      |
+| `name`        | Human-readable rule name                                                                                                 |
+| `description` | Optional free-form description                                                                                           |
+| `input`       | What triggers evaluation — `type` (`message` or `alarm`), `thing_ids`, and an optional `config` (e.g. `subtopic` filter) |
+| `conditions`  | List of conditions to evaluate — `threshold` comparisons or `script` runs (see below)                                    |
+| `operator`    | `AND` or `OR` — required when more than one condition is defined                                                         |
+| `actions`     | List of actions to trigger when the conditions are met (see below)                                                       |
 
 ### Conditions
 
@@ -34,6 +34,18 @@ Each condition has a required `type`, which selects how it's evaluated.
 | `script_id`  | Script only. ID of the [script](#scripts) to run                                                                                                                                       |
 
 A `script` condition runs the referenced Lua script and uses its return value as the result: a strict `return true` counts as met, anything else — `return false`, no return, or a runtime error — counts as not met. The script's result is combined with any other conditions on the rule the same way a threshold result would be, under the rule's `operator`. Script conditions run with a **read-only** API (only `mfx.log` is available, since a condition must not have side effects), and are only supported on `message`-input rules, not `alarm`-input rules. Every evaluation is recorded as a [script run](#script-runs).
+
+### Actions
+
+Each action has a required `type`, which selects what happens when the rule triggers.
+
+| Field   | Description                                                             |
+| ------- | ----------------------------------------------------------------------- |
+| `type`  | `alarm`, `smtp`, `smpp`, or `webhook`                                   |
+| `id`    | `smtp`/`smpp` only. ID of the notifier to send the notification through |
+| `level` | `alarm` only. Alarm severity, 1–5                                       |
+
+A `webhook` action forwards the message to the webhooks registered for the thing that published it, so it takes no `id`. `alarm` actions are only supported on `message`-input rules — an `alarm`-input rule cannot raise another alarm.
 
 ### Create Rules
 
@@ -188,13 +200,13 @@ A Lua script is a group-scoped resource, referenced by ID from a rule's [script 
 
 Each script execution receives an isolated Lua environment with an `mfx` global:
 
-| Field / Function           | Description                                                        |
-| -------------------------- | ------------------------------------------------------------------ |
-| `mfx.message.payload`      | Parsed message payload (JSON object or array item)                 |
-| `mfx.message.subtopic`     | Message subtopic                                                   |
-| `mfx.message.created`      | Message creation timestamp (Unix)                                  |
-| `mfx.message.publisher_id` | Thing ID that published the message                                |
-| `mfx.log(message)`         | Appends a message to the run log (max 256 lines, 2048 chars each). |
+| Field / Function       | Description                                                        |
+| ---------------------- | ------------------------------------------------------------------ |
+| `mfx.message.payload`  | Parsed message payload (JSON object or array item)                 |
+| `mfx.message.subtopic` | Message subtopic                                                   |
+| `mfx.message.created`  | Message creation timestamp (Unix)                                  |
+| `mfx.message.thing_id` | ID of the thing that published the message                         |
+| `mfx.log(message)`     | Appends a message to the run log (max 256 lines, 2048 chars each). |
 
 `mfx.log` is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: `base`, `math`, `string`, `table`. The `print` function is disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.
 
