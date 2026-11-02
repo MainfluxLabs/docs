@@ -12,7 +12,7 @@ Every file stored in the platform carries the following metadata fields:
 |------------|----------------------------------------------------------------------------------------------------------------------|
 | `name`     | File name; serves as the unique identifier within the thing or group scope                                           |
 | `class`    | Logical file class, derived from the extension (`images`, `documents`, `BIM`, `pointclouds`, `binaries`, `archives`) |
-| `format`   | File format, derived from the extension (e.g. `csv`, `pdf`, `png`, `ifc`)                                            |
+| `format`   | File format, derived from the extension                                                                              |
 | `time`     | Unix timestamp (floating-point seconds) associated with the file                                                     |
 | `metadata` | Optional arbitrary key-value pairs for custom attributes                                                             |
 | `checksum` | SHA256 checksum of the file content, computed by the server on upload (read-only)                                    |
@@ -29,19 +29,19 @@ Every file stored in the platform carries the following metadata fields:
 | `binaries`    | `bin`, `hex`                                                                                        |
 | `archives`    | `zip`                                                                                               |
 
-On upload the first 512 bytes of the file are sniffed and checked against the class and format derived from its extension:
+On upload, the MIME type detected from the first 512 bytes of the file is checked against the class and format derived from its extension:
 
-| Class / format                  | Required sniffed type                                            |
-|---------------------------------|------------------------------------------------------------------|
-| `images` (`jpg`, `jpeg`, `png`) | `image/*`                                                        |
-| `images` (`svg`)                | `image/*` or `text/*` (SVG is XML, so it usually sniffs as text) |
-| `documents` (`pdf`)             | `application/pdf`                                                |
-| `documents` (`csv`, `txt`)      | `text/*`                                                         |
-| `documents` (other formats)     | `application/*` or `text/*`                                      |
-| `binaries` (`hex`)              | `text/*` (Intel HEX is a text encoding)                          |
-| `binaries` (`bin`)              | any                                                              |
-| `archives` (`zip`)              | `application/zip`                                                |
-| `BIM`, `pointclouds`            | any                                                              |
+| Class / format                  | Required detected MIME type                                           |
+|---------------------------------|-----------------------------------------------------------------------|
+| `images` (`jpg`, `jpeg`, `png`) | `image/*`                                                             |
+| `images` (`svg`)                | `image/*` or `text/*` (SVG is XML, so it is usually detected as text) |
+| `documents` (`pdf`)             | `application/pdf`                                                     |
+| `documents` (`csv`, `txt`)      | `text/*`                                                              |
+| `documents` (other formats)     | `application/*` or `text/*`                                           |
+| `binaries` (`hex`)              | `text/*` (Intel HEX is a text encoding)                               |
+| `binaries` (`bin`)              | `any`                                                                 |
+| `archives` (`zip`)              | `application/zip`                                                     |
+| `BIM`, `pointclouds`            | `any`                                                                 |
 
 A file whose extension is unsupported, or whose content does not match its class, is rejected with `415 Unsupported Media Type`.
 
@@ -58,7 +58,7 @@ A device can also read its own group's files directly using its thing key, witho
 
 The following applies to every file, in both the thing and group scopes.
 
-Every upload computes a SHA256 checksum of the content and stores it with the file. Every download (`/files/<name>`, `/fs/groups/<group_id>/files/<name>` and `/fs/groupfiles/<name>`) returns the content as `application/octet-stream` with a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download whose object is missing entirely (index row present, object gone) returns `404`.
+Every upload computes a SHA256 checksum of the content and stores it with the file. Every download (`/files/<name>`, `/fs/groups/<group_id>/files/<name>` and `/fs/groupfiles/<name>`) returns the content as `application/octet-stream` with a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download returns `404` if the file record exists but its content is missing from the object store.
 
 Downloads support single-range `Range` requests (RFC 9110), which lets constrained devices fetch large files such as firmware in chunks. The forms `bytes=<first>-<last>`, `bytes=<first>-`, and `bytes=-<suffix_length>` are accepted:
 
@@ -71,9 +71,10 @@ curl -s -S -i \
 
 - A satisfiable range returns `206 Partial Content` with a `Content-Range: bytes <first>-<last>/<size>` header and a `Content-Length` of the returned slice.
 - A range that lies outside the file returns `416 Range Not Satisfiable`.
-- Range headers that are malformed or request multiple ranges are ignored, and the whole file is returned with `200 OK`. The same happens for files stored before sizes were recorded.
+- Range headers that are malformed or request multiple ranges are ignored, and the whole file is returned with `200 OK`.
+- Range requests for files without a recorded size return the whole file.
 - Full responses for files with a known size include `Accept-Ranges: bytes` and `Content-Length`.
-- Range responses are **not** checksum-verified, because the checksum covers the whole object. Verify the reassembled file yourself against the `checksum` from the file listing if you need integrity guarantees.
+- Range responses are **not** checksum-verified, because the checksum covers the whole object. Clients must verify the reassembled file against the `checksum` from the file listing.
 
 ## Device-scoped files
 
@@ -156,7 +157,7 @@ The file content is returned as `application/octet-stream`. Range requests are s
 
 ### Update file metadata
 
-Metadata is updated with a JSON body (not a multipart form); this endpoint updates metadata only and does not replace file content. Fields omitted from the body are reset to their zero value, so include `time` if you want to preserve it.
+Metadata is updated with a JSON body (not a multipart form); this endpoint updates metadata only and does not replace file content. Omitted fields, including `time`, are reset to their zero value.
 
 ```bash
 curl -s -S -i -X PUT \
@@ -216,8 +217,7 @@ curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
   https://localhost/fs/groups/<group_id>/files/<name>
 
-# Using a thing key (useful for devices fetching shared config or firmware),
-# resolving the group from the thing key
+# Devices can use a thing key; the group is resolved from the key
 curl -s -S -i \
   -H "Authorization: Thing <thing_key>" \
   https://localhost/fs/groupfiles/<name>
