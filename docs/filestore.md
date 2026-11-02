@@ -1,6 +1,6 @@
 # Filestore
 
-The Filestore service provides file storage for things and groups. File contents are written to a pluggable object store — the local filesystem or a [SeaweedFS](https://github.com/seaweedfs/seaweedfs) filer — while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token at editor level or above).
+The Filestore service provides file storage for things and groups. File contents are written to a pluggable object store — the local filesystem or a [SeaweedFS](https://github.com/seaweedfs/seaweedfs) filer — while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token: viewer-level group access to list and download files, editor-level to upload, update and delete them).
 
 The backend is selected with `MF_FILESTORE_BACKEND` (`local` or `seaweedfs`). The default is `local`, both in the service itself and in the docker-compose deployment (`docker/.env`). Setting it to `seaweedfs` also enables the SeaweedFS master, volume, and filer containers through the matching docker-compose profile.
 
@@ -47,10 +47,10 @@ A file whose extension is unsupported, or whose content does not match its class
 
 ## Scopes
 
-| Scope       | Authentication                     | Description                                              |
-|-------------|------------------------------------|----------------------------------------------------------|
-| Thing files | `Authorization: Thing <thing_key>` | Files private to a specific device                       |
-| Group files | `Authorization: Bearer <token>`    | Files shared across a group; require editor-level access |
+| Scope       | Authentication                     | Description                                                                                                 |
+|-------------|------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| Thing files | `Authorization: Thing <thing_key>` | Files private to a specific device                                                                          |
+| Group files | `Authorization: Bearer <token>`    | Files shared across a group; viewer access to list and download, editor access to upload, update and delete |
 
 A device can also read its own group's files directly using its thing key, without requiring a user token.
 
@@ -82,6 +82,8 @@ A device authenticates using its thing key to upload and manage files scoped to 
 ### Upload a file
 
 The file is sent as a multipart form. The `file` part is required; `metadata` (an arbitrary JSON object) and `time` (Unix seconds, defaults to the current time) are optional. `class` and `format` are derived from the filename extension — do not send them.
+
+Uploads are limited to 1024 MB. A larger upload is rejected with `400 Bad Request`, either up front from its `Content-Length` or, for a chunked body without one, once the limit is exceeded mid-upload.
 
 ```bash
 curl -s -S -i -X POST \
@@ -176,7 +178,7 @@ Returns `204 No Content`.
 
 ## Group-scoped files
 
-Users with editor-level group access can upload and manage files shared across all devices in a group. Group-file routes are served under the `/fs/` prefix.
+Group files are shared across all devices in a group. Users with viewer-level group access can list and download them; uploading, updating and deleting require editor-level access. Group-file routes are served under the `/fs/` prefix.
 
 ### Upload a group file
 
@@ -188,7 +190,13 @@ curl -s -S -i -X POST \
   https://localhost/fs/groups/<group_id>/files
 ```
 
-Returns `201 Created` with an empty JSON body.
+A successful upload returns `201 Created` with an empty JSON body:
+
+```json
+{}
+```
+
+The same 1024 MB upload limit applies.
 
 ### List group files
 
