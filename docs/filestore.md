@@ -84,7 +84,10 @@ A device authenticates using its thing key to upload and manage files scoped to 
 
 The file is sent as a multipart form. The `file` part is required; `metadata` (an arbitrary JSON object) and `time` (Unix seconds, defaults to the current time) are optional. `class` and `format` are derived from the filename extension — do not send them.
 
-Uploads are limited to 1024 MB. A larger upload is rejected with `400 Bad Request`, either up front from its `Content-Length` or, for a chunked body without one, once the limit is exceeded mid-upload.
+Uploads are limited by `MF_FILESTORE_UPLOAD_LIMIT_MIB`, in MiB (`1` to `1024`, default `1024`). The status code for a larger upload depends on where it is rejected:
+
+- In the docker-compose deployment, nginx sits in front of the service and applies the same limit to `/files` and `/fs/` request bodies. Nginx rejects an oversized upload with `413 Request Entity Too Large`, with or without a `Content-Length` header.
+- When the service is called directly, it rejects the upload with `400 Bad Request`, either up front from its `Content-Length` or, for a chunked body without one, once the limit is exceeded mid-upload.
 
 ```bash
 curl -s -S -i -X POST \
@@ -197,7 +200,7 @@ A successful upload returns `201 Created` with an empty JSON body:
 {}
 ```
 
-The same 1024 MB upload limit applies.
+The same `MF_FILESTORE_UPLOAD_LIMIT_MIB` upload limit applies.
 
 ### List group files
 
