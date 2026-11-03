@@ -57,7 +57,7 @@ curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
   "http://localhost/svcaudit/orgs/<org_id>/events"
 
-# List events within a group — caller must be a group admin (or higher)
+# List events within a group — caller must be a group admin (or higher), or an org owner or admin
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
   "http://localhost/svcaudit/groups/<group_id>/events"

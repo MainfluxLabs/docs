@@ -36,13 +36,15 @@ Below are the predefined roles in the system:
 
 > Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**, 
 > which means that one User **can have different roles** in an Organization and a Group within that Organization.
+> The exception is the Organization `Owner` and `Admin`, who can access every Group in their Organization without Group membership.
 
 ## Org Members
 
 When a logged-in User creates an Organization, they become the `Owner` of that Organization.
 Within it, they can add other registered users by assigning them appropriate roles defined in the table above.
 
-Unlike an `Admin` of the Organization, an `Owner` has full rights over the entities within their Organization, meaning they can manage Groups and entities in Groups without an explicit Group membership.
+The Organization `Owner` and `Admin` can view, update and delete every Group in their Organization and manage its Members and entities without Group membership.
+Organization `Editor` and `Viewer` need Group membership to access a Group.
 
 For a simpler understanding of access control in an Org, the table below provides a clear overview:
 
@@ -74,7 +76,7 @@ Let's imagine that we have one Organization and four Members of that Organizatio
 > **{"error": "failed to perform authorization over the entity"}**
 
 - In the second case, if a `Viewer` or `Editor` tries to invite new users to the Organization, they will also get the above error message.
-- Next case, if an `Admin` attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied with an authorization failure message.
+- Next case, if an `Editor` attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied.
 - The same error message will be received if the `Owner`, or any other Organization Member who is not a `Root Admin`, tries to access an Organization in which they are not Members.
 
 ## Group Members
@@ -82,9 +84,10 @@ Let's imagine that we have one Organization and four Members of that Organizatio
 In order to enable the correct management of the entities within the Group, the rights that the members have over these entities are checked.
 Rights over entities are defined based on <u>the role in the Group</u> in which they belong.
 
-As previously emphasized, roles in an Organization and roles in a Group are independent and don't affect each other, which means that if a User is a `Viewer` in an Organization and a Group `Admin` adds them to the Group as an `Editor`, they will have higher rights in the Group than the rights they have in the Organization.
+As previously emphasized, Group roles are independent of Organization `Editor` and `Viewer` roles, which means that if a User is a `Viewer` in an Organization and a Group `Admin` adds them to the Group as an `Editor`, they will have higher rights in the Group than the rights they have in the Organization.
 
-By creating a Group, the User becomes its `Owner` and has the rights defined in the table.
+When the Organization `Owner` creates a Group, they become its `Owner`.
+When another Organization Member creates a Group, they become its `Admin` and the Organization `Owner` becomes its `Owner`.
 
 For a simpler understanding of access control in a Group, the table below provides a clear overview:
 
@@ -98,6 +101,8 @@ For a simpler understanding of access control in a Group, the table below provid
 | View Group Entities     | ✅      | ✅      | ✅     | ✅     | ✅           |
 | Update Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
 | Delete Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
+
+The Organization `Owner` and `Admin` have Group `Owner` rights in every Group of their Organization.
 
 The 'Create Group' operation is omitted from the table because the rights are defined in the Org table, where it can be clearly seen that everyone except the Organization Viewer can create a Group.
 
@@ -116,7 +121,7 @@ This means that the User now has all the rights provided by that role.
 On the other hand, the User with ID `6b9e77a1-22f8-4e72-b2f3-122ad8b37f48` who is an Organization `Editor` now has the Group's `Viewer` role. 
 Therefore, that Member has no rights in the Group other than viewing.
 
-Since the `Admin` of the Organization is also the `Admin` of the Group with ID `565ddcfb-bf64-4e6b-80ac-371516bd0e01`, it means that they have the same rights.
+The `Admin` of the Organization is also the `Admin` of the Group with ID `565ddcfb-bf64-4e6b-80ac-371516bd0e01`, but as an Organization `Admin` they have Group `Owner` rights in that Group and in every other Group of the Organization.
 
 Based on the above examples of unauthorized access within the Organization, the same rules are applied within the Group based on the roles of the Members.
 
