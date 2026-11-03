@@ -1,10 +1,8 @@
 # UIConfigs
 
-UIConfigs service stores and retrieves schema-free JSON configuration objects scoped to organizations, groups, and things. It is intended for frontends and dashboards that need to persist display or layout settings without requiring database schema changes.
+The UIConfigs service stores and retrieves free-form JSON configuration objects scoped to organizations, groups, and things. It is intended for frontends and dashboards that need to persist display or layout settings without requiring database schema changes.
 
-Configuration objects are free-form JSON — any structure is accepted, allowing frontends to store arbitrary settings without schema constraints. Each organization, group, and thing has a single config object, all upserted on write, so a PUT always creates or replaces the full config.
-
-The service also exposes backup and restore endpoints for exporting and re-importing the full configuration state.
+Each organization, group, and thing has a single config object, all upserted on write, so a PUT always creates or replaces the full config.
 
 ## Org configs
 
@@ -37,7 +35,7 @@ curl -s -S -i -X PUT \
   https://localhost/svcuiconfigs/orgs/<org_id>/configs
 ```
 
-Any user can list the configs of the organizations they can view. Administrators get the configs of all organizations:
+Any user can list the configs of the organizations they can view. Admin users get the configs of all organizations:
 
 ```bash
 curl -s -S -i \
@@ -75,7 +73,7 @@ curl -s -S -i -X PUT \
   https://localhost/svcuiconfigs/groups/<group_id>/configs
 ```
 
-Any user can list the configs of the groups they can view. Administrators get the configs of all groups:
+Any user can list the configs of the groups they can view. Admin users get the configs of all groups:
 
 ```bash
 curl -s -S -i \
@@ -85,7 +83,7 @@ curl -s -S -i \
 
 ## Thing configs
 
-Each thing has a single config object. Viewing it requires the viewer role in the thing's group, and updating it requires the editor role. Thing configs are typically used to store per-widget display settings in dashboards.
+Each thing has a single config object. Viewing it requires the viewer role in the thing's group, and updating it requires the editor role in the thing's group. Thing configs are typically used to store per-widget display settings in dashboards.
 
 ```bash
 # Retrieve thing config
@@ -97,7 +95,6 @@ curl -s -S -i \
 ```json
 {
   "thing_id": "111e4567-e89b-12d3-a456-426614174000",
-  "group_id": "321e4567-e89b-12d3-a456-426614174000",
   "config": {
     "chartType": "line",
     "unit": "°C",
@@ -115,7 +112,7 @@ curl -s -S -i -X PUT \
   https://localhost/svcuiconfigs/things/<thing_id>/configs
 ```
 
-Any user can list the configs of the things they can view. Administrators get the configs of all things:
+Any user can list the configs of the things they can view. Admin users get the configs of all things:
 
 ```bash
 curl -s -S -i \
@@ -151,6 +148,7 @@ curl -s -S -i \
   "things_configs": [
     {
       "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+      "group_id": "321e4567-e89b-12d3-a456-426614174000",
       "config": {"chartType": "line", "unit": "°C"}
     }
   ]
