@@ -144,7 +144,7 @@ In addition to `content_type` and `transformer`, the profile `config` accepts th
 | `webhook_enabled` | Forward the message to any webhooks registered for the thing     |
 | `rule_enabled`    | Evaluate the message against rules/scripts assigned to the thing |
 
-These flags are independent — a message can be written to storage without triggering rules, forwarded to webhooks without being persisted, etc. **They default to `false` on newly created profiles** — if you leave all three unset, published messages are received by the adapter but never written, forwarded, or evaluated (a silent no-op, with no error returned to the publisher). Set the ones you need explicitly:
+These flags are independent — a message can be written to storage without triggering rules, forwarded to webhooks without being persisted, etc. **They default to `false` on newly created profiles** — if you leave all three unset, published messages are received by the adapter but never written, forwarded, or evaluated (a silent no-op, with no error returned to the publishing thing). Set the ones you need explicitly:
 
 ```json
 {
@@ -203,15 +203,15 @@ Commands can be sent two ways:
 - **User token** (`Authorization: Bearer <user_token>`) — the caller must have `editor` role (or higher) on the target thing's/group's group. No thing-type restrictions apply.
 - **Thing key** (`Authorization: Thing <thing_key>`) — machine-to-machine (M2M). The _sending_ thing's type must be authorized to command the _target_ thing's type, per this same-group-only policy matrix:
 
-  | Publisher type | Can command                    |
-  | -------------- | ------------------------------ |
-  | `controller`   | `sensor`, `actuator`, `device` |
-  | `gateway`      | `sensor`, `actuator`, `device` |
-  | `device`       | `device`                       |
-  | `sensor`       | _(none)_                       |
-  | `actuator`     | _(none)_                       |
+  | Sending thing type | Can command                    |
+  | ------------------ | ------------------------------ |
+  | `controller`       | `sensor`, `actuator`, `device` |
+  | `gateway`          | `sensor`, `actuator`, `device` |
+  | `device`           | `device`                       |
+  | `sensor`           | _(none)_                       |
+  | `actuator`         | _(none)_                       |
 
-  For group commands sent via thing key, only the publisher's type is checked (it must have _some_ command authority) — filtering by individual recipient type is left to the receiving things.
+  For group commands sent via thing key, only the sending thing's type is checked (it must have _some_ command authority) — filtering by individual recipient type is left to the receiving things.
 
 ```bash
 # Send a command to a thing (M2M, via thing key)

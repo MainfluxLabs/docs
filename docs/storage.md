@@ -31,13 +31,11 @@ Each reader exposes the same API for both SenML and JSON formats:
 | Method   | Path                   | Description                                |
 |----------|------------------------|--------------------------------------------|
 | `GET`    | `/senml`               | List SenML messages                        |
-| `GET`    | `/senml/{thingId}`     | List SenML messages for a specific thing   |
 | `POST`   | `/senml/search`        | Search SenML messages (request body)       |
 | `GET`    | `/senml/export`        | Export SenML messages                      |
 | `DELETE` | `/senml`               | Delete all SenML messages (admin)          |
 | `DELETE` | `/senml/{thingId}`     | Delete SenML messages for a specific thing |
 | `GET`    | `/json`                | List JSON messages                         |
-| `GET`    | `/json/{thingId}`      | List JSON messages for a specific thing    |
 | `POST`   | `/json/search`         | Search JSON messages (request body)        |
 | `GET`    | `/json/export`         | Export JSON messages                       |
 | `DELETE` | `/json`                | Delete all JSON messages (admin)           |
@@ -127,7 +125,7 @@ curl -s -S -X GET \
 ```bash
 curl -s -S -X GET \
   -H "Authorization: Thing <thing_key>" \
-  "http://localhost/reader/senml/<thing_id>?limit=5"
+  "http://localhost/reader/senml?thing_id=<thing_id>&limit=5"
 ```
 
 ### List messages with time range
