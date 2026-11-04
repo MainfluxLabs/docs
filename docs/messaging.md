@@ -326,8 +326,8 @@ Here is an example of a browser application connecting to Mainflux server and se
         connectTimeout: 4000, // Timeout period
         // Authentication information
         clientId: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
-        username: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
-        password: 'ec82f341-d4b5-4c77-ae05-34877a62428f',
+        username: 'internal',
+        password: '<thing_key>',
     }
 
     var topic = '/messages'

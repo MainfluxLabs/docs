@@ -1,6 +1,6 @@
 # Storage
 
-Mainflux uses PostgreSQL as its primary message store. TimescaleDB is available as an optional add-on for time-series workloads.
+Mainflux uses TimescaleDB as its primary message store. PostgreSQL is available as an optional add-on.
 
 ## Writers
 
@@ -8,19 +8,20 @@ Writers consume Mainflux messages, transform them to the desired format, and sto
 
 For proper consumption of messages based on subtopics and their transformation, see [Subtopics](messaging.md#subtopics) and [Configure Profile Config](messaging.md#configure-profile-config) sections on the messaging page.
 
-PostgreSQL and the PostgreSQL Writer are part of the core composition and start automatically with the platform.
+TimescaleDB, the TimescaleDB Writer and the TimescaleDB Reader are part of the core composition and start automatically with the platform.
 
-TimescaleDB Writer is an optional add-on:
+PostgreSQL Writer and PostgreSQL Reader are optional add-ons:
 
 ```bash
-docker-compose -f docker/addons/timescale-writer/docker-compose.yml up -d
+docker-compose -f docker/docker-compose.yml -f docker/addons/postgres-writer/docker-compose.yml -f docker/addons/postgres-reader/docker-compose.yml up -d
 ```
 
 ## Readers
 
-Readers expose an HTTP API for querying messages persisted by writers. Each reader authenticates requests using the Thing key:
+Readers expose an HTTP API for querying messages persisted by writers. Message queries accept either a user token or a Thing key:
 
 ```
+Authorization: Bearer <user_token>
 Authorization: Thing <thing_key>
 ```
 
