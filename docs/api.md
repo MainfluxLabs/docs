@@ -38,6 +38,59 @@ Access-Control-Allow-Headers: *
 {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTU0MjQ4MzgsImlhdCI6MTYxNTM4ODgzOCwiaXNzIjoibWFpbmZsdXguYXV0aCIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaXNzdWVyX2lkIjoiZDc4MmI0MmItZTMxNy00Y2Q3LTlkZDAtNGUyZWEwZjM0OWM4IiwidHlwZSI6MH0.TAQxV6TImKw06RsK0J11rOHiWPvexEOA4BNZnhLhtxs"}
 ```
 
+### Refresh Token
+
+Exchanges a login token for a new login token in the same session. Each login token can be refreshed only once; presenting an already refreshed token revokes the whole session. A session cannot be refreshed beyond `MF_AUTH_MAX_SESSION_DURATION` from login.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/tokens/refresh
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"token":"<new_user_token>"}
+```
+
+### Logout
+
+Revokes the session of the given login token.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/sessions/logout
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+```
+
+### Logout All Sessions
+
+Revokes all sessions of the user that owns the given login token.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/sessions/logout-all
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+```
+
 ### Create User
 
 The predefined user within the Mainflux system is the `root admin`.
@@ -102,12 +155,11 @@ curl -s -S -i -X POST "http://localhost/register/verify?email_token=<email_token
 Response:
 
 ```bash
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Content-Type: application/json
 Date: Thu, 11 Apr 2024 12:05:00 GMT
-Content-Length: 45
-
-{"created":true,"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8"}
+Content-Length: 0
+Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
 ```
 
 ### View User
@@ -193,7 +245,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{"total":2,"offset":0,"limit":10,"Users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
+{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
 ```
 
 ### Search Users
@@ -221,12 +273,15 @@ Content-Length: 120
   "total": 1,
   "offset": 0,
   "limit": 10,
-  "Users": [
+  "order": "id",
+  "dir": "desc",
+  "email": "example@email.com",
+  "status": "enabled",
+  "users": [
     {
       "id": "d782b42b-e317-4cd7-9dd0-4e2ea0f349c8",
       "email": "example@email.com",
-      "metadata": {"foo":"bar"},
-      "status": "enabled"
+      "metadata": {"foo":"bar"}
     }
   ]
 }
@@ -274,14 +329,14 @@ curl -s -S -i -X POST -H "Content-Type: application/json" \ http://localhost/pas
 Response:
 
 ```bash
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Server: nginx/1.16.0
 Date: Thu, 11 Apr 2024 12:30:00 GMT
 Content-Type: application/json
-Content-Length: 32
+Content-Length: 40
 
 {
-  "msg": "Password reset email sent"
+  "msg": "Email with reset link is sent"
 }
 ```
 
@@ -358,7 +413,7 @@ Response:
 
 #### OAuth Callback
 
-After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and returns the final redirect URL.
+After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and redirects to `MF_HOST` + `MF_REDIRECT_LOGIN_URL` with the login token in the URL fragment.
 
 > Must-have: `provider` (Google or GitHub), `code`, `state` (from OAuth provider)
 > Cookies: `state` and `verifier` must be set
@@ -370,9 +425,8 @@ curl -s -S -i -X GET "http://localhost/users/oauth/google/callback?code=<auth_co
 Response:
 
 ```bash
-{
-  "redirect_url": "https://localhost/home?token=<user_token>"
-}
+HTTP/1.1 302 Found
+Location: https://localhost/auth/login#token=<user_token>
 ```
 
 #### Enable User
@@ -1267,6 +1321,23 @@ Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
 
+### Delete Profiles
+
+Delete multiple profiles by providing a list of profile IDs.
+
+> Must-have: `user_token` and at least one `profile_id`
+
+```bash
+curl -s -S -i -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/profiles -d '{"profile_ids":["<profile_id_1>","<profile_id_2>"]}'
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+Content-Type: application/json
+```
+
 ### Search Profiles
 
 Full-text and field search across all profiles the user can access. Accepts `name`, `metadata`, `limit`, and `offset` in the request body.
@@ -1308,7 +1379,7 @@ Search profiles filtered by a specific organization.
 
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/orgs/<org_id>/profiles/search \
+  http://localhost/svcthings/orgs/<org_id>/profiles/search \
   -d '{"name":"<profile_name>","limit":10,"offset":0}'
 ```
 
@@ -1430,12 +1501,13 @@ Get thing metadata by providing the `thing_key`
 > Must-have: `thing_key`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/metadata
+curl -s -S -i -X GET -H "Authorization: Thing <thing_key>" http://localhost/svcthings/metadata
 ```
 
 Response:
 
 ```bash
+HTTP/1.1 200 OK
 Server: nginx/1.20.0
 Date: Tue, 21 Jan 2025 15:46:10 GMT
 Content-Type: application/json
@@ -1728,7 +1800,7 @@ Search things filtered by a specific organization.
 
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/orgs/<org_id>/things/search \
+  http://localhost/svcthings/orgs/<org_id>/things/search \
   -d '{"name":"<thing_name>","limit":10,"offset":0}'
 ```
 
@@ -2170,12 +2242,12 @@ Platform Invites allow administrators to invite unregistered users to the platfo
 
 ### Create Platform Invite
 
-> Must-have: `user_token`, `invitee_email`
+> Must-have: `user_token`, `email`
 
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" \
-  http://localhost/svcauth/invites \
-  -d '{"invitee_email":"<invitee_email>","org_id":"<org_id>","role":"editor","group_invites":[{"group_id":"<group_id>","member_role":"viewer"}]}'
+  http://localhost/svcusers/invites \
+  -d '{"email":"<invitee_email>","org_id":"<org_id>","role":"editor","group_invites":[{"group_id":"<group_id>","member_role":"viewer"}]}'
 ```
 
 Response:
@@ -2191,7 +2263,7 @@ Location: /invites/a1b2c3d4-e5f6-7890-abcd-ef1234567890
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites
+curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcusers/invites
 ```
 
 Response:
@@ -2210,7 +2282,7 @@ Returns the details of a single Platform Invite. No authentication is required â
 > Must-have: `invite_id`
 
 ```bash
-curl -s -S -i -X GET http://localhost/svcauth/invites/<invite_id>
+curl -s -S -i -X GET http://localhost/svcusers/invites/<invite_id>
 ```
 
 Response:
@@ -2231,7 +2303,7 @@ Cancels a pending Platform Invite. Only the platform root admin can revoke.
 > Must-have: `user_token`, `invite_id`
 
 ```bash
-curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/svcauth/invites/<invite_id>
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/svcusers/invites/<invite_id>
 ```
 
 Response:
@@ -2269,7 +2341,7 @@ You can create multiple Webhooks at once by entering a series of Webhooks struct
 > Must-have: `user_token`, `thing_id`, `name` and `url`
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks -d '{"webhooks: [{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks -d '{"webhooks":[{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
 ```
 
 Response:
@@ -2279,11 +2351,11 @@ HTTP/1.1 201 Created
 Server: nginx/1.20.0
 Date: Thu, 11 Apr 2024 11:47:12 GMT
 Content-Type: application/json
-Content-Length: 191
+Content-Length: 257
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}
+{"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}
 
 ```
 
@@ -2455,7 +2527,7 @@ You can create multiple Notifiers at once by entering a series of Notifiers stru
 > Must-have: `user_token`, `group_id`, `name` and `contacts`
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers -d '{"notifiers: [{"name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}]}'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcsmtp/groups/<group_id>/notifiers -d '{"notifiers":[{"name":"notifier_name","contacts":["email1@example.com","email2@example.com"],"metadata":{}}]}'
 ```
 
 Response:
@@ -2469,7 +2541,7 @@ Content-Length: 190
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"notifier_name","contacts": ["email1@example.com", "email2@example.com"],"metadata":{}}
+{"notifiers":[{"id":"a630f594-d967-4c54-85ef-af58efe8e8eb","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","name":"notifier_name","contacts":["email1@example.com","email2@example.com"]}]}
 
 ```
 
@@ -2572,7 +2644,7 @@ Access-Control-Expose-Headers: Location
 
 Delete notifiers by given IDs
 
-> Must-have: `user_token`,`group_id`, notifier_ids
+> Must-have: `user_token` and `notifier_ids`
 
 ```bash
 curl -s -S -i -X PATCH -H "Content-Type: application/json" -H  "Authorization: Bearer <user_token>" http://localhost/svcsmtp/notifiers -d '{"notifier_ids":["a93cafb3-b3a7-4e7f-a470-15c14d8ed1e1","b513d843-abf8-4db4-93fd-bdc8917d42m2"]}'
