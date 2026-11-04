@@ -4,7 +4,7 @@
 
 A complete API reference in the Swagger UI is available at:
 
-[https://mainfluxlabs.github.io/mainflux/docs/swagger](https://mainfluxlabs.github.io/docs/swagger)
+[https://mainfluxlabs.github.io/docs/swagger](https://mainfluxlabs.github.io/docs/swagger)
 
 ## Users
 
@@ -164,7 +164,7 @@ Location: /users/d782b42b-e317-4cd7-9dd0-4e2ea0f349c8
 
 ### View User
 
-You can always check the user entity that is logged in by entering the user ID and `user_token`.
+View a user by ID. Non-admin users can view only their own user.
 
 > Must-have: `user_id` and `user_token`
 
@@ -221,7 +221,7 @@ Content-Length: 120
 
 ### List Users
 
-You can get all users in the database by calling this function. Requires admin privileges.
+List all users. Requires admin privileges.
 
 > Must-have: `user_token`
 
@@ -289,7 +289,7 @@ Content-Length: 120
 
 ### Update User
 
-Updating user's metadata
+Update the metadata of the logged-in user.
 
 > Must-have: `user_token`
 
@@ -363,7 +363,7 @@ Content-Length: 0
 
 ### Change Password
 
-Changing the user password can be done by calling the update password function
+Change the password of the logged-in user.
 
 > Must-have: `user_token`, `old_password` and `password` (new_password)
 
@@ -467,7 +467,7 @@ Content-Type: application/json
 
 ### Create Org
 
-To create an org, you need the org name, description, metadata and a `user_token`
+To create an org, you need the org name, description, metadata and a `user_token`.
 
 > Must-have: `user_token`
 
@@ -487,7 +487,7 @@ Content-Length: 0
 
 ### View Org
 
-To view an org, you need the org ID and a `user_token`
+To view an org, you need the org ID and a `user_token`.
 
 > Must-have: `user_token` and `org_id`
 
@@ -508,7 +508,7 @@ Content-Length: 250
 
 ### Update Org
 
-To update an org, you need the org ID, name, description, metadata and a `user_token`
+To update an org, you need the org ID, name, description, metadata and a `user_token`.
 
 > Must-have: `user_token` and `org_id`
 
@@ -527,7 +527,7 @@ Content-Length: 0
 
 ### Delete Org
 
-To delete an org, you need the org ID and a `user_token`
+To delete an org, you need the org ID and a `user_token`.
 
 > Must-have: `user_token` and `org_id`
 
@@ -563,8 +563,8 @@ Date: Fri, 14 Jul 2023 14:47:24 GMT
 
 ### List Orgs
 
-To list orgs, you need a `user_token`
-Only admin users can list all orgs, other users can only list orgs they are members of.
+To list orgs, you need a `user_token`.
+Only admin users can list all orgs; other users can list only the orgs they are members of.
 
 > Must-have: `user_token`
 
@@ -640,7 +640,7 @@ Content-Length: 0
 
 ### Remove Memberships
 
-To remove org memberships, you need the org ID, member IDs and a `user_token`
+To remove org memberships, you need the org ID, member IDs and a `user_token`.
 
 > Must-have: `user_token`, `org_id` and `member_id`
 
@@ -675,7 +675,7 @@ curl -s -S -i -X PUT -H "Content-Type: application/json" -H  "Authorization: Bea
 
 ### View Membership
 
-To view org membership, you need the org ID, member ID and a `user_token`
+To view an org membership, you need the org ID, member ID and a `user_token`.
 
 > Must-have: `user_token`, `member_id`, `org_id`
 
@@ -722,7 +722,7 @@ Content-Length: 235
 
 ### Create Group
 
-To create a group, you need the group name, description, metadata, `org_id` and a `user_token`
+To create a group, you need the group name, description, metadata, `org_id` and a `user_token`.
 
 > Must-have: `org_id`, `user_token`
 
@@ -745,7 +745,7 @@ Access-Control-Expose-Headers: Location
 
 ### View Group
 
-Get a group entity for a logged-in user
+View a group by ID.
 
 > Must-have: `user_token` and `group_id`
 
@@ -769,7 +769,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Groups
 
-Get all groups, list requests accepts limit and offset query parameters
+Get all groups. List requests accept `limit` and `offset` query parameters.
 
 > Must-have: `user_token`
 
@@ -793,7 +793,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Groups by Org
 
-Get groups by a specific organization
+List the groups of an organization.
 
 > Must-have: `user_token`, `org_id`
 
@@ -861,7 +861,7 @@ Content-Length: 573
 
 ### Update Group
 
-Update group entity
+Update a group.
 
 > Must-have: `user_token`, `group_id`
 
@@ -883,7 +883,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete Group
 
-Delete a group entity
+Delete a group.
 
 > Must-have: `user_token`, `group_id`
 
@@ -922,7 +922,7 @@ Date: Wed, 10 Mar 2021 17:14:13 GMT
 
 ### View Group by Thing
 
-Get a group entity by thing
+View the group of a thing.
 
 > Must-have: `user_token`, `thing_id`
 
@@ -946,7 +946,7 @@ Access-Control-Expose-Headers: Location
 
 ### View Group by Profile
 
-Get a group entity by profile
+View the group of a profile.
 
 > Must-have: `user_token`, `profile_id`
 
@@ -1004,7 +1004,7 @@ Content-Length: 3
 
 ### Remove Memberships
 
-To remove group memberships, you need the group ID, member IDs and a `user_token`
+To remove group memberships, you need the group ID, member IDs and a `user_token`.
 
 > Must-have: `user_token`, `group_id`, `member_ids`
 
@@ -1083,7 +1083,7 @@ Access-Control-Expose-Headers: Location
 
 A profile is a set of configuration parameters that can be applied to a Thing within the same group.
 To create a profile with external ID, the user needs to provide a UUID v4 format unique ID, `group_id`, metadata, config and a `user_token`.
-The detailed configuration of the Profile Config can be found at [Profile Config](https://github.com/MainfluxLabs/docs/blob/master/docs/messaging.md#configure-profile-config).
+The detailed configuration of the Profile Config can be found at [Profile Config](messaging.md#configure-profile-config).
 
 > Must-have: `user_token`,`group_id`
 
@@ -1109,7 +1109,7 @@ Access-Control-Expose-Headers: Location
 
 ### Create Profiles
 
-The same as creating a profile with external ID the user can create multiple profiles at once by providing UUID v4 format unique ID in a series of profiles together with a `user_token` and `<group_id>`.
+Multiple profiles can be created in a single request by providing a list of profiles together with a `user_token` and `<group_id>`.
 
 > Must-have: `user_token`, `group_id` and profiles
 
@@ -1133,7 +1133,7 @@ Access-Control-Expose-Headers: Location
 
 ### Create Profiles with external ID
 
-You can create multiple profiles with external ID at once
+Multiple profiles with external IDs can be created in a single request.
 
 > Must-have: `user_token`, `group_id` and at least 2 profiles
 
@@ -1157,7 +1157,7 @@ Access-Control-Expose-Headers: Location
 
 ### View Profile
 
-Get a profile entity for a logged-in user
+View a profile by ID.
 
 > Must-have: `user_token` and `profile_id`
 
@@ -1181,7 +1181,7 @@ Access-Control-Expose-Headers: Location
 
 ### View Profile by Thing
 
-Get a profile by a specific thing
+View the profile of a thing.
 
 > Must-have: `user_token` and `thing_id`
 
@@ -1232,7 +1232,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Profiles by Group
 
-Get all profiles by a certain group where the user has access
+List the profiles of a group.
 
 > Must-have: `user_token`, `<group_id>`
 
@@ -1256,7 +1256,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Profiles by Org
 
-Get all profiles by a certain organization
+List the profiles of an organization.
 
 > Must-have: `user_token`, `<org_id>`
 
@@ -1280,7 +1280,7 @@ Access-Control-Expose-Headers: Location
 
 ### Update Profile
 
-Update profile entity
+Update a profile.
 
 > Must-have: `user_token` and `profile_id`
 
@@ -1302,7 +1302,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete Profile
 
-Delete a profile entity that is not assigned to any Thing
+Delete a profile that is not assigned to any thing.
 
 > Must-have: `user_token` and `profile_id`
 
@@ -1472,7 +1472,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" \
 
 ### View Thing
 
-You can get thing entity by entering the thing ID and `user_token`
+View a thing by ID.
 
 > Must-have: `user_token` and `thing_id`
 
@@ -1496,7 +1496,7 @@ Access-Control-Expose-Headers: Location
 
 ### View Metadata by Key
 
-Get thing metadata by providing the `thing_key`
+View the metadata of a thing by its `thing_key`.
 
 > Must-have: `thing_key`
 
@@ -1547,7 +1547,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Things by Group
 
-Get all things by a certain group
+List the things of a group.
 
 > Must-have: `user_token`, `group_id`
 
@@ -1571,7 +1571,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Things by Profile
 
-Get all things by a certain profile
+List the things of a profile.
 
 > Must-have: `user_token`, `profile_id`
 
@@ -1595,7 +1595,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Things by Org
 
-Get all things by a certain organization
+List the things of an organization.
 
 > Must-have: `user_token`, `org_id`
 
@@ -1663,7 +1663,7 @@ Access-Control-Expose-Headers: Location
 
 ### Update Things Metadata
 
-Updating a things metadata
+Update the metadata of multiple things.
 
 > Must-have: `user_token`
 
@@ -1685,7 +1685,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete Thing
 
-To delete a thing you need a `thing_id` and a `user_token`
+Delete a thing.
 
 > Must-have: `user_token` and `thing_id`
 
@@ -1808,7 +1808,7 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
 
 ### Send Messages
 
-Sends message via HTTP protocol
+Sends messages over HTTP.
 
 > Must-have: `thing_key`
 
@@ -1836,7 +1836,7 @@ Connection: keep-alive
 
 ### Read Messages
 
-Reads messages from database with optional filtering and pagination.
+Reads messages from the database with optional filtering and pagination.
 
 > Must-have: `user_token` and `format`.
 
@@ -1986,7 +1986,7 @@ Content-Length: 660
 
 ### Issue API Key
 
-Generates a new API key. Then new API key will be uniquely identified by its ID.
+Generates a new API key. The new API key is uniquely identified by its ID.
 Duration is expressed in seconds.
 
 > Must-have: `user_token`
@@ -2334,9 +2334,9 @@ HTTP/1.1 201 Created
 
 ### Create Webhooks
 
-To forward a message to another platform, you need to create a Webhook with the necessary data such as the `name` of the Webhook, `thing_id` which refers to the Thing for which the Webhook is being created, the `url` to which the message will be forwarded and HTTP `headers` specific for the certain webhook.
+Creates webhooks for a thing. Each webhook requires a `name` and the `url` to which messages are forwarded, and accepts optional HTTP `headers` and `metadata`.
 
-You can create multiple Webhooks at once by entering a series of Webhooks structures, `thing_id` and a `user_token`.
+Multiple webhooks can be created in a single request.
 
 > Must-have: `user_token`, `thing_id`, `name` and `url`
 
@@ -2361,7 +2361,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Webhooks by Group
 
-You can get all Webhooks for certain Group by entering `user_token` and `group_id`.
+List the webhooks of a group.
 
 > Must-have: `user_token` and `group_id`
 
@@ -2385,7 +2385,7 @@ Access-Control-Expose-Headers: Location
 
 ### List Webhooks by Thing
 
-You can get all Webhooks for certain Thing by entering `user_token` and `thing_id`.
+List the webhooks of a thing.
 
 > Must-have: `user_token` and `thing_id`
 
@@ -2451,7 +2451,7 @@ Content-Length: 250
 
 ### View Webhook
 
-View details of a certain Webhook by entering `user_token` and `webhook_id`.
+View a webhook by ID.
 
 > Must-have: `user_token` and `group_id`
 
@@ -2475,7 +2475,7 @@ Access-Control-Expose-Headers: Location
 
 ### Update Webhook
 
-Update data of webhook with provided ID and `user_token`
+Update a webhook.
 
 > Must-have: `user_token` and `webhook_id`
 
@@ -2497,7 +2497,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete Webhooks
 
-Delete webhooks by given IDs
+Delete webhooks by ID.
 
 > Must-have: `user_token`, webhook_ids
 
@@ -2520,9 +2520,9 @@ Access-Control-Expose-Headers: Location
 
 ### Create Notifiers
 
-In order to send email notifications to certain contacts when a message arrives, you need to create a Notifier with the necessary data, such as the Notifier's `name`, `group_id`, which refers to the Group for which the Notifier is being created, the `contacts` to which the notifications will be sent and optional `metadata`.
+Creates notifiers for a group. Each notifier requires a `name` and the `contacts` to which notifications are sent, and accepts optional `metadata`.
 
-You can create multiple Notifiers at once by entering a series of Notifiers structures, `group_id` and a `user_token`.
+Multiple notifiers can be created in a single request.
 
 > Must-have: `user_token`, `group_id`, `name` and `contacts`
 
@@ -2545,11 +2545,11 @@ Access-Control-Expose-Headers: Location
 
 ```
 
-**Note:** The logged-in user who creates a Notifier for a certain Group must have the role of "editor" of that Group.
+**Note:** Creating notifiers requires the `editor` role in the group.
 
 ### List Notifiers by Group
 
-You can get all Notifiers for certain Group by entering `user_token` and `group_id`.
+List the notifiers of a group.
 
 > Must-have: `user_token` and `group_id`
 
@@ -2596,7 +2596,7 @@ Content-Length: 337
 
 ### View Notifier
 
-View details of a certain Notifier by entering `user_token` and `notifier_id`.
+View a notifier by ID.
 
 > Must-have: `user_token` and `group_id`
 
@@ -2620,7 +2620,7 @@ Access-Control-Expose-Headers: Location
 
 ### Update Notifier
 
-Update data of notifier with provided ID and `user_token`
+Update a notifier.
 
 > Must-have: `user_token` and `notifier_id`
 
@@ -2642,7 +2642,7 @@ Access-Control-Expose-Headers: Location
 
 ### Delete Notifiers
 
-Delete notifiers by given IDs
+Delete notifiers by ID.
 
 > Must-have: `user_token` and `notifier_ids`
 
