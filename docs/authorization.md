@@ -46,13 +46,13 @@ Organization `Editor` and `Viewer` need Group membership to access a Group.
 
 For a simpler understanding of access control in an Org, the table below provides a clear overview:
 
-| Operation               | Viewer | Editor | Admin | Owner | Root Admin | 
+| Operation               | Viewer | Editor | Admin | Owner | Root Admin |
 |-------------------------|--------|--------|-------|-------|------------|
-| View Org                | ✅      | ✅      | ✅     | ✅     | ✅          | 
-| Update Org              | ❌      | ❌      | ✅     | ✅     | ✅          | 
-| Delete Org              | ❌      | ❌      | ❌     | ✅     | ✅          | 
-| Assign/Unassign Members | ❌      | ❌      | ✅     | ✅     | ✅          | 
-| Create Groups           | ❌      | ✅      | ✅     | ✅     | ✅          | 
+| View Org                | ✅     | ✅     | ✅    | ✅    | ✅         |
+| Update Org              | ❌     | ❌     | ✅    | ✅    | ✅         |
+| Delete Org              | ❌     | ❌     | ❌    | ✅    | ✅         |
+| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅         |
+| Create Groups           | ❌     | ✅     | ✅    | ✅    | ✅         |
 
 The operation 'Create Org' is omitted from the table because every registered (and logged-in) user has the right to do so.
 
@@ -62,12 +62,12 @@ The operation 'Create Org' is omitted from the table because every registered (a
 
 Let's imagine that we have one Organization and four Members of that Organization with different roles:
  
-| org_id                               | member_id                            | role     |
-  |--------------------------------------|--------------------------------------|--------|
-  | 550e8400-e29b-41d4-a716-446655440000 | 3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8 | viewer |
-| 550e8400-e29b-41d4-a716-446655440000 | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | editor   |
-| 550e8400-e29b-41d4-a716-446655440000 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | admin    |
-| 550e8400-e29b-41d4-a716-446655440000 | f1c6e7b3-4b29-496a-810b-bf7397dc3842 | owner    |
+| org_id                               | member_id                            | role   |
+|--------------------------------------|--------------------------------------|--------|
+| 550e8400-e29b-41d4-a716-446655440000 | 3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8 | viewer |
+| 550e8400-e29b-41d4-a716-446655440000 | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | editor |
+| 550e8400-e29b-41d4-a716-446655440000 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | admin  |
+| 550e8400-e29b-41d4-a716-446655440000 | f1c6e7b3-4b29-496a-810b-bf7397dc3842 | owner  |
 
 - If a `Viewer` tries to create a Group within that Organization, they will receive a message indicating that the creation has failed:
 
@@ -89,16 +89,16 @@ When another Organization Member creates a Group, they become its `Admin` and th
 
 For a simpler understanding of access control in a Group, the table below provides a clear overview:
 
-| Operation               | Viewer | Editor | Admin | Owner | Root Admin | 
+| Operation               | Viewer | Editor | Admin | Owner | Root Admin |
 |-------------------------|--------|--------|-------|-------|------------|
-| View Group              | ✅      | ✅      | ✅     | ✅     | ✅          | 
-| Update Group            | ❌      | ❌      | ✅     | ✅     | ✅          | 
-| Delete Group            | ❌      | ❌      | ❌     | ✅     | ✅          | 
-| Assign/Unassign Members | ❌      | ❌      | ✅     | ✅     | ✅          | 
-| Create Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅          | 
-| View Group Entities     | ✅      | ✅      | ✅     | ✅     | ✅           |
-| Update Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
-| Delete Group Entities   | ❌      | ✅      | ✅     | ✅     | ✅           |
+| View Group              | ✅     | ✅     | ✅    | ✅    | ✅         |
+| Update Group            | ❌     | ❌     | ✅    | ✅    | ✅         |
+| Delete Group            | ❌     | ❌     | ❌    | ✅    | ✅         |
+| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅         |
+| Create Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅         |
+| View Group Entities     | ✅     | ✅     | ✅    | ✅    | ✅         |
+| Update Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅         |
+| Delete Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅         |
 
 The Organization `Owner` and `Admin` have Group `Owner` rights in every Group of their Organization.
 

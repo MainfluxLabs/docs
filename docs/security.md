@@ -62,23 +62,23 @@ TLS can be activated per service using the `_CLIENT_TLS` and `_CA_CERTS` environ
 
 Each adapter has its own pair of variables:
 
-| Variable | Description                                                   |
-|----------|-------------|
+| Variable                     | Description                               |
+|------------------------------|-------------------------------------------|
 | `MF_HTTP_ADAPTER_CLIENT_TLS` | Enable TLS for HTTP adapter → Things gRPC |
-| `MF_HTTP_ADAPTER_CA_CERTS` | Path to CA cert for HTTP adapter            |
+| `MF_HTTP_ADAPTER_CA_CERTS`   | Path to CA cert for HTTP adapter          |
 | `MF_MQTT_ADAPTER_CLIENT_TLS` | Enable TLS for MQTT adapter → Things gRPC |
-| `MF_MQTT_ADAPTER_CA_CERTS` | Path to CA cert for MQTT adapter            |
-| `MF_WS_ADAPTER_CLIENT_TLS` | Enable TLS for WS adapter → Things gRPC     |
-| `MF_WS_ADAPTER_CA_CERTS` | Path to CA cert for WS adapter                |
+| `MF_MQTT_ADAPTER_CA_CERTS`   | Path to CA cert for MQTT adapter          |
+| `MF_WS_ADAPTER_CLIENT_TLS`   | Enable TLS for WS adapter → Things gRPC   |
+| `MF_WS_ADAPTER_CA_CERTS`     | Path to CA cert for WS adapter            |
 | `MF_COAP_ADAPTER_CLIENT_TLS` | Enable TLS for CoAP adapter → Things gRPC |
-| `MF_COAP_ADAPTER_CA_CERTS` | Path to CA cert for CoAP adapter            |
+| `MF_COAP_ADAPTER_CA_CERTS`   | Path to CA cert for CoAP adapter          |
 
 ### Other Services → Things gRPC
 
 Services that communicate with Things over gRPC follow the same convention:
 
-| Variable | Description                                                      |
-|----------|-------------|
+| Variable             | Description                                          |
+|----------------------|------------------------------------------------------|
 | `MF_THINGS_CA_CERTS` | Path to CA cert for outbound Things gRPC connections |
 
 ### Example

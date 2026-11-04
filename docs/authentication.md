@@ -4,11 +4,11 @@
 
 Mainflux uses JWT-based authentication keys for all user-facing operations. There are three types of authentication keys:
 
-| Key type | Issued by | Expiry | Revocable | Purpose                                               |
-|----------|-----------|--------|-----------|---------|
-| **Login key** | Login endpoint | Short-lived (session) | Via logout | Authenticates interactive sessions  |
-| **API key** | User request | Configurable (default: never) | Yes | Long-lived programmatic access |
-| **Recovery key** | Password reset flow | Short-lived | No | Password recovery only                |
+| Key type         | Issued by           | Expiry                        | Revocable  | Purpose                            |
+|------------------|---------------------|-------------------------------|------------|------------------------------------|
+| **Login key**    | Login endpoint      | Short-lived (session)         | Via logout | Authenticates interactive sessions |
+| **API key**      | User request        | Configurable (default: never) | Yes        | Long-lived programmatic access     |
+| **Recovery key** | Password reset flow | Short-lived                   | No         | Password recovery only             |
 
 **Login keys** are issued automatically when a user logs in. They expire after a short session period and can be refreshed within the session. Logging out revokes the session, after which its login keys can no longer be refreshed. Every authenticated request (other than registration and login) must carry a valid key in the `Authorization: Bearer <key>` header.
 
