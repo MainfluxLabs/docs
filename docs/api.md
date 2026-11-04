@@ -221,7 +221,7 @@ Content-Length: 120
 
 ### List Users
 
-You can get all users in the database by calling this function
+You can get all users in the database by calling this function. Requires admin privileges.
 
 > Must-have: `user_token`
 
@@ -250,7 +250,7 @@ Access-Control-Allow-Headers: *
 
 ### Search Users
 
-Search users with optional filters such as status, email, and metadata. Supports pagination and ordering.
+Search users with optional filters such as status, email, and metadata. Supports pagination and ordering. Requires admin privileges.
 
 > Must-have: `user_token` (Bearer token)
 > Optional JSON body fields: `offset`, `limit`, `order`, `dir`, `status`, `email`, `metadata`
