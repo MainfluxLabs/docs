@@ -85,7 +85,7 @@ Available Commands:
 ```
 
 ## Service
-#### Get Mainflux Things services health check
+#### Check Things Service Health
 ```bash
 mainfluxlabs-cli health
 ```

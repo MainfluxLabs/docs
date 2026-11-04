@@ -21,9 +21,7 @@ Make sure that you have [Protocol Buffers](https://developers.google.com/protoco
 Go Protobuf uses C bindings, so you will need to install [C++ protobuf](https://github.com/google/protobuf) as a prerequisite.
 Mainflux uses `Protocol Buffers for Go with Gadgets` to generate faster marshaling and unmarshaling Go code. Protocol Buffers for Go with Gadgets installation instructions can be found [here](https://github.com/gogo/protobuf).
 
-A copy of [Go](https://golang.org/doc/install) (version 1.17.5) and docker template (version 3.7) will also need to be installed on your system.
-
-If any of these versions seem outdated, the latest can always be found in our [CI script](https://github.com/MainfluxLabs/mainflux/blob/master/scripts/ci.sh).
+[Go](https://golang.org/doc/install) is also required, in the version declared in [go.mod](https://github.com/MainfluxLabs/mainflux/blob/master/go.mod).
 
 ### Build All Services
 
@@ -35,7 +33,7 @@ make
 
 Build artifacts will be put in the `build` directory.
 
-> N.B. All Mainflux services are built as a statically linked binaries. This way they can be portable (transferred to any platform just by placing them there and running them) as they contain all needed libraries and do not relay on shared system libraries. This helps creating [FROM scratch](https://hub.docker.com/_/scratch/) dockers.
+> N.B. All Mainflux services are built as statically linked binaries. This makes them portable (they can be transferred to any platform and run there) because they contain all required libraries and do not rely on shared system libraries. This allows building [FROM scratch](https://hub.docker.com/_/scratch/) Docker images.
 
 ### Build Individual Microservice
 
@@ -177,7 +175,7 @@ make test
 Dockertest is used for the tests, so to run them, you will need the Docker daemon/service running.
 
 ## Installing
-Installing Go binaries is simple: just move them from `build` to `$GOBIN` (do not fortget to add `$GOBIN` to your `$PATH`).
+Installing Go binaries is simple: just move them from `build` to `$GOBIN` (do not forget to add `$GOBIN` to your `$PATH`).
 
 You can execute:
 
@@ -187,26 +185,24 @@ make install
 
 which will do this copying of the binaries.
 
-> N.B. Only Go binaries will be installed this way. The MQTT adapter is a NodeJS script and will stay in the `mqtt` dir.
-
 ## Deployment
 
 ### Prerequisites
 Mainflux depends on several infrastructural services, notably [NATS](https://www.nats.io/) broker and [PostgreSQL](https://www.postgresql.org/) database.
 
 #### NATS
-Mainflux uses NATS as it's central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.
+Mainflux uses NATS as its central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.
 
 To do this execute:
 
 ```
-go get github.com/nats-io/gnatsd
+go install github.com/nats-io/nats-server/v2@latest
 ```
 
-This will install `gnatsd` binary that can be simply run by executing:
+This installs the `nats-server` binary, which can be run with:
 
 ```
-gnatsd
+nats-server -js
 ```
 
 #### PostgreSQL
@@ -229,7 +225,7 @@ postgres=# ALTER USER mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 ```
 
 ### Mainflux Services
-Running of the Mainflux microservices can be tricky, as there is a lot of them and each demand configuration in the form of environment variables.
+Running the Mainflux microservices can be tricky, as there are many of them and each one requires configuration through environment variables.
 
 The whole system (set of microservices) can be run with one command:
 
@@ -239,14 +235,18 @@ make rundev
 
 which will properly configure and run all microservices.
 
-Please assure that MQTT microservice has `node_modules` installed, as explained in _MQTT Microservice_ chapter.
-
 > N.B. `make rundev` actually calls helper script `scripts/run.sh`, so you can inspect this script for the details.
 
 ## Events
-In order to be easily integratable system, Mainflux is using [Redis Streams](https://redis.io/topics/streams-intro)
-as an event log for event sourcing. Services that are publishing events to Redis Streams
-are `things` service and `mqtt` adapter.
+Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
+The `things` service publishes events to the `mainflux.things` stream, and the `auth` service publishes
+events to the `mainflux.auth` stream.
+
+Besides the operation-specific fields described below, every event carries the following fields:
+- `operation` - the operation that produced the event,
+- `occurred_at` - the time of the operation in RFC 3339 format,
+- `evt_org_id` and `evt_group_id` - the org and the group to which the event belongs, empty when not applicable,
+- `jwt_identity_user_id` and `jwt_identity_user_email` - the user who performed the operation, present only for user-initiated operations.
 
 ### Things Service
 For every operation that has side effects (that is changing service state) `things`
@@ -255,17 +255,21 @@ Every event has its own event ID that is automatically generated and `operation`
 field that can have one of the following values:
 - `thing.create` for thing creation,
 - `thing.update` for thing update,
+- `thing.update_group_and_profile` for thing group and profile reassignment,
 - `thing.remove` for thing removal,
 - `profile.create` for profile creation,
 - `profile.update` for profile update,
-- `profile.remove` for profile removal.
+- `profile.remove` for profile removal,
+- `group.remove` for group removal.
+
+The `auth` service publishes `org.create` and `org.remove` events.
 
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
 way to fetch it and process it. If you want to integrate through
 [docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml)
-you can use `mainflux-es-redis` service. Just connect to it and consume events
-from Redis Stream named `mainflux.things`.
+you can use the `mainfluxlabs-es-redis` container. Connect to it and consume events
+from the Redis Stream named `mainflux.things`.
 
 #### Thing create event
 
@@ -365,46 +369,3 @@ publish new `remove` event. This event will have the following format:
 **Note:** Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.
-
-
-### MQTT Adapter
-Instead of using heartbeat to know when client is connected through MQTT adapter one
-can fetch events from Redis Streams that MQTT adapter publishes. MQTT adapter
-publishes events every time client connects and disconnects to stream named `mainflux.mqtt`.
-
-Events that are coming from MQTT adapter have following fields:
-- `thing_id` ID of a thing that has connected to MQTT adapter,
-- `timestamp` is in Epoch UNIX Time Stamp format,
-- `event_type` can have two possible values, connect and disconnect,
-- `instance` represents MQTT adapter instance.
-
-If you want to integrate through
-[docker-compose.yml](https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml)
-you can use `mainflux-es-redis` service. Just connect to it and consume events
-from Redis Stream named `mainflux.mqtt`.
-
-Example of connect event:
-```
-1) 1) "1555351214144-0"
-2) 1) "thing_id"
-   2) "1c597a85-b68e-42ff-8ed8-a3a761884bc4"
-   3) "timestamp"
-   4) "1555351214"
-   5) "event_type"
-   6) "connect"
-   7) "instance"
-   8) "mqtt-adapter-1"
-```
-
-Example of disconnect event:
-```
-1) 1) "1555351214188-0"
-2) 1) "thing_id"
-   2) "1c597a85-b68e-42ff-8ed8-a3a761884bc4"
-   3) "timestamp"
-   4) "1555351214"
-   5) "event_type"
-   6) "disconnect"
-   7) "instance"
-   8) "mqtt-adapter-1"
-```
