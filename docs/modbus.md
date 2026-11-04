@@ -255,4 +255,61 @@ curl -s -S -i -X PATCH \
   https://localhost/svcmodbus/clients
 ```
 
+## Immediate read and write
+
+A single register or coil can be read or written on demand, without creating a client. Both operations require the editor role in the thing's group, connect to the device given by `ip_address`, `port` and `slave_id`, and publish the resulting value as a message of the thing identified by `thing_id`. The message key is `name`, or the address when `name` is omitted.
+
+### Read a value
+
+`function_code` must be one of the [function codes](#function-codes). For registers, `type` is required and `byte_order`, `scale` and `length` are optional, as in a [data field](#data-fields); coils and discrete inputs take no decoding options.
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+    "ip_address": "192.168.1.100",
+    "port": "502",
+    "slave_id": 1,
+    "function_code": "ReadHoldingRegisters",
+    "name": "temperature",
+    "address": 100,
+    "type": "float32",
+    "byte_order": "ABCD",
+    "unit": "°C"
+  }' \
+  https://localhost/svcmodbus/read
+```
+
+The response contains the decoded value:
+
+```json
+{ "value": 21.5 }
+```
+
+### Write a value
+
+`type` selects the target: `bool` writes a coil, while `int16`, `uint16`, `int32`, `uint32` and `float32` write holding registers. The written value is read back from the device and published.
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+    "ip_address": "192.168.1.100",
+    "port": "502",
+    "slave_id": 1,
+    "name": "setpoint",
+    "address": 200,
+    "type": "float32",
+    "byte_order": "ABCD",
+    "value": 22.0
+  }' \
+  https://localhost/svcmodbus/write
+```
+
+A successful write returns `200 OK`.
+
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).
