@@ -15,7 +15,7 @@ Every file stored in the platform carries the following metadata fields:
 | `format`   | File format, derived from the extension                                                                              |
 | `time`     | Unix timestamp (floating-point seconds) associated with the file                                                     |
 | `metadata` | Optional arbitrary key-value pairs for custom attributes                                                             |
-| `checksum` | SHA256 checksum of the file content, computed by the server on upload (read-only)                                    |
+| `checksum` | SHA-256 checksum of the file content, computed by the server on upload (read-only)                                   |
 | `size`     | File size in bytes, recorded by the server on upload (read-only)                                                     |
 
 `class` and `format` are **not** supplied by the client — they are derived from the uploaded file's extension. The supported extensions and the class each maps to are:
@@ -58,7 +58,7 @@ A device can also read its own group's files directly using its thing key, witho
 
 The following applies to every file, in both the thing and group scopes.
 
-Every upload computes a SHA256 checksum of the content and stores it with the file. Every download (`/files/<name>`, `/fs/groups/<group_id>/files/<name>` and `/fs/groupfiles/<name>`) returns the content as `application/octet-stream` with a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download returns `404` if the file record exists but its content is missing from the object store.
+Every upload computes a SHA-256 checksum of the content and stores it with the file. Every download (`/files/<name>`, `/fs/groups/<group_id>/files/<name>` and `/fs/groupfiles/<name>`) returns the content as `application/octet-stream` with a `Content-Disposition: attachment; filename="<name>"` header (with an RFC 5987 `filename*` parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the `200 OK` status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download returns `404` if the file record exists but its content is missing from the object store.
 
 Downloads support single-range `Range` requests (RFC 9110), which lets constrained devices fetch large files such as firmware in chunks. The forms `bytes=<first>-<last>`, `bytes=<first>-`, and `bytes=-<suffix_length>` are accepted:
 
