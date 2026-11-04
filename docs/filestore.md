@@ -87,7 +87,7 @@ The file is sent as a multipart form. The `file` part is required; `metadata` (a
 Uploads are limited by `MF_FILESTORE_UPLOAD_LIMIT_MIB`, in MiB (`1` to `1024`, default `1024`). The status code for a larger upload depends on where it is rejected:
 
 - In the docker-compose deployment, nginx sits in front of the service and applies the same limit to `/files` and `/fs/` request bodies. Nginx rejects an oversized upload with `413 Request Entity Too Large`, with or without a `Content-Length` header.
-- When the service is called directly, it rejects the upload with `400 Bad Request`, either up front from its `Content-Length` or, for a chunked body without one, once the limit is exceeded mid-upload.
+- When the service is called directly, an upload whose `Content-Length` exceeds the limit is rejected with `400 Bad Request` before the body is read. An upload sent with chunked transfer encoding (no `Content-Length`) fails with `500 Internal Server Error` once the body exceeds the limit.
 
 ```bash
 curl -s -S -i -X POST \
