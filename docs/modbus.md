@@ -8,10 +8,10 @@ On startup, the service loads all persisted clients and begins scheduling polls 
 
 1. You create a Modbus client linked to a device, specifying the target device address, slave ID, function code, poll schedule, and the data fields to read.
 2. On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions. A write client first writes the `value` of each data field and then reads the written registers or coils back.
-3. The result is published to the platform as a JSON object keyed by field name, for example:
+3. The result is published to the platform as a JSON object keyed by field name. A register value is an object with `value` and, when configured, `unit`; a coil or discrete input value is a boolean, for example:
 
 ```json
-{ "temperature": 23.5, "humidity": 61, "status": true }
+{ "temperature": { "value": 23.5, "unit": "°C" }, "humidity": { "value": 61 }, "status": true }
 ```
 
 This message is then available to the rest of the platform — including storage, rules, and webhooks — just like any other device message.
@@ -266,7 +266,7 @@ A single register or coil can be read or written on demand, without creating a c
 
 ### Read a value
 
-`function_code` must be one of the [function codes](#function-codes). For registers, `type` is required and `byte_order`, `scale` and `length` are optional, as in a [data field](#data-fields); coils and discrete inputs take no decoding options.
+`function_code` must be `ReadCoils`, `ReadDiscreteInputs`, `ReadHoldingRegisters` or `ReadInputRegisters`. For registers, `type` is required and `byte_order`, `scale` and `length` are optional, as in a [data field](#data-fields); coils and discrete inputs take no decoding options.
 
 ```bash
 curl -s -S -i -X POST \
