@@ -180,16 +180,17 @@ The mandatory columns of each CSV record are the following, in order:
 
 * ID
 * Name
-* Group ID
-* Profile ID
+* Type
 
 Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.
 
 Example:
 
 ```
-,thing0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,30afa89c-decc-479c-8783-6b0c8813df0d,locationCountry,Poland,locationCity,Warsaw,a,1
+,thing0,device,locationCountry,Poland,locationCity,Warsaw,a,1
 ```
+
+The above CSV record and the first object in the JSON example represent the same Thing.
 
 
 #### Provision Profiles
@@ -256,9 +257,8 @@ The mandatory columns of each CSV record are the following, in order:
 
 * ID
 * Name
-* Group ID
 * Config - "content_type"
-* Config - "write"
+* Config - "write_enabled"
 * Config - "transformer" - "data_filters"
 * Config - "transformer" - "data_field"
 * Config - "transformer" - "time_field"
@@ -270,7 +270,7 @@ Any remaining columns are interpreted as metadata key-value pairs. The values ar
 Example:
 
 ```
-473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,"val1,val2","data.data.data",t,unix,UTC,a,1
+473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,application/json,false,"val1,val2","data.data.data",t,unix,UTC,a,1
 ```
 
 The above CSV record and the first object in the JSON example represent the same Profile.
