@@ -39,6 +39,7 @@ nav:
   - Webhooks: webhooks.md
   - Downlinks: downlinks.md
   - Modbus: modbus.md
+  - OTA: ota.md
   - Audit: audit.md
   - Security: security.md
   - CLI: cli.md
