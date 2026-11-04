@@ -114,7 +114,7 @@ curl -s -S -i \
   https://localhost/files
 ```
 
-Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`time` or `name`, default `time`), `dir` (`asc` or `desc`, default `desc`), and the filters `name`, `format`, `class`, and `metadata` (a URL-encoded JSON object; only files whose metadata contains the given key-value pairs are returned, e.g. `?metadata={"sensor":"temperature"}`).
+Supported query parameters: `offset`, `limit` (max 200, default 10), `order` (`time`, `name`, `class` or `format`, default `time`), `dir` (`asc` or `desc`, default `desc`), and the filters `name`, `format`, `class`, and `metadata` (a URL-encoded JSON object; only files whose metadata contains the given key-value pairs are returned, e.g. `?metadata={"sensor":"temperature"}`).
 
 **Response**
 
