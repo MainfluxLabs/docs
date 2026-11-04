@@ -16,6 +16,7 @@ window.onload = function() {
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/notifiers.yml", name: "notifiers service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/readers.yml", name: "readers service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/rules.yml", name: "rules service" },
+        { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/shadows.yml", name: "shadows service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/things.yml", name: "things service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/uiconfigs.yml", name: "uiconfigs service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/users.yml", name: "users service" },
