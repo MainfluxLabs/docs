@@ -124,7 +124,7 @@ curl -s -S -X GET \
 
 ```bash
 curl -s -S -X GET \
-  -H "Authorization: Thing <thing_key>" \
+  -H "Authorization: Bearer <user_token>" \
   "http://localhost/reader/senml?thing_id=<thing_id>&limit=5"
 ```
 
@@ -180,7 +180,7 @@ Search accepts the same filters as query parameters but via a JSON request body,
 
 ```bash
 curl -s -S -X POST \
-  -H "Authorization: Thing <thing_key>" \
+  -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '[
     {
@@ -200,13 +200,13 @@ Export returns all matching messages without pagination. Append `convert=csv` to
 ```bash
 # JSON format
 curl -s -S -X GET \
-  -H "Authorization: Thing <thing_key>" \
+  -H "Authorization: Bearer <user_token>" \
   "http://localhost/reader/senml/export?thing_id=<thing_id>" \
   -o messages.json
 
 # CSV format
 curl -s -S -X GET \
-  -H "Authorization: Thing <thing_key>" \
+  -H "Authorization: Bearer <user_token>" \
   "http://localhost/reader/senml/export?thing_id=<thing_id>&convert=csv" \
   -o messages.csv
 ```
