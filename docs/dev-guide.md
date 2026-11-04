@@ -141,15 +141,6 @@ __Note:__ Please store your customizations to some folder outside the Mainflux's
 If you want to clean your whole dockerized Mainflux installation you can use the `make pv=true cleandocker` command. Please note that __by default the `make cleandocker` command will stop and delete all of the containers and images, but NOT DELETE persistent volumes__. If you want to delete the gathered data in the system (the persistent volumes) please use the following command `make pv=true cleandocker` (pv = persistent volumes). This form of the command will stop and delete the containers, the images and will also delete the persistent volumes.
 
 
-### MQTT Microservice
-The MQTT adapter is a Go microservice built like the other services:
-
-```
-make mqtt
-```
-
-It uses mProxy to proxy traffic between MQTT clients and the [Eclipse Mosquitto](https://mosquitto.org) broker, authenticating things on connect and forwarding messages to the internal message broker. Configuration is described in the [MQTT adapter README](https://github.com/MainfluxLabs/mainflux/blob/master/mqtt/README.md).
-
 ### Protobuf
 If you've made any changes to `.proto` files, you should call `protoc` command prior to compiling individual microservices.
 

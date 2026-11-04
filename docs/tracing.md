@@ -32,7 +32,7 @@ Jaeger uses 4 ports within the Mainflux framework.  These ports and the Jaeger a
 
 ## Example
 
-As an example for using Jaeger, we can look at the traces generated after provisioning the system.  Make sure to have ran the provisioning script that is part of the [Getting Started](./getting-started.md) step.
+As an example for using Jaeger, we can look at the traces generated after provisioning the system.  Make sure to have completed the provisioning steps in [Getting Started](./getting-started.md).
 
 Before getting started with Jaeger, there are a few terms that are important to define.  A `trace` can be thought of as one transaction within the system.  A trace is made up of one or more `spans`.  These are the individual steps that must be taken for a trace to perform its action.  A span has `tags` and `logs` associated with it.  Tags are key-value pairs that provide information such as a database type or http method. Tags are useful when filtering traces in the Jaeger UI.  Logs are structured messages used at specific points in the trace's transaction.  These are typically used to indicate an error.
 

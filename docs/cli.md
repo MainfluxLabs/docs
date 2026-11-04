@@ -111,6 +111,8 @@ mainfluxlabs-cli users token <user_email> <user_password>
 mainfluxlabs-cli users get <all | user_id> <user_token>
 ```
 
+Only the admin can retrieve `all` users or another user's `user_id`; other users can retrieve only their own `user_id`.
+
 #### Update User Metadata
 ```bash
 mainfluxlabs-cli users update '{"key1":"value1", "key2":"value2"}' <user_token>
