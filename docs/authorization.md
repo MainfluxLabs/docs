@@ -1,10 +1,8 @@
 # Authorization
 
-At the beginning, it is necessary to ensure access to the platform for users. 
-__User registration in the system is performed exclusively by the platform administrator or `Root Admin`.__
+Users are registered by the `Root Admin`, by accepting a Platform Invite, or through self-registration with e-mail verification when `MF_USERS_SELF_REGISTER_ENABLED` is `true` (the default).
 
-
-After the user is registered by the `Root Admin`, in order to be able to manage entities within the system, it is necessary to have certain rights.
+Once registered, a user needs certain rights to manage entities within the system.
 Mainflux uses **roles** to control permissions for entities at two levels: at the Organization level and at the Group level.
 
 *More information about creating a user can be found at [Users API](api.md#users)*.

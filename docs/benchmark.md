@@ -7,11 +7,11 @@
 
 ### Setting up MZBench
 
-MZbench is open-source tool for that can generate large traffic and measure performance of the application. MZBench is distributed, cloud-aware benchmarking tool that can seamlessly scale to millions of requests. It's originally developed by [satori-com](https://github.com/satori-com/mzbench) but we will use [mzbench](https://github.com/mzbench/mzbench) fork because it can run with newest Erlang releases and the original MzBench repository is not maintained anymore.
+MZBench is an open-source tool that can generate large amounts of traffic and measure application performance. It is a distributed, cloud-aware benchmarking tool that can scale to millions of requests. It was originally developed by [satori-com](https://github.com/satori-com/mzbench), but this guide uses the [mzbench](https://github.com/mzbench/mzbench) fork because it runs with the newest Erlang releases and the original repository is no longer maintained.
 
-We will describe installing MZBench server on Ubuntu 18.04 (this can be on your PC or some external cloud server, like droplet on Digital Ocean)
+We will describe installing MZBench server on Ubuntu 18.04 (this can be on your PC or some external cloud server, like a Digital Ocean droplet).
 
-Install latest OTP/Erlang (it's version 22.3 for me)
+Install the latest OTP/Erlang (this guide was tested with version 22.3):
 ```
 sudo apt update
 sudo apt install erlang
@@ -44,7 +44,7 @@ The [MZBench CLI](https://github.com/mzbench/mzbench/blob/master/doc/cli.md) let
 
 Another way of using MZBench is over [Dashboard](https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md). After starting server you should check dashboard on `http://localhost:4800`. 
 
-Note that if you are installing MZBench on external server (i.e. Digital Ocean droplet), that you'll be able to reach MZBench dashboard on your server's IP address:4800, if you previously:
+If you install MZBench on an external server (e.g. a Digital Ocean droplet), the dashboard is reachable at `<server_ip>:4800` only after you:
 - change default value for `network_interface` from `127.0.0.1` to `0.0.0.0` in configuration file. Default configuration file location is `~/.config/mzbench/server.config`, create it from sample configuration file `~/.config/mzbench/server.config.example`
 - open port `4800` with `ufw allow 4800`
 
@@ -53,18 +53,18 @@ Try this before moving forward in setting up Amazon EC2 plugin.
 
 ### Setting up Amazon EC2 plugin
 
-For larger-scale tests we will set up MZBench to run each node as one of Amazon EC2 instance with built-in plugin [mzb_api_ec2_plugin](https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2).
+For larger-scale tests we will set up MZBench to run each node as an Amazon EC2 instance with the built-in plugin [mzb_api_ec2_plugin](https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2).
 
 This is basic architecture when running MZBench:
 
 ![MZBench Architecture Running](https://github.com/mzbench/mzbench/raw/master/doc/images/scheme_2.png)
 
-Every node that runs your scenarios will be one of Amazon EC2 instance; plus one more additional node — the director node. The director doesn't run scenarios, it collects the metrics from the other nodes and runs [post and pre hooks](https://github.com/mzbench/mzbench/blob/master/scenarios/spec.md#pre_hook-and-post_hook). So, if you want to run jobs on 10 nodes, actually 11 EC2 instances will be created.
+Every node that runs your scenarios will be an Amazon EC2 instance, plus one additional node — the director node. The director doesn't run scenarios, it collects the metrics from the other nodes and runs [post and pre hooks](https://github.com/mzbench/mzbench/blob/master/scenarios/spec.md#pre_hook-and-post_hook). So, if you want to run jobs on 10 nodes, actually 11 EC2 instances will be created.
 All instances will be automatically terminated when the test finishes.
 
 We will use one of ready-to-use Amazon Machine Images (AMI) with all necessary dependencies. We will choose AMI with OTP 22, because that is the version we have on MZBench server. So, we will search for `MZBench-erl22` AMI and find one with id `ami-03a169923be706764` available in `us-west-1b` zone.
 If you have chosen this AMI, everything you do from now must be in us-west-1 zone.
-We must have IAM user with `AmazonEC2FullAccess` and `IAMFullAccess` permissions policies, and his `access_key_id` and `secret_access_key` goes to configuration file.
+An IAM user with the `AmazonEC2FullAccess` and `IAMFullAccess` permission policies is required; its `access_key_id` and `secret_access_key` go into the configuration file.
 In EC2 dashboard, you must create new security group `MZbench_cluster` where you will add inbound rules to open ssh and TCP ports 4801-4804.
 Also, in EC2 dashboard go to section `key pairs`, click `Actions` -> `Import key pair` and upload public key you have on your MZBench server in `~/.ssh/id_rsa.pub` (if you need to create new, run `ssh-keygen` and follow instructions). Give it a name on EC2 dashboard, put that name (`key_name`) and path (`keyfile`) in configuration file.
 
@@ -108,7 +108,7 @@ Testing environment to be determined.
 
 ### Message publishing
 
-In this scenario, large number of requests are sent to HTTP adapter service
+In this scenario, a large number of requests are sent to HTTP adapter service
 every second. This test checks how much time HTTP adapter needs to respond
 to each request.
 
@@ -118,8 +118,8 @@ TBD
 
 ### Create and get client
 
-In this scenario, large number of requests are sent to things service to create
-things and than to retrieve their data. This test checks how much time things
+In this scenario, a large number of requests are sent to things service to create
+things and then to retrieve their data. This test checks how much time things
 service needs to respond to each request.
 
 #### Results

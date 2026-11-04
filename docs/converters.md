@@ -61,7 +61,7 @@ Rows are collected and published as batched JSON messages. The `time` column val
 {"Created": 1709635200, "temperature": 21.5, "humidity": 60, "status": "ok"}
 ```
 
-##  JSON file to SenML Messages
+## JSON file to SenML Messages
 
 Each object in the array must contain a `t` key (Unix timestamp as a float) and one or more numeric measurement keys. Each measurement key produces one SenML record.
 

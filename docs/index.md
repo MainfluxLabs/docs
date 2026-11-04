@@ -6,7 +6,7 @@
 
 Mainflux is modern, scalable, secure open source and patent-free IoT cloud platform written in Go.
 
-It accepts user and thing connections over various network protocols (i.e. HTTP,
+It accepts user and thing connections over various network protocols (e.g. HTTP,
 MQTT, WebSocket, CoAP), thus making a seamless bridge between them. It is used as the IoT middleware
 for building complex IoT solutions.
 
@@ -14,7 +14,7 @@ for building complex IoT solutions.
 
 ### Features
 
-- Protocol bridging (i.e. HTTP, MQTT, WebSocket, CoAP)
+- Protocol bridging (e.g. HTTP, MQTT, WebSocket, CoAP)
 - Device management and provisioning
 - Fine-grained access control
 - Platform logging and instrumentation support

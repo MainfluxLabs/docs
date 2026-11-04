@@ -6,11 +6,11 @@ Mainflux uses JWT-based authentication keys for all user-facing operations. Ther
 
 | Key type | Issued by | Expiry | Revocable | Purpose                                               |
 |----------|-----------|--------|-----------|---------|
-| **Login key** | Login endpoint | Short-lived (session) | No | Authenticates interactive sessions  |
+| **Login key** | Login endpoint | Short-lived (session) | Via logout | Authenticates interactive sessions  |
 | **API key** | User request | Configurable (default: never) | Yes | Long-lived programmatic access |
 | **Recovery key** | Password reset flow | Short-lived | No | Password recovery only                |
 
-**Login keys** are issued automatically when a user logs in. They expire after a short session period and cannot be revoked individually. Every authenticated request (other than registration and login) must carry a valid key in the `Authorization: Bearer <key>` header.
+**Login keys** are issued automatically when a user logs in. They expire after a short session period and can be refreshed within the session. Logging out revokes the session, after which its login keys can no longer be refreshed. Every authenticated request (other than registration and login) must carry a valid key in the `Authorization: Bearer <key>` header.
 
 **API keys** are created on demand and provide stable, long-lived access for scripts, integrations, and automated workflows. They can be given an explicit expiration time; if none is set, they never expire. Because API keys must be validated against the database on each request (unlike login keys, which are self-contained JWTs), they are the only key type that supports revocation. An API key holder can perform all the same operations as a logged-in user — managing things, profiles, groups, and the user's own profile — **except** creating additional API keys.
 
@@ -46,7 +46,7 @@ docker-compose -f docker/docker-compose.yml up
 
 ## Mutual TLS Authentication with X.509 Certificates
 
-In most of the cases, HTTPS, MQTTS or secure CoAP are secure enough. However, sometimes you might need an even more secure connection. Mainflux supports mutual TLS authentication (_mTLS_) based on [X.509 certificates](https://tools.ietf.org/html/rfc5280). By default, the TLS protocol only proves the identity of the server to the client using the X.509 certificate and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication. This is called two-way or mutual authentication. Mainflux currently supports mTLS over HTTP, MQTT and MQTT over WS protocols. In order to run Docker composition with mTLS turned on, you can execute the following command from the project root:
+In most cases, HTTPS, MQTTS or secure CoAP are secure enough. However, sometimes you might need an even more secure connection. Mainflux supports mutual TLS authentication (_mTLS_) based on [X.509 certificates](https://tools.ietf.org/html/rfc5280). By default, the TLS protocol only proves the identity of the server to the client using the X.509 certificate and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication. This is called two-way or mutual authentication. Mainflux currently supports mTLS over HTTP, MQTT and MQTT over WS protocols. In order to run Docker composition with mTLS turned on, you can execute the following command from the project root:
 
 ```bash
 AUTH=x509 docker-compose -f docker/docker-compose.yml up -d
@@ -79,7 +79,7 @@ Normally, in order to get things running, you will need to specify only `THING_K
 - Command `make server_cert` will generate and sign (with previously created CA) server cert, which will expire after 1000 days. This cert is used as a Mainflux server-side certificate in usual TLS flow to establish HTTPS or MQTTS connection.
 - Command `make thing_cert` will finally generate and sign a client-side certificate and private key for the thing.
 
-In this example `<thing_key>` represents key of the thing and `<cert_name>` represents the name of the certificate and key file which will be saved in `docker/ssl/certs` directory. Generated Certificate will expire after 2 years. The key must be stored in the x.509 certificate `CN` field.  This script is created for testing purposes and is not meant to be used in production. We strongly recommend avoiding self-signed certificates and using a certificate management tool such as [Vault](https://www.vaultproject.io/) for the production.
+In this example, `<thing_key>` is the key of the thing and `<cert_name>` is the name of the certificate and key files saved in the `docker/ssl/certs` directory. The generated certificate expires after 2 years. The key must be stored in the X.509 certificate `CN` field. This script is intended for testing purposes and is not meant to be used in production. For production, we strongly recommend avoiding self-signed certificates and using a certificate management tool such as [Vault](https://www.vaultproject.io/).
 
 Once you have created CA and server-side cert, you can spin the composition using:
 
