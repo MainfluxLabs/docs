@@ -253,6 +253,34 @@ mosquitto_sub -u [internal|external] -P <key> -t /messages -h localhost
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
 
+### Subscriptions
+
+The MQTT adapter records each topic, as sent by the client, that the things of a group subscribe to. Listing them requires the viewer role in the group and supports `offset`, `limit` and `topic` (partial match) query parameters:
+
+```bash
+curl -s -S -i \
+  -H "Authorization: Bearer <user_token>" \
+  "https://localhost/subs/groups/<group_id>/subscriptions?offset=0&limit=10"
+```
+
+```json
+{
+  "total": 1,
+  "offset": 0,
+  "limit": 10,
+  "subscriptions": [
+    {
+      "topic": "/messages/bedroom/temperature",
+      "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+      "group_id": "211e4567-e89b-12d3-a456-426614174000",
+      "created_at": 1774342578.003
+    }
+  ]
+}
+```
+
+`created_at` is the Unix time of the subscription in seconds. Subscriptions are removed when the thing or the group is removed.
+
 ## CoAP
 
 CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/MainfluxLabs/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/MainfluxLabs/coap-cli).
