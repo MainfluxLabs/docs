@@ -157,7 +157,7 @@ These flags are independent — a message can be written to storage without trig
 }
 ```
 
-Webhook delivery itself is configured per-thing — see the [Webhooks](webhooks.md) page. Rule-triggered SMTP/SMPP notifications are configured via rule/script actions — see the [Rules](rules.md) and [Notifiers](notifiers.md) pages.
+Webhook delivery itself is configured per-thing — see the [Webhooks](webhooks.md) page. Rule-triggered SMTP/SMPP notifications are configured via rule actions — see the [Rules](rules.md) and [Notifiers](notifiers.md) pages.
 
 ---
 
@@ -178,7 +178,7 @@ Our example topic `/messages/bedroom/temperature` with `content_type` defined as
 You can use multilevel subtopics, that have multiple parts. These parts are separated by `.` or `/` separators.
 When you use combination of these two, have in mind that behind the scene, `/` separator will be replaced with `.`.
 Every empty part of subtopic will be removed. What this means is that subtopic `a///b` is equivalent to `a/b`.
-When you want to subscribe, you can use NATS wildcards `*` and `>`. Every subtopic part can have `*` or `>` as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as `a.b*c.d` will be invalid, while `a.b.*.c.d` will be valid.
+When you want to subscribe, you can use NATS wildcards `*` and `>`. A subtopic part can be `*` or `>`, but a part that combines a wildcard with other characters is invalid. For example, `a.b*c.d` is invalid, while `a.b.*.c.d` is valid.
 
 **Note:** When using MQTT, it's recommended that you use standard MQTT wildcards `+` and `#`.
 
@@ -244,13 +244,11 @@ mosquitto_pub -u [internal|external] -P <key> -t /messages -h localhost -m '[{"b
 
 Note that the MQTT username should be either the literal `internal` or `external` depending on if you're authenticating with an internal or external thing key.
 
-To subcribe to a topic, for example:
+To subscribe to a topic, for example:
 
 ```
 mosquitto_sub -u [internal|external] -P <key> -t /messages -h localhost
 ```
-
-If you want to use standard topic such as `/messages` with SenML content type (JSON or CBOR), you should use following topic: `/messages`.
 
 If you are using TLS to secure MQTT connection, add `--cafile docker/ssl/certs/ca.crt`
 to every command.
@@ -279,11 +277,11 @@ To subscribe, send `GET` request with Observe option (flag `o`) set to false. Th
 1. Send `GET` request with Observe option set to true.
 2. Forget the token and send `RST` message as a response to `CONF` message received by the server.
 
-The most of the notifications received from the Adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
+Most of the notifications received from the adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
 
 > Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.
 
-CoAP Adapter sends these notifications every 12 hours. To configure this period, please check [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md) If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
+CoAP Adapter sends these notifications every 12 hours. To configure this period, see the [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md). If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
 
 ### Sending Commands
 
@@ -306,9 +304,7 @@ There are 2 recommended Javascript libraries for implementing browser support fo
 1. [Eclipse Paho JavaScript Client](https://www.eclipse.org/paho/index.php?page=clients/js/index.php)
 2. [MQTT.js](https://github.com/mqttjs/MQTT.js)
 
-As WS is an extension of HTTP protocol, Mainflux exposes it on port `80`, so it's usage is practically transparent.
-Additionally, please notice that since same port as for HTTP is used (`80`), and extension URL `/mqtt` should be used -
-i.e. connection URL should be `ws://<host_addr>/mqtt`.
+Mainflux exposes MQTT-over-WS on the HTTP port (`80`) under the `/mqtt` path, so the connection URL is `ws://<host_addr>/mqtt`.
 
 For quick testing you can use [HiveMQ UI tool](http://www.hivemq.com/demos/websocket-client/).
 
