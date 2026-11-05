@@ -23,18 +23,26 @@ curl -s -S -i -X POST \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Ops team alerts",
-    "contacts": ["ops@example.com", "oncall@example.com"]
+    "notifiers": [
+      {
+        "name": "Ops team alerts",
+        "contacts": ["ops@example.com", "oncall@example.com"]
+      }
+    ]
   }' \
   https://localhost/svcsmtp/groups/<group_id>/notifiers
 ```
 
 ```json
 {
-  "id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b",
-  "name": "Ops team alerts",
-  "contacts": ["ops@example.com", "oncall@example.com"],
-  "group_id": "211e4567-e89b-12d3-a456-426614174000"
+  "notifiers": [
+    {
+      "id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b",
+      "group_id": "211e4567-e89b-12d3-a456-426614174000",
+      "name": "Ops team alerts",
+      "contacts": ["ops@example.com", "oncall@example.com"]
+    }
+  ]
 }
 ```
 
@@ -48,6 +56,8 @@ curl -s -S -i \
 ```json
 {
   "total": 1,
+  "offset": 0,
+  "limit": 10,
   "notifiers": [
     {
       "id": "a9bf9e57-1685-4c89-bafb-ff5af830be8b",
@@ -75,10 +85,12 @@ curl -s -S -i -X PUT \
   }' \
   https://localhost/svcsmtp/notifiers/<notifier_id>
 
-# Delete a notifier
-curl -s -S -i -X DELETE \
+# Delete notifiers
+curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
-  https://localhost/svcsmtp/notifiers/<notifier_id>
+  -H "Content-Type: application/json" \
+  -d '{"notifier_ids": ["<notifier_id>"]}' \
+  https://localhost/svcsmtp/notifiers
 ```
 
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).

@@ -21,26 +21,33 @@ Webhooks are registered per device and scoped to the group that device belongs t
 curl -s -S -i -X POST \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
-  -d '[{
-    "name": "Data pipeline",
-    "url": "https://ingest.example.com/mainflux",
-    "headers": {"X-Api-Key": "<api_key>"}
-  }]' \
+  -d '{
+    "webhooks": [
+      {
+        "name": "Data pipeline",
+        "url": "https://ingest.example.com/mainflux",
+        "headers": {"X-Api-Key": "<api_key>"}
+      }
+    ]
+  }' \
   https://localhost/svcwebhooks/things/<thing_id>/webhooks
 ```
 
 **Response**
 
 ```json
-[
-  {
-    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-    "name": "Data pipeline",
-    "url": "https://ingest.example.com/mainflux",
-    "headers": {"X-Api-Key": "<api_key>"},
-    "group_id": "211e4567-e89b-12d3-a456-426614174000"
-  }
-]
+{
+  "webhooks": [
+    {
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "group_id": "211e4567-e89b-12d3-a456-426614174000",
+      "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+      "name": "Data pipeline",
+      "url": "https://ingest.example.com/mainflux",
+      "headers": {"X-Api-Key": "<api_key>"}
+    }
+  ]
+}
 ```
 
 ### List webhooks
@@ -82,7 +89,7 @@ curl -s -S -i -X PUT \
 ### Remove webhooks
 
 ```bash
-curl -s -S -i -X DELETE \
+curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"webhook_ids": ["<webhook_id>"]}' \

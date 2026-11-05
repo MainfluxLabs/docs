@@ -47,7 +47,7 @@ Returns the certificate metadata (`thing_id`, `certificate`, `serial`, `expires_
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  "http://localhost/things/<thing_id>/serials?offset=0&limit=20"
+  "http://localhost/svccerts/things/<thing_id>/serials?offset=0&limit=20"
 ```
 
 ## Renewing a Certificate
