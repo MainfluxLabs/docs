@@ -85,7 +85,7 @@ Available Commands:
 ```
 
 ## Service
-#### Get Mainflux Things services health check
+#### Check Things Service Health
 ```bash
 mainfluxlabs-cli health
 ```
@@ -108,8 +108,10 @@ mainfluxlabs-cli users token <user_email> <user_password>
 
 #### Retrieve User
 ```bash
-mainfluxlabs-cli users get <user_token>
+mainfluxlabs-cli users get <all | user_id> <user_token>
 ```
+
+Only the admin can retrieve `all` users or another user's `user_id`; other users can retrieve only their own `user_id`.
 
 #### Update User Metadata
 ```bash
@@ -128,10 +130,11 @@ mainfluxlabs-cli users password <old_password> <password> <user_token>
 Provision multiple Things in bulk from a JSON / CSV input file.
 
 ```bash
-mainfluxlabs-cli provision things <file> <user_token>
+mainfluxlabs-cli provision things <file> <profile_id> <user_token>
 ```
 
 * `file` - A path to a CSV or JSON file containing Things (must have the `.json` or `.csv` extension)
+* `profile_id` - ID of the Profile to which the Things are assigned
 * `user_token` - A valid user auth token for the current system
 
 ##### Input file structure (JSON):
@@ -141,8 +144,8 @@ each of which can have the following fields:
 
 * `name`
 * `id`
-* `group_id`
-* `profile_id`
+* `type`
+* `key`
 * `metadata`
 
 See [API -> Things](api.md#things) for the meaning and explanation of these fields.
@@ -152,9 +155,8 @@ Example:
 ```json
 [
     {
-        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
-        "profile_id": "30afa89c-decc-479c-8783-6b0c8813df0d",
         "name": "thing0",
+        "type": "device",
         "metadata": {
             "locationCountry": "Poland",
             "locationCity": "Warsaw",
@@ -162,9 +164,8 @@ Example:
         }
     },
     {
-        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
-        "profile_id": "efc59216-733d-41e7-af9a-e94a11ff39ee",
         "name": "thing1",
+        "type": "sensor",
         "metadata": {
             "b": 2
         }
@@ -179,15 +180,14 @@ The mandatory columns of each CSV record are the following, in order:
 
 * ID
 * Name
-* Group ID
-* Profile ID
+* Type
 
 Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.
 
 Example:
 
 ```
-,thing0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,30afa89c-decc-479c-8783-6b0c8813df0d,locationCountry,Poland,locationCity,Warsaw,a,1
+,thing0,device,locationCountry,Poland,locationCity,Warsaw,a,1
 ```
 
 The above CSV record and the first object in the JSON example represent the same Thing.
@@ -198,10 +198,11 @@ The above CSV record and the first object in the JSON example represent the same
 Provision multiple Profiles in bulk from a JSON / CSV input file.
 
 ```bash
-mainfluxlabs-cli provision profiles <file> <user_token>
+mainfluxlabs-cli provision profiles <file> <group_id> <user_token>
 ```
 
 * `file` - A path to a CSV or JSON file containing profiles (must have the `.json` or `.csv` extension)
+* `group_id` - ID of the Group in which the Profiles are created
 * `user_token` - A valid user auth token for the current system
 
 ##### Input file structure (JSON):
@@ -211,7 +212,6 @@ each of which can have the following fields:
 
 * `name`
 * `id`
-* `group_id`
 * `config`
 * `metadata`
 
@@ -223,18 +223,17 @@ Example:
 [
     {
         "id": "473c97ca-ac23-4e0f-b679-c34bcde98491",
-        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
         "name": "profile0",
         "config": {
           "content_type": "application/json",
-          "write": false,
+          "write_enabled": false,
           "transformer": {
             "data_filters": ["val1", "val2"],
             "data_field": "data.data.data",
             "time_field": "t",
             "time_format": "unix",
             "time_location": "UTC"
-          },
+          }
         },
         "metadata": {
             "a": "1"
@@ -242,7 +241,6 @@ Example:
     },
     {
         "id": "33da57ee-f072-4eef-a860-c3d2292e8c07",
-        "group_id": "2c6aaa48-595b-495e-ad7f-c569a44d15e1",
         "name": "profile1",
         "config": {...},
         "metadata": {
@@ -259,9 +257,8 @@ The mandatory columns of each CSV record are the following, in order:
 
 * ID
 * Name
-* Group ID
 * Config - "content_type"
-* Config - "write"
+* Config - "write_enabled"
 * Config - "transformer" - "data_filters"
 * Config - "transformer" - "data_field"
 * Config - "transformer" - "time_field"
@@ -273,7 +270,7 @@ Any remaining columns are interpreted as metadata key-value pairs. The values ar
 Example:
 
 ```
-473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,"val1,val2","data.data.data",t,unix,UTC,a,1
+473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,application/json,false,"val1,val2","data.data.data",t,unix,UTC,a,1
 ```
 
 The above CSV record and the first object in the JSON example represent the same Profile.
@@ -319,12 +316,12 @@ mainfluxlabs-cli things get by-profile <profile_id> <user_token>
 
 #### Retrieve Metadata by Key
 ```bash
-mainfluxlabs-cli things metadata <thing_key>
+mainfluxlabs-cli things metadata <key_type> <thing_key>
 ```
 
 #### Retrieve Thing ID by Key
 ```bash
-mainfluxlabs-cli things identify <thing_key>
+mainfluxlabs-cli things identify <key_type> <thing_key>
 ```
 
 ### Profiles
