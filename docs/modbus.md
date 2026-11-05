@@ -1,29 +1,33 @@
 # Modbus
 
-The Modbus service manages Modbus TCP polling clients for devices and groups. Each client connects to a Modbus TCP device on a configured schedule, reads the specified registers or coils, formats the result as a JSON payload, and publishes it as a platform message on behalf of the associated device.
+The Modbus service manages Modbus TCP polling clients for devices and groups. Each client connects to a Modbus TCP device on a configured schedule, reads or writes the specified registers or coils, formats the resulting values as a JSON payload, and publishes it as a platform message on behalf of the associated device.
 
 On startup, the service loads all persisted clients and begins scheduling polls according to each client's frequency setting.
 
 ## How it works
 
 1. You create a Modbus client linked to a device, specifying the target device address, slave ID, function code, poll schedule, and the data fields to read.
-2. On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions.
-3. The result is published to the platform as a JSON object keyed by field name, for example:
+2. On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions. A write client first writes the `value` of each data field and then reads the written registers or coils back.
+3. The result is published to the platform as a JSON object keyed by field name. A register value is an object with `value` and, when configured, `unit`; a coil or discrete input value is a boolean, for example:
 
 ```json
-{ "temperature": 23.5, "humidity": 61, "status": true }
+{ "temperature": { "value": 23.5, "unit": "°C" }, "humidity": { "value": 61 }, "status": true }
 ```
 
 This message is then available to the rest of the platform — including storage, rules, and webhooks — just like any other device message.
 
 ## Function codes
 
-| Function code          | Modbus FC | Description                          |
-| ---------------------- | :-------: | ------------------------------------ |
-| `ReadCoils`            |    01     | Read output coils (digital output)   |
-| `ReadDiscreteInputs`   |    02     | Read discrete inputs (digital input) |
-| `ReadHoldingRegisters` |    03     | Read holding registers (analog R/W)  |
-| `ReadInputRegisters`   |    04     | Read input registers (analog R/O)    |
+| Function code           | Modbus FC | Description                          |
+| ----------------------- | :-------: | ------------------------------------ |
+| `ReadCoils`             |    01     | Read output coils (digital output)   |
+| `ReadDiscreteInputs`    |    02     | Read discrete inputs (digital input) |
+| `ReadHoldingRegisters`  |    03     | Read holding registers (analog R/W)  |
+| `ReadInputRegisters`    |    04     | Read input registers (analog R/O)    |
+| `WriteCoils`            |  05, 15   | Write output coils                   |
+| `WriteHoldingRegisters` |  06, 16   | Write holding registers              |
+
+A `WriteCoils` client accepts only `bool` data fields. A `WriteHoldingRegisters` client accepts all types except `string`; a `bool` field is written as a register value of 0 or 1. Every data field of a write client requires a `value`.
 
 ## Poll schedule
 
@@ -41,7 +45,7 @@ The `scheduler` object controls when and how often the client polls the device.
 
 ## Data fields
 
-Each entry in `data_fields` describes one register or coil to read and how to decode it.
+Each entry in `data_fields` describes one register or coil to read or write and how to decode it.
 
 | Field        | Description                                                                                            |
 | ------------ | ------------------------------------------------------------------------------------------------------ |
@@ -52,6 +56,7 @@ Each entry in `data_fields` describes one register or coil to read and how to de
 | `unit`       | Optional unit label (e.g. `°C`, `%`, `bar`)                                                            |
 | `scale`      | Optional multiplier applied to the raw numeric value before publishing                                 |
 | `length`     | Register count. Calculated automatically from `type` for numeric types; set manually for `string` only |
+| `value`      | Value written on each scheduled run of a write client: boolean for `bool`, numeric otherwise           |
 
 Data fields can be sent inline in the request body, or uploaded as a CSV or JSON file — see [Create a client from a file](#create-a-client-from-a-file).
 
@@ -127,7 +132,7 @@ Each request creates exactly one client and returns it with status `201`. A malf
 
 #### CSV file
 
-The first line is a header row naming the columns. Recognized columns are `name`, `type`, `unit`, `scale`, `byte_order`, `address`, and `length`, in any order. Header names are matched case-insensitively and unknown columns are ignored. Every row must supply `name`, `type`, and `address`; `length` is only needed for `string` fields.
+The first line is a header row naming the columns. Recognized columns are `name`, `type`, `unit`, `scale`, `byte_order`, `address`, `length`, and `value`, in any order. Header names are matched case-insensitively and unknown columns are ignored. Every row must supply `name`, `type`, and `address`; `length` is only needed for `string` fields, and `value` (`true`, `false` or a number) only for write clients.
 
 `registers.csv`:
 
@@ -254,5 +259,62 @@ curl -s -S -i -X PATCH \
   -d '{"client_ids": ["<client_id>"]}' \
   https://localhost/svcmodbus/clients
 ```
+
+## Immediate read and write
+
+A single register or coil can be read or written on demand, without creating a client. Both operations require the editor role in the thing's group, connect to the device given by `ip_address`, `port` and `slave_id`, and publish the resulting value as a message of the thing identified by `thing_id`. The message key is `name`, or the address when `name` is omitted.
+
+### Read a value
+
+`function_code` must be `ReadCoils`, `ReadDiscreteInputs`, `ReadHoldingRegisters` or `ReadInputRegisters`. For registers, `type` is required and `byte_order`, `scale` and `length` are optional, as in a [data field](#data-fields); coils and discrete inputs take no decoding options.
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+    "ip_address": "192.168.1.100",
+    "port": "502",
+    "slave_id": 1,
+    "function_code": "ReadHoldingRegisters",
+    "name": "temperature",
+    "address": 100,
+    "type": "float32",
+    "byte_order": "ABCD",
+    "unit": "°C"
+  }' \
+  https://localhost/svcmodbus/read
+```
+
+The response contains the decoded value:
+
+```json
+{ "value": 21.5 }
+```
+
+### Write a value
+
+`type` selects the target: `bool` writes a coil, while `int16`, `uint16`, `int32`, `uint32` and `float32` write holding registers. The written value is read back from the device and published.
+
+```bash
+curl -s -S -i -X POST \
+  -H "Authorization: Bearer <user_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "thing_id": "111e4567-e89b-12d3-a456-426614174000",
+    "ip_address": "192.168.1.100",
+    "port": "502",
+    "slave_id": 1,
+    "name": "setpoint",
+    "address": 200,
+    "type": "float32",
+    "byte_order": "ABCD",
+    "value": 22.0
+  }' \
+  https://localhost/svcmodbus/write
+```
+
+A successful write returns `200 OK`.
 
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).
