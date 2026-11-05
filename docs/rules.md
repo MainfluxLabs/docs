@@ -74,7 +74,7 @@ curl -s -S -i -X POST \
       }
     ]
   }' \
-  http://localhost/groups/<group_id>/rules
+  http://localhost/svcrules/groups/<group_id>/rules
 ```
 
 A rule with a script condition instead:
@@ -100,7 +100,7 @@ curl -s -S -i -X POST \
       }
     ]
   }' \
-  http://localhost/groups/<group_id>/rules
+  http://localhost/svcrules/groups/<group_id>/rules
 ```
 
 ### List Rules by Group
@@ -108,7 +108,7 @@ curl -s -S -i -X POST \
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  "http://localhost/groups/<group_id>/rules?offset=0&limit=20"
+  "http://localhost/svcrules/groups/<group_id>/rules?offset=0&limit=20"
 ```
 
 List endpoints support `offset`, `limit` (max 200), `order=name`, `dir` (`asc`/`desc`), `name` (partial match), and `input_type` (`message`/`alarm`) query parameters.
@@ -118,7 +118,7 @@ List endpoints support `offset`, `limit` (max 200), `order=name`, `dir` (`asc`/`
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  "http://localhost/things/<thing_id>/rules"
+  "http://localhost/svcrules/things/<thing_id>/rules"
 ```
 
 ### View a Rule
@@ -249,7 +249,7 @@ curl -s -S -i -X POST \
       }
     ]
   }' \
-  http://localhost/groups/<group_id>/scripts
+  http://localhost/svcrules/groups/<group_id>/scripts
 ```
 
 ### List Scripts by Group
@@ -257,7 +257,7 @@ curl -s -S -i -X POST \
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  http://localhost/groups/<group_id>/scripts
+  http://localhost/svcrules/groups/<group_id>/scripts
 ```
 
 ### View a Script
@@ -265,7 +265,7 @@ curl -s -S -i \
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  http://localhost/scripts/<script_id>
+  http://localhost/svcrules/scripts/<script_id>
 ```
 
 ### Update a Script
@@ -275,7 +275,7 @@ curl -s -S -i -X PUT \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"name": "Condensation risk (v2)", "script": "..."}' \
-  http://localhost/scripts/<script_id>
+  http://localhost/svcrules/scripts/<script_id>
 ```
 
 ### Delete Scripts
@@ -285,7 +285,7 @@ curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"script_ids": ["456e4567-e89b-12d3-a456-426614174abc"]}' \
-  http://localhost/scripts
+  http://localhost/svcrules/scripts
 ```
 
 ## Script Runs
@@ -319,7 +319,7 @@ curl -s -S -i \
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  http://localhost/things/<thing_id>/runs
+  http://localhost/svcrules/things/<thing_id>/runs
 ```
 
 Both listing endpoints support the same `status`, `from`, `to` (Unix ms), and pagination query parameters.
@@ -331,7 +331,7 @@ curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
   -d '{"script_run_ids": ["789e4567-e89b-12d3-a456-426614174xyz"]}' \
-  http://localhost/runs
+  http://localhost/svcrules/runs
 ```
 
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).
