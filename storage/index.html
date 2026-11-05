@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -102,7 +106,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -131,6 +143,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -177,17 +197,18 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">#</a></h1>
-<p>Mainflux uses PostgreSQL as its primary message store. TimescaleDB is available as an optional add-on for time-series workloads.</p>
+<p>Mainflux uses TimescaleDB as its primary message store. PostgreSQL is available as an optional add-on.</p>
 <h2 id="writers">Writers<a class="headerlink" href="#writers" title="Permanent link">#</a></h2>
 <p>Writers consume Mainflux messages, transform them to the desired format, and store them in the database.</p>
 <p>For proper consumption of messages based on subtopics and their transformation, see <a href="../messaging/#subtopics">Subtopics</a> and <a href="../messaging/#configure-profile-config">Configure Profile Config</a> sections on the messaging page.</p>
-<p>PostgreSQL and the PostgreSQL Writer are part of the core composition and start automatically with the platform.</p>
-<p>TimescaleDB Writer is an optional add-on:</p>
-<pre><code class="language-bash">docker-compose -f docker/addons/timescale-writer/docker-compose.yml up -d
+<p>TimescaleDB, the TimescaleDB Writer and the TimescaleDB Reader are part of the core composition and start automatically with the platform.</p>
+<p>PostgreSQL Writer and PostgreSQL Reader are optional add-ons:</p>
+<pre><code class="language-bash">docker-compose -f docker/docker-compose.yml -f docker/addons/postgres-writer/docker-compose.yml -f docker/addons/postgres-reader/docker-compose.yml up -d
 </code></pre>
 <h2 id="readers">Readers<a class="headerlink" href="#readers" title="Permanent link">#</a></h2>
-<p>Readers expose an HTTP API for querying messages persisted by writers. Each reader authenticates requests using the Thing key:</p>
-<pre><code>Authorization: Thing &lt;thing_key&gt;
+<p>Readers expose an HTTP API for querying messages persisted by writers. Message queries accept either a user token or a Thing key:</p>
+<pre><code>Authorization: Bearer &lt;user_token&gt;
+Authorization: Thing &lt;thing_key&gt;
 </code></pre>
 <h3 id="endpoints">Endpoints<a class="headerlink" href="#endpoints" title="Permanent link">#</a></h3>
 <p>Each reader exposes the same API for both SenML and JSON formats:</p>
@@ -206,11 +227,6 @@
 <td>List SenML messages</td>
 </tr>
 <tr>
-<td><code>GET</code></td>
-<td><code>/senml/{publisherId}</code></td>
-<td>List SenML messages for a specific thing</td>
-</tr>
-<tr>
 <td><code>POST</code></td>
 <td><code>/senml/search</code></td>
 <td>Search SenML messages (request body)</td>
@@ -227,18 +243,13 @@
 </tr>
 <tr>
 <td><code>DELETE</code></td>
-<td><code>/senml/{publisherId}</code></td>
+<td><code>/senml/{thingId}</code></td>
 <td>Delete SenML messages for a specific thing</td>
 </tr>
 <tr>
 <td><code>GET</code></td>
 <td><code>/json</code></td>
 <td>List JSON messages</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/json/{publisherId}</code></td>
-<td>List JSON messages for a specific thing</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
@@ -257,7 +268,7 @@
 </tr>
 <tr>
 <td><code>DELETE</code></td>
-<td><code>/json/{publisherId}</code></td>
+<td><code>/json/{thingId}</code></td>
 <td>Delete JSON messages for a specific thing</td>
 </tr>
 <tr>
@@ -298,8 +309,8 @@
 <td></td>
 </tr>
 <tr>
-<td><code>publisher</code></td>
-<td>Filter by publisher (thing ID)</td>
+<td><code>thing_id</code></td>
+<td>Filter by thing ID</td>
 <td></td>
 </tr>
 <tr>
@@ -443,7 +454,7 @@
   &quot;limit&quot;: 5,
   &quot;messages&quot;: [
     {
-      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;thing_id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
       &quot;protocol&quot;: &quot;mqtt&quot;,
       &quot;name&quot;: &quot;voltage&quot;,
       &quot;unit&quot;: &quot;V&quot;,
@@ -455,8 +466,8 @@
 </code></pre>
 <h3 id="list-messages-for-a-specific-thing">List messages for a specific thing<a class="headerlink" href="#list-messages-for-a-specific-thing" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -X GET \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  &quot;http://localhost/reader/senml/&lt;publisher_id&gt;?limit=5&quot;
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/reader/senml?thing_id=&lt;thing_id&gt;&amp;limit=5&quot;
 </code></pre>
 <h3 id="list-messages-with-time-range">List messages with time range<a class="headerlink" href="#list-messages-with-time-range" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -X GET \
@@ -476,7 +487,7 @@
   &quot;limit&quot;: 10,
   &quot;messages&quot;: [
     {
-      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;thing_id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
       &quot;protocol&quot;: &quot;mqtt&quot;,
       &quot;name&quot;: &quot;&quot;,
       &quot;unit&quot;: &quot;&quot;,
@@ -494,11 +505,11 @@
 <h3 id="search-messages">Search messages<a class="headerlink" href="#search-messages" title="Permanent link">#</a></h3>
 <p>Search accepts the same filters as query parameters but via a JSON request body, supporting multiple concurrent queries:</p>
 <pre><code class="language-bash">curl -s -S -X POST \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '[
     {
-      &quot;publisher&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
+      &quot;thing_id&quot;: &quot;513d02d2-16c1-4f23-98be-9e12f8fee898&quot;,
       &quot;name&quot;: &quot;voltage&quot;,
       &quot;from&quot;: 1715000000000000000,
       &quot;limit&quot;: 100
@@ -510,21 +521,21 @@
 <p>Export returns all matching messages without pagination. Append <code>convert=csv</code> to download as CSV:</p>
 <pre><code class="language-bash"># JSON format
 curl -s -S -X GET \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  &quot;http://localhost/reader/senml/export?publisher=&lt;publisher_id&gt;&quot; \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/reader/senml/export?thing_id=&lt;thing_id&gt;&quot; \
   -o messages.json
 
 # CSV format
 curl -s -S -X GET \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  &quot;http://localhost/reader/senml/export?publisher=&lt;publisher_id&gt;&amp;convert=csv&quot; \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/reader/senml/export?thing_id=&lt;thing_id&gt;&amp;convert=csv&quot; \
   -o messages.csv
 </code></pre>
 <h3 id="delete-messages">Delete messages<a class="headerlink" href="#delete-messages" title="Permanent link">#</a></h3>
 <p>Delete messages for a specific thing (requires user token):</p>
 <pre><code class="language-bash">curl -s -S -X DELETE \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;http://localhost/reader/senml/&lt;publisher_id&gt;&quot;
+  &quot;http://localhost/reader/senml/&lt;thing_id&gt;&quot;
 </code></pre>
 <p>Delete all messages (requires admin token):</p>
 <pre><code class="language-bash">curl -s -S -X DELETE \
@@ -551,7 +562,7 @@ curl -s -S -X GET \
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../messaging/" class="btn btn-neutral float-left" title="Messaging"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../alarms/" class="btn btn-neutral float-right" title="Alarms">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../rules/" class="btn btn-neutral float-right" title="Rules">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -582,7 +593,7 @@ curl -s -S -X GET \
       <span><a href="../messaging/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../alarms/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../rules/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

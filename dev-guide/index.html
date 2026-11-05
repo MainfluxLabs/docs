@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -101,6 +113,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -139,12 +159,6 @@
     <li class="toctree-l3"><a class="reference internal" href="#overriding-the-default-docker-compose-configuration">Overriding the default docker-compose configuration</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#cleaning-up-your-dockerized-mainflux-setup">Cleaning up your dockerized Mainflux setup</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#mqtt-microservice">MQTT Microservice</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#protobuf">Protobuf</a>
     </li>
@@ -187,8 +201,6 @@
     <li class="toctree-l4"><a class="reference internal" href="#profile-remove-event">Profile remove event</a>
     </li>
         </ul>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#mqtt-adapter">MQTT Adapter</a>
     </li>
         </ul>
     </li>
@@ -235,15 +247,14 @@ cd $SOMEPATH/mainflux
 <p><a href="https://github.com/golang/protobuf">Go Protobuf</a> installation instructions are <a href="https://github.com/golang/protobuf#installation">here</a>.
 Go Protobuf uses C bindings, so you will need to install <a href="https://github.com/google/protobuf">C++ protobuf</a> as a prerequisite.
 Mainflux uses <code>Protocol Buffers for Go with Gadgets</code> to generate faster marshaling and unmarshaling Go code. Protocol Buffers for Go with Gadgets installation instructions can be found <a href="https://github.com/gogo/protobuf">here</a>.</p>
-<p>A copy of <a href="https://golang.org/doc/install">Go</a> (version 1.17.5) and docker template (version 3.7) will also need to be installed on your system.</p>
-<p>If any of these versions seem outdated, the latest can always be found in our <a href="https://github.com/MainfluxLabs/mainflux/blob/master/scripts/ci.sh">CI script</a>.</p>
+<p><a href="https://golang.org/doc/install">Go</a> is also required, in the version declared in <a href="https://github.com/MainfluxLabs/mainflux/blob/master/go.mod">go.mod</a>.</p>
 <h3 id="build-all-services">Build All Services<a class="headerlink" href="#build-all-services" title="Permanent link">#</a></h3>
 <p>Use the <em>GNU Make</em> tool to build all Mainflux services:</p>
 <pre><code class="language-bash">make
 </code></pre>
 <p>Build artifacts will be put in the <code>build</code> directory.</p>
 <blockquote>
-<p>N.B. All Mainflux services are built as a statically linked binaries. This way they can be portable (transferred to any platform just by placing them there and running them) as they contain all needed libraries and do not relay on shared system libraries. This helps creating <a href="https://hub.docker.com/_/scratch/">FROM scratch</a> dockers.</p>
+<p>N.B. All Mainflux services are built as statically linked binaries. This makes them portable (they can be transferred to any platform and run there) because they contain all required libraries and do not rely on shared system libraries. This allows building <a href="https://hub.docker.com/_/scratch/">FROM scratch</a> Docker images.</p>
 </blockquote>
 <h3 id="build-individual-microservice">Build Individual Microservice<a class="headerlink" href="#build-individual-microservice" title="Permanent link">#</a></h3>
 <p>Individual microservices can be built with:</p>
@@ -305,25 +316,6 @@ services:
 <p><strong>Note:</strong> Please store your customizations to some folder outside the Mainflux's source folder and maybe add them to some other git repository. You can always apply your customizations by pointing to the right file using <code>docker-compose -f ...</code>.</p>
 <h3 id="cleaning-up-your-dockerized-mainflux-setup">Cleaning up your dockerized Mainflux setup<a class="headerlink" href="#cleaning-up-your-dockerized-mainflux-setup" title="Permanent link">#</a></h3>
 <p>If you want to clean your whole dockerized Mainflux installation you can use the <code>make pv=true cleandocker</code> command. Please note that <strong>by default the <code>make cleandocker</code> command will stop and delete all of the containers and images, but NOT DELETE persistent volumes</strong>. If you want to delete the gathered data in the system (the persistent volumes) please use the following command <code>make pv=true cleandocker</code> (pv = persistent volumes). This form of the command will stop and delete the containers, the images and will also delete the persistent volumes.</p>
-<h3 id="mqtt-microservice">MQTT Microservice<a class="headerlink" href="#mqtt-microservice" title="Permanent link">#</a></h3>
-<p>The MQTT Microservice in Mainflux is special, as it is currently the only microservice written in NodeJS. It is not compiled, but node modules need to be downloaded in order to start the service:</p>
-<pre><code>cd mqtt
-npm install
-</code></pre>
-<p>Note that there is a shorthand for doing these commands with <code>make</code> tool:</p>
-<pre><code>make mqtt
-</code></pre>
-<p>After that, the MQTT Adapter can be started from top directory (as it needs to find <code>*.proto</code> files) with:</p>
-<pre><code>node mqtt/mqtt.js
-</code></pre>
-<h4 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h4>
-<p>Depending on your use case, MQTT topics, message size, the number of clients and the frequency with which the messages are sent it can happen that you experience some problems.</p>
-<p>Up until now it has been noticed that in case of high load, big messages and many clients it can happen that the MQTT microservice crashes with the following error:</p>
-<pre><code>mainflux-mqtt   | FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
-mainflux-mqtt exited with code 137
-</code></pre>
-<p>This problem is caused the default allowed memory in node (V8). <a href="https://medium.com/tomincode/increasing-nodes-memory-337dfb1a60dd">V8 gives the user 1.7GB per default</a>. To fix the problem you should add the following environment variable <code>NODE_OPTIONS:--max-old-space-size=SPACE_IN_MB</code> in the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/aedes.yml#L31">environment section</a> of the aedes.yml configuration. To find the right value for the <code>--max-old-space-size</code> parameter you'll have to experiment a bit depending on your needs.</p>
-<p>The Mainflux MQTT service uses the <a href="https://github.com/mcollina/aedes">Aedes MQTT Broker</a> for implementation of the MQTT related things. Therefore, for some questions or problems you can also check out the Aedes's documentation or reach out its contributors.</p>
 <h3 id="protobuf">Protobuf<a class="headerlink" href="#protobuf" title="Permanent link">#</a></h3>
 <p>If you've made any changes to <code>.proto</code> files, you should call <code>protoc</code> command prior to compiling individual microservices.</p>
 <p>To do this by hand, execute:</p>
@@ -348,24 +340,21 @@ found <a href="https://github.com/golang/go/wiki/GoArm">here</a>. The environmen
 </code></pre>
 <p>Dockertest is used for the tests, so to run them, you will need the Docker daemon/service running.</p>
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">#</a></h2>
-<p>Installing Go binaries is simple: just move them from <code>build</code> to <code>$GOBIN</code> (do not fortget to add <code>$GOBIN</code> to your <code>$PATH</code>).</p>
+<p>Installing Go binaries is simple: just move them from <code>build</code> to <code>$GOBIN</code> (do not forget to add <code>$GOBIN</code> to your <code>$PATH</code>).</p>
 <p>You can execute:</p>
 <pre><code>make install
 </code></pre>
 <p>which will do this copying of the binaries.</p>
-<blockquote>
-<p>N.B. Only Go binaries will be installed this way. The MQTT adapter is a NodeJS script and will stay in the <code>mqtt</code> dir.</p>
-</blockquote>
 <h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">#</a></h2>
 <h3 id="prerequisites_1">Prerequisites<a class="headerlink" href="#prerequisites_1" title="Permanent link">#</a></h3>
 <p>Mainflux depends on several infrastructural services, notably <a href="https://www.nats.io/">NATS</a> broker and <a href="https://www.postgresql.org/">PostgreSQL</a> database.</p>
 <h4 id="nats">NATS<a class="headerlink" href="#nats" title="Permanent link">#</a></h4>
-<p>Mainflux uses NATS as it's central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.</p>
+<p>Mainflux uses NATS as its central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.</p>
 <p>To do this execute:</p>
-<pre><code>go get github.com/nats-io/gnatsd
+<pre><code>go install github.com/nats-io/nats-server/v2@latest
 </code></pre>
-<p>This will install <code>gnatsd</code> binary that can be simply run by executing:</p>
-<pre><code>gnatsd
+<p>This installs the <code>nats-server</code> binary, which can be run with:</p>
+<pre><code>nats-server -js
 </code></pre>
 <h4 id="postgresql">PostgreSQL<a class="headerlink" href="#postgresql" title="Permanent link">#</a></h4>
 <p>Mainflux uses PostgreSQL to store metadata (<code>users</code>,<code>orgs</code>,<code>groups</code>,<code>things</code> and <code>profiles</code> entities alongside with authorization tokens).
@@ -383,19 +372,23 @@ postgres=# CREATE ROLE mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 postgres=# ALTER USER mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 </code></pre>
 <h3 id="mainflux-services">Mainflux Services<a class="headerlink" href="#mainflux-services" title="Permanent link">#</a></h3>
-<p>Running of the Mainflux microservices can be tricky, as there is a lot of them and each demand configuration in the form of environment variables.</p>
+<p>Running the Mainflux microservices can be tricky, as there are many of them and each one requires configuration through environment variables.</p>
 <p>The whole system (set of microservices) can be run with one command:</p>
 <pre><code>make rundev
 </code></pre>
 <p>which will properly configure and run all microservices.</p>
-<p>Please assure that MQTT microservice has <code>node_modules</code> installed, as explained in <em>MQTT Microservice</em> chapter.</p>
 <blockquote>
 <p>N.B. <code>make rundev</code> actually calls helper script <code>scripts/run.sh</code>, so you can inspect this script for the details.</p>
 </blockquote>
 <h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">#</a></h2>
-<p>In order to be easily integratable system, Mainflux is using <a href="https://redis.io/topics/streams-intro">Redis Streams</a>
-as an event log for event sourcing. Services that are publishing events to Redis Streams
-are <code>things</code> service and <code>mqtt</code> adapter.</p>
+<p>Mainflux uses <a href="https://redis.io/topics/streams-intro">Redis Streams</a> as an event log for event sourcing.
+The <code>things</code> service publishes events to the <code>mainflux.things</code> stream, and the <code>auth</code> service publishes
+events to the <code>mainflux.auth</code> stream.</p>
+<p>Besides the operation-specific fields described below, every event carries the following fields:
+- <code>operation</code> - the operation that produced the event,
+- <code>occurred_at</code> - the time of the operation in RFC 3339 format,
+- <code>evt_org_id</code> and <code>evt_group_id</code> - the org and the group to which the event belongs, empty when not applicable,
+- <code>jwt_identity_user_id</code> and <code>jwt_identity_user_email</code> - the user who performed the operation, present only for user-initiated operations.</p>
 <h3 id="things-service">Things Service<a class="headerlink" href="#things-service" title="Permanent link">#</a></h3>
 <p>For every operation that has side effects (that is changing service state) <code>things</code>
 service will generate new event and publish it to Redis Stream called <code>mainflux.things</code>.
@@ -403,16 +396,19 @@ Every event has its own event ID that is automatically generated and <code>opera
 field that can have one of the following values:
 - <code>thing.create</code> for thing creation,
 - <code>thing.update</code> for thing update,
+- <code>thing.update_group_and_profile</code> for thing group and profile reassignment,
 - <code>thing.remove</code> for thing removal,
 - <code>profile.create</code> for profile creation,
 - <code>profile.update</code> for profile update,
-- <code>profile.remove</code> for profile removal.</p>
+- <code>profile.remove</code> for profile removal,
+- <code>group.remove</code> for group removal.</p>
+<p>The <code>auth</code> service publishes <code>org.create</code> and <code>org.remove</code> events.</p>
 <p>By fetching and processing these events you can reconstruct <code>things</code> service state.
 If you store some of your custom data in <code>metadata</code> field, this is the perfect
 way to fetch it and process it. If you want to integrate through
 <a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml">docker-compose.yml</a>
-you can use <code>mainflux-es-redis</code> service. Just connect to it and consume events
-from Redis Stream named <code>mainflux.things</code>.</p>
+you can use the <code>mainfluxlabs-es-redis</code> container. Connect to it and consume events
+from the Redis Stream named <code>mainflux.things</code>.</p>
 <h4 id="thing-create-event">Thing create event<a class="headerlink" href="#thing-create-event" title="Permanent link">#</a></h4>
 <p>Whenever thing is created, <code>things</code> service will generate new <code>create</code> event. This
 event will have the following format:</p>
@@ -497,41 +493,6 @@ publish new <code>remove</code> event. This event will have the following format
 <p><strong>Note:</strong> Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.</p>
-<h3 id="mqtt-adapter">MQTT Adapter<a class="headerlink" href="#mqtt-adapter" title="Permanent link">#</a></h3>
-<p>Instead of using heartbeat to know when client is connected through MQTT adapter one
-can fetch events from Redis Streams that MQTT adapter publishes. MQTT adapter
-publishes events every time client connects and disconnects to stream named <code>mainflux.mqtt</code>.</p>
-<p>Events that are coming from MQTT adapter have following fields:
-- <code>thing_id</code> ID of a thing that has connected to MQTT adapter,
-- <code>timestamp</code> is in Epoch UNIX Time Stamp format,
-- <code>event_type</code> can have two possible values, connect and disconnect,
-- <code>instance</code> represents MQTT adapter instance.</p>
-<p>If you want to integrate through
-<a href="https://github.com/MainfluxLabs/mainflux/blob/master/docker/docker-compose.yml">docker-compose.yml</a>
-you can use <code>mainflux-es-redis</code> service. Just connect to it and consume events
-from Redis Stream named <code>mainflux.mqtt</code>.</p>
-<p>Example of connect event:</p>
-<pre><code>1) 1) &quot;1555351214144-0&quot;
-2) 1) &quot;thing_id&quot;
-   2) &quot;1c597a85-b68e-42ff-8ed8-a3a761884bc4&quot;
-   3) &quot;timestamp&quot;
-   4) &quot;1555351214&quot;
-   5) &quot;event_type&quot;
-   6) &quot;connect&quot;
-   7) &quot;instance&quot;
-   8) &quot;mqtt-adapter-1&quot;
-</code></pre>
-<p>Example of disconnect event:</p>
-<pre><code>1) 1) &quot;1555351214188-0&quot;
-2) 1) &quot;thing_id&quot;
-   2) &quot;1c597a85-b68e-42ff-8ed8-a3a761884bc4&quot;
-   3) &quot;timestamp&quot;
-   4) &quot;1555351214&quot;
-   5) &quot;event_type&quot;
-   6) &quot;disconnect&quot;
-   7) &quot;instance&quot;
-   8) &quot;mqtt-adapter-1&quot;
-</code></pre>
               
             </div>
           </div><footer>

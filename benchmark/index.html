@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -101,6 +113,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -180,9 +200,9 @@
 <li><a href="https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2">mzb_api_ec2_plugin</a></li>
 </ul>
 <h3 id="setting-up-mzbench">Setting up MZBench<a class="headerlink" href="#setting-up-mzbench" title="Permanent link">#</a></h3>
-<p>MZbench is open-source tool for that can generate large traffic and measure performance of the application. MZBench is distributed, cloud-aware benchmarking tool that can seamlessly scale to millions of requests. It's originally developed by <a href="https://github.com/satori-com/mzbench">satori-com</a> but we will use <a href="https://github.com/mzbench/mzbench">mzbench</a> fork because it can run with newest Erlang releases and the original MzBench repository is not maintained anymore.</p>
-<p>We will describe installing MZBench server on Ubuntu 18.04 (this can be on your PC or some external cloud server, like droplet on Digital Ocean)</p>
-<p>Install latest OTP/Erlang (it's version 22.3 for me)</p>
+<p>MZBench is an open-source tool that can generate large amounts of traffic and measure application performance. It is a distributed, cloud-aware benchmarking tool that can scale to millions of requests. It was originally developed by <a href="https://github.com/satori-com/mzbench">satori-com</a>, but this guide uses the <a href="https://github.com/mzbench/mzbench">mzbench</a> fork because it runs with the newest Erlang releases and the original repository is no longer maintained.</p>
+<p>We will describe installing MZBench server on Ubuntu 18.04 (this can be on your PC or some external cloud server, like a Digital Ocean droplet).</p>
+<p>Install the latest OTP/Erlang (this guide was tested with version 22.3):</p>
 <pre><code>sudo apt update
 sudo apt install erlang
 </code></pre>
@@ -203,20 +223,20 @@ sudo pip install -r requirements.txt
 </code></pre>
 <p>The <a href="https://github.com/mzbench/mzbench/blob/master/doc/cli.md">MZBench CLI</a> lets you control the server and benchmarks from the command line.</p>
 <p>Another way of using MZBench is over <a href="https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md">Dashboard</a>. After starting server you should check dashboard on <code>http://localhost:4800</code>. </p>
-<p>Note that if you are installing MZBench on external server (i.e. Digital Ocean droplet), that you'll be able to reach MZBench dashboard on your server's IP address:4800, if you previously:
+<p>If you install MZBench on an external server (e.g. a Digital Ocean droplet), the dashboard is reachable at <code>&lt;server_ip&gt;:4800</code> only after you:
 - change default value for <code>network_interface</code> from <code>127.0.0.1</code> to <code>0.0.0.0</code> in configuration file. Default configuration file location is <code>~/.config/mzbench/server.config</code>, create it from sample configuration file <code>~/.config/mzbench/server.config.example</code>
 - open port <code>4800</code> with <code>ufw allow 4800</code></p>
 <p>MZBench can run your test scenarios on many nodes, simultaneously. For now, you are able to run tests locally, so your nodes will be virtual nodes on machine where MZBench server is installed (your PC or DO droplet). You can try one of our <a href="https://github.com/MainfluxLabs/benchmark/tree/master/mzbench">MQTT scenarios</a> that uses <a href="https://github.com/vernemq/vmq_mzbench">vmq_mzbench</a> worker. Copy-paste scenario in MZBench dashboard, click button <em>Environmental variables</em> -&gt; <em>Add from script</em> and add appropriate values. Because it's running locally, you should try with smaller values, for example for fan-in scenario use 100 publishers on 2 nodes.
 Try this before moving forward in setting up Amazon EC2 plugin.</p>
 <h3 id="setting-up-amazon-ec2-plugin">Setting up Amazon EC2 plugin<a class="headerlink" href="#setting-up-amazon-ec2-plugin" title="Permanent link">#</a></h3>
-<p>For larger-scale tests we will set up MZBench to run each node as one of Amazon EC2 instance with built-in plugin <a href="https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2">mzb_api_ec2_plugin</a>.</p>
+<p>For larger-scale tests we will set up MZBench to run each node as an Amazon EC2 instance with the built-in plugin <a href="https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2">mzb_api_ec2_plugin</a>.</p>
 <p>This is basic architecture when running MZBench:</p>
 <p><img alt="MZBench Architecture Running" src="https://github.com/mzbench/mzbench/raw/master/doc/images/scheme_2.png" /></p>
-<p>Every node that runs your scenarios will be one of Amazon EC2 instance; plus one more additional node — the director node. The director doesn't run scenarios, it collects the metrics from the other nodes and runs <a href="https://github.com/mzbench/mzbench/blob/master/scenarios/spec.md#pre_hook-and-post_hook">post and pre hooks</a>. So, if you want to run jobs on 10 nodes, actually 11 EC2 instances will be created.
+<p>Every node that runs your scenarios will be an Amazon EC2 instance, plus one additional node — the director node. The director doesn't run scenarios, it collects the metrics from the other nodes and runs <a href="https://github.com/mzbench/mzbench/blob/master/scenarios/spec.md#pre_hook-and-post_hook">post and pre hooks</a>. So, if you want to run jobs on 10 nodes, actually 11 EC2 instances will be created.
 All instances will be automatically terminated when the test finishes.</p>
 <p>We will use one of ready-to-use Amazon Machine Images (AMI) with all necessary dependencies. We will choose AMI with OTP 22, because that is the version we have on MZBench server. So, we will search for <code>MZBench-erl22</code> AMI and find one with id <code>ami-03a169923be706764</code> available in <code>us-west-1b</code> zone.
 If you have chosen this AMI, everything you do from now must be in us-west-1 zone.
-We must have IAM user with <code>AmazonEC2FullAccess</code> and <code>IAMFullAccess</code> permissions policies, and his <code>access_key_id</code> and <code>secret_access_key</code> goes to configuration file.
+An IAM user with the <code>AmazonEC2FullAccess</code> and <code>IAMFullAccess</code> permission policies is required; its <code>access_key_id</code> and <code>secret_access_key</code> go into the configuration file.
 In EC2 dashboard, you must create new security group <code>MZbench_cluster</code> where you will add inbound rules to open ssh and TCP ports 4801-4804.
 Also, in EC2 dashboard go to section <code>key pairs</code>, click <code>Actions</code> -&gt; <code>Import key pair</code> and upload public key you have on your MZBench server in <code>~/.ssh/id_rsa.pub</code> (if you need to create new, run <code>ssh-keygen</code> and follow instructions). Give it a name on EC2 dashboard, put that name (<code>key_name</code>) and path (<code>keyfile</code>) in configuration file.</p>
 <pre><code>[
@@ -253,14 +273,14 @@ Note that every time you update the configuration you have to restart the server
 <h2 id="test-scenarios">Test scenarios<a class="headerlink" href="#test-scenarios" title="Permanent link">#</a></h2>
 <p>Testing environment to be determined.</p>
 <h3 id="message-publishing">Message publishing<a class="headerlink" href="#message-publishing" title="Permanent link">#</a></h3>
-<p>In this scenario, large number of requests are sent to HTTP adapter service
+<p>In this scenario, a large number of requests are sent to HTTP adapter service
 every second. This test checks how much time HTTP adapter needs to respond
 to each request.</p>
 <h4 id="results">Results<a class="headerlink" href="#results" title="Permanent link">#</a></h4>
 <p>TBD</p>
 <h3 id="create-and-get-client">Create and get client<a class="headerlink" href="#create-and-get-client" title="Permanent link">#</a></h3>
-<p>In this scenario, large number of requests are sent to things service to create
-things and than to retrieve their data. This test checks how much time things
+<p>In this scenario, a large number of requests are sent to things service to create
+things and then to retrieve their data. This test checks how much time things
 service needs to respond to each request.</p>
 <h4 id="results_1">Results<a class="headerlink" href="#results_1" title="Permanent link">#</a></h4>
 <p>TBD</p>

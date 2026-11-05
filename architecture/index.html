@@ -70,6 +70,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -82,7 +86,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -111,6 +123,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -197,7 +217,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/ws">ws-adapter</a></td>
-<td style="text-align: left;">Provides a WebSocket interface for sending and receiving messages</td>
+<td style="text-align: left;">Provides a WebSocket interface for sending commands</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/modbus">modbus</a></td>
@@ -209,11 +229,15 @@
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/alarms">alarms</a></td>
-<td style="text-align: left;">Persists alarms triggered by the rules engine or Lua scripts to PostgreSQL</td>
+<td style="text-align: left;">Persists alarms triggered by rule actions to PostgreSQL</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/downlinks">downlinks</a></td>
 <td style="text-align: left;">Manages scheduled outbound HTTP requests (downlinks) for things and groups</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/shadows">shadows</a></td>
+<td style="text-align: left;">Maintains a persisted desired/reported state record (shadow) for each thing</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/webhooks">webhooks</a></td>
@@ -229,7 +253,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/converters">converters</a></td>
-<td style="text-align: left;">Accepts CSV uploads and publishes parsed rows as messages for bulk ingestion</td>
+<td style="text-align: left;">Accepts CSV and JSON uploads and publishes them as messages for bulk ingestion</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/filestore">filestore</a></td>
@@ -237,15 +261,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/uiconfigs">uiconfigs</a></td>
-<td style="text-align: left;">Persists and manages UI configuration settings scoped per org and per thing</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/writers/mongodb">mongodb-writer</a></td>
-<td style="text-align: left;">Persists messages to MongoDB</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/readers/mongodb">mongodb-reader</a></td>
-<td style="text-align: left;">Provides an HTTP API for querying messages from MongoDB</td>
+<td style="text-align: left;">Persists and manages UI configuration settings scoped per org, group and thing</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/consumers/writers/postgres">postgres-writer</a></td>
@@ -264,6 +280,10 @@
 <td style="text-align: left;">Provides an HTTP API for querying messages from TimescaleDB</td>
 </tr>
 <tr>
+<td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/audit">audit</a></td>
+<td style="text-align: left;">Persists platform events and exposes them through an HTTP API</td>
+</tr>
+<tr>
 <td style="text-align: left;"><a href="https://github.com/MainfluxLabs/mainflux/tree/master/cli">cli</a></td>
 <td style="text-align: left;">Command line interface</td>
 </tr>
@@ -272,9 +292,9 @@
 <p><img alt="arch" src="../img/architecture.jpg" /></p>
 <h2 id="domain-model">Domain Model<a class="headerlink" href="#domain-model" title="Permanent link">#</a></h2>
 <p>The platform is built around 5 main entities: <strong>users</strong>, <strong>organizations</strong>, <strong>groups</strong>, <strong>profiles</strong> and <strong>things</strong>.</p>
-<p><code>User</code> represents the real (human) user of the system. It is represented via its
-e-mail and password, which he uses as platform access credentials in order to obtain
-an access token. Once logged into the system, user can manage his resources (i.e. groups,
+<p><code>User</code> represents the real (human) user of the system. A user is identified by an
+e-mail and password, which serve as platform access credentials for obtaining
+an access token. Once logged into the system, a user can manage their resources (groups,
 things and profiles) in CRUD fashion and define access control.</p>
 <p><code>Org</code> represents the highest entity in the system hierarchy consisting of its <code>members</code> and <code>groups</code>. It unites all the elements into a whole.</p>
 <p><code>Group</code> within an organization represents a set of Things, Profiles, Notifiers, Webhooks, Downlinks. Access to these entities requires appropriate rights, which are obtained when assigning a user to a group.</p>
@@ -290,9 +310,9 @@ content type and optional subtopic, following the format
 However, in order to be post-processed and normalized,
 messages should be formatted using <a href="https://tools.ietf.org/html/draft-ietf-core-senml-08">SenML</a>.</p>
 <h2 id="unified-iot-platform">Unified IoT Platform<a class="headerlink" href="#unified-iot-platform" title="Permanent link">#</a></h2>
-<p>Running Mainflux on gateway moves computation from cloud towards the edge thus decentralizing IoT system.
-Since we can deploy same Mainflux code on gateway and in the cloud there are many benefits but the biggest one is easy deployment and adoption - once the engineers understand how to deploy and maintain the platform, they will have the same known work across the whole edge-fog-cloud continuum.
-Same set of tools can be used, same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.</p>
+<p>Running Mainflux on a gateway moves computation from the cloud towards the edge, thus decentralizing the IoT system.
+Since the same Mainflux code can be deployed on a gateway and in the cloud, there are many benefits, the biggest one being easy deployment and adoption: once engineers understand how to deploy and maintain the platform, the same knowledge applies across the whole edge-fog-cloud continuum.
+The same set of tools can be used, and the same patches and bug fixes can be applied. The whole system is much easier to reason about, and the maintenance is much easier and less costly.</p>
               
             </div>
           </div><footer>

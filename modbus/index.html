@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -114,6 +126,14 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#create-clients">Create clients</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-a-client-from-a-file">Create a client from a file</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#csv-file">CSV file</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#json-file">JSON file</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#list-clients">List clients</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#view-a-client">View a client</a>
@@ -124,7 +144,23 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#immediate-read-and-write">Immediate read and write</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#read-a-value">Read a value</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#write-a-value">Write a value</a>
+    </li>
+        </ul>
+    </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -171,15 +207,15 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="modbus">Modbus<a class="headerlink" href="#modbus" title="Permanent link">#</a></h1>
-<p>The Modbus service manages Modbus TCP polling clients for devices and groups. Each client connects to a Modbus TCP device on a configured schedule, reads the specified registers or coils, formats the result as a JSON payload, and publishes it as a platform message on behalf of the associated device.</p>
+<p>The Modbus service manages Modbus TCP polling clients for devices and groups. Each client connects to a Modbus TCP device on a configured schedule, reads or writes the specified registers or coils, formats the resulting values as a JSON payload, and publishes it as a platform message on behalf of the associated device.</p>
 <p>On startup, the service loads all persisted clients and begins scheduling polls according to each client's frequency setting.</p>
 <h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
 <ol>
 <li>You create a Modbus client linked to a device, specifying the target device address, slave ID, function code, poll schedule, and the data fields to read.</li>
-<li>On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions.</li>
-<li>The result is published to the platform as a JSON object keyed by field name, for example:</li>
+<li>On each scheduled interval, the service connects to the Modbus TCP device, reads the configured registers or coils, and decodes the raw values according to the data field definitions. A write client first writes the <code>value</code> of each data field and then reads the written registers or coils back.</li>
+<li>The result is published to the platform as a JSON object keyed by field name. A register value is an object with <code>value</code> and, when configured, <code>unit</code>; a coil or discrete input value is a boolean, for example:</li>
 </ol>
-<pre><code class="language-json">{&quot;temperature&quot;: 23.5, &quot;humidity&quot;: 61, &quot;status&quot;: true}
+<pre><code class="language-json">{ &quot;temperature&quot;: { &quot;value&quot;: 23.5, &quot;unit&quot;: &quot;°C&quot; }, &quot;humidity&quot;: { &quot;value&quot;: 61 }, &quot;status&quot;: true }
 </code></pre>
 <p>This message is then available to the rest of the platform — including storage, rules, and webhooks — just like any other device message.</p>
 <h2 id="function-codes">Function codes<a class="headerlink" href="#function-codes" title="Permanent link">#</a></h2>
@@ -212,8 +248,19 @@
 <td style="text-align: center;">04</td>
 <td>Read input registers (analog R/O)</td>
 </tr>
+<tr>
+<td><code>WriteCoils</code></td>
+<td style="text-align: center;">05, 15</td>
+<td>Write output coils</td>
+</tr>
+<tr>
+<td><code>WriteHoldingRegisters</code></td>
+<td style="text-align: center;">06, 16</td>
+<td>Write holding registers</td>
+</tr>
 </tbody>
 </table>
+<p>A <code>WriteCoils</code> client accepts only <code>bool</code> data fields. A <code>WriteHoldingRegisters</code> client accepts all types except <code>string</code>; a <code>bool</code> field is written as a register value of 0 or 1. Every data field of a write client requires a <code>value</code>.</p>
 <h2 id="poll-schedule">Poll schedule<a class="headerlink" href="#poll-schedule" title="Permanent link">#</a></h2>
 <p>The <code>scheduler</code> object controls when and how often the client polls the device.</p>
 <table>
@@ -255,7 +302,7 @@
 </tbody>
 </table>
 <h2 id="data-fields">Data fields<a class="headerlink" href="#data-fields" title="Permanent link">#</a></h2>
-<p>Each entry in <code>data_fields</code> describes one register or coil to read and how to decode it.</p>
+<p>Each entry in <code>data_fields</code> describes one register or coil to read or write and how to decode it.</p>
 <table>
 <thead>
 <tr>
@@ -292,8 +339,13 @@
 <td><code>length</code></td>
 <td>Register count. Calculated automatically from <code>type</code> for numeric types; set manually for <code>string</code> only</td>
 </tr>
+<tr>
+<td><code>value</code></td>
+<td>Value written on each scheduled run of a write client: boolean for <code>bool</code>, numeric otherwise</td>
+</tr>
 </tbody>
 </table>
+<p>Data fields can be sent inline in the request body, or uploaded as a CSV or JSON file — see <a href="#create-a-client-from-a-file">Create a client from a file</a>.</p>
 <h2 id="managing-clients">Managing clients<a class="headerlink" href="#managing-clients" title="Permanent link">#</a></h2>
 <p>Modbus clients are registered per device. Multiple clients can be registered for a single device.</p>
 <h3 id="create-clients">Create clients<a class="headerlink" href="#create-clients" title="Permanent link">#</a></h3>
@@ -319,22 +371,111 @@
 <p><strong>Response</strong></p>
 <pre><code class="language-json">{
   &quot;clients&quot;: [
-  {
-    &quot;id&quot;: &quot;b2c3d4e5-f6a7-8901-bcde-f12345678901&quot;,
-    &quot;name&quot;: &quot;Boiler sensor&quot;,
-    &quot;ip_address&quot;: &quot;192.168.1.100&quot;,
-    &quot;port&quot;: &quot;502&quot;,
-    &quot;slave_id&quot;: 1,
-    &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
-    &quot;scheduler&quot;: {&quot;frequency&quot;: &quot;minutely&quot;, &quot;minute&quot;: 5},
-    &quot;data_fields&quot;: [
-      {&quot;name&quot;: &quot;temperature&quot;, &quot;address&quot;: 100, &quot;type&quot;: &quot;float32&quot;, &quot;byte_order&quot;: &quot;ABCD&quot;, &quot;unit&quot;: &quot;°C&quot;},
-      {&quot;name&quot;: &quot;pressure&quot;,    &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;,  &quot;unit&quot;: &quot;bar&quot;}
-    ],
-    &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
-    &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
-  }
+    {
+      &quot;id&quot;: &quot;b2c3d4e5-f6a7-8901-bcde-f12345678901&quot;,
+      &quot;name&quot;: &quot;Boiler sensor&quot;,
+      &quot;ip_address&quot;: &quot;192.168.1.100&quot;,
+      &quot;port&quot;: &quot;502&quot;,
+      &quot;slave_id&quot;: 1,
+      &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
+      &quot;scheduler&quot;: { &quot;frequency&quot;: &quot;minutely&quot;, &quot;minute&quot;: 5 },
+      &quot;data_fields&quot;: [
+        {
+          &quot;name&quot;: &quot;temperature&quot;,
+          &quot;address&quot;: 100,
+          &quot;type&quot;: &quot;float32&quot;,
+          &quot;byte_order&quot;: &quot;ABCD&quot;,
+          &quot;unit&quot;: &quot;°C&quot;
+        },
+        { &quot;name&quot;: &quot;pressure&quot;, &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;, &quot;unit&quot;: &quot;bar&quot; }
+      ],
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+    }
   ]
+}
+</code></pre>
+<h3 id="create-a-client-from-a-file">Create a client from a file<a class="headerlink" href="#create-a-client-from-a-file" title="Permanent link">#</a></h3>
+<p>Instead of listing every register inline, you can create a single client and upload its data fields as a <strong>CSV</strong> or <strong>JSON</strong> file. This is useful when register maps are large or exported from another tool.</p>
+<p>Both endpoints take a <code>multipart/form-data</code> body with two parts:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>client</code></td>
+<td>JSON object with the client's connection info — every field accepted by <em>Create clients</em> <strong>except</strong> <code>data_fields</code> (<code>name</code>, <code>ip_address</code>, <code>port</code>, <code>slave_id</code>, <code>function_code</code>, <code>scheduler</code>, <code>metadata</code>)</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>The CSV or JSON file describing the data fields, one entry per register or coil</td>
+</tr>
+</tbody>
+</table>
+<p>Each request creates exactly one client and returns it with status <code>201</code>. A malformed <code>client</code> part or an invalid file (missing <code>address</code> column, an unparseable numeric cell, a row with no address) returns <code>400</code>.</p>
+<h4 id="csv-file">CSV file<a class="headerlink" href="#csv-file" title="Permanent link">#</a></h4>
+<p>The first line is a header row naming the columns. Recognized columns are <code>name</code>, <code>type</code>, <code>unit</code>, <code>scale</code>, <code>byte_order</code>, <code>address</code>, <code>length</code>, and <code>value</code>, in any order. Header names are matched case-insensitively and unknown columns are ignored. Every row must supply <code>name</code>, <code>type</code>, and <code>address</code>; <code>length</code> is only needed for <code>string</code> fields, and <code>value</code> (<code>true</code>, <code>false</code> or a number) only for write clients.</p>
+<p><code>registers.csv</code>:</p>
+<pre><code class="language-csv">name,type,unit,scale,byte_order,address,length
+temperature,float32,°C,0.1,ABCD,100,
+pressure,uint16,bar,,,102,
+label,string,,,,200,8
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -F 'client={&quot;name&quot;:&quot;Boiler sensor&quot;,&quot;ip_address&quot;:&quot;192.168.1.100&quot;,&quot;port&quot;:&quot;502&quot;,&quot;slave_id&quot;:1,&quot;function_code&quot;:&quot;ReadHoldingRegisters&quot;,&quot;scheduler&quot;:{&quot;frequency&quot;:&quot;minutely&quot;,&quot;minute&quot;:5,&quot;time_zone&quot;:&quot;UTC&quot;}}' \
+  -F &quot;file=@registers.csv&quot; \
+  https://localhost/svcmodbus/things/&lt;thing_id&gt;/clients/csv
+</code></pre>
+<h4 id="json-file">JSON file<a class="headerlink" href="#json-file" title="Permanent link">#</a></h4>
+<p>The file holds a JSON array of objects, one per data field, each using the same keys as a <code>data_fields</code> entry in <em>Create clients</em>.</p>
+<p><code>registers.json</code>:</p>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;temperature&quot;,
+    &quot;address&quot;: 100,
+    &quot;type&quot;: &quot;float32&quot;,
+    &quot;byte_order&quot;: &quot;ABCD&quot;,
+    &quot;unit&quot;: &quot;°C&quot;,
+    &quot;scale&quot;: 0.1
+  },
+  { &quot;name&quot;: &quot;pressure&quot;, &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;, &quot;unit&quot;: &quot;bar&quot; },
+  { &quot;name&quot;: &quot;label&quot;, &quot;address&quot;: 200, &quot;type&quot;: &quot;string&quot;, &quot;length&quot;: 8 }
+]
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -F 'client={&quot;name&quot;:&quot;Boiler sensor&quot;,&quot;ip_address&quot;:&quot;192.168.1.100&quot;,&quot;port&quot;:&quot;502&quot;,&quot;slave_id&quot;:1,&quot;function_code&quot;:&quot;ReadHoldingRegisters&quot;,&quot;scheduler&quot;:{&quot;frequency&quot;:&quot;minutely&quot;,&quot;minute&quot;:5,&quot;time_zone&quot;:&quot;UTC&quot;}}' \
+  -F &quot;file=@registers.json&quot; \
+  https://localhost/svcmodbus/things/&lt;thing_id&gt;/clients/json
+</code></pre>
+<p><strong>Response</strong> (same shape for both)</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;b2c3d4e5-f6a7-8901-bcde-f12345678901&quot;,
+  &quot;name&quot;: &quot;Boiler sensor&quot;,
+  &quot;ip_address&quot;: &quot;192.168.1.100&quot;,
+  &quot;port&quot;: &quot;502&quot;,
+  &quot;slave_id&quot;: 1,
+  &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
+  &quot;scheduler&quot;: { &quot;frequency&quot;: &quot;minutely&quot;, &quot;minute&quot;: 5, &quot;time_zone&quot;: &quot;UTC&quot; },
+  &quot;data_fields&quot;: [
+    {
+      &quot;name&quot;: &quot;temperature&quot;,
+      &quot;address&quot;: 100,
+      &quot;type&quot;: &quot;float32&quot;,
+      &quot;byte_order&quot;: &quot;ABCD&quot;,
+      &quot;unit&quot;: &quot;°C&quot;,
+      &quot;scale&quot;: 0.1
+    },
+    { &quot;name&quot;: &quot;pressure&quot;, &quot;address&quot;: 102, &quot;type&quot;: &quot;uint16&quot;, &quot;unit&quot;: &quot;bar&quot; },
+    { &quot;name&quot;: &quot;label&quot;, &quot;address&quot;: 200, &quot;type&quot;: &quot;string&quot;, &quot;length&quot;: 8 }
+  ],
+  &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
 }
 </code></pre>
 <h3 id="list-clients">List clients<a class="headerlink" href="#list-clients" title="Permanent link">#</a></h3>
@@ -377,13 +518,56 @@ curl -s -S -i \
   -d '{&quot;client_ids&quot;: [&quot;&lt;client_id&gt;&quot;]}' \
   https://localhost/svcmodbus/clients
 </code></pre>
+<h2 id="immediate-read-and-write">Immediate read and write<a class="headerlink" href="#immediate-read-and-write" title="Permanent link">#</a></h2>
+<p>A single register or coil can be read or written on demand, without creating a client. Both operations require the editor role in the thing's group, connect to the device given by <code>ip_address</code>, <code>port</code> and <code>slave_id</code>, and publish the resulting value as a message of the thing identified by <code>thing_id</code>. The message key is <code>name</code>, or the address when <code>name</code> is omitted.</p>
+<h3 id="read-a-value">Read a value<a class="headerlink" href="#read-a-value" title="Permanent link">#</a></h3>
+<p><code>function_code</code> must be <code>ReadCoils</code>, <code>ReadDiscreteInputs</code>, <code>ReadHoldingRegisters</code> or <code>ReadInputRegisters</code>. For registers, <code>type</code> is required and <code>byte_order</code>, <code>scale</code> and <code>length</code> are optional, as in a <a href="#data-fields">data field</a>; coils and discrete inputs take no decoding options.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+    &quot;ip_address&quot;: &quot;192.168.1.100&quot;,
+    &quot;port&quot;: &quot;502&quot;,
+    &quot;slave_id&quot;: 1,
+    &quot;function_code&quot;: &quot;ReadHoldingRegisters&quot;,
+    &quot;name&quot;: &quot;temperature&quot;,
+    &quot;address&quot;: 100,
+    &quot;type&quot;: &quot;float32&quot;,
+    &quot;byte_order&quot;: &quot;ABCD&quot;,
+    &quot;unit&quot;: &quot;°C&quot;
+  }' \
+  https://localhost/svcmodbus/read
+</code></pre>
+<p>The response contains the decoded value:</p>
+<pre><code class="language-json">{ &quot;value&quot;: 21.5 }
+</code></pre>
+<h3 id="write-a-value">Write a value<a class="headerlink" href="#write-a-value" title="Permanent link">#</a></h3>
+<p><code>type</code> selects the target: <code>bool</code> writes a coil, while <code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code> and <code>float32</code> write holding registers. The written value is read back from the device and published.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+    &quot;ip_address&quot;: &quot;192.168.1.100&quot;,
+    &quot;port&quot;: &quot;502&quot;,
+    &quot;slave_id&quot;: 1,
+    &quot;name&quot;: &quot;setpoint&quot;,
+    &quot;address&quot;: 200,
+    &quot;type&quot;: &quot;float32&quot;,
+    &quot;byte_order&quot;: &quot;ABCD&quot;,
+    &quot;value&quot;: 22.0
+  }' \
+  https://localhost/svcmodbus/write
+</code></pre>
+<p>A successful write returns <code>200 OK</code>.</p>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../downlinks/" class="btn btn-neutral float-left" title="Downlinks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../security/" class="btn btn-neutral float-right" title="Security">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../ota/" class="btn btn-neutral float-right" title="OTA">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -414,7 +598,7 @@ curl -s -S -i \
       <span><a href="../downlinks/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../security/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../ota/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

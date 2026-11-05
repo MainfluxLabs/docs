@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -107,6 +119,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -161,7 +181,7 @@
 <p>Notifiers are group-scoped records that carry a list of contact addresses (emails or phone numbers). Notifications are triggered by <strong>rule actions</strong> — when a rule fires, its actions reference a notifier by ID, and the service dispatches the notification to all addresses in that notifier's contact list.</p>
 <h2 id="how-notifications-are-triggered">How notifications are triggered<a class="headerlink" href="#how-notifications-are-triggered" title="Permanent link">#</a></h2>
 <p>Notifications are attached to rules. Each rule action specifies a type (<code>smtp</code> or <code>smpp</code>) and the ID of the notifier to use. When a message satisfies the rule's conditions, the platform publishes to the corresponding notifier subject and the service dispatches the notification.</p>
-<p>See the <a href="rules.md">Rules</a> documentation for details on creating rules with notification actions.</p>
+<p>See the <a href="../rules/">Rules</a> documentation for details on creating rules with notification actions.</p>
 <h2 id="managing-notifiers">Managing notifiers<a class="headerlink" href="#managing-notifiers" title="Permanent link">#</a></h2>
 <p>Notifiers are group-scoped. Each notifier carries a name and a list of contact addresses. A single notifier can target multiple recipients simultaneously — all addresses in the list receive the notification when a matching message arrives.</p>
 <pre><code class="language-bash"># Create a notifier for a group
@@ -169,16 +189,24 @@ curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{
-    &quot;name&quot;: &quot;Ops team alerts&quot;,
-    &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;]
+    &quot;notifiers&quot;: [
+      {
+        &quot;name&quot;: &quot;Ops team alerts&quot;,
+        &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;]
+      }
+    ]
   }' \
   https://localhost/svcsmtp/groups/&lt;group_id&gt;/notifiers
 </code></pre>
 <pre><code class="language-json">{
-  &quot;id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,
-  &quot;name&quot;: &quot;Ops team alerts&quot;,
-  &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;],
-  &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
+  &quot;notifiers&quot;: [
+    {
+      &quot;id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;name&quot;: &quot;Ops team alerts&quot;,
+      &quot;contacts&quot;: [&quot;ops@example.com&quot;, &quot;oncall@example.com&quot;]
+    }
+  ]
 }
 </code></pre>
 <pre><code class="language-bash"># List notifiers for a group
@@ -188,6 +216,8 @@ curl -s -S -i \
 </code></pre>
 <pre><code class="language-json">{
   &quot;total&quot;: 1,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
   &quot;notifiers&quot;: [
     {
       &quot;id&quot;: &quot;a9bf9e57-1685-4c89-bafb-ff5af830be8b&quot;,
@@ -213,10 +243,12 @@ curl -s -S -i -X PUT \
   }' \
   https://localhost/svcsmtp/notifiers/&lt;notifier_id&gt;
 
-# Delete a notifier
-curl -s -S -i -X DELETE \
+# Delete notifiers
+curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  https://localhost/svcsmtp/notifiers/&lt;notifier_id&gt;
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;notifier_ids&quot;: [&quot;&lt;notifier_id&gt;&quot;]}' \
+  https://localhost/svcsmtp/notifiers
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               

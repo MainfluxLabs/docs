@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/rules/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Rules - MainfluxLabs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Rules";
+        var mkdocs_page_input_path = "rules.md";
+        var mkdocs_page_url = "/index.html/rules/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MainfluxLabs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Rules</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#rules_1">Rules</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#conditions">Conditions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#actions">Actions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-rules">Create Rules</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-rules-by-group">List Rules by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-rules-by-thing">List Rules by Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-a-rule">View a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-rule">Update a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#assign-things-to-a-rule">Assign Things to a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#unassign-things-from-a-rule">Unassign Things from a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-things-assigned-to-a-rule">List Things Assigned to a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-rules">Delete Rules</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#scripts">Scripts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#execution-environment">Execution Environment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create-scripts">Create Scripts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-scripts-by-group">List Scripts by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-a-script">View a Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-script">Update a Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-scripts">Delete Scripts</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#script-runs">Script Runs</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#list-runs-for-a-rule">List Runs for a Rule</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-runs-for-a-thing">List Runs for a Thing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete-runs">Delete Runs</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MainfluxLabs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Rules</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">#</a></h1>
+<p>The Rules service provides a <strong>rule engine</strong> for condition matching on incoming device messages — by threshold comparison, or by running a Lua script and using its result.</p>
+<p>The engine is driven by the event stream: every message published by a thing is evaluated against all rules assigned to that thing. Rules are created within a group and then assigned to individual things. Scripts are also created within a group, and referenced by ID from a rule's script conditions.</p>
+<p><strong>Prerequisite:</strong> the thing's profile must have <code>rule_enabled: true</code> set in its <code>config</code> (see <a href="../messaging/#dispatcher-flags">Dispatcher Flags</a>) — otherwise its messages never reach the rules engine, and assigned rules simply never fire.</p>
+<h2 id="rules_1">Rules<a class="headerlink" href="#rules_1" title="Permanent link">#</a></h2>
+<p>A rule evaluates a set of conditions against an incoming payload. When conditions are met according to the configured operator (<code>AND</code> or <code>OR</code>), the rule triggers one or more actions.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique rule identifier</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>ID of the group the rule belongs to</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Human-readable rule name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Optional free-form description</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td>What triggers evaluation — <code>type</code> (<code>message</code> or <code>alarm</code>), <code>thing_ids</code>, and an optional <code>config</code> (e.g. <code>subtopic</code> filter)</td>
+</tr>
+<tr>
+<td><code>conditions</code></td>
+<td>List of conditions to evaluate — <code>threshold</code> comparisons or <code>script</code> runs (see below)</td>
+</tr>
+<tr>
+<td><code>operator</code></td>
+<td><code>AND</code> or <code>OR</code> — required when more than one condition is defined</td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>List of actions to trigger when the conditions are met (see below)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conditions">Conditions<a class="headerlink" href="#conditions" title="Permanent link">#</a></h3>
+<p>Each condition has a required <code>type</code>, which selects how it's evaluated.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>threshold</code> or <code>script</code></td>
+</tr>
+<tr>
+<td><code>field</code></td>
+<td>Threshold only. The payload field name to evaluate. For SenML messages, this matches the <code>name</code> key. For JSON messages, dot-notation paths are supported (e.g. <code>sensors.temperature</code>).</td>
+</tr>
+<tr>
+<td><code>comparator</code></td>
+<td>Threshold only. Comparison operator: <code>==</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&lt;</code></td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold only. Numeric value to compare against</td>
+</tr>
+<tr>
+<td><code>script_id</code></td>
+<td>Script only. ID of the <a href="#scripts">script</a> to run</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>script</code> condition runs the referenced Lua script and uses its return value as the result: a strict <code>return true</code> counts as met, anything else — <code>return false</code>, no return, or a runtime error — counts as not met. The script's result is combined with any other conditions on the rule the same way a threshold result would be, under the rule's <code>operator</code>. Script conditions run with a <strong>read-only</strong> API (only <code>mfx.log</code> is available, since a condition must not have side effects), and are only supported on <code>message</code>-input rules, not <code>alarm</code>-input rules. Every evaluation is recorded as a <a href="#script-runs">script run</a>.</p>
+<h3 id="actions">Actions<a class="headerlink" href="#actions" title="Permanent link">#</a></h3>
+<p>Each action has a required <code>type</code>, which selects what happens when the rule triggers.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>alarm</code>, <code>smtp</code>, <code>smpp</code>, or <code>webhook</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><code>smtp</code>/<code>smpp</code> only. ID of the notifier to send the notification through</td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td><code>alarm</code> only. Alarm severity, 1–5</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>webhook</code> action forwards the message to the webhooks registered for the thing that published it, so it takes no <code>id</code>. <code>alarm</code> actions are only supported on <code>message</code>-input rules — an <code>alarm</code>-input rule cannot raise another alarm.</p>
+<h3 id="create-rules">Create Rules<a class="headerlink" href="#create-rules" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;rules&quot;: [
+      {
+        &quot;name&quot;: &quot;Temperature and Humidity Alert&quot;,
+        &quot;description&quot;: &quot;Triggers when temperature exceeds 45°C and humidity drops below 20%&quot;,
+        &quot;input&quot;: {
+          &quot;type&quot;: &quot;message&quot;,
+          &quot;thing_ids&quot;: [&quot;123e4567-e89b-12d3-a456-426614174000&quot;]
+        },
+        &quot;conditions&quot;: [
+          {&quot;type&quot;: &quot;threshold&quot;, &quot;field&quot;: &quot;temperature&quot;, &quot;comparator&quot;: &quot;&gt;&quot;, &quot;threshold&quot;: 45},
+          {&quot;type&quot;: &quot;threshold&quot;, &quot;field&quot;: &quot;humidity&quot;, &quot;comparator&quot;: &quot;&lt;&quot;, &quot;threshold&quot;: 20}
+        ],
+        &quot;operator&quot;: &quot;AND&quot;,
+        &quot;actions&quot;: [
+          {&quot;type&quot;: &quot;smtp&quot;, &quot;id&quot;: &quot;513e2557-e09b-42d3-s456-425614175403&quot;},
+          {&quot;type&quot;: &quot;alarm&quot;, &quot;level&quot;: 3}
+        ]
+      }
+    ]
+  }' \
+  http://localhost/svcrules/groups/&lt;group_id&gt;/rules
+</code></pre>
+<p>A rule with a script condition instead:</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;rules&quot;: [
+      {
+        &quot;name&quot;: &quot;Condensation Risk Alert&quot;,
+        &quot;input&quot;: {
+          &quot;type&quot;: &quot;message&quot;,
+          &quot;thing_ids&quot;: [&quot;123e4567-e89b-12d3-a456-426614174000&quot;]
+        },
+        &quot;conditions&quot;: [
+          {&quot;type&quot;: &quot;script&quot;, &quot;script_id&quot;: &quot;456e4567-e89b-12d3-a456-426614174abc&quot;}
+        ],
+        &quot;actions&quot;: [
+          {&quot;type&quot;: &quot;alarm&quot;, &quot;level&quot;: 3}
+        ]
+      }
+    ]
+  }' \
+  http://localhost/svcrules/groups/&lt;group_id&gt;/rules
+</code></pre>
+<h3 id="list-rules-by-group">List Rules by Group<a class="headerlink" href="#list-rules-by-group" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcrules/groups/&lt;group_id&gt;/rules?offset=0&amp;limit=20&quot;
+</code></pre>
+<p>List endpoints support <code>offset</code>, <code>limit</code> (max 200), <code>order=name</code>, <code>dir</code> (<code>asc</code>/<code>desc</code>), <code>name</code> (partial match), and <code>input_type</code> (<code>message</code>/<code>alarm</code>) query parameters.</p>
+<h3 id="list-rules-by-thing">List Rules by Thing<a class="headerlink" href="#list-rules-by-thing" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcrules/things/&lt;thing_id&gt;/rules&quot;
+</code></pre>
+<h3 id="view-a-rule">View a Rule<a class="headerlink" href="#view-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/rules/&lt;rule_id&gt;
+</code></pre>
+<h3 id="update-a-rule">Update a Rule<a class="headerlink" href="#update-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;Temperature Alert&quot;,
+    &quot;input&quot;: {&quot;type&quot;: &quot;message&quot;},
+    &quot;conditions&quot;: [{&quot;type&quot;: &quot;threshold&quot;, &quot;field&quot;: &quot;temperature&quot;, &quot;comparator&quot;: &quot;&gt;&quot;, &quot;threshold&quot;: 50}],
+    &quot;actions&quot;: [{&quot;type&quot;: &quot;alarm&quot;, &quot;level&quot;: 3}]
+  }' \
+  http://localhost/rules/&lt;rule_id&gt;
+</code></pre>
+<p>Updating a rule does not affect its thing assignments — use the assign/unassign endpoints below for that.</p>
+<h3 id="assign-things-to-a-rule">Assign Things to a Rule<a class="headerlink" href="#assign-things-to-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;thing_ids&quot;: [&quot;123e4567-e89b-12d3-a456-426614174000&quot;]}' \
+  http://localhost/rules/&lt;rule_id&gt;/things
+</code></pre>
+<h3 id="unassign-things-from-a-rule">Unassign Things from a Rule<a class="headerlink" href="#unassign-things-from-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;thing_ids&quot;: [&quot;123e4567-e89b-12d3-a456-426614174000&quot;]}' \
+  http://localhost/rules/&lt;rule_id&gt;/things
+</code></pre>
+<h3 id="list-things-assigned-to-a-rule">List Things Assigned to a Rule<a class="headerlink" href="#list-things-assigned-to-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/rules/&lt;rule_id&gt;/things
+</code></pre>
+<h3 id="delete-rules">Delete Rules<a class="headerlink" href="#delete-rules" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;rule_ids&quot;: [&quot;789e4567-e89b-12d3-a456-426614174abc&quot;]}' \
+  http://localhost/rules
+</code></pre>
+<h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">#</a></h2>
+<p>A Lua script is a group-scoped resource, referenced by ID from a rule's <a href="#conditions">script conditions</a> — it is not assigned to things directly, and only runs when a rule's condition invokes it.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique script identifier</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>ID of the group the script belongs to</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Human-readable script name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Optional free-form description</td>
+</tr>
+<tr>
+<td><code>script</code></td>
+<td>Lua source code (max 65,535 bytes)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-environment">Execution Environment<a class="headerlink" href="#execution-environment" title="Permanent link">#</a></h3>
+<p>Each script execution receives an isolated Lua environment with an <code>mfx</code> global:</p>
+<table>
+<thead>
+<tr>
+<th>Field / Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mfx.message.payload</code></td>
+<td>Parsed message payload (JSON object or array item)</td>
+</tr>
+<tr>
+<td><code>mfx.message.subtopic</code></td>
+<td>Message subtopic</td>
+</tr>
+<tr>
+<td><code>mfx.message.created</code></td>
+<td>Message creation timestamp (Unix)</td>
+</tr>
+<tr>
+<td><code>mfx.message.thing_id</code></td>
+<td>ID of the thing that published the message</td>
+</tr>
+<tr>
+<td><code>mfx.log(message)</code></td>
+<td>Appends a message to the run log (max 256 lines, 2048 chars each).</td>
+</tr>
+</tbody>
+</table>
+<p><code>mfx.log</code> is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: <code>base</code>, <code>math</code>, <code>string</code>, <code>table</code>. The <code>print</code> function is disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.</p>
+<p>Example condition script — flags condensation risk from a payload's <code>temperature</code> and <code>humidity</code> fields:</p>
+<pre><code class="language-lua">local payload = mfx.message.payload
+local temp = tonumber(payload[&quot;temperature&quot;])
+local hum  = tonumber(payload[&quot;humidity&quot;])
+
+if not temp or not hum or hum &lt;= 0 then
+  mfx.log(&quot;Invalid or missing fields&quot;)
+  return
+end
+
+-- Magnus formula: dew point from temperature and relative humidity
+local gamma = math.log(hum / 100.0) + (17.625 * temp) / (243.04 + temp)
+local dew_point = 243.04 * gamma / (17.625 - gamma)
+local spread = temp - dew_point  -- smaller spread → closer to condensation
+
+mfx.log(string.format(&quot;temp=%.1f  hum=%.1f%%  dew_point=%.1f  spread=%.1f&quot;,
+  temp, hum, dew_point, spread))
+
+-- condensation risk if the surface is within 2°C of the dew point
+return spread &lt;= 2.0
+</code></pre>
+<h3 id="create-scripts">Create Scripts<a class="headerlink" href="#create-scripts" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;scripts&quot;: [
+      {
+        &quot;name&quot;: &quot;Condensation risk&quot;,
+        &quot;description&quot;: &quot;Flags condensation risk from temperature and humidity readings&quot;,
+        &quot;script&quot;: &quot;local payload = mfx.message.payload\n...&quot;
+      }
+    ]
+  }' \
+  http://localhost/svcrules/groups/&lt;group_id&gt;/scripts
+</code></pre>
+<h3 id="list-scripts-by-group">List Scripts by Group<a class="headerlink" href="#list-scripts-by-group" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/svcrules/groups/&lt;group_id&gt;/scripts
+</code></pre>
+<h3 id="view-a-script">View a Script<a class="headerlink" href="#view-a-script" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/svcrules/scripts/&lt;script_id&gt;
+</code></pre>
+<h3 id="update-a-script">Update a Script<a class="headerlink" href="#update-a-script" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;name&quot;: &quot;Condensation risk (v2)&quot;, &quot;script&quot;: &quot;...&quot;}' \
+  http://localhost/svcrules/scripts/&lt;script_id&gt;
+</code></pre>
+<h3 id="delete-scripts">Delete Scripts<a class="headerlink" href="#delete-scripts" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;script_ids&quot;: [&quot;456e4567-e89b-12d3-a456-426614174abc&quot;]}' \
+  http://localhost/svcrules/scripts
+</code></pre>
+<h2 id="script-runs">Script Runs<a class="headerlink" href="#script-runs" title="Permanent link">#</a></h2>
+<p>Every script condition evaluation is recorded as a run, capturing the outcome, logs, and any runtime error.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique run identifier</td>
+</tr>
+<tr>
+<td><code>script_id</code></td>
+<td>ID of the script that was executed</td>
+</tr>
+<tr>
+<td><code>rule_id</code></td>
+<td>ID of the rule whose condition triggered the run</td>
+</tr>
+<tr>
+<td><code>thing_id</code></td>
+<td>ID of the thing that triggered the execution</td>
+</tr>
+<tr>
+<td><code>logs</code></td>
+<td>Log lines written via <code>mfx.log()</code></td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td>Execution start timestamp (RFC 3339)</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td>Execution end timestamp (RFC 3339)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>success</code> or <code>fail</code></td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Runtime error message, if any</td>
+</tr>
+</tbody>
+</table>
+<p><code>status</code> reflects only whether the script ran without a Lua runtime error — it does not reflect whether the script's return value counted as the condition being met. <code>rule_id</code> is empty on runs recorded before rule-scoped tracking was added.</p>
+<h3 id="list-runs-for-a-rule">List Runs for a Rule<a class="headerlink" href="#list-runs-for-a-rule" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/rules/&lt;rule_id&gt;/runs
+</code></pre>
+<h3 id="list-runs-for-a-thing">List Runs for a Thing<a class="headerlink" href="#list-runs-for-a-thing" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  http://localhost/svcrules/things/&lt;thing_id&gt;/runs
+</code></pre>
+<p>Both listing endpoints support the same <code>status</code>, <code>from</code>, <code>to</code> (Unix ms), and pagination query parameters.</p>
+<h3 id="delete-runs">Delete Runs<a class="headerlink" href="#delete-runs" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;script_run_ids&quot;: [&quot;789e4567-e89b-12d3-a456-426614174xyz&quot;]}' \
+  http://localhost/svcrules/runs
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../storage/" class="btn btn-neutral float-left" title="Storage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../alarms/" class="btn btn-neutral float-right" title="Alarms">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) MainfluxLabs</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../storage/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../alarms/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

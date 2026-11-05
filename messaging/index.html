@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -68,15 +72,29 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#configure-profile-config">Configure Profile Config</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dispatcher-flags">Dispatcher Flags</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#subtopics">Subtopics</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#http">HTTP</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#mqtt">MQTT</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#subscriptions">Subscriptions</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#coap">CoAP</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#sending-commands">Sending Commands</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#ws">WS</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#native-websocket-adapter-commands">Native WebSocket Adapter (Commands)</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -86,7 +104,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -115,6 +141,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -190,7 +224,7 @@ Available formats are SenML, CBOR, and JSON and they can be defined correspondin
     &quot;content_type&quot;: &quot;application/json&quot;,
     &quot;transformer&quot;: {
       &quot;data_filters&quot;: [&quot;val1&quot;, &quot;val2&quot;],
-      &quot;data_field&quot;:&quot;field1&quot;,
+      &quot;data_field&quot;: &quot;field1&quot;,
       &quot;time_field&quot;: &quot;t&quot;,
       &quot;time_format&quot;: &quot;unix&quot;,
       &quot;time_location&quot;: &quot;UTC&quot;
@@ -254,7 +288,7 @@ For the previous example, we can filter the extracted payload and save only the 
   &quot;config&quot;: {
     &quot;content_type&quot;: &quot;application/json&quot;,
     &quot;transformer&quot;: {
-      &quot;data_filters&quot;: [&quot;field&quot;,&quot;value&quot;],
+      &quot;data_filters&quot;: [&quot;field&quot;, &quot;value&quot;],
       &quot;data_field&quot;: &quot;root.params&quot;,
       &quot;time_field&quot;: &quot;created&quot;,
       &quot;time_format&quot;: &quot;rfc3339&quot;,
@@ -264,7 +298,41 @@ For the previous example, we can filter the extracted payload and save only the 
 }
 </code></pre>
 <p>If the <code>data_filters</code> and <code>data_field</code> fields are empty, the whole payload will be used.</p>
-<p>Webhook forwarding and notifications are configured via rule actions — see the <a href="../webhooks/">Webhooks</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
+<h3 id="dispatcher-flags">Dispatcher Flags<a class="headerlink" href="#dispatcher-flags" title="Permanent link">#</a></h3>
+<p>In addition to <code>content_type</code> and <code>transformer</code>, the profile <code>config</code> accepts three boolean dispatcher flags that control where an incoming message is routed once it's received:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>write_enabled</code></td>
+<td>Publish the message to storage (writers/readers)</td>
+</tr>
+<tr>
+<td><code>webhook_enabled</code></td>
+<td>Forward the message to any webhooks registered for the thing</td>
+</tr>
+<tr>
+<td><code>rule_enabled</code></td>
+<td>Evaluate the message against rules/scripts assigned to the thing</td>
+</tr>
+</tbody>
+</table>
+<p>These flags are independent — a message can be written to storage without triggering rules, forwarded to webhooks without being persisted, etc. <strong>They default to <code>false</code> on newly created profiles</strong> — if you leave all three unset, published messages are received by the adapter but never written, forwarded, or evaluated (a silent no-op, with no error returned to the publishing thing). Set the ones you need explicitly:</p>
+<pre><code class="language-json">{
+  &quot;config&quot;: {
+    &quot;content_type&quot;: &quot;application/senml+json&quot;,
+    &quot;write_enabled&quot;: true,
+    &quot;webhook_enabled&quot;: true,
+    &quot;rule_enabled&quot;: true
+  }
+}
+</code></pre>
+<p>Webhook delivery itself is configured per-thing — see the <a href="../webhooks/">Webhooks</a> page. Rule-triggered SMTP/SMPP notifications are configured via rule actions — see the <a href="../rules/">Rules</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
 <hr />
 <h3 id="subtopics">Subtopics<a class="headerlink" href="#subtopics" title="Permanent link">#</a></h3>
 <p>In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base <code>/messages</code> topic.</p>
@@ -277,7 +345,7 @@ The prefix value can be set to <code>json</code> or <code>senml</code>.</p>
 <p>You can use multilevel subtopics, that have multiple parts. These parts are separated by <code>.</code> or <code>/</code> separators.
 When you use combination of these two, have in mind that behind the scene, <code>/</code> separator will be replaced with <code>.</code>.
 Every empty part of subtopic will be removed. What this means is that subtopic <code>a///b</code> is equivalent to <code>a/b</code>.
-When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>&gt;</code>. Every subtopic part can have <code>*</code> or <code>&gt;</code> as it's value, but if there is any other character beside these wildcards, subtopic will be invalid. What this means is that subtopics such as <code>a.b*c.d</code> will be invalid, while <code>a.b.*.c.d</code> will be valid.</p>
+When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>&gt;</code>. A subtopic part can be <code>*</code> or <code>&gt;</code>, but a part that combines a wildcard with other characters is invalid. For example, <code>a.b*c.d</code> is invalid, while <code>a.b.*.c.d</code> is valid.</p>
 <p><strong>Note:</strong> When using MQTT, it's recommended that you use standard MQTT wildcards <code>+</code> and <code>#</code>.</p>
 <p><em>For more information and examples checkout <a href="https://nats.io/documentation/writing_applications/subscribing/">official nats.io documentation</a></em></p>
 <hr />
@@ -286,17 +354,53 @@ When you want to subscribe, you can use NATS wildcards <code>*</code> and <code>
 <pre><code>curl -s -S -i --cacert docker/ssl/certs/ca.crt -X POST -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; -H &quot;Content-Type: application/senml+json&quot; https://localhost/http/messages -d '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <p><strong>Note:</strong> If you're going to use senml message format, you should always send messages as an array.</p>
-<p>The HTTP adapter also supports sending <strong>commands</strong> to a specific thing or all things in a group:</p>
-<pre><code class="language-bash"># Send a command to a thing
+<p>The HTTP adapter also supports sending <strong>downlink commands</strong> to a specific thing or to every thing in a group. A command's payload is an arbitrary JSON body — there's no required envelope shape (the <code>{"command": ..., "params": ...}</code> shown below is just a convention, not an enforced schema). The command is published on NATS and delivered to the target thing over whichever protocol adapter (MQTT, CoAP, WS) it's currently connected through.</p>
+<p>Commands can be sent two ways:</p>
+<ul>
+<li><strong>User token</strong> (<code>Authorization: Bearer &lt;user_token&gt;</code>) — the caller must have <code>editor</code> role (or higher) on the target thing's/group's group. No thing-type restrictions apply.</li>
+<li><strong>Thing key</strong> (<code>Authorization: Thing &lt;thing_key&gt;</code>) — machine-to-machine (M2M). The <em>sending</em> thing's type must be authorized to command the <em>target</em> thing's type, per this same-group-only policy matrix:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Sending thing type</th>
+<th>Can command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>controller</code></td>
+<td><code>sensor</code>, <code>actuator</code>, <code>device</code></td>
+</tr>
+<tr>
+<td><code>gateway</code></td>
+<td><code>sensor</code>, <code>actuator</code>, <code>device</code></td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td><code>device</code></td>
+</tr>
+<tr>
+<td><code>sensor</code></td>
+<td><em>(none)</em></td>
+</tr>
+<tr>
+<td><code>actuator</code></td>
+<td><em>(none)</em></td>
+</tr>
+</tbody>
+</table>
+<p>For group commands sent via thing key, only the sending thing's type is checked (it must have <em>some</em> command authority) — filtering by individual recipient type is left to the receiving things.</p>
+<pre><code class="language-bash"># Send a command to a thing (M2M, via thing key)
 curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   https://localhost/http/things/&lt;thing_id&gt;/commands \
   -d '{&quot;command&quot;:&quot;reboot&quot;,&quot;params&quot;:{&quot;delay&quot;:5}}'
 
-# Send a command to all things in a group
+# Send a command to all things in a group (as a user)
 curl -s -S -i -X POST \
-  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   https://localhost/http/groups/&lt;group_id&gt;/commands \
   -d '{&quot;command&quot;:&quot;set_threshold&quot;,&quot;params&quot;:{&quot;value&quot;:80}}'
@@ -309,12 +413,32 @@ or <a href="https://www.eclipse.org/paho/">Paho</a> if you want to use MQTT over
 <pre><code>mosquitto_pub -u [internal|external] -P &lt;key&gt; -t /messages -h localhost -m '[{&quot;bn&quot;:&quot;some-base-name:&quot;,&quot;bt&quot;:1.276020076001e+09, &quot;bu&quot;:&quot;A&quot;,&quot;bver&quot;:5, &quot;n&quot;:&quot;voltage&quot;,&quot;u&quot;:&quot;V&quot;,&quot;v&quot;:120.1}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-5,&quot;v&quot;:1.2}, {&quot;n&quot;:&quot;current&quot;,&quot;t&quot;:-4,&quot;v&quot;:1.3}]'
 </code></pre>
 <p>Note that the MQTT username should be either the literal <code>internal</code> or <code>external</code> depending on if you're authenticating with an internal or external thing key.</p>
-<p>To subcribe to a topic, for example:</p>
+<p>To subscribe to a topic, for example:</p>
 <pre><code>mosquitto_sub -u [internal|external] -P &lt;key&gt; -t /messages -h localhost
 </code></pre>
-<p>If you want to use standard topic such as <code>/messages</code> with SenML content type (JSON or CBOR), you should use following topic: <code>/messages</code>.</p>
 <p>If you are using TLS to secure MQTT connection, add <code>--cafile docker/ssl/certs/ca.crt</code>
 to every command.</p>
+<h3 id="subscriptions">Subscriptions<a class="headerlink" href="#subscriptions" title="Permanent link">#</a></h3>
+<p>The MQTT adapter records each topic, as sent by the client, that the things of a group subscribe to. Listing them requires the viewer role in the group and supports <code>offset</code>, <code>limit</code> and <code>topic</code> (partial match) query parameters:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/subs/groups/&lt;group_id&gt;/subscriptions?offset=0&amp;limit=10&quot;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 1,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;subscriptions&quot;: [
+    {
+      &quot;topic&quot;: &quot;/messages/bedroom/temperature&quot;,
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;created_at&quot;: 1774342578.003
+    }
+  ]
+}
+</code></pre>
+<p><code>created_at</code> is the Unix time of the subscription in seconds. Subscriptions are removed when the thing or the group is removed.</p>
 <h2 id="coap">CoAP<a class="headerlink" href="#coap" title="Permanent link">#</a></h2>
 <p>CoAP adapter implements CoAP protocol using underlying UDP and according to <a href="https://tools.ietf.org/html/rfc7252">RFC 7252</a>. To send and receive messages over CoAP, you can use <a href="https://github.com/MainfluxLabs/coap-cli">CoAP CLI</a>. To set the add-on, please follow the installation instructions provided <a href="https://github.com/MainfluxLabs/coap-cli">here</a>.</p>
 <p>Examples:</p>
@@ -325,14 +449,22 @@ to every command.</p>
 <pre><code>coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d &quot;hello world&quot; -h 0.0.0.0 -p 1234
 </code></pre>
 <p>To send a message, use <code>POST</code> request.
-To subscribe, send <code>GET</code> request with Observe option (flag <code>o</code>) set to false. There are two ways to unsubscribe:
-1) Send <code>GET</code> request with Observe option set to true.
-2) Forget the token and send <code>RST</code> message as a response to <code>CONF</code> message received by the server.</p>
-<p>The most of the notifications received from the Adapter are non-confirmable. By <a href="https://tools.ietf.org/html/rfc7641#page-18">RFC 7641</a>:</p>
+To subscribe, send <code>GET</code> request with Observe option (flag <code>o</code>) set to false. There are two ways to unsubscribe:</p>
+<ol>
+<li>Send <code>GET</code> request with Observe option set to true.</li>
+<li>Forget the token and send <code>RST</code> message as a response to <code>CONF</code> message received by the server.</li>
+</ol>
+<p>Most of the notifications received from the adapter are non-confirmable. By <a href="https://tools.ietf.org/html/rfc7641#page-18">RFC 7641</a>:</p>
 <blockquote>
 <p>Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.</p>
 </blockquote>
-<p>CoAP Adapter sends these notifications every 12 hours. To configure this period, please check <a href="https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md">adapter documentation</a> If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.</p>
+<p>CoAP Adapter sends these notifications every 12 hours. To configure this period, see the <a href="https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md">adapter documentation</a>. If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.</p>
+<h3 id="sending-commands">Sending Commands<a class="headerlink" href="#sending-commands" title="Permanent link">#</a></h3>
+<p>Commands (see <a href="#http">Downlink Commands</a> above) can also be sent over CoAP, using the same <code>things/&lt;id&gt;/commands</code> and <code>groups/&lt;id&gt;/commands</code> paths as the HTTP adapter, via <code>POST</code>. <strong>CoAP only supports thing-key (M2M) authentication for commands</strong> — there is no user-token path over CoAP.</p>
+<pre><code>coap-cli post things/&lt;thing_id&gt;/commands -auth &lt;thing_key&gt; -d '{&quot;command&quot;:&quot;reboot&quot;,&quot;params&quot;:{&quot;delay&quot;:5}}'
+</code></pre>
+<pre><code>coap-cli post groups/&lt;group_id&gt;/commands -auth &lt;thing_key&gt; -d '{&quot;command&quot;:&quot;set_threshold&quot;,&quot;params&quot;:{&quot;value&quot;:80}}'
+</code></pre>
 <h2 id="ws">WS<a class="headerlink" href="#ws" title="Permanent link">#</a></h2>
 <p>Mainflux supports <a href="https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).">MQTT-over-WS</a>, rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.</p>
 <p>There are 2 recommended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:</p>
@@ -340,9 +472,7 @@ To subscribe, send <code>GET</code> request with Observe option (flag <code>o</c
 <li><a href="https://www.eclipse.org/paho/index.php?page=clients/js/index.php">Eclipse Paho JavaScript Client</a></li>
 <li><a href="https://github.com/mqttjs/MQTT.js">MQTT.js</a></li>
 </ol>
-<p>As WS is an extension of HTTP protocol, Mainflux exposes it on port <code>80</code>, so it's usage is practically transparent.
-Additionally, please notice that since same port as for HTTP is used (<code>80</code>), and extension URL <code>/mqtt</code> should be used -
-i.e. connection URL should be <code>ws://&lt;host_addr&gt;/mqtt</code>.</p>
+<p>Mainflux exposes MQTT-over-WS on the HTTP port (<code>80</code>) under the <code>/mqtt</code> path, so the connection URL is <code>ws://&lt;host_addr&gt;/mqtt</code>.</p>
 <p>For quick testing you can use <a href="http://www.hivemq.com/demos/websocket-client/">HiveMQ UI tool</a>.</p>
 <p>Here is an example of a browser application connecting to Mainflux server and sending and receiving messages over WebSocket using MQTT.js library:</p>
 <pre><code class="language-javascript">&lt;script src=&quot;https://unpkg.com/mqtt/dist/mqtt.min.js&quot;&gt;&lt;/script&gt;
@@ -356,8 +486,8 @@ i.e. connection URL should be <code>ws://&lt;host_addr&gt;/mqtt</code>.</p>
         connectTimeout: 4000, // Timeout period
         // Authentication information
         clientId: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
-        username: '14d6c682-fb5a-4d28-b670-ee565ab5866c',
-        password: 'ec82f341-d4b5-4c77-ae05-34877a62428f',
+        username: 'internal',
+        password: '&lt;thing_key&gt;',
     }
 
     var topic = '/messages'
@@ -392,11 +522,36 @@ i.e. connection URL should be <code>ws://&lt;host_addr&gt;/mqtt</code>.</p>
 &lt;/script&gt;
 </code></pre>
 <p><strong>N.B.</strong> Eclipse Paho lib adds sub-URL <code>/mqtt</code> automatically, so procedure for connecting to the server can be something like this:</p>
-<pre><code class="language-javascript">var loc = { hostname: 'localhost', port: 80 }
+<pre><code class="language-javascript">var loc = { hostname: &quot;localhost&quot;, port: 80 };
 // Create a client instance
-client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), &quot;clientId&quot;)
+client = new Paho.MQTT.Client(loc.hostname, Number(loc.port), &quot;clientId&quot;);
 // Connect the client
-client.connect({onSuccess:onConnect});
+client.connect({ onSuccess: onConnect });
+</code></pre>
+<h3 id="native-websocket-adapter-commands">Native WebSocket Adapter (Commands)<a class="headerlink" href="#native-websocket-adapter-commands" title="Permanent link">#</a></h3>
+<p>Sending <a href="#http">downlink commands</a> over WebSocket uses a <strong>separate</strong> service from the MQTT-over-WS connection described above — the native <code>ws-adapter</code>, which speaks plain WebSocket (not MQTT) and listens on its own port (<code>MF_WS_ADAPTER_PORT</code>, default <code>8190</code>), not the nginx <code>/mqtt</code> path. Each WS connection is scoped to one thing or group; every text/binary frame the client sends over that connection becomes the payload of one command.</p>
+<p>Authentication can be supplied either via headers or, for browser clients that can't set custom headers on a WebSocket handshake, via query parameters:</p>
+<ul>
+<li>Thing key (M2M): <code>Authorization: Thing &lt;thing_key&gt;</code> header, or <code>?key=&lt;thing_key&gt;&amp;keyType=&lt;internal|external&gt;</code></li>
+<li>User token: <code>Authorization: Bearer &lt;user_token&gt;</code> header, or <code>?token=&lt;user_token&gt;</code></li>
+</ul>
+<pre><code class="language-javascript">// Connect and send a command to a thing (M2M, via thing key query params)
+const ws = new WebSocket(
+  &quot;ws://localhost:8190/things/&lt;thing_id&gt;/commands?key=&lt;thing_key&gt;&amp;keyType=internal&quot;,
+);
+
+ws.onopen = () =&gt; {
+  ws.send(JSON.stringify({ command: &quot;reboot&quot;, params: { delay: 5 } }));
+};
+</code></pre>
+<pre><code class="language-javascript">// Connect and send a command to a group, authenticated as a user
+const ws = new WebSocket(
+  &quot;ws://localhost:8190/groups/&lt;group_id&gt;/commands?token=&lt;user_token&gt;&quot;,
+);
+
+ws.onopen = () =&gt; {
+  ws.send(JSON.stringify({ command: &quot;set_threshold&quot;, params: { value: 80 } }));
+};
 </code></pre>
               
             </div>

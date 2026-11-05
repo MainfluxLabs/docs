@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -86,6 +98,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#scopes">Scopes</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checksums-downloads-and-range-requests">Checksums, downloads and range requests</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#device-scoped-files">Device-scoped files</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#upload-a-file">Upload a file</a>
@@ -94,7 +108,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#download-a-file">Download a file</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#update-a-file">Update a file</a>
+    <li class="toctree-l3"><a class="reference internal" href="#update-file-metadata">Update file metadata</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#delete-a-file">Delete a file</a>
     </li>
@@ -135,6 +149,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -181,7 +203,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="filestore">Filestore<a class="headerlink" href="#filestore" title="Permanent link">#</a></h1>
-<p>The Filestore service provides file storage for things and groups. File contents are written to the local filesystem, while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token at editor level or above).</p>
+<p>The Filestore service provides file storage for things and groups. File contents are written to a pluggable object store — the local filesystem or a <a href="https://github.com/seaweedfs/seaweedfs">SeaweedFS</a> filer — while file metadata is persisted to a database. Files can be scoped to an individual device (authenticated with a thing key) or to a group (authenticated with a user token: viewer-level group access to list and download files, editor-level to upload, update and delete them).</p>
+<p>The backend is selected with <code>MF_FILESTORE_BACKEND</code> (<code>local</code> or <code>seaweedfs</code>). The default is <code>local</code>, both in the service itself and in the docker-compose deployment (<code>docker/.env</code>). Setting it to <code>seaweedfs</code> also enables the SeaweedFS master, volume, and filer containers through the matching docker-compose profile.</p>
 <h2 id="file-metadata">File metadata<a class="headerlink" href="#file-metadata" title="Permanent link">#</a></h2>
 <p>Every file stored in the platform carries the following metadata fields:</p>
 <table>
@@ -198,11 +221,11 @@
 </tr>
 <tr>
 <td><code>class</code></td>
-<td>Logical file class (e.g. <code>image</code>, <code>document</code>, <code>bim</code>, <code>pointcloud</code>, <code>binary</code>)</td>
+<td>Logical file class, derived from the extension (<code>images</code>, <code>documents</code>, <code>BIM</code>, <code>pointclouds</code>, <code>binaries</code>, <code>archives</code>)</td>
 </tr>
 <tr>
 <td><code>format</code></td>
-<td>File format (e.g. <code>csv</code>, <code>pdf</code>, <code>png</code>, <code>ifc</code>, <code>json</code>)</td>
+<td>File format, derived from the extension</td>
 </tr>
 <tr>
 <td><code>time</code></td>
@@ -210,10 +233,101 @@
 </tr>
 <tr>
 <td><code>metadata</code></td>
-<td>Optional key-value pairs for custom attributes</td>
+<td>Optional arbitrary key-value pairs for custom attributes</td>
+</tr>
+<tr>
+<td><code>checksum</code></td>
+<td>SHA-256 checksum of the file content, computed by the server on upload (read-only)</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>File size in bytes, recorded by the server on upload (read-only)</td>
 </tr>
 </tbody>
 </table>
+<p><code>class</code> and <code>format</code> are <strong>not</strong> supplied by the client — they are derived from the uploaded file's extension. The supported extensions and the class each maps to are:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Extensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>images</code></td>
+<td><code>jpg</code>, <code>jpeg</code>, <code>png</code>, <code>svg</code></td>
+</tr>
+<tr>
+<td><code>documents</code></td>
+<td><code>pdf</code>, <code>csv</code>, <code>txt</code>, <code>doc</code>, <code>docx</code>, <code>odt</code>, <code>odf</code>, <code>odp</code>, <code>ods</code>, <code>xls</code>, <code>xlsx</code>, <code>ppt</code>, <code>pptx</code>, <code>xps</code></td>
+</tr>
+<tr>
+<td><code>BIM</code></td>
+<td><code>ifc</code></td>
+</tr>
+<tr>
+<td><code>pointclouds</code></td>
+<td><code>e57</code></td>
+</tr>
+<tr>
+<td><code>binaries</code></td>
+<td><code>bin</code>, <code>hex</code></td>
+</tr>
+<tr>
+<td><code>archives</code></td>
+<td><code>zip</code></td>
+</tr>
+</tbody>
+</table>
+<p>On upload, the MIME type detected from the first 512 bytes of the file is checked against the class and format derived from its extension:</p>
+<table>
+<thead>
+<tr>
+<th>Class / format</th>
+<th>Required detected MIME type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>images</code> (<code>jpg</code>, <code>jpeg</code>, <code>png</code>)</td>
+<td><code>image/*</code></td>
+</tr>
+<tr>
+<td><code>images</code> (<code>svg</code>)</td>
+<td><code>image/*</code> or <code>text/*</code> (SVG is XML, so it is usually detected as text)</td>
+</tr>
+<tr>
+<td><code>documents</code> (<code>pdf</code>)</td>
+<td><code>application/pdf</code></td>
+</tr>
+<tr>
+<td><code>documents</code> (<code>csv</code>, <code>txt</code>)</td>
+<td><code>text/*</code></td>
+</tr>
+<tr>
+<td><code>documents</code> (other formats)</td>
+<td><code>application/*</code> or <code>text/*</code></td>
+</tr>
+<tr>
+<td><code>binaries</code> (<code>hex</code>)</td>
+<td><code>text/*</code> (Intel HEX is a text encoding)</td>
+</tr>
+<tr>
+<td><code>binaries</code> (<code>bin</code>)</td>
+<td><code>any</code></td>
+</tr>
+<tr>
+<td><code>archives</code> (<code>zip</code>)</td>
+<td><code>application/zip</code></td>
+</tr>
+<tr>
+<td><code>BIM</code>, <code>pointclouds</code></td>
+<td><code>any</code></td>
+</tr>
+</tbody>
+</table>
+<p>A file whose extension is unsupported, or whose content does not match its class, is rejected with <code>415 Unsupported Media Type</code>.</p>
 <h2 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">#</a></h2>
 <table>
 <thead>
@@ -232,39 +346,80 @@
 <tr>
 <td>Group files</td>
 <td><code>Authorization: Bearer &lt;token&gt;</code></td>
-<td>Files shared across a group; require editor-level access</td>
+<td>Files shared across a group; viewer access to list and download, editor access to upload, update and delete</td>
 </tr>
 </tbody>
 </table>
 <p>A device can also read its own group's files directly using its thing key, without requiring a user token.</p>
+<h2 id="checksums-downloads-and-range-requests">Checksums, downloads and range requests<a class="headerlink" href="#checksums-downloads-and-range-requests" title="Permanent link">#</a></h2>
+<p>The following applies to every file, in both the thing and group scopes.</p>
+<p>Every upload computes a SHA-256 checksum of the content and stores it with the file. Every download (<code>/files/&lt;name&gt;</code>, <code>/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;</code> and <code>/fs/groupfiles/&lt;name&gt;</code>) returns the content as <code>application/octet-stream</code> with a <code>Content-Disposition: attachment; filename="&lt;name&gt;"</code> header (with an RFC 5987 <code>filename*</code> parameter for non-ASCII names). Full downloads stream from the backend and verify the stored checksum at end-of-stream. Because the body is streamed, the <code>200 OK</code> status and headers are sent before verification completes, so a mismatch (or backend read failure) cannot change the status code — the server logs the error and aborts the connection mid-transfer. Clients must therefore treat a truncated or aborted download as a failure rather than relying on the status code alone. A download returns <code>404</code> if the file record exists but its content is missing from the object store.</p>
+<p>Downloads support single-range <code>Range</code> requests (RFC 9110), which lets constrained devices fetch large files such as firmware in chunks. The forms <code>bytes=&lt;first&gt;-&lt;last&gt;</code>, <code>bytes=&lt;first&gt;-</code>, and <code>bytes=-&lt;suffix_length&gt;</code> are accepted:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Range: bytes=0-1023&quot; \
+  https://localhost/files/&lt;name&gt;
+</code></pre>
+<ul>
+<li>A satisfiable range returns <code>206 Partial Content</code> with a <code>Content-Range: bytes &lt;first&gt;-&lt;last&gt;/&lt;size&gt;</code> header and a <code>Content-Length</code> of the returned slice.</li>
+<li>A range that lies outside the file returns <code>416 Range Not Satisfiable</code>.</li>
+<li>Range headers that are malformed or request multiple ranges are ignored, and the whole file is returned with <code>200 OK</code>.</li>
+<li>Range requests for files without a recorded size return the whole file.</li>
+<li>Full responses for files with a known size include <code>Accept-Ranges: bytes</code> and <code>Content-Length</code>.</li>
+<li>Range responses are <strong>not</strong> checksum-verified, because the checksum covers the whole object. Clients must verify the reassembled file against the <code>checksum</code> from the file listing.</li>
+</ul>
 <h2 id="device-scoped-files">Device-scoped files<a class="headerlink" href="#device-scoped-files" title="Permanent link">#</a></h2>
 <p>A device authenticates using its thing key to upload and manage files scoped to itself.</p>
 <h3 id="upload-a-file">Upload a file<a class="headerlink" href="#upload-a-file" title="Permanent link">#</a></h3>
+<p>The file is sent as a multipart form. The <code>file</code> part is required; <code>metadata</code> (an arbitrary JSON object) and <code>time</code> (Unix seconds, defaults to the current time) are optional. <code>class</code> and <code>format</code> are derived from the filename extension — do not send them.</p>
+<p>Uploads are limited by <code>MF_FILESTORE_UPLOAD_LIMIT_MIB</code>, in MiB (<code>1</code> to <code>1024</code>, default <code>1024</code>). The status code for a larger upload depends on where it is rejected:</p>
+<ul>
+<li>In the docker-compose deployment, nginx sits in front of the service and applies the same limit to <code>/files</code> and <code>/fs/</code> request bodies. Nginx rejects an oversized upload with <code>413 Request Entity Too Large</code>, with or without a <code>Content-Length</code> header.</li>
+<li>When the service is called directly, an upload whose <code>Content-Length</code> exceeds the limit is rejected with <code>400 Bad Request</code> before the body is read. An upload sent with chunked transfer encoding (no <code>Content-Length</code>) fails with <code>500 Internal Server Error</code> once the body exceeds the limit.</li>
+</ul>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@sensor-data.csv&quot; \
-  -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;csv&quot;,&quot;time&quot;:1710000000.0}' \
+  -F 'metadata={&quot;sensor&quot;:&quot;temperature&quot;}' \
+  -F &quot;time=1710000000.0&quot; \
   https://localhost/files
 </code></pre>
-<p><strong>Response</strong></p>
-<pre><code class="language-json">{
-  &quot;name&quot;: &quot;sensor-data.csv&quot;,
-  &quot;class&quot;: &quot;document&quot;,
-  &quot;format&quot;: &quot;csv&quot;,
-  &quot;time&quot;: 1710000000.0
-}
+<p>A successful upload returns <code>201 Created</code> with an empty JSON body:</p>
+<pre><code class="language-json">{}
 </code></pre>
+<p>Uploading a file whose name already exists in the scope returns <code>409 Conflict</code>.</p>
 <h3 id="list-files">List files<a class="headerlink" href="#list-files" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/files
 </code></pre>
+<p>Supported query parameters: <code>offset</code>, <code>limit</code> (max 200, default 10), <code>order</code> (<code>time</code>, <code>name</code>, <code>class</code> or <code>format</code>, default <code>time</code>), <code>dir</code> (<code>asc</code> or <code>desc</code>, default <code>desc</code>), and the filters <code>name</code>, <code>format</code>, <code>class</code>, and <code>metadata</code> (a URL-encoded JSON object; only files whose metadata contains the given key-value pairs are returned, e.g. <code>?metadata={"sensor":"temperature"}</code>).</p>
 <p><strong>Response</strong></p>
 <pre><code class="language-json">{
   &quot;total&quot;: 2,
-  &quot;files&quot;: [
-    {&quot;name&quot;: &quot;sensor-data.csv&quot;,   &quot;class&quot;: &quot;document&quot;, &quot;format&quot;: &quot;csv&quot;,  &quot;time&quot;: 1710000000.0},
-    {&quot;name&quot;: &quot;calibration.json&quot;,  &quot;class&quot;: &quot;document&quot;, &quot;format&quot;: &quot;json&quot;, &quot;time&quot;: 1709900000.0}
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;order&quot;: &quot;time&quot;,
+  &quot;dir&quot;: &quot;desc&quot;,
+  &quot;files_info&quot;: [
+    {
+      &quot;name&quot;: &quot;photo.png&quot;,
+      &quot;class&quot;: &quot;images&quot;,
+      &quot;format&quot;: &quot;png&quot;,
+      &quot;time&quot;: 1710000200.0,
+      &quot;metadata&quot;: {},
+      &quot;checksum&quot;: &quot;&lt;sha256&gt;&quot;,
+      &quot;size&quot;: 20480
+    },
+    {
+      &quot;name&quot;: &quot;sensor-data.csv&quot;,
+      &quot;class&quot;: &quot;documents&quot;,
+      &quot;format&quot;: &quot;csv&quot;,
+      &quot;time&quot;: 1710000000.0,
+      &quot;metadata&quot;: {&quot;sensor&quot;: &quot;temperature&quot;},
+      &quot;checksum&quot;: &quot;&lt;sha256&gt;&quot;,
+      &quot;size&quot;: 512
+    }
   ]
 }
 </code></pre>
@@ -273,10 +428,13 @@
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/files/&lt;name&gt;
 </code></pre>
-<h3 id="update-a-file">Update a file<a class="headerlink" href="#update-a-file" title="Permanent link">#</a></h3>
+<p>The file content is returned as <code>application/octet-stream</code>. Range requests are supported, see <a href="#checksums-downloads-and-range-requests">Checksums, downloads and range requests</a>.</p>
+<h3 id="update-file-metadata">Update file metadata<a class="headerlink" href="#update-file-metadata" title="Permanent link">#</a></h3>
+<p>Metadata is updated with a JSON body (not a multipart form); this endpoint updates metadata only and does not replace file content. Omitted fields, including <code>time</code>, are reset to their zero value.</p>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
-  -F &quot;file=@sensor-data-v2.csv&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;time&quot;:1710000000.0,&quot;metadata&quot;:{&quot;sensor&quot;:&quot;temperature&quot;,&quot;unit&quot;:&quot;celsius&quot;}}' \
   https://localhost/files/&lt;name&gt;
 </code></pre>
 <h3 id="delete-a-file">Delete a file<a class="headerlink" href="#delete-a-file" title="Permanent link">#</a></h3>
@@ -284,35 +442,43 @@
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/files/&lt;name&gt;
 </code></pre>
+<p>Returns <code>204 No Content</code>.</p>
 <h2 id="group-scoped-files">Group-scoped files<a class="headerlink" href="#group-scoped-files" title="Permanent link">#</a></h2>
-<p>Users with editor-level group access can upload and manage files shared across all devices in a group.</p>
+<p>Group files are shared across all devices in a group. Users with viewer-level group access can list and download them; uploading, updating and deleting require editor-level access. Group-file routes are served under the <code>/fs/</code> prefix.</p>
 <h3 id="upload-a-group-file">Upload a group file<a class="headerlink" href="#upload-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  -F &quot;file=@config.json&quot; \
-  -F 'metadata={&quot;class&quot;:&quot;document&quot;,&quot;format&quot;:&quot;json&quot;,&quot;time&quot;:1710000000.0}' \
+  -F &quot;file=@config.csv&quot; \
+  -F 'metadata={&quot;role&quot;:&quot;shared-config&quot;}' \
   https://localhost/fs/groups/&lt;group_id&gt;/files
 </code></pre>
+<p>A successful upload returns <code>201 Created</code> with an empty JSON body:</p>
+<pre><code class="language-json">{}
+</code></pre>
+<p>The same <code>MF_FILESTORE_UPLOAD_LIMIT_MIB</code> upload limit applies.</p>
 <h3 id="list-group-files">List group files<a class="headerlink" href="#list-group-files" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/fs/groups/&lt;group_id&gt;/files
 </code></pre>
+<p>Accepts the same query parameters as the thing-scoped listing. The response has the same shape (<code>files_info</code>).</p>
 <h3 id="download-a-group-file">Download a group file<a class="headerlink" href="#download-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash"># Using a user token
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 
-# Using a thing key (useful for devices fetching shared config or firmware)
+# Devices can use a thing key; the group is resolved from the key
 curl -s -S -i \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   https://localhost/fs/groupfiles/&lt;name&gt;
 </code></pre>
+<p>Group-file downloads behave like thing-file downloads, including the checksum verification and range support described in <a href="#checksums-downloads-and-range-requests">Checksums, downloads and range requests</a>.</p>
 <h3 id="update-a-group-file">Update a group file<a class="headerlink" href="#update-a-group-file" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  -F &quot;file=@config-v2.json&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;time&quot;:1710000000.0,&quot;metadata&quot;:{&quot;role&quot;:&quot;shared-config&quot;,&quot;version&quot;:2}}' \
   https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 </code></pre>
 <h3 id="delete-a-group-file">Delete a group file<a class="headerlink" href="#delete-a-group-file" title="Permanent link">#</a></h3>
@@ -320,6 +486,7 @@ curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/fs/groups/&lt;group_id&gt;/files/&lt;name&gt;
 </code></pre>
+<p>Returns <code>204 No Content</code>.</p>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>

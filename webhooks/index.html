@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -121,6 +133,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -175,30 +195,37 @@
 <li>Each webhook receives an HTTP POST with the message payload as the request body.</li>
 <li>Custom HTTP headers defined on the webhook are included in every request, allowing authentication with the receiving system.</li>
 </ol>
-<p>No additional configuration is required on the device or its profile — forwarding is automatic as long as webhooks are registered.</p>
+<p>The thing's profile must have <code>webhook_enabled: true</code> set in its <code>config</code> (see <a href="../messaging/#dispatcher-flags">Dispatcher Flags</a>) — otherwise messages never reach the webhooks pipeline, even if webhooks are registered for the thing.</p>
 <h2 id="managing-webhooks">Managing webhooks<a class="headerlink" href="#managing-webhooks" title="Permanent link">#</a></h2>
 <p>Webhooks are registered per device and scoped to the group that device belongs to. You can register multiple webhooks for a single device; each one will receive a copy of every message that device publishes.</p>
 <h3 id="create-webhooks">Create webhooks<a class="headerlink" href="#create-webhooks" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
-  -d '[{
-    &quot;name&quot;: &quot;Data pipeline&quot;,
-    &quot;url&quot;: &quot;https://ingest.example.com/mainflux&quot;,
-    &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
-  }]' \
+  -d '{
+    &quot;webhooks&quot;: [
+      {
+        &quot;name&quot;: &quot;Data pipeline&quot;,
+        &quot;url&quot;: &quot;https://ingest.example.com/mainflux&quot;,
+        &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
+      }
+    ]
+  }' \
   https://localhost/svcwebhooks/things/&lt;thing_id&gt;/webhooks
 </code></pre>
 <p><strong>Response</strong></p>
-<pre><code class="language-json">[
-  {
-    &quot;id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
-    &quot;name&quot;: &quot;Data pipeline&quot;,
-    &quot;url&quot;: &quot;https://ingest.example.com/mainflux&quot;,
-    &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;},
-    &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;
-  }
-]
+<pre><code class="language-json">{
+  &quot;webhooks&quot;: [
+    {
+      &quot;id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;name&quot;: &quot;Data pipeline&quot;,
+      &quot;url&quot;: &quot;https://ingest.example.com/mainflux&quot;,
+      &quot;headers&quot;: {&quot;X-Api-Key&quot;: &quot;&lt;api_key&gt;&quot;}
+    }
+  ]
+}
 </code></pre>
 <h3 id="list-webhooks">List webhooks<a class="headerlink" href="#list-webhooks" title="Permanent link">#</a></h3>
 <pre><code class="language-bash"># All webhooks for a specific device
@@ -228,7 +255,7 @@ curl -s -S -i \
   https://localhost/webhooks/&lt;webhook_id&gt;
 </code></pre>
 <h3 id="remove-webhooks">Remove webhooks<a class="headerlink" href="#remove-webhooks" title="Permanent link">#</a></h3>
-<pre><code class="language-bash">curl -s -S -i -X DELETE \
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;webhook_ids&quot;: [&quot;&lt;webhook_id&gt;&quot;]}' \

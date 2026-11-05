@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/ota/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>OTA - MainfluxLabs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OTA";
+        var mkdocs_page_input_path = "ota.md";
+        var mkdocs_page_url = "/index.html/ota/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MainfluxLabs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">OTA</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#updates">Updates</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-updates">Managing updates</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-an-update">Create an update</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-updates-of-a-group">List updates of a group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-an-update">View an update</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-the-things-of-an-update">List the things of an update</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#retry-failed-things">Retry failed things</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-an-update">Remove an update</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#device-api">Device API</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#fetch-the-pending-update">Fetch the pending update</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#report-progress">Report progress</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MainfluxLabs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">OTA</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ota">OTA<a class="headerlink" href="#ota" title="Permanent link">#</a></h1>
+<p>The OTA service rolls out firmware to things over the air. A user creates an <strong>update</strong> for a set of things in a group, the service notifies those things, and each thing reports its progress until it runs the new firmware or fails. Firmware files are stored by the <a href="../filestore/">Filestore</a> service as group files.</p>
+<h2 id="updates">Updates<a class="headerlink" href="#updates" title="Permanent link">#</a></h2>
+<p>An update describes the firmware and the things that should install it.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique update identifier</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>ID of the group of the things being updated</td>
+</tr>
+<tr>
+<td><code>file_name</code></td>
+<td>Name of the firmware group file in the Filestore service</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Version that things must report on success</td>
+</tr>
+<tr>
+<td><code>file_size</code></td>
+<td>Firmware size in bytes</td>
+</tr>
+<tr>
+<td><code>checksum</code></td>
+<td>Hex-encoded SHA-256 of the firmware, used by the thing to verify the download</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Optional free-form description</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>Seconds without progress after which a thing is marked <code>failed</code> (default 24 hours)</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>Creation timestamp (RFC 3339)</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Number of things of the update per status, and the total number of target things</td>
+</tr>
+</tbody>
+</table>
+<p>Each thing of an update has its own progress: <code>status</code>, <code>error</code>, <code>reported_version</code> and <code>updated_at</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending</code></td>
+<td>The thing has not started the update yet</td>
+</tr>
+<tr>
+<td><code>downloading</code></td>
+<td>The thing is downloading the firmware</td>
+</tr>
+<tr>
+<td><code>installing</code></td>
+<td>The thing is installing the firmware</td>
+</tr>
+<tr>
+<td><code>succeeded</code></td>
+<td>The thing reported the version of the update</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>The thing reported an error or another version, timed out, or was superseded</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Create.</strong> A user creates an update for things of a group. Every thing starts as <code>pending</code>. A thing runs at most one update at a time: its older running update is marked <code>failed</code> with <code>superseded by update &lt;id&gt;</code>.</li>
+<li><strong>Notify.</strong> The service publishes the update on the <code>things/&lt;thing_id&gt;/ota/update</code> MQTT topic of each thing. Only the OTA service can publish on that topic. Things that were offline fetch the update on reconnect with <code>GET /ota/pending</code>.</li>
+<li><strong>Download.</strong> The thing downloads the firmware from the <code>url</code> of the update with its thing key, resuming with HTTP Range requests if needed (see <a href="../filestore/#checksums-downloads-and-range-requests">Filestore</a>), and verifies the SHA-256 checksum.</li>
+<li><strong>Report.</strong> The thing reports its progress with <code>POST /ota/status</code>, or by publishing on its <code>things/&lt;thing_id&gt;/ota/status</code> MQTT topic. A thing can report only its own status. Reports reach only the OTA service; they are not stored and do not trigger rules or webhooks. A <code>succeeded</code> report must include <code>version</code>; if it differs from the version of the update, the thing is marked <code>failed</code>.</li>
+<li><strong>Timeout.</strong> Things without progress for the <code>timeout</code> of the update are marked <code>failed</code> with <code>timed out</code>. The service checks this every <code>MF_OTA_TIMEOUT_CHECK_INTERVAL</code>.</li>
+<li><strong>Retry.</strong> A user can move the failed things of an update back to <code>pending</code>, and they are notified again. Things that received a newer update in the meantime are skipped, so a retry never rolls a thing back to older firmware. The service never retries on its own.</li>
+</ol>
+<p>Viewing updates requires the viewer role in the group, while creating, retrying and removing updates require the editor role. Updates and progress are removed when their group or thing is removed.</p>
+<h2 id="managing-updates">Managing updates<a class="headerlink" href="#managing-updates" title="Permanent link">#</a></h2>
+<h3 id="create-an-update">Create an update<a class="headerlink" href="#create-an-update" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;file_name&quot;: &quot;fw-sensor-1.4.0.bin&quot;,
+    &quot;version&quot;: &quot;1.4.0&quot;,
+    &quot;file_size&quot;: 421888,
+    &quot;checksum&quot;: &quot;&lt;sha256_hex&gt;&quot;,
+    &quot;description&quot;: &quot;Sensor firmware 1.4.0&quot;,
+    &quot;thing_ids&quot;: [&quot;111e4567-e89b-12d3-a456-426614174000&quot;]
+  }' \
+  https://localhost/svcota/groups/&lt;group_id&gt;/updates
+</code></pre>
+<p>The response contains the created update with <code>201 Created</code>.</p>
+<h3 id="list-updates-of-a-group">List updates of a group<a class="headerlink" href="#list-updates-of-a-group" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/svcota/groups/&lt;group_id&gt;/updates?offset=0&amp;limit=10&quot;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 1,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;updates&quot;: [
+    {
+      &quot;id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;file_name&quot;: &quot;fw-sensor-1.4.0.bin&quot;,
+      &quot;version&quot;: &quot;1.4.0&quot;,
+      &quot;file_size&quot;: 421888,
+      &quot;checksum&quot;: &quot;&lt;sha256_hex&gt;&quot;,
+      &quot;description&quot;: &quot;Sensor firmware 1.4.0&quot;,
+      &quot;timeout&quot;: 86400,
+      &quot;created_at&quot;: &quot;2026-11-04T12:00:00Z&quot;,
+      &quot;stats&quot;: {
+        &quot;targets&quot;: 1,
+        &quot;pending&quot;: 0,
+        &quot;downloading&quot;: 1,
+        &quot;installing&quot;: 0,
+        &quot;succeeded&quot;: 0,
+        &quot;failed&quot;: 0
+      }
+    }
+  ]
+}
+</code></pre>
+<h3 id="view-an-update">View an update<a class="headerlink" href="#view-an-update" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcota/updates/&lt;update_id&gt;
+</code></pre>
+<h3 id="list-the-things-of-an-update">List the things of an update<a class="headerlink" href="#list-the-things-of-an-update" title="Permanent link">#</a></h3>
+<p>The <code>status</code> query parameter filters the things by status.</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/svcota/updates/&lt;update_id&gt;/things?status=failed&quot;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 1,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;status&quot;: &quot;failed&quot;,
+  &quot;thing_updates&quot;: [
+    {
+      &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;status&quot;: &quot;failed&quot;,
+      &quot;error&quot;: &quot;timed out&quot;,
+      &quot;updated_at&quot;: &quot;2026-11-05T12:00:00Z&quot;
+    }
+  ]
+}
+</code></pre>
+<h3 id="retry-failed-things">Retry failed things<a class="headerlink" href="#retry-failed-things" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcota/updates/&lt;update_id&gt;/retry
+</code></pre>
+<h3 id="remove-an-update">Remove an update<a class="headerlink" href="#remove-an-update" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcota/updates/&lt;update_id&gt;
+</code></pre>
+<p>Returns <code>204 No Content</code>.</p>
+<h2 id="device-api">Device API<a class="headerlink" href="#device-api" title="Permanent link">#</a></h2>
+<p>Things authenticate with their thing key.</p>
+<h3 id="fetch-the-pending-update">Fetch the pending update<a class="headerlink" href="#fetch-the-pending-update" title="Permanent link">#</a></h3>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  https://localhost/ota/pending
+</code></pre>
+<p>When an update is pending, the response is:</p>
+<pre><code class="language-json">{
+  &quot;update_id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
+  &quot;version&quot;: &quot;1.4.0&quot;,
+  &quot;file_name&quot;: &quot;fw-sensor-1.4.0.bin&quot;,
+  &quot;url&quot;: &quot;https://localhost/fs/groupfiles/fw-sensor-1.4.0.bin&quot;,
+  &quot;size&quot;: 421888,
+  &quot;checksum&quot;: &quot;&lt;sha256_hex&gt;&quot;
+}
+</code></pre>
+<p>When nothing is pending, the response is <code>204 No Content</code>. Over MQTT, the same object is delivered under the <code>payload</code> field of the standard command message.</p>
+<h3 id="report-progress">Report progress<a class="headerlink" href="#report-progress" title="Permanent link">#</a></h3>
+<p><code>status</code> is one of <code>downloading</code>, <code>installing</code>, <code>succeeded</code> or <code>failed</code>. <code>version</code> is required with <code>succeeded</code>, and <code>error</code> describes a failure.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;update_id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;, &quot;status&quot;: &quot;succeeded&quot;, &quot;version&quot;: &quot;1.4.0&quot;}' \
+  https://localhost/ota/status
+</code></pre>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<p><code>MF_OTA_FIRMWARE_URL</code> sets the public base URL from which things download firmware group files (default <code>https://localhost/fs/groupfiles</code>), and <code>MF_OTA_TIMEOUT_CHECK_INTERVAL</code> sets how often things without progress are checked for timeout (default <code>10m</code>). See the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/ota/README.md">OTA service README</a> for the full list of environment variables.</p>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../modbus/" class="btn btn-neutral float-left" title="Modbus"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../audit/" class="btn btn-neutral float-right" title="Audit">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) MainfluxLabs</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../modbus/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../audit/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

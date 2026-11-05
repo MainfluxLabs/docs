@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/audit/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Audit - MainfluxLabs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Audit";
+        var mkdocs_page_input_path = "audit.md";
+        var mkdocs_page_url = "/index.html/audit/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MainfluxLabs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Audit</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#querying-events">Querying events</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MainfluxLabs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Audit</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="audit">Audit<a class="headerlink" href="#audit" title="Permanent link">#</a></h1>
+<p>The Audit service consumes Redis Stream events published by every other Mainflux service, persists them to its own PostgreSQL database, and exposes a read-only HTTP API for querying the recorded audit trail. There is no manual event creation through the API — events are generated automatically whenever another service performs an action (e.g. creating a thing, updating an org).</p>
+<p>Each event contains the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique event identifier</td>
+</tr>
+<tr>
+<td><code>occurred_at</code></td>
+<td>RFC 3339 timestamp of when the recorded action occurred</td>
+</tr>
+<tr>
+<td><code>operation</code></td>
+<td>The operation that triggered the event, e.g. <code>thing.create</code>, <code>org.create</code></td>
+</tr>
+<tr>
+<td><code>actor</code></td>
+<td><code>{id, email}</code> of the user whose action triggered the event</td>
+</tr>
+<tr>
+<td><code>org_id</code></td>
+<td>Organization the event belongs to (absent if not tied to an org)</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>Group the event belongs to (absent if not tied to a group)</td>
+</tr>
+<tr>
+<td><code>action_data</code></td>
+<td>Operation-specific payload describing the event (always present)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="querying-events">Querying events<a class="headerlink" href="#querying-events" title="Permanent link">#</a></h2>
+<p>All list endpoints support <code>offset</code>, <code>limit</code> (max 200), <code>order</code> (<code>id</code>, <code>occurred_at</code>, <code>operation</code>, <code>actor_email</code>, <code>org_id</code>, <code>group_id</code>), <code>dir</code> (<code>asc</code>/<code>desc</code>), <code>email</code> (filter by actor email), <code>operation</code> (filter by operation name), <code>from</code>/<code>to</code> (Unix timestamp bounds on <code>occurred_at</code>), and <code>action_data</code> (URL-encoded JSON — returns events whose <code>action_data</code> contains all supplied key/value pairs).</p>
+<pre><code class="language-bash"># List all events across the platform — restricted to root administrators
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcaudit/events?offset=0&amp;limit=20&quot;
+</code></pre>
+<pre><code class="language-json">{
+  &quot;total&quot;: 2,
+  &quot;offset&quot;: 0,
+  &quot;limit&quot;: 10,
+  &quot;events&quot;: [
+    {
+      &quot;id&quot;: &quot;123e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;occurred_at&quot;: &quot;2026-06-12T14:22:17.357447Z&quot;,
+      &quot;operation&quot;: &quot;thing.create&quot;,
+      &quot;actor&quot;: {
+        &quot;id&quot;: &quot;574106f7-030e-4881-8ab0-151195c29f94&quot;,
+        &quot;email&quot;: &quot;user@example.com&quot;
+      },
+      &quot;org_id&quot;: &quot;374106f7-030e-4881-8ab0-151195c29f92&quot;,
+      &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;action_data&quot;: {
+        &quot;id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+        &quot;name&quot;: &quot;sensor-1&quot;,
+        &quot;profile_id&quot;: &quot;311e4567-e89b-12d3-a456-426614174000&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+<pre><code class="language-bash"># List events within an organization — caller must be an org admin (or higher)
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcaudit/orgs/&lt;org_id&gt;/events&quot;
+
+# List events within a group — caller must be a group admin (or higher), or an org owner or admin
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcaudit/groups/&lt;group_id&gt;/events&quot;
+
+# Filter by operation and time range
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;http://localhost/svcaudit/orgs/&lt;org_id&gt;/events?operation=thing.create&amp;from=1735689600&amp;to=1738368000&quot;
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../ota/" class="btn btn-neutral float-left" title="OTA"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../security/" class="btn btn-neutral float-right" title="Security">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) MainfluxLabs</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../ota/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../security/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

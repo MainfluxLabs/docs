@@ -84,6 +84,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -96,7 +100,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -125,6 +137,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -171,9 +191,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">#</a></h1>
-<p>At the beginning, it is necessary to ensure access to the platform for users. 
-<strong>User registration in the system is performed exclusively by the platform administrator or <code>Root Admin</code>.</strong></p>
-<p>After the user is registered by the <code>Root Admin</code>, in order to be able to manage entities within the system, it is necessary to have certain rights.
+<p>Users are registered by the <code>Root Admin</code>, by accepting a Platform Invite, or through self-registration with e-mail verification when <code>MF_USERS_SELF_REGISTER_ENABLED</code> is <code>true</code> (the default).</p>
+<p>Once registered, a user needs certain rights to manage entities within the system.
 Mainflux uses <strong>roles</strong> to control permissions for entities at two levels: at the Organization level and at the Group level.</p>
 <p><em>More information about creating a user can be found at <a href="../api/#users">Users API</a></em>.</p>
 <hr />
@@ -206,12 +225,14 @@ Below are the predefined roles in the system:</p>
 </ul>
 <blockquote>
 <p>Although these roles are the same for an Organization and a Group, <strong>they operate completely separately at those levels</strong>, 
-which means that one User <strong>can have different roles</strong> in an Organization and a Group within that Organization.</p>
+which means that one User <strong>can have different roles</strong> in an Organization and a Group within that Organization.
+The exception is the Organization <code>Owner</code> and <code>Admin</code>, who can access every Group in their Organization without Group membership.</p>
 </blockquote>
 <h2 id="org-members">Org Members<a class="headerlink" href="#org-members" title="Permanent link">#</a></h2>
 <p>When a logged-in User creates an Organization, they become the <code>Owner</code> of that Organization.
 Within it, they can add other registered users by assigning them appropriate roles defined in the table above.</p>
-<p>Unlike an <code>Admin</code> of the Organization, an <code>Owner</code> has full rights over the entities within their Organization, meaning they can manage Groups and entities in Groups without an explicit Group membership.</p>
+<p>The Organization <code>Owner</code> and <code>Admin</code> can view, update and delete every Group in their Organization and manage its Members and entities without Group membership.
+Organization <code>Editor</code> and <code>Viewer</code> need Group membership to access a Group.</p>
 <p>For a simpler understanding of access control in an Org, the table below provides a clear overview:</p>
 <table>
 <thead>
@@ -310,14 +331,15 @@ Within it, they can add other registered users by assigning them appropriate rol
 </blockquote>
 <ul>
 <li>In the second case, if a <code>Viewer</code> or <code>Editor</code> tries to invite new users to the Organization, they will also get the above error message.</li>
-<li>Next case, if an <code>Admin</code> attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied with an authorization failure message.</li>
+<li>Next case, if an <code>Editor</code> attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied.</li>
 <li>The same error message will be received if the <code>Owner</code>, or any other Organization Member who is not a <code>Root Admin</code>, tries to access an Organization in which they are not Members.</li>
 </ul>
 <h2 id="group-members">Group Members<a class="headerlink" href="#group-members" title="Permanent link">#</a></h2>
 <p>In order to enable the correct management of the entities within the Group, the rights that the members have over these entities are checked.
 Rights over entities are defined based on <u>the role in the Group</u> in which they belong.</p>
-<p>As previously emphasized, roles in an Organization and roles in a Group are independent and don't affect each other, which means that if a User is a <code>Viewer</code> in an Organization and a Group <code>Admin</code> adds them to the Group as an <code>Editor</code>, they will have higher rights in the Group than the rights they have in the Organization.</p>
-<p>By creating a Group, the User becomes its <code>Owner</code> and has the rights defined in the table.</p>
+<p>As previously emphasized, Group roles are independent of Organization <code>Editor</code> and <code>Viewer</code> roles, which means that if a User is a <code>Viewer</code> in an Organization and a Group <code>Admin</code> adds them to the Group as an <code>Editor</code>, they will have higher rights in the Group than the rights they have in the Organization.</p>
+<p>When the Organization <code>Owner</code> creates a Group, they become its <code>Owner</code>.
+When another Organization Member creates a Group, they become its <code>Admin</code> and the Organization <code>Owner</code> becomes its <code>Owner</code>.</p>
 <p>For a simpler understanding of access control in a Group, the table below provides a clear overview:</p>
 <table>
 <thead>
@@ -397,6 +419,7 @@ Rights over entities are defined based on <u>the role in the Group</u> in which 
 </tr>
 </tbody>
 </table>
+<p>The Organization <code>Owner</code> and <code>Admin</code> have Group <code>Owner</code> rights in every Group of their Organization.</p>
 <p>The 'Create Group' operation is omitted from the table because the rights are defined in the Org table, where it can be clearly seen that everyone except the Organization Viewer can create a Group.</p>
 <p>If we keep the data from the previous table and expand it with new data by creating Groups within the Organization and assigning Group roles to the existing members of the Organization, 
 the additional table would look like this:</p>
@@ -434,7 +457,7 @@ the additional table would look like this:</p>
 This means that the User now has all the rights provided by that role.</p>
 <p>On the other hand, the User with ID <code>6b9e77a1-22f8-4e72-b2f3-122ad8b37f48</code> who is an Organization <code>Editor</code> now has the Group's <code>Viewer</code> role. 
 Therefore, that Member has no rights in the Group other than viewing.</p>
-<p>Since the <code>Admin</code> of the Organization is also the <code>Admin</code> of the Group with ID <code>565ddcfb-bf64-4e6b-80ac-371516bd0e01</code>, it means that they have the same rights.</p>
+<p>The <code>Admin</code> of the Organization is also the <code>Admin</code> of the Group with ID <code>565ddcfb-bf64-4e6b-80ac-371516bd0e01</code>, but as an Organization <code>Admin</code> they have Group <code>Owner</code> rights in that Group and in every other Group of the Organization.</p>
 <p>Based on the above examples of unauthorized access within the Organization, the same rules are applied within the Group based on the roles of the Members.</p>
 <p>In addition to the basic access rights that apply to Members, note the case of Thing creation.
 When creating a Thing, it needs to be assigned a specific Profile by specifying its ID. The Profile being assigned and the Thing <u> must belong to the same Group. </u></p>
@@ -444,7 +467,7 @@ When creating a Thing, it needs to be assigned a specific Profile by specifying 
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../authentication/" class="btn btn-neutral float-left" title="Authentication"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../certs/" class="btn btn-neutral float-right" title="Certs">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -475,7 +498,7 @@ When creating a Thing, it needs to be assigned a specific Profile by specifying 
       <span><a href="../authentication/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../certs/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

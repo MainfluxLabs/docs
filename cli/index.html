@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -104,6 +116,14 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
                 </li>
               </ul>
@@ -112,7 +132,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#service">Service</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#get-mainflux-things-services-health-check">Get Mainflux Things services health check</a>
+    <li class="toctree-l3"><a class="reference internal" href="#check-things-service-health">Check Things Service Health</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#users-management">Users management</a>
         <ul>
@@ -379,7 +399,7 @@ Available Commands:
 
 </code></pre>
 <h2 id="service">Service<a class="headerlink" href="#service" title="Permanent link">#</a></h2>
-<h4 id="get-mainflux-things-services-health-check">Get Mainflux Things services health check<a class="headerlink" href="#get-mainflux-things-services-health-check" title="Permanent link">#</a></h4>
+<h4 id="check-things-service-health">Check Things Service Health<a class="headerlink" href="#check-things-service-health" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli health
 </code></pre>
 <h3 id="users-management">Users management<a class="headerlink" href="#users-management" title="Permanent link">#</a></h3>
@@ -393,8 +413,9 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <pre><code class="language-bash">mainfluxlabs-cli users token &lt;user_email&gt; &lt;user_password&gt;
 </code></pre>
 <h4 id="retrieve-user">Retrieve User<a class="headerlink" href="#retrieve-user" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli users get &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli users get &lt;all | user_id&gt; &lt;user_token&gt;
 </code></pre>
+<p>Only the admin can retrieve <code>all</code> users or another user's <code>user_id</code>; other users can retrieve only their own <code>user_id</code>.</p>
 <h4 id="update-user-metadata">Update User Metadata<a class="headerlink" href="#update-user-metadata" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli users update '{&quot;key1&quot;:&quot;value1&quot;, &quot;key2&quot;:&quot;value2&quot;}' &lt;user_token&gt;
 </code></pre>
@@ -404,10 +425,11 @@ For more details, please see <a href="../authorization/">Authorization page</a>.
 <h3 id="system-provisioning">System Provisioning<a class="headerlink" href="#system-provisioning" title="Permanent link">#</a></h3>
 <h4 id="provision-things">Provision Things<a class="headerlink" href="#provision-things" title="Permanent link">#</a></h4>
 <p>Provision multiple Things in bulk from a JSON / CSV input file.</p>
-<pre><code class="language-bash">mainfluxlabs-cli provision things &lt;file&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli provision things &lt;file&gt; &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <ul>
 <li><code>file</code> - A path to a CSV or JSON file containing Things (must have the <code>.json</code> or <code>.csv</code> extension)</li>
+<li><code>profile_id</code> - ID of the Profile to which the Things are assigned</li>
 <li><code>user_token</code> - A valid user auth token for the current system</li>
 </ul>
 <h5 id="input-file-structure-json">Input file structure (JSON):<a class="headerlink" href="#input-file-structure-json" title="Permanent link">#</a></h5>
@@ -416,17 +438,16 @@ each of which can have the following fields:</p>
 <ul>
 <li><code>name</code></li>
 <li><code>id</code></li>
-<li><code>group_id</code></li>
-<li><code>profile_id</code></li>
+<li><code>type</code></li>
+<li><code>key</code></li>
 <li><code>metadata</code></li>
 </ul>
 <p>See <a href="../api/#things">API -&gt; Things</a> for the meaning and explanation of these fields.</p>
 <p>Example:</p>
 <pre><code class="language-json">[
     {
-        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
-        &quot;profile_id&quot;: &quot;30afa89c-decc-479c-8783-6b0c8813df0d&quot;,
         &quot;name&quot;: &quot;thing0&quot;,
+        &quot;type&quot;: &quot;device&quot;,
         &quot;metadata&quot;: {
             &quot;locationCountry&quot;: &quot;Poland&quot;,
             &quot;locationCity&quot;: &quot;Warsaw&quot;,
@@ -434,9 +455,8 @@ each of which can have the following fields:</p>
         }
     },
     {
-        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
-        &quot;profile_id&quot;: &quot;efc59216-733d-41e7-af9a-e94a11ff39ee&quot;,
         &quot;name&quot;: &quot;thing1&quot;,
+        &quot;type&quot;: &quot;sensor&quot;,
         &quot;metadata&quot;: {
             &quot;b&quot;: 2
         }
@@ -449,20 +469,20 @@ each of which can have the following fields:</p>
 <ul>
 <li>ID</li>
 <li>Name</li>
-<li>Group ID</li>
-<li>Profile ID</li>
+<li>Type</li>
 </ul>
 <p>Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.</p>
 <p>Example:</p>
-<pre><code>,thing0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,30afa89c-decc-479c-8783-6b0c8813df0d,locationCountry,Poland,locationCity,Warsaw,a,1
+<pre><code>,thing0,device,locationCountry,Poland,locationCity,Warsaw,a,1
 </code></pre>
 <p>The above CSV record and the first object in the JSON example represent the same Thing.</p>
 <h4 id="provision-profiles">Provision Profiles<a class="headerlink" href="#provision-profiles" title="Permanent link">#</a></h4>
 <p>Provision multiple Profiles in bulk from a JSON / CSV input file.</p>
-<pre><code class="language-bash">mainfluxlabs-cli provision profiles &lt;file&gt; &lt;user_token&gt;
+<pre><code class="language-bash">mainfluxlabs-cli provision profiles &lt;file&gt; &lt;group_id&gt; &lt;user_token&gt;
 </code></pre>
 <ul>
 <li><code>file</code> - A path to a CSV or JSON file containing profiles (must have the <code>.json</code> or <code>.csv</code> extension)</li>
+<li><code>group_id</code> - ID of the Group in which the Profiles are created</li>
 <li><code>user_token</code> - A valid user auth token for the current system</li>
 </ul>
 <h5 id="input-file-structure-json_1">Input file structure (JSON):<a class="headerlink" href="#input-file-structure-json_1" title="Permanent link">#</a></h5>
@@ -471,7 +491,6 @@ each of which can have the following fields:</p>
 <ul>
 <li><code>name</code></li>
 <li><code>id</code></li>
-<li><code>group_id</code></li>
 <li><code>config</code></li>
 <li><code>metadata</code></li>
 </ul>
@@ -480,18 +499,17 @@ each of which can have the following fields:</p>
 <pre><code class="language-json">[
     {
         &quot;id&quot;: &quot;473c97ca-ac23-4e0f-b679-c34bcde98491&quot;,
-        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
         &quot;name&quot;: &quot;profile0&quot;,
         &quot;config&quot;: {
           &quot;content_type&quot;: &quot;application/json&quot;,
-          &quot;write&quot;: false,
+          &quot;write_enabled&quot;: false,
           &quot;transformer&quot;: {
             &quot;data_filters&quot;: [&quot;val1&quot;, &quot;val2&quot;],
             &quot;data_field&quot;: &quot;data.data.data&quot;,
             &quot;time_field&quot;: &quot;t&quot;,
             &quot;time_format&quot;: &quot;unix&quot;,
             &quot;time_location&quot;: &quot;UTC&quot;
-          },
+          }
         },
         &quot;metadata&quot;: {
             &quot;a&quot;: &quot;1&quot;
@@ -499,7 +517,6 @@ each of which can have the following fields:</p>
     },
     {
         &quot;id&quot;: &quot;33da57ee-f072-4eef-a860-c3d2292e8c07&quot;,
-        &quot;group_id&quot;: &quot;2c6aaa48-595b-495e-ad7f-c569a44d15e1&quot;,
         &quot;name&quot;: &quot;profile1&quot;,
         &quot;config&quot;: {...},
         &quot;metadata&quot;: {
@@ -514,9 +531,8 @@ each of which can have the following fields:</p>
 <ul>
 <li>ID</li>
 <li>Name</li>
-<li>Group ID</li>
 <li>Config - "content_type"</li>
-<li>Config - "write"</li>
+<li>Config - "write_enabled"</li>
 <li>Config - "transformer" - "data_filters"</li>
 <li>Config - "transformer" - "data_field"</li>
 <li>Config - "transformer" - "time_field"</li>
@@ -525,7 +541,7 @@ each of which can have the following fields:</p>
 </ul>
 <p>Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.</p>
 <p>Example:</p>
-<pre><code>473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,2c6aaa48-595b-495e-ad7f-c569a44d15e1,application/json,false,&quot;val1,val2&quot;,&quot;data.data.data&quot;,t,unix,UTC,a,1
+<pre><code>473c97ca-ac23-4e0f-b679-c34bcde98491,profile0,application/json,false,&quot;val1,val2&quot;,&quot;data.data.data&quot;,t,unix,UTC,a,1
 </code></pre>
 <p>The above CSV record and the first object in the JSON example represent the same Profile.</p>
 <h3 id="things">Things<a class="headerlink" href="#things" title="Permanent link">#</a></h3>
@@ -552,10 +568,10 @@ each of which can have the following fields:</p>
 <pre><code class="language-bash">mainfluxlabs-cli things get by-profile &lt;profile_id&gt; &lt;user_token&gt;
 </code></pre>
 <h4 id="retrieve-metadata-by-key">Retrieve Metadata by Key<a class="headerlink" href="#retrieve-metadata-by-key" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things metadata &lt;thing_key&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things metadata &lt;key_type&gt; &lt;thing_key&gt;
 </code></pre>
 <h4 id="retrieve-thing-id-by-key">Retrieve Thing ID by Key<a class="headerlink" href="#retrieve-thing-id-by-key" title="Permanent link">#</a></h4>
-<pre><code class="language-bash">mainfluxlabs-cli things identify &lt;thing_key&gt;
+<pre><code class="language-bash">mainfluxlabs-cli things identify &lt;key_type&gt; &lt;thing_key&gt;
 </code></pre>
 <h3 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">#</a></h3>
 <h4 id="create-profile">Create Profile<a class="headerlink" href="#create-profile" title="Permanent link">#</a></h4>

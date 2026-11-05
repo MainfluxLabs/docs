@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -87,6 +99,8 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">UIConfigs</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#org-configs">Org configs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#group-configs">Group configs</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#thing-configs">Thing configs</a>
     </li>
@@ -109,6 +123,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -155,76 +177,115 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="uiconfigs">UIConfigs<a class="headerlink" href="#uiconfigs" title="Permanent link">#</a></h1>
-<p>UIConfigs service stores and retrieves schema-free JSON configuration objects scoped to organizations and things. It is intended for frontends and dashboards that need to persist display or layout settings without requiring database schema changes.</p>
-<p>Configuration objects are free-form JSON — any structure is accepted, allowing frontends to store arbitrary settings without schema constraints. Each organization has a single config object, and each thing has a single config object. Both are upserted on write, so a PUT always creates or replaces the full config.</p>
-<p>The service also exposes backup and restore endpoints for exporting and re-importing the full configuration state.</p>
+<p>The UIConfigs service stores and retrieves free-form JSON configuration objects scoped to organizations, groups, and things. It is intended for frontends and dashboards that need to persist display or layout settings without requiring database schema changes.</p>
+<p>Each organization, group, and thing has a single config object, all upserted on write, so a PUT always creates or replaces the full config.</p>
 <h2 id="org-configs">Org configs<a class="headerlink" href="#org-configs" title="Permanent link">#</a></h2>
-<p>Each organization has a single config object accessible to any member of that org.</p>
+<p>Each organization has a single config object. Viewing it requires the org viewer role, and updating it requires the org editor role.</p>
 <pre><code class="language-bash"># Retrieve org config
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/svcuiconfigs/orgs/&lt;org_id&gt;/configs
 </code></pre>
 <pre><code class="language-json">{
-  &quot;theme&quot;: &quot;dark&quot;,
-  &quot;sidebar&quot;: {&quot;collapsed&quot;: false},
-  &quot;defaultView&quot;: &quot;dashboard&quot;
+  &quot;org_id&quot;: &quot;511e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;config&quot;: {
+    &quot;theme&quot;: &quot;dark&quot;,
+    &quot;sidebar&quot;: {&quot;collapsed&quot;: false},
+    &quot;defaultView&quot;: &quot;dashboard&quot;
+  }
 }
 </code></pre>
 <pre><code class="language-bash"># Update org config
 curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;theme&quot;: &quot;dark&quot;, &quot;sidebar&quot;: {&quot;collapsed&quot;: false}, &quot;defaultView&quot;: &quot;dashboard&quot;}' \
+  -d '{&quot;config&quot;: {&quot;theme&quot;: &quot;dark&quot;, &quot;sidebar&quot;: {&quot;collapsed&quot;: false}, &quot;defaultView&quot;: &quot;dashboard&quot;}}' \
   https://localhost/svcuiconfigs/orgs/&lt;org_id&gt;/configs
 </code></pre>
-<p>Administrators can retrieve configs for all organizations:</p>
+<p>Any user can list the configs of the organizations they can view. Admin users get the configs of all organizations:</p>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/svcuiconfigs/orgs/configs
 </code></pre>
+<h2 id="group-configs">Group configs<a class="headerlink" href="#group-configs" title="Permanent link">#</a></h2>
+<p>Each group has a single config object. Viewing it requires the group viewer role, and updating it requires the group editor role. Group configs are typically used to store group-level dashboard layouts and widget arrangements.</p>
+<pre><code class="language-bash"># Retrieve group config
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcuiconfigs/groups/&lt;group_id&gt;/configs
+</code></pre>
+<pre><code class="language-json">{
+  &quot;group_id&quot;: &quot;321e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;config&quot;: {
+    &quot;dashboardLayout&quot;: &quot;grid&quot;,
+    &quot;widgets&quot;: [&quot;chart&quot;, &quot;kpi&quot;, &quot;map&quot;]
+  }
+}
+</code></pre>
+<pre><code class="language-bash"># Update group config
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;config&quot;: {&quot;dashboardLayout&quot;: &quot;grid&quot;, &quot;widgets&quot;: [&quot;chart&quot;, &quot;kpi&quot;, &quot;map&quot;]}}' \
+  https://localhost/svcuiconfigs/groups/&lt;group_id&gt;/configs
+</code></pre>
+<p>Any user can list the configs of the groups they can view. Admin users get the configs of all groups:</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcuiconfigs/groups/configs
+</code></pre>
 <h2 id="thing-configs">Thing configs<a class="headerlink" href="#thing-configs" title="Permanent link">#</a></h2>
-<p>Each thing has a single config object, accessible to users authorized for that thing's group. Thing configs are typically used to store per-widget display settings in dashboards.</p>
+<p>Each thing has a single config object. Viewing it requires the viewer role in the thing's group, and updating it requires the editor role in the thing's group. Thing configs are typically used to store per-widget display settings in dashboards.</p>
 <pre><code class="language-bash"># Retrieve thing config
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/svcuiconfigs/things/&lt;thing_id&gt;/configs
 </code></pre>
 <pre><code class="language-json">{
-  &quot;chartType&quot;: &quot;line&quot;,
-  &quot;unit&quot;: &quot;°C&quot;,
-  &quot;color&quot;: &quot;#ff6600&quot;
+  &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;config&quot;: {
+    &quot;chartType&quot;: &quot;line&quot;,
+    &quot;unit&quot;: &quot;°C&quot;,
+    &quot;color&quot;: &quot;#ff6600&quot;
+  }
 }
 </code></pre>
 <pre><code class="language-bash"># Update thing config
 curl -s -S -i -X PUT \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;, &quot;color&quot;: &quot;#ff6600&quot;}' \
+  -d '{&quot;config&quot;: {&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;, &quot;color&quot;: &quot;#ff6600&quot;}}' \
   https://localhost/svcuiconfigs/things/&lt;thing_id&gt;/configs
 </code></pre>
-<p>Administrators can retrieve configs for all things:</p>
+<p>Any user can list the configs of the things they can view. Admin users get the configs of all things:</p>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   https://localhost/svcuiconfigs/things/configs
 </code></pre>
 <h2 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
-<p>The service exposes backup and restore endpoints for exporting and re-importing the full configuration state. This is useful for migrations, environment snapshots, or disaster recovery.</p>
+<p>The service exposes backup and restore endpoints for exporting and re-importing the full configuration state. This is useful for migrations, environment snapshots, or disaster recovery. Both endpoints are restricted to admin users.</p>
 <pre><code class="language-bash"># Export all configs
 curl -s -S -i \
-  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; \
   https://localhost/svcuiconfigs/backup
 </code></pre>
 <pre><code class="language-json">{
-  &quot;org_configs&quot;: [
+  &quot;orgs_configs&quot;: [
     {
       &quot;org_id&quot;: &quot;511e4567-e89b-12d3-a456-426614174000&quot;,
       &quot;config&quot;: {&quot;theme&quot;: &quot;dark&quot;, &quot;defaultView&quot;: &quot;dashboard&quot;}
     }
   ],
-  &quot;thing_configs&quot;: [
+  &quot;groups_configs&quot;: [
+    {
+      &quot;group_id&quot;: &quot;321e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;config&quot;: {&quot;dashboardLayout&quot;: &quot;grid&quot;, &quot;widgets&quot;: [&quot;chart&quot;, &quot;kpi&quot;, &quot;map&quot;]}
+    }
+  ],
+  &quot;things_configs&quot;: [
     {
       &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;group_id&quot;: &quot;321e4567-e89b-12d3-a456-426614174000&quot;,
       &quot;config&quot;: {&quot;chartType&quot;: &quot;line&quot;, &quot;unit&quot;: &quot;°C&quot;}
     }
   ]
@@ -232,8 +293,8 @@ curl -s -S -i \
 </code></pre>
 <pre><code class="language-bash"># Restore from backup
 curl -s -S -i -X POST \
-  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Authorization: Bearer &lt;admin_token&gt;&quot; \
+  -H &quot;Content-Type: application/octet-stream&quot; \
   -d '&lt;backup_json&gt;' \
   https://localhost/svcuiconfigs/restore
 </code></pre>

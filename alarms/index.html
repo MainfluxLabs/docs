@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -71,14 +75,26 @@
                 <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Alarms</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#querying-alarms">Querying alarms</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#updating-alarm-status">Updating alarm status</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exporting-alarms">Exporting alarms</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#removing-alarms">Removing alarms</a>
     </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul>
@@ -107,6 +123,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -153,7 +177,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="alarms">Alarms<a class="headerlink" href="#alarms" title="Permanent link">#</a></h1>
-<p>Alarms service persists triggered alarms to a database. Alarms are generated automatically by the Rules engine or Lua scripts when a message matches a defined condition — there is no manual alarm creation through the API.</p>
+<p>Alarms service persists triggered alarms to a database. Alarms are generated automatically by rule <code>alarm</code> actions when a message matches the rule conditions — there is no manual alarm creation through the API.</p>
 <p>Each alarm record contains the following fields:</p>
 <table>
 <thead>
@@ -177,11 +201,7 @@
 </tr>
 <tr>
 <td><code>rule_id</code></td>
-<td>The rule that triggered the alarm (if rule-based)</td>
-</tr>
-<tr>
-<td><code>script_id</code></td>
-<td>The script that triggered the alarm (if script-based)</td>
+<td>The rule that triggered the alarm</td>
 </tr>
 <tr>
 <td><code>subtopic</code></td>
@@ -192,8 +212,16 @@
 <td>The protocol used (http, mqtt, coap, etc.)</td>
 </tr>
 <tr>
-<td><code>payload</code></td>
-<td>The raw message payload that triggered the alarm</td>
+<td><code>rule</code></td>
+<td>Snapshot of the rule <code>conditions</code> and <code>operator</code></td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td>Alarm severity, 1–5, taken from the rule action</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>active</code>, <code>noted</code> or <code>cleared</code>; <code>active</code> on creation</td>
 </tr>
 <tr>
 <td><code>created</code></td>
@@ -202,7 +230,7 @@
 </tbody>
 </table>
 <h2 id="querying-alarms">Querying alarms<a class="headerlink" href="#querying-alarms" title="Permanent link">#</a></h2>
-<p>Alarms can be queried by thing, group, or organization. All list endpoints support <code>offset</code> and <code>limit</code> pagination query parameters (maximum 200 per page).</p>
+<p>Alarms can be queried by thing, group, or organization. All list endpoints support <code>offset</code> and <code>limit</code> pagination query parameters (maximum 200 per page), <code>order</code> (<code>id</code>, <code>created</code>, <code>level</code>, <code>status</code>), <code>dir</code> (<code>asc</code>/<code>desc</code>), and the <code>level</code>, <code>status</code>, <code>protocol</code>, <code>subtopic</code>, <code>from</code> and <code>to</code> (Unix nanoseconds) filters.</p>
 <pre><code class="language-bash"># List alarms for a thing
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
@@ -217,10 +245,16 @@ curl -s -S -i \
       &quot;id&quot;: &quot;123e4567-e89b-12d3-a456-426614174000&quot;,
       &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
       &quot;group_id&quot;: &quot;211e4567-e89b-12d3-a456-426614174000&quot;,
-      &quot;script_id&quot;: &quot;323e4567-e89b-12d3-a456-426614174000&quot;,
+      &quot;rule_id&quot;: &quot;323e4567-e89b-12d3-a456-426614174000&quot;,
       &quot;subtopic&quot;: &quot;temperature&quot;,
       &quot;protocol&quot;: &quot;mqtt&quot;,
-      &quot;payload&quot;: { &quot;temperature&quot;: 85.2, &quot;unit&quot;: &quot;C&quot; },
+      &quot;rule&quot;: {
+        &quot;conditions&quot;: [
+          { &quot;type&quot;: &quot;threshold&quot;, &quot;field&quot;: &quot;temperature&quot;, &quot;comparator&quot;: &quot;&gt;&quot;, &quot;threshold&quot;: 80 }
+        ]
+      },
+      &quot;level&quot;: 3,
+      &quot;status&quot;: &quot;active&quot;,
       &quot;created&quot;: 1774342578003142691
     }
   ]
@@ -241,6 +275,20 @@ curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   &quot;https://localhost/alarms/&lt;alarm_id&gt;&quot;
 </code></pre>
+<h2 id="updating-alarm-status">Updating alarm status<a class="headerlink" href="#updating-alarm-status" title="Permanent link">#</a></h2>
+<p>The status of an alarm can be set to <code>noted</code> or <code>cleared</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;status&quot;: &quot;noted&quot;}' \
+  https://localhost/alarms/&lt;alarm_id&gt;
+</code></pre>
+<h2 id="exporting-alarms">Exporting alarms<a class="headerlink" href="#exporting-alarms" title="Permanent link">#</a></h2>
+<p>Alarms of a thing can be exported as a file. The <code>convert</code> query parameter selects the format (<code>json</code> or <code>csv</code>, default <code>json</code>), and <code>time_format=rfc3339</code> exports timestamps in RFC 3339 instead of Unix nanoseconds. The list filters above also apply.</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/svcalarms/things/&lt;thing_id&gt;/alarms/export?convert=csv&quot;
+</code></pre>
 <h2 id="removing-alarms">Removing alarms<a class="headerlink" href="#removing-alarms" title="Permanent link">#</a></h2>
 <pre><code class="language-bash">curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
@@ -253,8 +301,8 @@ curl -s -S -i \
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../storage/" class="btn btn-neutral float-left" title="Storage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../converters/" class="btn btn-neutral float-right" title="Converters">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../rules/" class="btn btn-neutral float-left" title="Rules"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../shadows/" class="btn btn-neutral float-right" title="Shadows">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -282,10 +330,10 @@ curl -s -S -i \
         </span>
     
     
-      <span><a href="../storage/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../rules/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../converters/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../shadows/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

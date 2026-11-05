@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/shadows/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Shadows - MainfluxLabs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Shadows";
+        var mkdocs_page_input_path = "shadows.md";
+        var mkdocs_page_url = "/index.html/shadows/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MainfluxLabs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Shadows</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#state">State</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-a-shadow">Managing a shadow</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MainfluxLabs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Shadows</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="shadows">Shadows<a class="headerlink" href="#shadows" title="Permanent link">#</a></h1>
+<p>Shadows service maintains a <strong>device shadow</strong> for each thing — a persisted record holding the thing's last <em>reported</em> state and its <em>desired</em> state. It lets users read and set a thing's state even while the thing is offline, and aligns the two whenever the thing reconnects.</p>
+<p>A shadow is a single record per thing.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>thing_id</code></td>
+<td>ID of the thing the shadow belongs to</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>Nested object holding the <code>desired</code>, <code>reported</code>, and <code>delta</code> states (see below)</td>
+</tr>
+<tr>
+<td><code>reported_at</code></td>
+<td>Unix timestamp (seconds) of the last reported-state update</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>Unix timestamp (seconds) of the last desired-state update</td>
+</tr>
+</tbody>
+</table>
+<h2 id="state">State<a class="headerlink" href="#state" title="Permanent link">#</a></h2>
+<p><code>desired</code>, <code>reported</code>, and <code>delta</code> are each a free-form JSON object (a set of key/value pairs).</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>desired</code></td>
+<td>State the application wants the thing to reach.</td>
+</tr>
+<tr>
+<td><code>reported</code></td>
+<td>State the thing last reported. Merged from the thing's telemetry messages.</td>
+</tr>
+<tr>
+<td><code>delta</code></td>
+<td>Computed subset of <code>desired</code> whose values differ from (or are absent in) <code>reported</code>. Omitted when empty.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>delta</code> is derived on read and on every state change; it is never stored directly. Keys present only in <code>reported</code> are not part of the delta.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>Desired state</strong> is set by a user through the HTTP API. On update, the service recomputes the delta and publishes it to the thing on its command subject (<code>things.&lt;id&gt;.commands.shadow</code>).</li>
+<li><strong>Reported state</strong> is updated automatically as the thing publishes messages. The service consumes messages from the broker, flattens each into a state patch, and merges the patch into <code>reported</code> (no-op writes are skipped).</li>
+<li>On each reported-state change, any still-pending delta is re-published, so a reconnecting thing receives commands it missed while offline.</li>
+</ul>
+<p>Authorization is delegated to the Things service: reading a shadow requires <code>viewer</code> access on the thing's group, while updating or removing a shadow requires <code>editor</code> access.</p>
+<h2 id="managing-a-shadow">Managing a shadow<a class="headerlink" href="#managing-a-shadow" title="Permanent link">#</a></h2>
+<pre><code class="language-bash"># Set the desired state for a thing
+curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;desired&quot;: {&quot;fanSpeed&quot;: 3, &quot;targetTemp&quot;: 21}
+  }' \
+  https://localhost/svcshadows/things/&lt;thing_id&gt;/shadows
+</code></pre>
+<pre><code class="language-json">{
+  &quot;thing_id&quot;: &quot;111e4567-e89b-12d3-a456-426614174000&quot;,
+  &quot;state&quot;: {
+    &quot;desired&quot;: { &quot;fanSpeed&quot;: 3, &quot;targetTemp&quot;: 21 },
+    &quot;reported&quot;: { &quot;fanSpeed&quot;: 1, &quot;targetTemp&quot;: 19 },
+    &quot;delta&quot;: { &quot;fanSpeed&quot;: 3, &quot;targetTemp&quot;: 21 }
+  },
+  &quot;reported_at&quot;: 1774342400,
+  &quot;updated_at&quot;: 1774342578
+}
+</code></pre>
+<pre><code class="language-bash"># View a thing's shadow
+curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcshadows/things/&lt;thing_id&gt;/shadows
+
+# Remove a thing's shadow
+curl -s -S -i -X DELETE \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcshadows/things/&lt;thing_id&gt;/shadows
+</code></pre>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../alarms/" class="btn btn-neutral float-left" title="Alarms"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../converters/" class="btn btn-neutral float-right" title="Converters">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) MainfluxLabs</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../alarms/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../converters/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

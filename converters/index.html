@@ -60,6 +60,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
                 </li>
               </ul>
@@ -72,7 +76,15 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
                 </li>
               </ul>
               <ul class="current">
@@ -80,9 +92,13 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#senml-csv">SenML CSV</a>
+    <li class="toctree-l2"><a class="reference internal" href="#csv-file-to-senml-messages">CSV file to SenML Messages</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#json-csv">JSON CSV</a>
+    <li class="toctree-l2"><a class="reference internal" href="#csv-file-to-json-messages">CSV file to JSON Messages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#json-file-to-senml-messages">JSON file to SenML Messages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#json-file-to-json-messages">JSON file to JSON Messages</a>
     </li>
     </ul>
                 </li>
@@ -109,6 +125,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
                 </li>
               </ul>
               <ul>
@@ -155,16 +179,18 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="converters">Converters<a class="headerlink" href="#converters" title="Permanent link">#</a></h1>
-<p>Converters service provides bulk CSV ingestion by parsing uploaded CSV files and publishing their rows as platform messages. It is intended for batch import of historical or bulk-collected sensor data without requiring device-level publishing.</p>
-<p>Two input formats are supported:</p>
+<p>Converters service provides bulk CSV and JSON ingestion by parsing uploaded files and publishing their records as platform messages. It is intended for batch import of historical or bulk-collected sensor data without requiring device-level publishing.</p>
+<p>Four input formats are supported:</p>
 <ul>
-<li><strong>SenML</strong> — the first row is the header where column names become measurement names. The first column must be a Unix timestamp. All remaining columns are treated as numeric measurement values.</li>
-<li><strong>JSON</strong> — column names become JSON field names. The value from the column named by the thing's profile transformer <code>time_field</code> setting is parsed as a numeric Unix timestamp and stored as a <code>Created</code> field in the payload. The first column is excluded from the payload. Values are auto-parsed as numbers where possible, otherwise treated as strings.</li>
+<li><strong>CSV → SenML</strong> — the first row is the header where column names become measurement names. The first column must be a Unix timestamp. All remaining columns are treated as numeric measurement values.</li>
+<li><strong>CSV → JSON</strong> — column names become JSON field names. The value from the column named by the thing's profile transformer <code>time_field</code> setting is parsed as a numeric Unix timestamp and stored as a <code>Created</code> field in the payload. The first column is excluded from the payload. Values are auto-parsed as numbers where possible, otherwise treated as strings.</li>
+<li><strong>JSON → SenML</strong> — a JSON array of objects. Each object must have a <code>t</code> key (Unix timestamp) and one or more numeric measurement keys.</li>
+<li><strong>JSON → JSON</strong> — a JSON array of objects. The key matching the thing's profile transformer <code>time_field</code> is stored as <code>Created</code>. All other fields are passed through as-is.</li>
 </ul>
 <p>Large files are processed in batches with a 30-second pause between batches to avoid overloading the message broker. For SenML, a batch is flushed every 50,000 SenML records (one record per value column per row). For JSON, a batch is flushed every 50,000 rows.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h2>
 <p>Requests must be authenticated with the device's internal key using the <code>Authorization: Thing &lt;key&gt;</code> header.</p>
-<h2 id="senml-csv">SenML CSV<a class="headerlink" href="#senml-csv" title="Permanent link">#</a></h2>
+<h2 id="csv-file-to-senml-messages">CSV file to SenML Messages<a class="headerlink" href="#csv-file-to-senml-messages" title="Permanent link">#</a></h2>
 <p>The first column must be a Unix timestamp. Subsequent columns are measurement names taken from the header row.</p>
 <p>Example file (<code>readings.csv</code>):</p>
 <pre><code>time,voltage,current,power
@@ -174,10 +200,10 @@
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@readings.csv&quot; \
-  https://localhost/converters/csv/senml
+  &quot;https://localhost/converters/csv?to=senml&quot;
 </code></pre>
 <p>Rows are collected and published as batched SenML messages. Each SenML record carries the measurement name (<code>n</code>), value (<code>v</code>), and timestamp (<code>t</code>) from its column and row.</p>
-<h2 id="json-csv">JSON CSV<a class="headerlink" href="#json-csv" title="Permanent link">#</a></h2>
+<h2 id="csv-file-to-json-messages">CSV file to JSON Messages<a class="headerlink" href="#csv-file-to-json-messages" title="Permanent link">#</a></h2>
 <p>Column names become JSON field names. If the profile transformer <code>time_field</code> is set and matches a column name, that column's value is parsed as a numeric Unix timestamp (seconds or nanoseconds as a float) and stored as a <code>Created</code> field in the payload. The first column is always excluded from the payload. Values that cannot be parsed as numbers are kept as strings.</p>
 <p>Example file (<code>events.csv</code>), assuming <code>time_field</code> is set to <code>time</code> in the profile transformer config:</p>
 <pre><code>time,temperature,humidity,status
@@ -187,17 +213,47 @@
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
   -F &quot;file=@events.csv&quot; \
-  https://localhost/converters/csv/json
+  &quot;https://localhost/converters/csv?to=json&quot;
 </code></pre>
 <p>Rows are collected and published as batched JSON messages. The <code>time</code> column value is parsed as a float and stored as <code>Created</code> in the payload. The remaining columns — <code>temperature</code>, <code>humidity</code>, and <code>status</code> — become fields in the JSON payload. The resulting record looks like:</p>
 <pre><code class="language-json">{&quot;Created&quot;: 1709635200, &quot;temperature&quot;: 21.5, &quot;humidity&quot;: 60, &quot;status&quot;: &quot;ok&quot;}
+</code></pre>
+<h2 id="json-file-to-senml-messages">JSON file to SenML Messages<a class="headerlink" href="#json-file-to-senml-messages" title="Permanent link">#</a></h2>
+<p>Each object in the array must contain a <code>t</code> key (Unix timestamp as a float) and one or more numeric measurement keys. Each measurement key produces one SenML record.</p>
+<p>Example file (<code>readings.json</code>):</p>
+<pre><code class="language-json">[
+  {&quot;t&quot;: 1709635200.0, &quot;voltage&quot;: 120.1, &quot;current&quot;: 1.2},
+  {&quot;t&quot;: 1709635260.0, &quot;voltage&quot;: 119.8, &quot;current&quot;: 1.3}
+]
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -F &quot;file=@readings.json&quot; \
+  &quot;https://localhost/converters/json?to=senml&quot;
+</code></pre>
+<p>Records are collected and published as batched SenML messages. Each SenML record carries the measurement name (<code>n</code>), value (<code>v</code>), and timestamp (<code>t</code>).</p>
+<h2 id="json-file-to-json-messages">JSON file to JSON Messages<a class="headerlink" href="#json-file-to-json-messages" title="Permanent link">#</a></h2>
+<p>Each object in the array becomes one JSON payload record. If the profile transformer <code>time_field</code> is set and matches a key, that key's value is stored as a <code>Created</code> field. All other keys are passed through with their original types.</p>
+<p>Example file (<code>events.json</code>), assuming <code>time_field</code> is set to <code>time</code>:</p>
+<pre><code class="language-json">[
+  {&quot;time&quot;: 1709635200.0, &quot;temperature&quot;: 21.5, &quot;humidity&quot;: 60, &quot;status&quot;: &quot;ok&quot;},
+  {&quot;time&quot;: 1709635260.0, &quot;temperature&quot;: 22.1, &quot;humidity&quot;: 58, &quot;status&quot;: &quot;ok&quot;}
+]
+</code></pre>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Thing &lt;thing_key&gt;&quot; \
+  -F &quot;file=@events.json&quot; \
+  &quot;https://localhost/converters/json?to=json&quot;
+</code></pre>
+<p>The <code>time</code> field value is stored as <code>Created</code> in the payload. The resulting record looks like:</p>
+<pre><code class="language-json">{&quot;time&quot;: 1709635200, &quot;Created&quot;: 1709635200, &quot;temperature&quot;: 21.5, &quot;humidity&quot;: 60, &quot;status&quot;: &quot;ok&quot;}
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../alarms/" class="btn btn-neutral float-left" title="Alarms"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../shadows/" class="btn btn-neutral float-left" title="Shadows"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../filestore/" class="btn btn-neutral float-right" title="Filestore">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -226,7 +282,7 @@
         </span>
     
     
-      <span><a href="../alarms/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../shadows/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../filestore/" style="color: #fcfcfc">Next &raquo;</a></span>
