@@ -1088,7 +1088,7 @@ The detailed configuration of the Profile Config can be found at [Profile Config
 > Must-have: `user_token`,`group_id`
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<profile_name>","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name": "<profile_name>","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]'
 ```
 
 Response:
@@ -1103,7 +1103,7 @@ Connection: keep-alive
 Location: /profiles/db4b7428-e278-4fe3-b85a-d65554d6abe9
 Access-Control-Expose-Headers: Location
 
-{"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx>","name":"profile_name","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 
 ```
 
@@ -1114,7 +1114,7 @@ Multiple profiles can be created in a single request by providing a list of prof
 > Must-have: `user_token`, `group_id` and profiles
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"name": "<profile_name_1>"}, {"name": "<profile_name_2>","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"name": "<profile_name_1>"}, {"name": "<profile_name_2>","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]'
 ```
 
 Response:
@@ -1128,7 +1128,7 @@ Content-Length: 352
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"profiles":[{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000"},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"content-type":"application/json"}}]}
+{"profiles":[{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000"},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 ```
 
 ### Create Profiles with external ID
@@ -1138,7 +1138,7 @@ Multiple profiles with external IDs can be created in a single request.
 > Must-have: `user_token`, `group_id` and at least 2 profiles
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<profile_name_1>","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<profile_name_2>","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]'
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/groups/<group_id>/profiles -d '[{"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name": "<profile_name_1>","metadata":{"key":"val"},"config":{"content_type":"application/json"}}, {"id": "<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name": "<profile_name_2>","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]'
 ```
 
 Response:
@@ -1152,7 +1152,7 @@ Content-Length: 398
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"profiles":[{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx1>","name":"profile_name_1","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"<xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxx2>","name":"profile_name_2","group_id":"123e4567-e89b-12d3-a456-426614174000","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 ```
 
 ### View Profile
@@ -1176,7 +1176,7 @@ Content-Length: 188
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content-type":"application/json"}}
+{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content_type":"application/json"}}
 ```
 
 ### View Profile by Thing
@@ -1200,7 +1200,7 @@ Content-Length: 188
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content-type":"application/json"}}
+{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content_type":"application/json"}}
 ```
 
 ### List Profiles
@@ -1251,7 +1251,7 @@ Content-Length: 427
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":2,"offset":0,"limit":10,"profiles":[{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"total":2,"offset":0,"limit":10,"profiles":[{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 ```
 
 ### List Profiles by Org
@@ -1275,7 +1275,7 @@ Content-Length: 493
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"b9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"Content-Type":"application/json"}}]}
+{"total":3,"offset":0,"limit":10,"profiles":[{"id":"db4b7428-e278-4fe3-b85a-d65554d6abe9","group_id":"b9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"b8073d41-01dc-46ad-bb26-cfecc596c6c1","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_1","metadata":{"key":"val"},"config":{"content_type":"application/json"}},{"id":"2200527a-f590-4fe5-b9d6-892fc6f825c3","group_id":"c9bf9e57-1685-4c89-bafb-ff5af830be8a","name":"profile_name_2","metadata":{"key":"val"},"config":{"content_type":"application/json"}}]}
 ```
 
 ### Update Profile
@@ -2341,7 +2341,7 @@ Multiple webhooks can be created in a single request.
 > Must-have: `user_token`, `thing_id`, `name` and `url`
 
 ```bash
-curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks -d '{"webhooks":[{"name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}'
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcwebhooks/things/<thing_id>/webhooks -d '[{"name":"webhook_name","url":"https://webhook.com","headers":{"content_type":"application/json"}}]'
 ```
 
 Response:
@@ -2355,7 +2355,7 @@ Content-Length: 257
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","name":"webhook_name","url":"https://webhook.com","headers":{"Content-Type":"application/json"}}]}
+{"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","group_id":"c93cafb3-b3a7-4e7f-a470-15c14d8ed1e0","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","name":"webhook_name","url":"https://webhook.com","headers":{"content_type":"application/json"}}]}
 
 ```
 
@@ -2380,7 +2380,7 @@ Content-Length: 488
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":3,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}},{"id":"1234f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"12140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","url":"https://api.test2.com/","headers":{}}]}
+{"total":3,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"content_type":"application/json"}},{"id":"1234f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"12140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test2","url":"https://api.test2.com/","headers":{}}]}
 ```
 
 ### List Webhooks by Thing
@@ -2404,7 +2404,7 @@ Content-Length: 250
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"total":1,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}]}
+{"total":1,"offset":0,"limit":10,"webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"content_type":"application/json"}}]}
 ```
 
 ### Search Webhooks by Group
@@ -2425,7 +2425,7 @@ Content-Type: application/json
 Date: Thu, 11 Apr 2024 11:44:57 GMT
 Content-Length: 488
 
-{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"},"metadata":{"key":"value"}}]}
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"content_type":"application/json"},"metadata":{"key":"value"}}]}
 ```
 
 ### Search Webhooks by Thing
@@ -2446,7 +2446,7 @@ Content-Type: application/json
 Date: Mon, 24 Mar 2025 11:44:57 GMT
 Content-Length: 250
 
-{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"},"metadata":{"key":"value"}}]}
+{"total":1,"offset":0,"limit":10,"order":"name","dir":"asc","name":"<webhook_name>","webhooks":[{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"content_type":"application/json"},"metadata":{"key":"value"}}]}
 ```
 
 ### View Webhook
@@ -2470,7 +2470,7 @@ Content-Length: 185
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 
-{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"Content-Type":"application/json"}}
+{"id":"f630f594-d967-4c54-85ef-af58efe8e8ed","thing_id":"64140f0b-6448-41cf-967e-1bbcc703c332","group_id":"50e6b371-60ff-45cf-bb52-8200e7cde536","name":"Test","url":"https://api.test.com/","headers":{"content_type":"application/json"}}
 ```
 
 ### Update Webhook
