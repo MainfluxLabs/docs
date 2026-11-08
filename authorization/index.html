@@ -338,8 +338,9 @@ Organization <code>Editor</code> and <code>Viewer</code> need Group membership t
 <p>In order to enable the correct management of the entities within the Group, the rights that the members have over these entities are checked.
 Rights over entities are defined based on <u>the role in the Group</u> in which they belong.</p>
 <p>As previously emphasized, Group roles are independent of Organization <code>Editor</code> and <code>Viewer</code> roles, which means that if a User is a <code>Viewer</code> in an Organization and a Group <code>Admin</code> adds them to the Group as an <code>Editor</code>, they will have higher rights in the Group than the rights they have in the Organization.</p>
-<p>When the Organization <code>Owner</code> creates a Group, they become its <code>Owner</code>.
-When another Organization Member creates a Group, they become its <code>Admin</code> and the Organization <code>Owner</code> becomes its <code>Owner</code>.</p>
+<p>The Organization <code>Owner</code> and <code>Admin</code> hold the Group <code>Owner</code> role in every Group of their Organization through their Organization role.
+They are listed as Group <code>Owner</code> members, and they cannot be added to a Group, invited to a Group, updated or removed.
+When an Organization <code>Editor</code> creates a Group, they become its <code>Admin</code>.</p>
 <p>For a simpler understanding of access control in a Group, the table below provides a clear overview:</p>
 <table>
 <thead>
@@ -449,7 +450,7 @@ the additional table would look like this:</p>
 <td>550e8400-e29b-41d4-a716-446655440000</td>
 <td>565ddcfb-bf64-4e6b-80ac-371516bd0e01</td>
 <td>c9b8f7d5-8143-47b4-9d72-f83d3f73834e</td>
-<td>admin</td>
+<td>owner</td>
 </tr>
 </tbody>
 </table>
@@ -457,7 +458,7 @@ the additional table would look like this:</p>
 This means that the User now has all the rights provided by that role.</p>
 <p>On the other hand, the User with ID <code>6b9e77a1-22f8-4e72-b2f3-122ad8b37f48</code> who is an Organization <code>Editor</code> now has the Group's <code>Viewer</code> role. 
 Therefore, that Member has no rights in the Group other than viewing.</p>
-<p>The <code>Admin</code> of the Organization is also the <code>Admin</code> of the Group with ID <code>565ddcfb-bf64-4e6b-80ac-371516bd0e01</code>, but as an Organization <code>Admin</code> they have Group <code>Owner</code> rights in that Group and in every other Group of the Organization.</p>
+<p>The <code>Admin</code> of the Organization is listed as the <code>Owner</code> of the Group with ID <code>565ddcfb-bf64-4e6b-80ac-371516bd0e01</code>, because an Organization <code>Admin</code> holds the Group <code>Owner</code> role in every Group of the Organization.</p>
 <p>Based on the above examples of unauthorized access within the Organization, the same rules are applied within the Group based on the roles of the Members.</p>
 <p>In addition to the basic access rights that apply to Members, note the case of Thing creation.
 When creating a Thing, it needs to be assigned a specific Profile by specifying its ID. The Profile being assigned and the Thing <u> must belong to the same Group. </u></p>
