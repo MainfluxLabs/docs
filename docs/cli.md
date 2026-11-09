@@ -19,46 +19,69 @@ Usage:
   mainfluxlabs-cli [command]
 
 Available Commands:
-  certs       Certificates management
+  benchmark         Provision entities and run an HTTP JSON message load benchmark
+  certs             Certificates management
+  completion        Generate the autocompletion script for the specified shell
   group_memberships Group memberships management
-  groups      Groups management
-  health      Health Check
-  help        Help about any command
-  keys        Keys management
-  messages    Send or read messages
-  orgs        Orgs management
-  profiles    Profiles management
-  provision   Provision things and profiles from a config file
-  things      Things management
-  users       Users management
-  webhooks    Webhooks management
+  groups            Groups management
+  health            Health Check
+  help              Help about any command
+  keys              Keys management
+  messages          Send, read, delete, export, backup, or restore messages
+  org_memberships   Org memberships management
+  orgs              Orgs management
+  profiles          Profiles management
+  provision         Provision things and profiles from a config file
+  things            Things management
+  users             Users management
+  webhooks          Webhooks management
 
 Flags:
-  -a, --auth-url string       Auth service URL (default "http://localhost")
+      --agg-field string      Aggregation fields (comma-separated)
+      --agg-interval string   Aggregation interval (minute, hour, day, week, month, year)
+      --agg-type string       Aggregation type (min, max, avg, count)
+      --agg-value uint        Aggregation value (default 1)
+  -a, --auth-url string       Auth service URL (default "http://localhost/svcauth")
+      --bool-value            SenML boolean value filter
   -c, --certs-url string      Certs service URL (default "http://localhost")
+      --comparator string     Comparison operator (SenML: eq, lt, le, gt, ge; JSON: eq, starts_with, contains)
   -y, --content-type string   Message content type (default "application/senml+json")
+      --convert string        Export format (json/csv) (default "json")
+      --data-value string     SenML data value filter
+      --dir string            Sort direction (asc/desc)
   -e, --email string          User email query parameter
   -f, --format string         Message format query parameter
+      --from int              From timestamp in milliseconds
   -h, --help                  help for mainfluxlabs-cli
   -p, --http-url string       HTTP adapter URL (default "http://localhost/http")
   -i, --insecure              Do not check for TLS cert
+      --key string            JSON payload key
   -l, --limit uint            Limit query parameter (default 100)
   -m, --metadata string       Metadata query parameter
   -n, --name string           Name query parameter
   -o, --offset uint           Offset query parameter
+      --protocol string       Protocol query parameter
   -r, --raw                   Enables raw output mode for easier parsing of output
+      --senml-name string     SenML name filter
+      --senml-value float     SenML numeric value filter
+      --string-value string   SenML string value filter
   -s, --subtopic string       Subtopic query parameter
-  -t, --things-url string     Things service URL (default "http://localhost")
-  -u, --users-url string      Users service URL (default "http://localhost")
+      --thing-id string       Thing ID query parameter
+  -t, --things-url string     Things service URL (default "http://localhost/svcthings")
+      --time-format string    Export time format
+      --to int                To timestamp in milliseconds
+      --url string            Deployment base URL from which service URLs that are not set explicitly are derived
+  -u, --users-url string      Users service URL (default "http://localhost/svcusers")
+      --value string          JSON payload value
   -w, --webhooks-url string   Webhooks service URL (default "http://localhost/svcwebhooks")
 
 Use "mainfluxlabs-cli [command] --help" for more information about a command.
 ```
 
-It is also possible to use the docker image `mainflux/cli` to execute CLI command:
+It is also possible to use the docker image `mainfluxlabs/cli` to execute CLI command:
 
 ```bash
-docker run -it --rm mainflux/cli -m http://<IP_SERVER> [command]
+docker run -it --rm mainfluxlabs/cli --url http://<IP_SERVER> [command]
 ```
 
 You can execute each command with `-h` flag for more information about that command, e.g.
@@ -549,3 +572,35 @@ mainfluxlabs-cli keys revoke <key_id> <user_token>
 ```bash
 mainfluxlabs-cli keys retrieve <key_id> <user_token>
 ```
+
+### Benchmark
+Provision orgs, groups, transformer profiles, and things, then publish backfilled JSON messages over the HTTP adapter to load-test ingestion and storage.
+
+#### Run a benchmark
+```bash
+mainfluxlabs-cli benchmark <username> <password>
+```
+
+#### Run against a remote deployment
+The `--url` flag derives every service URL from the deployment base URL.
+```bash
+mainfluxlabs-cli benchmark <username> <password> --url https://example.com
+```
+
+#### Flags
+| Flag              | Default   | Description                                                     |
+| ----------------- | --------- | --------------------------------------------------------------- |
+| `--orgs`          | `3`       | Number of orgs to create                                        |
+| `--groups`        | `5`       | Number of groups per org                                        |
+| `--things`        | `100`     | Number of things to create                                      |
+| `--messages`      | `10000`   | Number of messages to send                                      |
+| `--rate`          | `0`       | Approximate maximum messages per second, `0` disables the limit |
+| `--batch`         | `100`     | Maximum number of messages per HTTP request                     |
+| `--backfill-days` | `30`      | Spread message timestamps over the last N days                  |
+| `--mtls`          | `false`   | Authenticate a random half of the things over mutual TLS        |
+
+Each request carries a random number of messages between 1 and `--batch`, sent as a JSON object for a single message and as a JSON array otherwise. The sustained ingestion rate is bounded by the database insert rate, so `--rate` should be set to that rate to prevent the message broker buffer from overflowing.
+
+With `--mtls`, the selected things obtain client certificates from the certs service and publish over HTTPS without the `Authorization` header, so the deployment must verify client certificates and still accept the header from the remaining things.
+
+The results report the requests and messages per authentication type and the failed requests per cause.
