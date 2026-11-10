@@ -465,7 +465,7 @@ Content-Type: application/json
 
 #### Impersonate User
 
-Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation.
+Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
 The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out ends the impersonated session; the root admin then signs in again.
 
