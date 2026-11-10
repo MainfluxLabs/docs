@@ -30,6 +30,7 @@ Below are the predefined roles in the system:
 ### Root Admin
 - Has all permissions across all Organizations and Groups (and entities within them).
 - Acts as the primary administrator for the entire platform.
+- Can [impersonate](api.md#impersonate-user) any enabled user other than a root admin.
 
 
 > Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**, 
