@@ -283,7 +283,40 @@ curl -s -S -i \
 
 ## CoAP
 
-CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). To send and receive messages over CoAP, you can use [CoAP CLI](https://github.com/MainfluxLabs/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/MainfluxLabs/coap-cli).
+CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). It listens on two ports:
+
+| Port | Scheme    | Authentication                                       |
+| ---- | --------- | ---------------------------------------------------- |
+| 5684 | `coaps://` | DTLS handshake with a pre-shared key (recommended)  |
+| 5683 | `coap://`  | Thing key in the `auth` query of every request      |
+
+### DTLS
+
+Over DTLS a thing authenticates once, in the handshake, and its requests carry no key. The key itself is never sent over the network.
+
+- PSK identity: the thing ID
+- PSK: the first 32 hex characters of the SHA-256 hash of the thing key
+
+The PSK is derived from the key because constrained DTLS stacks (mbedTLS, tinydtls, nRF91 modems) accept pre-shared keys of at most 32 bytes, and the key is longer. Compute it with:
+
+```bash
+echo -n <thing_key> | sha256sum | cut -c1-32
+```
+
+A wrong key or an unknown thing ID fails the handshake. The adapter supports the `TLS_PSK_WITH_AES_128_CCM_8` and `TLS_PSK_WITH_AES_128_GCM_SHA256` cipher suites, and DTLS Connection IDs ([RFC 9146](https://datatracker.ietf.org/doc/html/rfc9146)): a client that negotiates one keeps its session when NAT changes its address or port.
+
+For example, with [libcoap](https://libcoap.net/):
+
+```bash
+PSK=$(echo -n <thing_key> | sha256sum | cut -c1-32)
+coap-client-openssl -m post -e '{"v":1}' -u <thing_id> -k "$PSK" "coaps://localhost/things/<thing_id>/messages"
+```
+
+A DTLS session with no traffic from the thing for `MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT` (5 minutes by default) is closed, together with its observations. A thing that only observes commands should send something more often, for example a message or a CoAP ping, which also keeps carrier NAT mappings alive.
+
+### Plain CoAP
+
+Plain CoAP sends everything in cleartext, including the thing key, so it should be disabled with `MF_COAP_ADAPTER_PLAIN_ENABLED=false` once things use DTLS. To send and receive messages over plain CoAP, you can use [CoAP CLI](https://github.com/MainfluxLabs/coap-cli). To set the add-on, please follow the installation instructions provided [here](https://github.com/MainfluxLabs/coap-cli).
 
 Examples:
 
@@ -299,17 +332,21 @@ coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "
 coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d "hello world" -h 0.0.0.0 -p 1234
 ```
 
-To send a message, use `POST` request.
-To subscribe, send `GET` request with Observe option (flag `o`) set to false. There are two ways to unsubscribe:
+### Observing
 
-1. Send `GET` request with Observe option set to true.
-2. Forget the token and send `RST` message as a response to `CONF` message received by the server.
+To send a message, use a `POST` request. To observe a resource ([RFC 7641](https://tools.ietf.org/html/rfc7641)), send a `GET` request with the Observe option set to `0` (register, flag `-o` in CoAP CLI). Notifications are confirmable, so the thing must acknowledge them.
 
-Most of the notifications received from the adapter are non-confirmable. By [RFC 7641](https://tools.ietf.org/html/rfc7641#page-18):
+An observation ends when the thing sends a `GET` request with the Observe option set to `1` (deregister), or when its connection closes.
 
-> Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.
+### Configuration
 
-CoAP Adapter sends these notifications every 12 hours. To configure this period, see the [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md). If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.
+| Variable                            | Description                                      | Default |
+| ----------------------------------- | ------------------------------------------------ | ------- |
+| `MF_COAP_ADAPTER_PLAIN_ENABLED`     | Whether the plain CoAP listener (5683) is started | true    |
+| `MF_COAP_ADAPTER_DTLS_PORT`         | DTLS (`coaps`) listening port                    | 5684    |
+| `MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT` | Time after which an idle DTLS session is closed  | 5m      |
+
+For all variables, see the [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md).
 
 ### Sending Commands
 
@@ -322,6 +359,8 @@ coap-cli post things/<thing_id>/commands -auth <thing_key> -d '{"command":"reboo
 ```
 coap-cli post groups/<group_id>/commands -auth <thing_key> -d '{"command":"set_threshold","params":{"value":80}}'
 ```
+
+Over DTLS, use the same paths without the `auth` query, since the session already authenticates the thing.
 
 ## WS
 
