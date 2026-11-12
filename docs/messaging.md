@@ -285,10 +285,10 @@ curl -s -S -i \
 
 CoAP adapter implements CoAP protocol using underlying UDP and according to [RFC 7252](https://tools.ietf.org/html/rfc7252). It listens on two ports:
 
-| Port | Scheme    | Authentication                                       |
-| ---- | --------- | ---------------------------------------------------- |
-| 5684 | `coaps://` | DTLS handshake with a pre-shared key (recommended)  |
-| 5683 | `coap://`  | Thing key in the `auth` query of every request      |
+| Port | Scheme     | Authentication                                     |
+| ---- | ---------- | -------------------------------------------------- |
+| 5684 | `coaps://` | DTLS handshake with a pre-shared key (recommended) |
+| 5683 | `coap://`  | Thing key in the `auth` query of every request     |
 
 ### DTLS
 
@@ -340,11 +340,11 @@ An observation ends when the thing sends a `GET` request with the Observe option
 
 ### Configuration
 
-| Variable                            | Description                                      | Default |
-| ----------------------------------- | ------------------------------------------------ | ------- |
+| Variable                            | Description                                       | Default |
+| ----------------------------------- | ------------------------------------------------- | ------- |
 | `MF_COAP_ADAPTER_PLAIN_ENABLED`     | Whether the plain CoAP listener (5683) is started | true    |
-| `MF_COAP_ADAPTER_DTLS_PORT`         | DTLS (`coaps`) listening port                    | 5684    |
-| `MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT` | Time after which an idle DTLS session is closed  | 5m      |
+| `MF_COAP_ADAPTER_DTLS_PORT`         | DTLS (`coaps`) listening port                     | 5684    |
+| `MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT` | Time after which an idle DTLS session is closed   | 5m      |
 
 For all variables, see the [adapter documentation](https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md).
 
