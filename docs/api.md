@@ -463,6 +463,38 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
+#### Assign Admin Role
+
+Assign the platform admin role to a user without a platform role. Requires root admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+```
+
+#### Revoke Admin Role
+
+Revoke the platform admin role from a user. Requires root admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+```
+
 ## Orgs
 
 ### Create Org
