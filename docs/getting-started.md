@@ -1,6 +1,7 @@
 # Getting Started
 
 ## Step 1 - Run the System
+
 Before proceeding, install the following prerequisites:
 
 - [Docker](https://docs.docker.com/install/) (v24 or later)
@@ -17,6 +18,7 @@ make run
 This will start Mainflux docker composition in detached mode.
 
 ## Step 2 - Install the CLI
+
 Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI, which can be downloaded as a pre-built binary from the [latest release page](https://github.com/MainfluxLabs/mainflux/releases).
 
 > Move the binary to a directory in your `$PATH` (e.g. `/usr/local/bin`) to make `mainfluxlabs-cli` accessible system-wide.
@@ -39,7 +41,7 @@ User management requires an admin token. The default admin credentials are confi
 **1. Get an admin token**
 
 ```bash
-mainfluxlabs-cli users token admin@example.com 12345678
+mainfluxlabs-cli users token admin@example.com mainflux-dev
 ```
 
 ```json
@@ -105,14 +107,16 @@ mainfluxlabs-cli things create '{"name":"my-device","type":"device"}' <profile_i
 
 ```json
 {
-  "things": [{
-    "id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
-    "group_id": "737d2200-64a1-482f-839d-64906b0bd80e",
-    "profile_id": "b7bfc4b6-c18d-47c5-b343-98235c5acc19",
-    "name": "my-device",
-    "type": "device",
-    "key": "69590b3a-9d76-4baa-adae-9b5fec0ea14f"
-  }]
+  "things": [
+    {
+      "id": "513d02d2-16c1-4f23-98be-9e12f8fee898",
+      "group_id": "737d2200-64a1-482f-839d-64906b0bd80e",
+      "profile_id": "b7bfc4b6-c18d-47c5-b343-98235c5acc19",
+      "name": "my-device",
+      "type": "device",
+      "key": "69590b3a-9d76-4baa-adae-9b5fec0ea14f"
+    }
+  ]
 }
 ```
 
