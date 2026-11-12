@@ -41,7 +41,7 @@ User management requires an admin token. The default admin credentials are confi
 **1. Get an admin token**
 
 ```bash
-mainfluxlabs-cli users token admin@example.com mainflux-dev
+mainfluxlabs-cli users token admin@example.com mainflux-pass
 ```
 
 ```json
