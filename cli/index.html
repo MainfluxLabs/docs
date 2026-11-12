@@ -290,6 +290,16 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#benchmark">Benchmark</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#run-a-benchmark">Run a benchmark</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run-against-a-remote-deployment">Run against a remote deployment</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#flags">Flags</a>
+    </li>
+        </ul>
+    </li>
         </ul>
     </li>
     </ul>
@@ -343,43 +353,66 @@ make cli
   mainfluxlabs-cli [command]
 
 Available Commands:
-  certs       Certificates management
+  benchmark         Provision entities and run an HTTP JSON message load benchmark
+  certs             Certificates management
+  completion        Generate the autocompletion script for the specified shell
   group_memberships Group memberships management
-  groups      Groups management
-  health      Health Check
-  help        Help about any command
-  keys        Keys management
-  messages    Send or read messages
-  orgs        Orgs management
-  profiles    Profiles management
-  provision   Provision things and profiles from a config file
-  things      Things management
-  users       Users management
-  webhooks    Webhooks management
+  groups            Groups management
+  health            Health Check
+  help              Help about any command
+  keys              Keys management
+  messages          Send, read, delete, export, backup, or restore messages
+  org_memberships   Org memberships management
+  orgs              Orgs management
+  profiles          Profiles management
+  provision         Provision things and profiles from a config file
+  things            Things management
+  users             Users management
+  webhooks          Webhooks management
 
 Flags:
-  -a, --auth-url string       Auth service URL (default &quot;http://localhost&quot;)
+      --agg-field string      Aggregation fields (comma-separated)
+      --agg-interval string   Aggregation interval (minute, hour, day, week, month, year)
+      --agg-type string       Aggregation type (min, max, avg, count)
+      --agg-value uint        Aggregation value (default 1)
+  -a, --auth-url string       Auth service URL (default &quot;http://localhost/svcauth&quot;)
+      --bool-value            SenML boolean value filter
   -c, --certs-url string      Certs service URL (default &quot;http://localhost&quot;)
+      --comparator string     Comparison operator (SenML: eq, lt, le, gt, ge; JSON: eq, starts_with, contains)
   -y, --content-type string   Message content type (default &quot;application/senml+json&quot;)
+      --convert string        Export format (json/csv) (default &quot;json&quot;)
+      --data-value string     SenML data value filter
+      --dir string            Sort direction (asc/desc)
   -e, --email string          User email query parameter
   -f, --format string         Message format query parameter
+      --from int              From timestamp in milliseconds
   -h, --help                  help for mainfluxlabs-cli
   -p, --http-url string       HTTP adapter URL (default &quot;http://localhost/http&quot;)
   -i, --insecure              Do not check for TLS cert
+      --key string            JSON payload key
   -l, --limit uint            Limit query parameter (default 100)
   -m, --metadata string       Metadata query parameter
   -n, --name string           Name query parameter
   -o, --offset uint           Offset query parameter
+      --protocol string       Protocol query parameter
   -r, --raw                   Enables raw output mode for easier parsing of output
+      --senml-name string     SenML name filter
+      --senml-value float     SenML numeric value filter
+      --string-value string   SenML string value filter
   -s, --subtopic string       Subtopic query parameter
-  -t, --things-url string     Things service URL (default &quot;http://localhost&quot;)
-  -u, --users-url string      Users service URL (default &quot;http://localhost&quot;)
+      --thing-id string       Thing ID query parameter
+  -t, --things-url string     Things service URL (default &quot;http://localhost/svcthings&quot;)
+      --time-format string    Export time format
+      --to int                To timestamp in milliseconds
+      --url string            Deployment base URL from which service URLs that are not set explicitly are derived
+  -u, --users-url string      Users service URL (default &quot;http://localhost/svcusers&quot;)
+      --value string          JSON payload value
   -w, --webhooks-url string   Webhooks service URL (default &quot;http://localhost/svcwebhooks&quot;)
 
 Use &quot;mainfluxlabs-cli [command] --help&quot; for more information about a command.
 </code></pre>
-<p>It is also possible to use the docker image <code>mainflux/cli</code> to execute CLI command:</p>
-<pre><code class="language-bash">docker run -it --rm mainflux/cli -m http://&lt;IP_SERVER&gt; [command]
+<p>It is also possible to use the docker image <code>mainfluxlabs/cli</code> to execute CLI command:</p>
+<pre><code class="language-bash">docker run -it --rm mainfluxlabs/cli --url http://&lt;IP_SERVER&gt; [command]
 </code></pre>
 <p>You can execute each command with <code>-h</code> flag for more information about that command, e.g.</p>
 <pre><code class="language-bash">mainfluxlabs-cli profiles -h
@@ -715,6 +748,70 @@ mainfluxlabs-cli messages read json &lt;user_token&gt;
 <h4 id="retrieve-api-key-with-given-id">Retrieve API key with given id<a class="headerlink" href="#retrieve-api-key-with-given-id" title="Permanent link">#</a></h4>
 <pre><code class="language-bash">mainfluxlabs-cli keys retrieve &lt;key_id&gt; &lt;user_token&gt;
 </code></pre>
+<h3 id="benchmark">Benchmark<a class="headerlink" href="#benchmark" title="Permanent link">#</a></h3>
+<p>Provision orgs, groups, transformer profiles, and things, then publish backfilled JSON messages over the HTTP adapter to load-test ingestion and storage.</p>
+<h4 id="run-a-benchmark">Run a benchmark<a class="headerlink" href="#run-a-benchmark" title="Permanent link">#</a></h4>
+<pre><code class="language-bash">mainfluxlabs-cli benchmark &lt;username&gt; &lt;password&gt;
+</code></pre>
+<h4 id="run-against-a-remote-deployment">Run against a remote deployment<a class="headerlink" href="#run-against-a-remote-deployment" title="Permanent link">#</a></h4>
+<p>The <code>--url</code> flag derives every service URL from the deployment base URL.</p>
+<pre><code class="language-bash">mainfluxlabs-cli benchmark &lt;username&gt; &lt;password&gt; --url https://example.com
+</code></pre>
+<h4 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--orgs</code></td>
+<td><code>3</code></td>
+<td>Number of orgs to create</td>
+</tr>
+<tr>
+<td><code>--groups</code></td>
+<td><code>5</code></td>
+<td>Number of groups per org</td>
+</tr>
+<tr>
+<td><code>--things</code></td>
+<td><code>100</code></td>
+<td>Number of things to create</td>
+</tr>
+<tr>
+<td><code>--messages</code></td>
+<td><code>10000</code></td>
+<td>Number of messages to send</td>
+</tr>
+<tr>
+<td><code>--rate</code></td>
+<td><code>0</code></td>
+<td>Approximate maximum messages per second, <code>0</code> disables the limit</td>
+</tr>
+<tr>
+<td><code>--batch</code></td>
+<td><code>100</code></td>
+<td>Maximum number of messages per HTTP request</td>
+</tr>
+<tr>
+<td><code>--backfill-days</code></td>
+<td><code>30</code></td>
+<td>Spread message timestamps over the last N days</td>
+</tr>
+<tr>
+<td><code>--mtls</code></td>
+<td><code>false</code></td>
+<td>Authenticate a random half of the things over mutual TLS</td>
+</tr>
+</tbody>
+</table>
+<p>Each request carries a random number of messages between 1 and <code>--batch</code>, sent as a JSON object for a single message and as a JSON array otherwise. The sustained ingestion rate is bounded by the database insert rate, so <code>--rate</code> should be set to that rate to prevent the message broker buffer from overflowing.</p>
+<p>With <code>--mtls</code>, the selected things obtain client certificates from the certs service and publish over HTTPS without the <code>Authorization</code> header, so the deployment must verify client certificates and still accept the header from the remaining things.</p>
+<p>The results report the requests and messages per authentication type and the failed requests per cause.</p>
               
             </div>
           </div><footer>

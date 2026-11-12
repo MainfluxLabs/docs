@@ -86,6 +86,14 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#coap">CoAP</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dtls">DTLS</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#plain-coap">Plain CoAP</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#observing">Observing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#sending-commands">Sending Commands</a>
     </li>
         </ul>
@@ -440,7 +448,45 @@ to every command.</p>
 </code></pre>
 <p><code>created_at</code> is the Unix time of the subscription in seconds. Subscriptions are removed when the thing or the group is removed.</p>
 <h2 id="coap">CoAP<a class="headerlink" href="#coap" title="Permanent link">#</a></h2>
-<p>CoAP adapter implements CoAP protocol using underlying UDP and according to <a href="https://tools.ietf.org/html/rfc7252">RFC 7252</a>. To send and receive messages over CoAP, you can use <a href="https://github.com/MainfluxLabs/coap-cli">CoAP CLI</a>. To set the add-on, please follow the installation instructions provided <a href="https://github.com/MainfluxLabs/coap-cli">here</a>.</p>
+<p>CoAP adapter implements CoAP protocol using underlying UDP and according to <a href="https://tools.ietf.org/html/rfc7252">RFC 7252</a>. It listens on two ports:</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Scheme</th>
+<th>Authentication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5684</td>
+<td><code>coaps://</code></td>
+<td>DTLS handshake with a pre-shared key (recommended)</td>
+</tr>
+<tr>
+<td>5683</td>
+<td><code>coap://</code></td>
+<td>Thing key in the <code>auth</code> query of every request</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dtls">DTLS<a class="headerlink" href="#dtls" title="Permanent link">#</a></h3>
+<p>Over DTLS a thing authenticates once, in the handshake, and its requests carry no key. The key itself is never sent over the network.</p>
+<ul>
+<li>PSK identity: the thing ID</li>
+<li>PSK: the first 32 hex characters of the SHA-256 hash of the thing key</li>
+</ul>
+<p>The PSK is derived from the key because constrained DTLS stacks (mbedTLS, tinydtls, nRF91 modems) accept pre-shared keys of at most 32 bytes, and the key is longer. Compute it with:</p>
+<pre><code class="language-bash">echo -n &lt;thing_key&gt; | sha256sum | cut -c1-32
+</code></pre>
+<p>A wrong key or an unknown thing ID fails the handshake. The adapter supports the <code>TLS_PSK_WITH_AES_128_CCM_8</code> and <code>TLS_PSK_WITH_AES_128_GCM_SHA256</code> cipher suites, and DTLS Connection IDs (<a href="https://datatracker.ietf.org/doc/html/rfc9146">RFC 9146</a>): a client that negotiates one keeps its session when NAT changes its address or port.</p>
+<p>For example, with <a href="https://libcoap.net/">libcoap</a>:</p>
+<pre><code class="language-bash">PSK=$(echo -n &lt;thing_key&gt; | sha256sum | cut -c1-32)
+coap-client-openssl -m post -e '{&quot;v&quot;:1}' -u &lt;thing_id&gt; -k &quot;$PSK&quot; &quot;coaps://localhost/things/&lt;thing_id&gt;/messages&quot;
+</code></pre>
+<p>A DTLS session with no traffic from the thing for <code>MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT</code> (5 minutes by default) is closed, together with its observations. A thing that only observes commands should send something more often, for example a message or a CoAP ping, which also keeps carrier NAT mappings alive.</p>
+<h3 id="plain-coap">Plain CoAP<a class="headerlink" href="#plain-coap" title="Permanent link">#</a></h3>
+<p>Plain CoAP sends everything in cleartext, including the thing key, so it should be disabled with <code>MF_COAP_ADAPTER_PLAIN_ENABLED=false</code> once things use DTLS. To send and receive messages over plain CoAP, you can use <a href="https://github.com/MainfluxLabs/coap-cli">CoAP CLI</a>. To set the add-on, please follow the installation instructions provided <a href="https://github.com/MainfluxLabs/coap-cli">here</a>.</p>
 <p>Examples:</p>
 <pre><code>coap-cli get /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -o
 </code></pre>
@@ -448,23 +494,44 @@ to every command.</p>
 </code></pre>
 <pre><code>coap-cli post /messages/subtopic -auth 1e1017e6-dee7-45b4-8a13-00e6afeb66eb -d &quot;hello world&quot; -h 0.0.0.0 -p 1234
 </code></pre>
-<p>To send a message, use <code>POST</code> request.
-To subscribe, send <code>GET</code> request with Observe option (flag <code>o</code>) set to false. There are two ways to unsubscribe:</p>
-<ol>
-<li>Send <code>GET</code> request with Observe option set to true.</li>
-<li>Forget the token and send <code>RST</code> message as a response to <code>CONF</code> message received by the server.</li>
-</ol>
-<p>Most of the notifications received from the adapter are non-confirmable. By <a href="https://tools.ietf.org/html/rfc7641#page-18">RFC 7641</a>:</p>
-<blockquote>
-<p>Server must send a notification in a confirmable message instead of a non-confirmable message at least every 24 hours. This prevents a client that went away or is no longer interested from remaining in the list of observers indefinitely.</p>
-</blockquote>
-<p>CoAP Adapter sends these notifications every 12 hours. To configure this period, see the <a href="https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md">adapter documentation</a>. If the client is no longer interested in receiving notifications, the second scenario described above can be used to unsubscribe.</p>
+<h3 id="observing">Observing<a class="headerlink" href="#observing" title="Permanent link">#</a></h3>
+<p>To send a message, use a <code>POST</code> request. To observe a resource (<a href="https://tools.ietf.org/html/rfc7641">RFC 7641</a>), send a <code>GET</code> request with the Observe option set to <code>0</code> (register, flag <code>-o</code> in CoAP CLI). Notifications are confirmable, so the thing must acknowledge them.</p>
+<p>An observation ends when the thing sends a <code>GET</code> request with the Observe option set to <code>1</code> (deregister), or when its connection closes.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MF_COAP_ADAPTER_PLAIN_ENABLED</code></td>
+<td>Whether the plain CoAP listener (5683) is started</td>
+<td>true</td>
+</tr>
+<tr>
+<td><code>MF_COAP_ADAPTER_DTLS_PORT</code></td>
+<td>DTLS (<code>coaps</code>) listening port</td>
+<td>5684</td>
+</tr>
+<tr>
+<td><code>MF_COAP_ADAPTER_DTLS_IDLE_TIMEOUT</code></td>
+<td>Time after which an idle DTLS session is closed</td>
+<td>5m</td>
+</tr>
+</tbody>
+</table>
+<p>For all variables, see the <a href="https://www.github.com/MainfluxLabs/mainflux/tree/master/coap/README.md">adapter documentation</a>.</p>
 <h3 id="sending-commands">Sending Commands<a class="headerlink" href="#sending-commands" title="Permanent link">#</a></h3>
 <p>Commands (see <a href="#http">Downlink Commands</a> above) can also be sent over CoAP, using the same <code>things/&lt;id&gt;/commands</code> and <code>groups/&lt;id&gt;/commands</code> paths as the HTTP adapter, via <code>POST</code>. <strong>CoAP only supports thing-key (M2M) authentication for commands</strong> — there is no user-token path over CoAP.</p>
 <pre><code>coap-cli post things/&lt;thing_id&gt;/commands -auth &lt;thing_key&gt; -d '{&quot;command&quot;:&quot;reboot&quot;,&quot;params&quot;:{&quot;delay&quot;:5}}'
 </code></pre>
 <pre><code>coap-cli post groups/&lt;group_id&gt;/commands -auth &lt;thing_key&gt; -d '{&quot;command&quot;:&quot;set_threshold&quot;,&quot;params&quot;:{&quot;value&quot;:80}}'
 </code></pre>
+<p>Over DTLS, use the same paths without the <code>auth</code> query, since the session already authenticates the thing.</p>
 <h2 id="ws">WS<a class="headerlink" href="#ws" title="Permanent link">#</a></h2>
 <p>Mainflux supports <a href="https://www.hivemq.com/blog/mqtt-essentials-special-mqtt-over-websockets/#:~:text=In%20MQTT%20over%20WebSockets%2C%20the,(WebSockets%20also%20leverage%20TCP).">MQTT-over-WS</a>, rather than pure WS protocol. This brings numerous benefits for IoT applications that are derived from the properties of MQTT - like QoS and PUB/SUB features.</p>
 <p>There are 2 recommended Javascript libraries for implementing browser support for Mainflux MQTT-over-WS connectivity:</p>
