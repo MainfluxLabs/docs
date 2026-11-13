@@ -741,7 +741,7 @@ Content-Length: 235
 
 ## Backup and Restore
 
-Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Users before Orgs, so that restored memberships and roles refer to existing users.
+Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform root admin role of the current login key.
 
 ### Backup Users
 
@@ -767,6 +767,8 @@ Content-Type: application/json
 Restore users and OAuth identities from a backup. Requires platform root admin privileges.
 
 The backed up `admin` keeps the platform root admin role only when its e-mail matches the configured platform root admin. The platform root admin then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up `admin` is restored as a regular user.
+
+When the platform root admin takes another ID, the current login keys lose the platform root admin role. Restore Users last, or log in again afterwards.
 
 > Must-have: `user_token` and the backup JSON
 
