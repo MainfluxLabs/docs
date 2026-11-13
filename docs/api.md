@@ -215,13 +215,13 @@ Content-Length: 120
   "metadata": {
     "foo": "bar"
   },
-  "role": "user"
+  "role": "admin"
 }
 ```
 
 ### List Users
 
-List all users. Requires admin privileges.
+List all users. Requires admin privileges. The `role` field is `root` for the root admin and `admin` for a platform admin, and it is omitted for regular users.
 
 > Must-have: `user_token`
 
@@ -245,7 +245,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
+{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","role":"root"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
 ```
 
 ### Search Users
@@ -465,7 +465,7 @@ Content-Type: application/json
 
 #### Assign Admin Role
 
-Assign the platform admin role to a user without a platform role. Requires root admin privileges.
+Assign the platform admin role to an enabled user without a platform role. Requires root admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 

@@ -34,7 +34,7 @@ Below are the predefined roles in the system:
 
 ### Platform Admin
 - Has the same permissions as the `Root Admin`, and appears in the `Root Admin` column of the tables below.
-- Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Root Admin`.
+- Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Root Admin` or of another `Platform Admin`.
 
 
 > Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**, 
