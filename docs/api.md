@@ -479,9 +479,9 @@ Response:
 HTTP/1.1 204 No Content
 ```
 
-#### Revoke Admin Role
+#### Unassign Admin Role
 
-Revoke the platform admin role from a user. Requires root admin privileges.
+Unassign the platform admin role from a user. Requires root admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
