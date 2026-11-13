@@ -481,7 +481,7 @@ HTTP/1.1 204 No Content
 
 #### Unassign Admin Role
 
-Unassign the platform admin role from a user. Requires root admin privileges.
+Unassign the platform admin role from a user and revoke all sessions of the user. Requires root admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
