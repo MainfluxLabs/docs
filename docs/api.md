@@ -750,15 +750,12 @@ Export the platform root admin, all users and their OAuth identities. Requires p
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcusers/backup
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcusers/backup -o users-backup.json
 ```
 
-Response:
+Content of `users-backup.json`:
 
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
-
+```json
 {"admin":{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","password":"<password_hash>","status":"enabled"},"users":[{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com","password":"<password_hash>","status":"enabled"}],"identities":[]}
 ```
 
@@ -773,7 +770,7 @@ When the platform root admin takes another ID, the current login keys lose the p
 > Must-have: `user_token` and the backup JSON
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcusers/restore -d @users-backup.json
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcusers/restore --data-binary @users-backup.json
 ```
 
 Response:
@@ -789,15 +786,12 @@ Export all Orgs, Org Memberships and platform roles. Requires admin privileges.
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/backup
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/backup -o auth-backup.json
 ```
 
-Response:
+Content of `auth-backup.json`:
 
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
-
+```json
 {"orgs":[{"id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","name":"org","owner_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"org_memberships":[{"member_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","org_id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","role":"owner","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"user_roles":[{"user_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","role":"root"},{"user_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","role":"admin"}]}
 ```
 
@@ -810,7 +804,7 @@ The `root` role is never restored, since it belongs only to the configured platf
 > Must-have: `user_token` and the backup JSON
 
 ```bash
-curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcauth/restore -d @auth-backup.json
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcauth/restore --data-binary @auth-backup.json
 ```
 
 Response:
