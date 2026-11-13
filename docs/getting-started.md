@@ -49,13 +49,13 @@ mainfluxlabs-cli users token admin@example.com mainflux-pass
 **2. Create a user**
 
 ```bash
-mainfluxlabs-cli users create user@example.com my-secure-passphrase <admin_token>
+mainfluxlabs-cli users create user@example.com my-secure-password <admin_token>
 ```
 
 **3. Get a user token**
 
 ```bash
-mainfluxlabs-cli users token user@example.com my-secure-passphrase
+mainfluxlabs-cli users token user@example.com my-secure-password
 ```
 
 **4. Create an organization**
