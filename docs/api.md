@@ -96,7 +96,7 @@ Content-Type: application/json
 The predefined user within the Mainflux system is the `root admin`.
 In order to add users to the system, the `root` administrator must create accounts for them.
 
-> Must-have: `email`, `password` (password must contain at least 8 characters) and `user_token`
+> Must-have: `email`, `password` (password must meet the [password policy](authentication.md#password-policy)) and `user_token`
 
 ```bash
 curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/users -d '{"email":"<user_email>", "password":"<user_password>"}'
