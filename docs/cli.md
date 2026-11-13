@@ -407,6 +407,15 @@ mainfluxlabs-cli messages read json <user_token>
 
 Use `-s=<subtopic>` to filter by subtopic.
 
+#### Back up and restore messages
+
+Both commands require admin privileges. `backup` writes the backup to standard output.
+
+```bash
+mainfluxlabs-cli messages backup <user_token> > backup.json
+mainfluxlabs-cli messages restore backup.json <user_token>
+```
+
 ### Groups
 #### Create Group
 ```bash
