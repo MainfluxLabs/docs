@@ -1825,6 +1825,34 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
   -d '{"name":"<thing_name>","limit":10,"offset":0}'
 ```
 
+### Backup Things
+
+Exports all Groups, Group Memberships, Profiles and Things, including the Thing keys. Requires admin privileges.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcthings/backup -o things-backup.json
+```
+
+The backup is a JSON document with the `groups`, `group_memberships`, `profiles` and `things` lists.
+
+### Restore Things
+
+Restores Groups, Group Memberships, Profiles and Things from a backup file created by [Backup Things](#backup-things). Requires admin privileges and `Content-Type: application/json`.
+
+> Must-have: `user_token`, `file_name`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcthings/restore --data-binary @<file_name>
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+```
+
 ## Messages
 
 ### Send Messages
@@ -1936,12 +1964,12 @@ Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds. C
 
 ### Backup Messages
 
-Exports a full backup of all stored messages as a single file (format-agnostic).
+Exports all stored JSON and SenML messages as a single JSON document. Requires admin privileges.
 
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "backup.json"
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "backup.json"
 ```
 
 ### Export Messages
@@ -1966,12 +1994,18 @@ Note: You can use `csv` or `json` for `file_type`. If `?convert` is omitted, the
 
 ### Restore Messages
 
-Restores messages from a backup file. Requires `Content-Type: application/octet-stream`.
+Restores messages from a backup file created by [Backup Messages](#backup-messages). Requires admin privileges and `Content-Type: application/json`.
 
 > Must-have: `user_token`, `file_name`
 
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/octet-stream" "http://localhost/reader/restore" --data-binary @<file_name>
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" --data-binary @<file_name>
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
 ```
 
 ### Search Messages

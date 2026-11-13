@@ -10,16 +10,16 @@ The engine is driven by the event stream: every message published by a thing is 
 
 A rule evaluates a set of conditions against an incoming payload. When conditions are met according to the configured operator (`AND` or `OR`), the rule triggers one or more actions.
 
-| Field         | Description                                                                                                              |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `id`          | Unique rule identifier                                                                                                   |
-| `group_id`    | ID of the group the rule belongs to                                                                                      |
-| `name`        | Human-readable rule name                                                                                                 |
-| `description` | Optional free-form description                                                                                           |
-| `input`       | What triggers evaluation — `type` (`message` or `alarm`), `thing_ids`, and an optional `config` (e.g. `subtopic` filter) |
-| `conditions`  | List of conditions to evaluate — `threshold` comparisons or `script` runs (see below)                                    |
-| `operator`    | `AND` or `OR` — required when more than one condition is defined                                                         |
-| `actions`     | List of actions to trigger when the conditions are met (see below)                                                       |
+| Field         | Description                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Unique rule identifier                                                                                                                                           |
+| `group_id`    | ID of the group the rule belongs to                                                                                                                              |
+| `name`        | Human-readable rule name                                                                                                                                         |
+| `description` | Optional free-form description                                                                                                                                   |
+| `input`       | What triggers evaluation — `type` (`message` or `alarm`), `thing_ids` (1–100 thing IDs, set on creation only), and an optional `config` (e.g. `subtopic` filter) |
+| `conditions`  | List of conditions to evaluate — `threshold` comparisons or `script` runs (see below)                                                                            |
+| `operator`    | `AND` or `OR` — required when more than one condition is defined                                                                                                 |
+| `actions`     | List of actions to trigger when the conditions are met (see below)                                                                                               |
 
 ### Conditions
 
@@ -68,7 +68,7 @@ curl -s -S -i -X POST \
         ],
         "operator": "AND",
         "actions": [
-          {"type": "smtp", "id": "513e2557-e09b-42d3-s456-425614175403"},
+          {"type": "smtp", "id": "513e2557-e09b-42d3-a456-425614175403"},
           {"type": "alarm", "level": 3}
         ]
       }
@@ -111,7 +111,7 @@ curl -s -S -i \
   "http://localhost/svcrules/groups/<group_id>/rules?offset=0&limit=20"
 ```
 
-List endpoints support `offset`, `limit` (max 200), `order=name`, `dir` (`asc`/`desc`), `name` (partial match), and `input_type` (`message`/`alarm`) query parameters.
+Both rule list endpoints support `offset`, `limit` (max 200), `order` (`id` or `name`), `dir` (`asc`/`desc`), `name` (partial match), and `input_type` (`message`/`alarm`) query parameters.
 
 ### List Rules by Thing
 
@@ -144,7 +144,7 @@ curl -s -S -i -X PUT \
   http://localhost/rules/<rule_id>
 ```
 
-Updating a rule does not affect its thing assignments — use the assign/unassign endpoints below for that.
+Updating a rule does not affect its thing assignments, and its `input` takes no `thing_ids` — use the assign/unassign endpoints below for that.
 
 ### Assign Things to a Rule
 
@@ -204,7 +204,7 @@ Each script execution receives an isolated Lua environment with an `mfx` global:
 | ---------------------- | ------------------------------------------------------------------ |
 | `mfx.message.payload`  | Parsed message payload (JSON object or array item)                 |
 | `mfx.message.subtopic` | Message subtopic                                                   |
-| `mfx.message.created`  | Message creation timestamp (Unix)                                  |
+| `mfx.message.created`  | Message creation timestamp (Unix time in nanoseconds)              |
 | `mfx.message.thing_id` | ID of the thing that published the message                         |
 | `mfx.log(message)`     | Appends a message to the run log (max 256 lines, 2048 chars each). |
 
@@ -259,6 +259,8 @@ curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
   http://localhost/svcrules/groups/<group_id>/scripts
 ```
+
+The script list supports `offset`, `limit` (max 200), `order` (`id` or `name`), `dir` (`asc`/`desc`), and `name` (partial match) query parameters.
 
 ### View a Script
 
@@ -322,7 +324,7 @@ curl -s -S -i \
   http://localhost/svcrules/things/<thing_id>/runs
 ```
 
-Both listing endpoints support the same `status`, `from`, `to` (Unix ms), and pagination query parameters.
+Both listing endpoints support `status` (`success`/`fail`), `from` and `to` (Unix time in milliseconds), `offset`, `limit` (max 200), `order` (`id`, `started_at`, `finished_at` or `status`) and `dir` query parameters.
 
 ### Delete Runs
 
@@ -330,7 +332,7 @@ Both listing endpoints support the same `status`, `from`, `to` (Unix ms), and pa
 curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
-  -d '{"script_run_ids": ["789e4567-e89b-12d3-a456-426614174xyz"]}' \
+  -d '{"script_run_ids": ["789e4567-e89b-12d3-a456-426614174def"]}' \
   http://localhost/svcrules/runs
 ```
 
