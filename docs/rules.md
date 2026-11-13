@@ -208,7 +208,7 @@ Each script execution receives an isolated Lua environment with an `mfx` global:
 | `mfx.message.thing_id` | ID of the thing that published the message                         |
 | `mfx.log(message)`     | Appends a message to the run log (max 256 lines, 2048 chars each). |
 
-`mfx.log` is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: `base`, `math`, `string`, `table`. The `print` function is disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.
+`mfx.log` is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: `base`, `math`, `string`, `table`. The `print`, `dofile`, `loadfile` and `load` functions are disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.
 
 Example condition script — flags condensation risk from a payload's `temperature` and `humidity` fields:
 
