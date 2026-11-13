@@ -4,19 +4,19 @@ The Audit service consumes Redis Stream events published by every other Mainflux
 
 Each event contains the following fields:
 
-| Field         | Description                                                                                                                        |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Unique event identifier                                                                                                            |
-| `occurred_at` | RFC 3339 timestamp of when the recorded action occurred                                                                            |
-| `operation`   | The operation that triggered the event, e.g. `thing.create`, `org.create`                                                          |
-| `actor`       | `{id, email}` of the user whose action triggered the event, plus `impersonator` `{id, email}` when a root admin acted as that user |
-| `org_id`      | Organization the event belongs to (absent if not tied to an org)                                                                   |
-| `group_id`    | Group the event belongs to (absent if not tied to a group)                                                                         |
-| `action_data` | Operation-specific payload describing the event (always present)                                                                   |
+| Field         | Description                                                                                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Unique event identifier                                                                                                                |
+| `occurred_at` | RFC 3339 timestamp of when the recorded action occurred                                                                                |
+| `operation`   | The operation that triggered the event, e.g. `thing.create`, `org.create`                                                              |
+| `actor`       | `{id, email}` of the user whose action triggered the event, plus `impersonator` `{id, email}` when a platform admin acted as that user |
+| `org_id`      | Organization the event belongs to (absent if not tied to an org)                                                                       |
+| `group_id`    | Group the event belongs to (absent if not tied to a group)                                                                             |
+| `action_data` | Operation-specific payload describing the event (always present)                                                                       |
 
 ## Impersonation
 
-When the root admin [impersonates a user](api.md#impersonate-user), every event raised in that session records the user as `actor` and the root admin as `actor.impersonator`. Starting the impersonation records a `user.impersonate` event, with the root admin as `actor` and the impersonated user in `action_data`.
+When a platform admin [impersonates a user](api.md#impersonate-user), every event raised in that session records the user as `actor` and the platform admin as `actor.impersonator`. Starting the impersonation records a `user.impersonate` event, with the platform admin as `actor` and the impersonated user in `action_data`.
 
 ```json
 "actor": {
@@ -34,7 +34,7 @@ When the root admin [impersonates a user](api.md#impersonate-user), every event 
 All list endpoints support `offset`, `limit` (max 200), `order` (`id`, `occurred_at`, `operation`, `actor_email`, `org_id`, `group_id`), `dir` (`asc`/`desc`), `email` (filter by actor email), `operation` (filter by operation name), `from`/`to` (Unix timestamp bounds on `occurred_at`), and `action_data` (URL-encoded JSON — returns events whose `action_data` contains all supplied key/value pairs).
 
 ```bash
-# List all events across the platform — restricted to root administrators
+# List all events across the platform — restricted to platform administrators
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
   "http://localhost/svcaudit/events?offset=0&limit=20"
