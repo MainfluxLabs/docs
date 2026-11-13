@@ -93,8 +93,8 @@ Content-Type: application/json
 
 ### Create User
 
-The predefined user within the Mainflux system is the `root admin`.
-In order to add users to the system, the `root` administrator must create accounts for them.
+The predefined user within the Mainflux system is the `platform root admin`.
+In order to add users to the system, the `platform root admin` or a `platform admin` must create accounts for them.
 
 > Must-have: `email`, `password` (password must contain at least 8 characters) and `user_token`
 
@@ -221,7 +221,7 @@ Content-Length: 120
 
 ### List Users
 
-List all users. Requires admin privileges. The `role` field is `root` for the root admin and `admin` for a platform admin, and it is omitted for regular users.
+List all users. Requires admin privileges. The `role` field is `root` for the platform root admin and `admin` for a platform admin, and it is omitted for regular users.
 
 > Must-have: `user_token`
 
@@ -465,7 +465,7 @@ Content-Type: application/json
 
 #### Assign Admin Role
 
-Assign the platform admin role to an enabled user without a platform role. Requires root admin privileges.
+Assign the platform admin role to an enabled user without a platform role. Requires platform root admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -481,7 +481,7 @@ HTTP/1.1 204 No Content
 
 #### Unassign Admin Role
 
-Unassign the platform admin role from a user and revoke all sessions of the user. Requires root admin privileges.
+Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform root admin privileges.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -497,7 +497,7 @@ HTTP/1.1 204 No Content
 
 #### Impersonate User
 
-Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the root admin can impersonate a platform admin. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
+Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform root admin can impersonate a platform admin. Platform root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
 The response holds a login key for the impersonated user. The key carries the platform admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the platform admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
 
