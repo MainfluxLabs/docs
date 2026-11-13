@@ -448,7 +448,7 @@ Content-Type: application/json
 
 #### Disable User
 
-Deactivate a user account. Requires admin privileges.
+Deactivate a user account. Requires admin privileges. A user with a platform role cannot be disabled; unassign the role first.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
