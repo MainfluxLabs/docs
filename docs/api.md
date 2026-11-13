@@ -76,7 +76,7 @@ Content-Type: application/json
 
 ### Logout All Sessions
 
-Revokes all sessions of the user that owns the given login token.
+Revokes all sessions of the user that owns the given login token, including the sessions they impersonate. From an impersonated session, it revokes only that session.
 
 > Must-have: `user_token`
 
@@ -467,7 +467,7 @@ Content-Type: application/json
 
 Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
-The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out ends the impersonated session; the root admin then signs in again.
+The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session; the root admin then signs in again. When the root admin logs out of all sessions or changes their password, their impersonated sessions end too.
 
 > Must-have: `user_token` (root admin Bearer token), `id` (user ID)
 
