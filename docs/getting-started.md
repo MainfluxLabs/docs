@@ -34,12 +34,12 @@ The binary will be placed at `build/mainfluxlabs-cli`. See the [CLI](cli.md) pag
 
 The entity hierarchy in Mainflux is **Org → Group → Profile → Thing**. Each resource must be created in this order, as each step requires the ID from the previous one.
 
-User management requires an admin token. The default admin credentials are configured via `MF_USERS_ADMIN_EMAIL` and `MF_USERS_ADMIN_PASSWORD` in `docker/.env`.
+User management requires an admin token. The default admin credentials are configured via `MF_USERS_ADMIN_EMAIL` and `MF_USERS_ADMIN_PASSWORD` in `docker/.env`. The users service fails to start if `MF_USERS_ADMIN_PASSWORD` does not meet the [password policy](authentication.md#password-policy).
 
 **1. Get an admin token**
 
 ```bash
-mainfluxlabs-cli users token admin@example.com 12345678
+mainfluxlabs-cli users token admin@example.com mainflux-pass
 ```
 
 ```json
@@ -49,13 +49,13 @@ mainfluxlabs-cli users token admin@example.com 12345678
 **2. Create a user**
 
 ```bash
-mainfluxlabs-cli users create user@example.com password123 <admin_token>
+mainfluxlabs-cli users create user@example.com my-secure-password <admin_token>
 ```
 
 **3. Get a user token**
 
 ```bash
-mainfluxlabs-cli users token user@example.com password123
+mainfluxlabs-cli users token user@example.com my-secure-password
 ```
 
 **4. Create an organization**
