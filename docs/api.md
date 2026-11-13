@@ -448,7 +448,7 @@ Content-Type: application/json
 
 #### Disable User
 
-Deactivate a user account. Requires admin privileges.
+Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
