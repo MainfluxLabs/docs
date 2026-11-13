@@ -76,7 +76,7 @@ Content-Type: application/json
 
 ### Logout All Sessions
 
-Revokes all sessions of the user that owns the given login token.
+Revokes all sessions of the user that owns the given login token, including the sessions they impersonate. From an impersonated session, it revokes only that session.
 
 > Must-have: `user_token`
 
@@ -461,6 +461,27 @@ Response:
 ```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
+```
+
+#### Impersonate User
+
+Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
+
+The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the root admin logs out of all sessions or changes their password, their impersonated sessions end too.
+
+> Must-have: `user_token` (root admin Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/impersonate
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"token":"<impersonated_user_token>"}
 ```
 
 ## Orgs
