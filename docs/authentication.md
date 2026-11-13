@@ -12,6 +12,8 @@ Mainflux uses JWT-based authentication keys for all user-facing operations. Ther
 
 **Login keys** are issued automatically when a user logs in. They expire after a short session period and can be refreshed within the session. Logging out revokes the session, after which its login keys can no longer be refreshed. Every authenticated request (other than registration and login) must carry a valid key in the `Authorization: Bearer <key>` header.
 
+A platform admin can also obtain a login key for another user through [impersonation](api.md#impersonate-user). That key carries the platform admin's `impersonator_id` and `impersonator_email` claims, which stay on the key across refresh.
+
 **API keys** are created on demand and provide stable, long-lived access for scripts, integrations, and automated workflows. They can be given an explicit expiration time; if none is set, they never expire. Because API keys must be validated against the database on each request (unlike login keys, which are self-contained JWTs), they are the only key type that supports revocation. An API key holder can perform all the same operations as a logged-in user — managing things, profiles, groups, and the user's own profile — **except** creating additional API keys.
 
 **Recovery keys** are short-lived tokens generated during the password reset flow. They are single-use and expire quickly.

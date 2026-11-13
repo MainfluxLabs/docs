@@ -76,7 +76,7 @@ Content-Type: application/json
 
 ### Logout All Sessions
 
-Revokes all sessions of the user that owns the given login token.
+Revokes all sessions of the user that owns the given login token, including the sessions they impersonate. From an impersonated session, it revokes only that session.
 
 > Must-have: `user_token`
 
@@ -493,6 +493,27 @@ Response:
 
 ```bash
 HTTP/1.1 204 No Content
+```
+
+#### Impersonate User
+
+Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the root admin can impersonate a platform admin. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
+
+The response holds a login key for the impersonated user. The key carries the platform admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the platform admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/impersonate
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"token":"<impersonated_user_token>"}
 ```
 
 ## Orgs
@@ -2330,7 +2351,7 @@ The `org_invite` field is omitted when the Platform Invite has no org component.
 
 ### Revoke Platform Invite
 
-Cancels a pending Platform Invite. Only the platform root admin can revoke.
+Cancels a pending Platform Invite. Only a platform admin can revoke.
 
 > Must-have: `user_token`, `invite_id`
 

@@ -30,11 +30,13 @@ Below are the predefined roles in the system:
 ### Root Admin
 - Has all permissions across all Organizations and Groups (and entities within them).
 - Acts as the primary administrator for the entire platform.
-- Is the only User who can assign and unassign the `Platform Admin` role, and back up and restore Users.
+- Is the only User who can assign and unassign the `Platform Admin` role, back up and restore Users, and [impersonate](api.md#impersonate-user) a `Platform Admin`.
 
 ### Platform Admin
 - Has the same permissions as the `Root Admin`, and appears in the `Root Admin` column of the tables below.
+- Can [impersonate](api.md#impersonate-user) any enabled user other than a `Root Admin` or another `Platform Admin`.
 - Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Root Admin` or of another `Platform Admin`.
+- Cannot be disabled while holding the role.
 
 
 > Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**, 
