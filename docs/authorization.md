@@ -1,6 +1,6 @@
 # Authorization
 
-Users are registered by the `Root Admin` or a `Platform Admin`, by accepting a Platform Invite, or through self-registration with e-mail verification when `MF_USERS_SELF_REGISTER_ENABLED` is `true` (the default).
+Users are registered by the `Platform Root Admin` or a `Platform Admin`, by accepting a Platform Invite, or through self-registration with e-mail verification when `MF_USERS_SELF_REGISTER_ENABLED` is `true` (the default).
 
 Once registered, a user needs certain rights to manage entities within the system.
 Mainflux uses **roles** to control permissions for entities at two levels: at the Organization level and at the Group level.
@@ -27,15 +27,15 @@ Below are the predefined roles in the system:
 - Has all the permissions of an admin.
 - Has access to all entities within the Organization or Group they own.
 
-### Root Admin
+### Platform Root Admin
 - Has all permissions across all Organizations and Groups (and entities within them).
 - Acts as the primary administrator for the entire platform.
 - Is the only User who can assign and unassign the `Platform Admin` role, back up and restore Users, and [impersonate](api.md#impersonate-user) a `Platform Admin`.
 
 ### Platform Admin
-- Has the same permissions as the `Root Admin`, as shown in the `Root / Platform Admin` column of the tables below.
-- Can [impersonate](api.md#impersonate-user) any enabled user other than a `Root Admin` or another `Platform Admin`.
-- Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Root Admin` or of another `Platform Admin`.
+- Has the same permissions as the `Platform Root Admin` within all Organizations and Groups, as shown in the tables below.
+- Can [impersonate](api.md#impersonate-user) any enabled user other than a `Platform Root Admin` or another `Platform Admin`.
+- Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Platform Root Admin` or of another `Platform Admin`.
 - Cannot be disabled while holding the role.
 
 
@@ -53,13 +53,13 @@ Organization `Editor` and `Viewer` need Group membership to access a Group.
 
 For a simpler understanding of access control in an Org, the table below provides a clear overview:
 
-| Operation               | Viewer | Editor | Admin | Owner | Root / Platform Admin |
-|-------------------------|--------|--------|-------|-------|-----------------------|
-| View Org                | ✅     | ✅     | ✅    | ✅    | ✅                    |
-| Update Org              | ❌     | ❌     | ✅    | ✅    | ✅                    |
-| Delete Org              | ❌     | ❌     | ❌    | ✅    | ✅                    |
-| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅                    |
-| Create Groups           | ❌     | ✅     | ✅    | ✅    | ✅                    |
+| Operation               | Viewer | Editor | Admin | Owner | Platform Root Admin | Platform Admin |
+|-------------------------|--------|--------|-------|-------|---------------------|----------------|
+| View Org                | ✅     | ✅     | ✅    | ✅    | ✅                  | ✅             |
+| Update Org              | ❌     | ❌     | ✅    | ✅    | ✅                  | ✅             |
+| Delete Org              | ❌     | ❌     | ❌    | ✅    | ✅                  | ✅             |
+| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅                  | ✅             |
+| Create Groups           | ❌     | ✅     | ✅    | ✅    | ✅                  | ✅             |
 
 The operation 'Create Org' is omitted from the table because every registered (and logged-in) user has the right to do so.
 
@@ -82,7 +82,7 @@ Let's imagine that we have one Organization and four Members of that Organizatio
 
 - In the second case, if a `Viewer` or `Editor` tries to invite new users to the Organization, they will also get the above error message.
 - Next case, if an `Editor` attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied.
-- The same error message will be received if the `Owner`, or any other Organization Member who is not a `Root Admin` or a `Platform Admin`, tries to access an Organization in which they are not Members.
+- The same error message will be received if the `Owner`, or any other Organization Member who is not a `Platform Root Admin` or a `Platform Admin`, tries to access an Organization in which they are not Members.
 
 ## Group Members
 
@@ -97,16 +97,16 @@ When an Organization `Editor` creates a Group, they become its `Admin`.
 
 For a simpler understanding of access control in a Group, the table below provides a clear overview:
 
-| Operation               | Viewer | Editor | Admin | Owner | Root / Platform Admin |
-|-------------------------|--------|--------|-------|-------|-----------------------|
-| View Group              | ✅     | ✅     | ✅    | ✅    | ✅                    |
-| Update Group            | ❌     | ❌     | ✅    | ✅    | ✅                    |
-| Delete Group            | ❌     | ❌     | ❌    | ✅    | ✅                    |
-| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅                    |
-| Create Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                    |
-| View Group Entities     | ✅     | ✅     | ✅    | ✅    | ✅                    |
-| Update Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                    |
-| Delete Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                    |
+| Operation               | Viewer | Editor | Admin | Owner | Platform Root Admin | Platform Admin |
+|-------------------------|--------|--------|-------|-------|---------------------|----------------|
+| View Group              | ✅     | ✅     | ✅    | ✅    | ✅                  | ✅             |
+| Update Group            | ❌     | ❌     | ✅    | ✅    | ✅                  | ✅             |
+| Delete Group            | ❌     | ❌     | ❌    | ✅    | ✅                  | ✅             |
+| Assign/Unassign Members | ❌     | ❌     | ✅    | ✅    | ✅                  | ✅             |
+| Create Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                  | ✅             |
+| View Group Entities     | ✅     | ✅     | ✅    | ✅    | ✅                  | ✅             |
+| Update Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                  | ✅             |
+| Delete Group Entities   | ❌     | ✅     | ✅    | ✅    | ✅                  | ✅             |
 
 The Organization `Owner` and `Admin` have Group `Owner` rights in every Group of their Organization.
 
