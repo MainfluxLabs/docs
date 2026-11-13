@@ -448,7 +448,7 @@ Content-Type: application/json
 
 #### Disable User
 
-Deactivate a user account. Requires admin privileges. A user with a platform role cannot be disabled; unassign the role first.
+Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again. A user with a platform role cannot be disabled; unassign the role first.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -769,6 +769,80 @@ Date: Mon, 17 Jul 2023 09:13:22 GMT
 Content-Length: 235
 
 {"limit":10,"offset":0,"total":2,"org_memberships":[{"member_id":"a08bd22c-916d-4ed1-8ca4-8d32ede58822","email":"user@example.com","role":"owner"},{"member_id":"34cf0a14-dc23-42ed-87bd-fa7ecc205bc2","email":"user_2@example.com","role":"admin"}
+```
+
+## Backup and Restore
+
+Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform root admin role of the current login key.
+
+### Backup Users
+
+Export the platform root admin, all users and their OAuth identities. Requires platform root admin privileges. The response contains password hashes.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcusers/backup -o users-backup.json
+```
+
+Content of `users-backup.json`:
+
+```json
+{"admin":{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","password":"<password_hash>","status":"enabled"},"users":[{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com","password":"<password_hash>","status":"enabled"}],"identities":[]}
+```
+
+### Restore Users
+
+Restore users and OAuth identities from a backup. Requires platform root admin privileges.
+
+The backed up `admin` keeps the platform root admin role only when its e-mail matches the configured platform root admin. The platform root admin then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up `admin` is restored as a regular user.
+
+When the platform root admin takes another ID, the current login keys lose the platform root admin role. Restore Users last, or log in again afterwards.
+
+> Must-have: `user_token` and the backup JSON
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcusers/restore --data-binary @users-backup.json
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+```
+
+### Backup Orgs
+
+Export all Orgs, Org Memberships and platform roles. Requires admin privileges.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcauth/backup -o auth-backup.json
+```
+
+Content of `auth-backup.json`:
+
+```json
+{"orgs":[{"id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","name":"org","owner_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"org_memberships":[{"member_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","org_id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","role":"owner","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"user_roles":[{"user_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","role":"root"},{"user_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","role":"admin"}]}
+```
+
+### Restore Orgs
+
+Restore Orgs, Org Memberships and platform roles from a backup. Requires platform root admin privileges.
+
+The `root` role is never restored, since it belongs only to the configured platform root admin. A user who already has a platform role keeps it. Each `user_roles` entry needs a `user_id` and a `role` of `root` or `admin`; otherwise the request fails with `400 Bad Request` before anything is restored.
+
+> Must-have: `user_token` and the backup JSON
+
+```bash
+curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <user_token>" http://localhost/svcauth/restore --data-binary @auth-backup.json
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
 ```
 
 ## Groups
@@ -1857,6 +1931,34 @@ curl -s -S -i -X POST -H "Content-Type: application/json" -H "Authorization: Bea
   -d '{"name":"<thing_name>","limit":10,"offset":0}'
 ```
 
+### Backup Things
+
+Exports all Groups, Group Memberships, Profiles and Things, including the Thing keys. Requires admin privileges.
+
+> Must-have: `user_token`
+
+```bash
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcthings/backup -o things-backup.json
+```
+
+The backup is a JSON document with the `groups`, `group_memberships`, `profiles` and `things` lists.
+
+### Restore Things
+
+Restores Groups, Group Memberships, Profiles and Things from a backup file created by [Backup Things](#backup-things). Requires admin privileges and `Content-Type: application/json`.
+
+> Must-have: `user_token`, `file_name`
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" http://localhost/svcthings/restore --data-binary @<file_name>
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
+```
+
 ## Messages
 
 ### Send Messages
@@ -1968,12 +2070,12 @@ Note: `<start_timestamp>` and `<end_timestamp>` are int values in nanoseconds. C
 
 ### Backup Messages
 
-Exports a full backup of all stored messages as a single file (format-agnostic).
+Exports all stored JSON and SenML messages as a single JSON document. Requires admin privileges.
 
 > Must-have: `user_token`
 
 ```bash
-curl -s -S -i -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "backup.json"
+curl -s -S -X GET -H "Authorization: Bearer <user_token>" "http://localhost/reader/backup" -o "backup.json"
 ```
 
 ### Export Messages
@@ -1998,12 +2100,18 @@ Note: You can use `csv` or `json` for `file_type`. If `?convert` is omitted, the
 
 ### Restore Messages
 
-Restores messages from a backup file. Requires `Content-Type: application/octet-stream`.
+Restores messages from a backup file created by [Backup Messages](#backup-messages). Requires admin privileges and `Content-Type: application/json`.
 
 > Must-have: `user_token`, `file_name`
 
 ```bash
-curl -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/octet-stream" "http://localhost/reader/restore" --data-binary @<file_name>
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" -H "Content-Type: application/json" "http://localhost/reader/restore" --data-binary @<file_name>
+```
+
+Response:
+
+```bash
+HTTP/1.1 201 Created
 ```
 
 ### Search Messages

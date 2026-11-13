@@ -113,7 +113,7 @@ curl -s -S -i -X PATCH \
 
 ## Backup and restore
 
-The service exposes backup and restore endpoints for exporting and re-importing all downlink definitions. This is useful for migrations, environment snapshots, or disaster recovery.
+The service exposes backup and restore endpoints for exporting and re-importing all downlink definitions. This is useful for migrations, environment snapshots, or disaster recovery. Both endpoints require admin privileges.
 
 ```bash
 # Export all downlinks
