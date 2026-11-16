@@ -37,6 +37,13 @@ maintainers might not want to merge into the project.
 Please adhere to the coding conventions used throughout the project. If in doubt, consult the
 [Effective Go](https://golang.org/doc/effective_go.html) style guide.
 
+Markdown files are formatted with [Prettier](https://prettier.io/) using the repository `.prettierrc`.
+Format your changes before committing:
+
+```
+npx prettier@3.7.4 --write "**/*.md"
+```
+
 To contribute to the project, [fork](https://help.github.com/articles/fork-a-repo/) it,
 clone your fork repository and configure the remotes:
 

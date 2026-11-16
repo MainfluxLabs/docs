@@ -1,6 +1,7 @@
 # Getting Started
 
 ## Step 1 - Run the System
+
 Before proceeding, install the following prerequisites:
 
 - [Docker](https://docs.docker.com/install/) (v24 or later)
@@ -17,6 +18,7 @@ make run
 This will start Mainflux docker composition in detached mode.
 
 ## Step 2 - Install the CLI
+
 Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI, which can be downloaded as a pre-built binary from the [latest release page](https://github.com/MainfluxLabs/mainflux/releases).
 
 > Move the binary to a directory in your `$PATH` (e.g. `/usr/local/bin`) to make `mainfluxlabs-cli` accessible system-wide.
