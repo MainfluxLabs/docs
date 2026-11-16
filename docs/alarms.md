@@ -4,18 +4,18 @@ Alarms service persists triggered alarms to a database. Alarms are generated aut
 
 Each alarm record contains the following fields:
 
-| Field       | Description                                               |
-|-------------|-----------------------------------------------------------|
-| `id`        | Unique alarm identifier                                   |
-| `thing_id`  | The thing that triggered the alarm                        |
-| `group_id`  | The group the thing belongs to                            |
-| `rule_id`   | The rule that triggered the alarm                         |
-| `subtopic`  | The message subtopic on which the alarm was triggered     |
-| `protocol`  | The protocol used (http, mqtt, coap, etc.)                |
-| `rule`      | Snapshot of the rule `conditions` and `operator`          |
-| `level`     | Alarm severity, 1–5, taken from the rule action           |
-| `status`    | `active`, `noted` or `cleared`; `active` on creation      |
-| `created`   | Unix nanosecond timestamp of when the alarm was triggered |
+| Field      | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `id`       | Unique alarm identifier                                   |
+| `thing_id` | The thing that triggered the alarm                        |
+| `group_id` | The group the thing belongs to                            |
+| `rule_id`  | The rule that triggered the alarm                         |
+| `subtopic` | The message subtopic on which the alarm was triggered     |
+| `protocol` | The protocol used (http, mqtt, coap, etc.)                |
+| `rule`     | Snapshot of the rule `conditions` and `operator`          |
+| `level`    | Alarm severity, 1–5, taken from the rule action           |
+| `status`   | `active`, `noted` or `cleared`; `active` on creation      |
+| `created`  | Unix nanosecond timestamp of when the alarm was triggered |
 
 ## Querying alarms
 

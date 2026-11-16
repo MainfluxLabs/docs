@@ -29,33 +29,33 @@ Authorization: Thing <thing_key>
 
 Each reader exposes the same API for both SenML and JSON formats:
 
-| Method   | Path                   | Description                                |
-|----------|------------------------|--------------------------------------------|
-| `GET`    | `/senml`               | List SenML messages                        |
-| `POST`   | `/senml/search`        | Search SenML messages (request body)       |
-| `GET`    | `/senml/export`        | Export SenML messages                      |
-| `DELETE` | `/senml`               | Delete all SenML messages (admin)          |
-| `DELETE` | `/senml/{thingId}`     | Delete SenML messages for a specific thing |
-| `GET`    | `/json`                | List JSON messages                         |
-| `POST`   | `/json/search`         | Search JSON messages (request body)        |
-| `GET`    | `/json/export`         | Export JSON messages                       |
-| `DELETE` | `/json`                | Delete all JSON messages (admin)           |
-| `DELETE` | `/json/{thingId}`      | Delete JSON messages for a specific thing  |
-| `GET`    | `/backup`              | Export full message backup (admin)         |
-| `POST`   | `/restore`             | Restore messages from backup (admin)       |
+| Method   | Path               | Description                                |
+| -------- | ------------------ | ------------------------------------------ |
+| `GET`    | `/senml`           | List SenML messages                        |
+| `POST`   | `/senml/search`    | Search SenML messages (request body)       |
+| `GET`    | `/senml/export`    | Export SenML messages                      |
+| `DELETE` | `/senml`           | Delete all SenML messages (admin)          |
+| `DELETE` | `/senml/{thingId}` | Delete SenML messages for a specific thing |
+| `GET`    | `/json`            | List JSON messages                         |
+| `POST`   | `/json/search`     | Search JSON messages (request body)        |
+| `GET`    | `/json/export`     | Export JSON messages                       |
+| `DELETE` | `/json`            | Delete all JSON messages (admin)           |
+| `DELETE` | `/json/{thingId}`  | Delete JSON messages for a specific thing  |
+| `GET`    | `/backup`          | Export full message backup (admin)         |
+| `POST`   | `/restore`         | Restore messages from backup (admin)       |
 
 ### Query parameters
 
-| Parameter    | Description                                     | Default |
-|--------------|-------------------------------------------------|---------|
-| `offset`     | Number of messages to skip                      | 0       |
-| `limit`      | Maximum number of messages to return (max 1000) | 10      |
-| `subtopic`   | Filter by subtopic                              |         |
-| `thing_id`   | Filter by thing ID                              |         |
-| `protocol`   | Filter by protocol                              |         |
-| `from`       | Start of time range (nanoseconds)               |         |
-| `to`         | End of time range (nanoseconds)                 |         |
-| `dir`        | Sort direction                                  | `desc`  |
+| Parameter  | Description                                     | Default |
+| ---------- | ----------------------------------------------- | ------- |
+| `offset`   | Number of messages to skip                      | 0       |
+| `limit`    | Maximum number of messages to return (max 1000) | 10      |
+| `subtopic` | Filter by subtopic                              |         |
+| `thing_id` | Filter by thing ID                              |         |
+| `protocol` | Filter by protocol                              |         |
+| `from`     | Start of time range (nanoseconds)               |         |
+| `to`       | End of time range (nanoseconds)                 |         |
+| `dir`      | Sort direction                                  | `desc`  |
 
 SenML-only parameters: `name`, `v`, `vb`, `vs`, `vd`, `comparator` (`eq`, `lt`, `le`, `gt`, `ge`).
 
@@ -63,26 +63,26 @@ JSON-only parameters: `filter` (dot-notation path to filter by payload field pre
 
 Export-only parameters:
 
-| Parameter     | Description                         | Values        | Default              |
-|---------------|-------------------------------------|---------------|----------------------|
-| `convert`     | Output format                       | `json`, `csv` | `json`               |
-| `time_format` | Timestamp format in exported output | `rfc3339`     | nanoseconds (int64)  |
+| Parameter     | Description                         | Values        | Default             |
+| ------------- | ----------------------------------- | ------------- | ------------------- |
+| `convert`     | Output format                       | `json`, `csv` | `json`              |
+| `time_format` | Timestamp format in exported output | `rfc3339`     | nanoseconds (int64) |
 
 ### Aggregation
 
 Time-based aggregation groups messages into time buckets and computes an aggregate value per bucket. Both `agg_type` and `agg_interval` must be provided together.
 
-| Parameter      | Description                                         | Values                                                                                   |
-|----------------|-----------------------------------------------------|------------------------------------------------------------------------------------------|
-| `agg_type`     | Aggregation function                                | `min`, `max`, `avg`, `count`, `first`, `last`                                            |
-| `agg_interval` | Time bucket unit                                    | `microsecond`, `millisecond`, `second`, `minute`, `hour`, `day`, `week`, `month`, `year` |
-| `agg_value`    | Number of interval units per bucket (default: `1`)  | See per-interval limits below                                                            |
-| `agg_field`    | Payload field(s) to aggregate (JSON only)           | dot-notation, comma-separated                                                            |
+| Parameter      | Description                                        | Values                                                                                   |
+| -------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `agg_type`     | Aggregation function                               | `min`, `max`, `avg`, `count`, `first`, `last`                                            |
+| `agg_interval` | Time bucket unit                                   | `microsecond`, `millisecond`, `second`, `minute`, `hour`, `day`, `week`, `month`, `year` |
+| `agg_value`    | Number of interval units per bucket (default: `1`) | See per-interval limits below                                                            |
+| `agg_field`    | Payload field(s) to aggregate (JSON only)          | dot-notation, comma-separated                                                            |
 
 `agg_value` maximum per interval:
 
 | Interval      | Max  |
-|---------------|------|
+| ------------- | ---- |
 | `microsecond` | 1000 |
 | `millisecond` | 1000 |
 | `second`      | 60   |
@@ -252,4 +252,3 @@ curl -s -S -X POST \
 ```
 
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).
-

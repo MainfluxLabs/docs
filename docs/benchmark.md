@@ -1,6 +1,7 @@
 # Test spec
 
 ## Tools
+
 - [MZBench](https://github.com/mzbench/mzbench)
 - [vmq_mzbench](https://github.com/vernemq/vmq_mzbench)
 - [mzb_api_ec2_plugin](https://github.com/mzbench/mzbench/blob/master/doc/cloud_plugins.md#amazon-ec2)
@@ -12,23 +13,27 @@ MZBench is an open-source tool that can generate large amounts of traffic and me
 We will describe installing MZBench server on Ubuntu 18.04 (this can be on your PC or some external cloud server, like a Digital Ocean droplet).
 
 Install the latest OTP/Erlang (this guide was tested with version 22.3):
+
 ```
 sudo apt update
 sudo apt install erlang
 ```
 
 For running this tool you will also need libz-dev package:
+
 ```
 sudo apt-get update
 sudo apt-get install libz-dev
 ```
 
 and pip:
+
 ```
 sudo apt install python-pip
 ```
 
 Clone mzbench tool and install the requirements:
+
 ```
 git clone https://github.com/mzbench/mzbench
 cd mzbench
@@ -36,15 +41,17 @@ sudo pip install -r requirements.txt
 ```
 
 This should be enough for installing MZBench, and you can now start MZBench server with this CLI command:
+
 ```
 ./bin/mzbench start_server
 ```
 
 The [MZBench CLI](https://github.com/mzbench/mzbench/blob/master/doc/cli.md) lets you control the server and benchmarks from the command line.
 
-Another way of using MZBench is over [Dashboard](https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md). After starting server you should check dashboard on `http://localhost:4800`. 
+Another way of using MZBench is over [Dashboard](https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md). After starting server you should check dashboard on `http://localhost:4800`.
 
 If you install MZBench on an external server (e.g. a Digital Ocean droplet), the dashboard is reachable at `<server_ip>:4800` only after you:
+
 - change default value for `network_interface` from `127.0.0.1` to `0.0.0.0` in configuration file. Default configuration file location is `~/.config/mzbench/server.config`, create it from sample configuration file `~/.config/mzbench/server.config.example`
 - open port `4800` with `ufw allow 4800`
 
@@ -68,7 +75,6 @@ An IAM user with the `AmazonEC2FullAccess` and `IAMFullAccess` permission polici
 In EC2 dashboard, you must create new security group `MZbench_cluster` where you will add inbound rules to open ssh and TCP ports 4801-4804.
 Also, in EC2 dashboard go to section `key pairs`, click `Actions` -> `Import key pair` and upload public key you have on your MZBench server in `~/.ssh/id_rsa.pub` (if you need to create new, run `ssh-keygen` and follow instructions). Give it a name on EC2 dashboard, put that name (`key_name`) and path (`keyfile`) in configuration file.
 
-
 ```
 [
 {mzbench_api, [
@@ -91,11 +97,12 @@ Also, in EC2 dashboard go to section `key pairs`, click `Actions` -> `Import key
                           {secret_access_key, "IAM_USER_SECRET_ACCESS_KEY"}
                         ],
                         instance_user => "ec2-user"
-                  }}              
+                  }}
               ]
 }
 ]}].
 ```
+
 There is both `local` and `ec2` plugin in this configuration file, so you can choose to run tests on either of them.
 Default path for configuration file is `~/.config/mzbench/server.config`, if it's somewhere else, server is starting with:
 `$ ./bin/mzbench start_server --config <config_file>`

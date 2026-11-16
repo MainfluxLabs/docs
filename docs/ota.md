@@ -21,13 +21,13 @@ An update describes the firmware and the things that should install it.
 
 Each thing of an update has its own progress: `status`, `error`, `reported_version` and `updated_at`.
 
-| Status        | Meaning                                                                         |
-| ------------- | ------------------------------------------------------------------------------- |
-| `pending`     | The thing has not started the update yet                                        |
-| `downloading` | The thing is downloading the firmware                                           |
-| `installing`  | The thing is installing the firmware                                            |
-| `succeeded`   | The thing reported the version of the update                                    |
-| `failed`      | The thing reported an error or another version, timed out, or was superseded    |
+| Status        | Meaning                                                                      |
+| ------------- | ---------------------------------------------------------------------------- |
+| `pending`     | The thing has not started the update yet                                     |
+| `downloading` | The thing is downloading the firmware                                        |
+| `installing`  | The thing is installing the firmware                                         |
+| `succeeded`   | The thing reported the version of the update                                 |
+| `failed`      | The thing reported an error or another version, timed out, or was superseded |
 
 ## How it works
 

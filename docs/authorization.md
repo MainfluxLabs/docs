@@ -5,35 +5,41 @@ Users are registered by the `Root Admin`, by accepting a Platform Invite, or thr
 Once registered, a user needs certain rights to manage entities within the system.
 Mainflux uses **roles** to control permissions for entities at two levels: at the Organization level and at the Group level.
 
-*More information about creating a user can be found at [Users API](api.md#users)*.
+_More information about creating a user can be found at [Users API](api.md#users)_.
 
 ---
+
 ## Roles
+
 Roles determine the permissions a User has within an Organization or Group.
 Below are the predefined roles in the system:
 
 ### Viewer
+
 - Can only view entities (read-only access).
 - Applies to both Organization and Group levels.
 
 ### Editor
+
 - Can create, delete, and view entities within the Organization or Group (more details are in the table below).
 
 ### Admin
+
 - Has all the permissions of an editor.
 - Can assign and unassign Members to the Organization or Group.
 
 ### Owner
+
 - Has all the permissions of an admin.
 - Has access to all entities within the Organization or Group they own.
 
 ### Root Admin
+
 - Has all permissions across all Organizations and Groups (and entities within them).
 - Acts as the primary administrator for the entire platform.
 - Can [impersonate](api.md#impersonate-user) any enabled user other than a root admin.
 
-
-> Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**, 
+> Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**,
 > which means that one User **can have different roles** in an Organization and a Group within that Organization.
 > The exception is the Organization `Owner` and `Admin`, who can access every Group in their Organization without Group membership.
 
@@ -48,7 +54,7 @@ Organization `Editor` and `Viewer` need Group membership to access a Group.
 For a simpler understanding of access control in an Org, the table below provides a clear overview:
 
 | Operation               | Viewer | Editor | Admin | Owner | Root Admin |
-|-------------------------|--------|--------|-------|-------|------------|
+| ----------------------- | ------ | ------ | ----- | ----- | ---------- |
 | View Org                | ✅     | ✅     | ✅    | ✅    | ✅         |
 | Update Org              | ❌     | ❌     | ✅    | ✅    | ✅         |
 | Delete Org              | ❌     | ❌     | ❌    | ✅    | ✅         |
@@ -57,14 +63,14 @@ For a simpler understanding of access control in an Org, the table below provide
 
 The operation 'Create Org' is omitted from the table because every registered (and logged-in) user has the right to do so.
 
-*An example of assigning Members to an Organization can be found at [Org Members API](api.md#org-memberships).*
+_An example of assigning Members to an Organization can be found at [Org Members API](api.md#org-memberships)._
 
 ### Examples of unauthorized access
 
 Let's imagine that we have one Organization and four Members of that Organization with different roles:
- 
+
 | org_id                               | member_id                            | role   |
-|--------------------------------------|--------------------------------------|--------|
+| ------------------------------------ | ------------------------------------ | ------ |
 | 550e8400-e29b-41d4-a716-446655440000 | 3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8 | viewer |
 | 550e8400-e29b-41d4-a716-446655440000 | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | editor |
 | 550e8400-e29b-41d4-a716-446655440000 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | admin  |
@@ -92,7 +98,7 @@ When an Organization `Editor` creates a Group, they become its `Admin`.
 For a simpler understanding of access control in a Group, the table below provides a clear overview:
 
 | Operation               | Viewer | Editor | Admin | Owner | Root Admin |
-|-------------------------|--------|--------|-------|-------|------------|
+| ----------------------- | ------ | ------ | ----- | ----- | ---------- |
 | View Group              | ✅     | ✅     | ✅    | ✅    | ✅         |
 | Update Group            | ❌     | ❌     | ✅    | ✅    | ✅         |
 | Delete Group            | ❌     | ❌     | ❌    | ✅    | ✅         |
@@ -106,19 +112,19 @@ The Organization `Owner` and `Admin` have Group `Owner` rights in every Group of
 
 The 'Create Group' operation is omitted from the table because the rights are defined in the Org table, where it can be clearly seen that everyone except the Organization Viewer can create a Group.
 
-If we keep the data from the previous table and expand it with new data by creating Groups within the Organization and assigning Group roles to the existing members of the Organization, 
+If we keep the data from the previous table and expand it with new data by creating Groups within the Organization and assigning Group roles to the existing members of the Organization,
 the additional table would look like this:
 
 | org_id                               | group_id                             | member_id                            | role   |
-|--------------------------------------|--------------------------------------|--------------------------------------|--------|
+| ------------------------------------ | ------------------------------------ | ------------------------------------ | ------ |
 | 550e8400-e29b-41d4-a716-446655440000 | 9f8e7a61-d34e-4a7a-9836-df8c3f54d3a1 | 3f3f9cc2-1a84-40cd-a7fb-02d9c5e1e5c8 | editor |
 | 550e8400-e29b-41d4-a716-446655440000 | 15ee88e2-3632-41fb-acfa-2625645a2b8d | 6b9e77a1-22f8-4e72-b2f3-122ad8b37f48 | viewer |
 | 550e8400-e29b-41d4-a716-446655440000 | 565ddcfb-bf64-4e6b-80ac-371516bd0e01 | c9b8f7d5-8143-47b4-9d72-f83d3f73834e | owner  |
 
-We can notice that the User who has the role of `Viewer` in the Organization now has the role of `Editor` in the group with ID `9f8e7a61-d34e-4a7a-9836-df8c3f54d3a1`. 
+We can notice that the User who has the role of `Viewer` in the Organization now has the role of `Editor` in the group with ID `9f8e7a61-d34e-4a7a-9836-df8c3f54d3a1`.
 This means that the User now has all the rights provided by that role.
 
-On the other hand, the User with ID `6b9e77a1-22f8-4e72-b2f3-122ad8b37f48` who is an Organization `Editor` now has the Group's `Viewer` role. 
+On the other hand, the User with ID `6b9e77a1-22f8-4e72-b2f3-122ad8b37f48` who is an Organization `Editor` now has the Group's `Viewer` role.
 Therefore, that Member has no rights in the Group other than viewing.
 
 The `Admin` of the Organization is listed as the `Owner` of the Group with ID `565ddcfb-bf64-4e6b-80ac-371516bd0e01`, because an Organization `Admin` holds the Group `Owner` role in every Group of the Organization.
@@ -128,4 +134,4 @@ Based on the above examples of unauthorized access within the Organization, the 
 In addition to the basic access rights that apply to Members, note the case of Thing creation.
 When creating a Thing, it needs to be assigned a specific Profile by specifying its ID. The Profile being assigned and the Thing <u> must belong to the same Group. </u>
 
-*An example of assigning Members to a Group can be found at [Group Members API](api.md#group-memberships).*
+_An example of assigning Members to a Group can be found at [Group Members API](api.md#group-memberships)._

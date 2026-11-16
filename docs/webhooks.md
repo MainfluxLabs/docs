@@ -98,12 +98,12 @@ curl -s -S -i -X PATCH \
 
 ## Webhook fields
 
-| Field     | Description                                                           |
-|-----------|-----------------------------------------------------------------------|
-| `id`      | Unique identifier assigned by the platform                            |
-| `name`    | A label to help identify the webhook                                  |
-| `url`     | The destination URL. Must be a valid HTTP or HTTPS address.           |
-| `headers` | Optional HTTP headers sent with every request (e.g. API keys, tokens) |
-| `metadata`| Optional key-value pairs for custom attributes                        |
+| Field      | Description                                                           |
+| ---------- | --------------------------------------------------------------------- |
+| `id`       | Unique identifier assigned by the platform                            |
+| `name`     | A label to help identify the webhook                                  |
+| `url`      | The destination URL. Must be a valid HTTP or HTTPS address.           |
+| `headers`  | Optional HTTP headers sent with every request (e.g. API keys, tokens) |
+| `metadata` | Optional key-value pairs for custom attributes                        |
 
 For the full API reference, see the [API documentation](https://mainfluxlabs.github.io/docs/swagger/).

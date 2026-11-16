@@ -3,7 +3,7 @@
 Once a profile is provisioned and assigned to a thing, publishing messages can begin.
 The following sections will provide an example of message publishing for each of the supported protocols.
 
-### Configure Profile Config
+## Configure Profile Config
 
 For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure `config`.
 The `config` structure consists of the following fields: `content_type` and `transformer`.
@@ -134,7 +134,7 @@ For the previous example, we can filter the extracted payload and save only the 
 
 If the `data_filters` and `data_field` fields are empty, the whole payload will be used.
 
-### Dispatcher Flags
+## Dispatcher Flags
 
 In addition to `content_type` and `transformer`, the profile `config` accepts three boolean dispatcher flags that control where an incoming message is routed once it's received:
 
@@ -161,7 +161,7 @@ Webhook delivery itself is configured per-thing — see the [Webhooks](webhooks.
 
 ---
 
-### Subtopics
+## Subtopics
 
 In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base `/messages` topic.
 

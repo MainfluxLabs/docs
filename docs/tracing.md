@@ -10,11 +10,11 @@ The Jaeger service will launch with the rest of the Mainflux services. All servi
 make run
 ```
 
-The Jaeger UI can then be accessed at ```http://localhost:16686``` from a browser. Details about the UI can be found in [Jaeger's official documentation](https://www.jaegertracing.io/docs/1.14/frontend-ui/).
+The Jaeger UI can then be accessed at `http://localhost:16686` from a browser. Details about the UI can be found in [Jaeger's official documentation](https://www.jaegertracing.io/docs/1.14/frontend-ui/).
 
 ## Configure
 
-The Jaeger service can be disabled by using the `scale` flag with ```docker-compose up``` and setting the jaeger container to 0.
+The Jaeger service can be disabled by using the `scale` flag with `docker-compose up` and setting the jaeger container to 0.
 
 ```bash
 --scale jaeger=0

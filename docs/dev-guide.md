@@ -25,7 +25,7 @@ Mainflux uses `Protocol Buffers for Go with Gadgets` to generate faster marshali
 
 ### Build All Services
 
-Use the *GNU Make* tool to build all Mainflux services:
+Use the _GNU Make_ tool to build all Mainflux services:
 
 ```bash
 make
@@ -73,7 +73,7 @@ make docker_http
 
 > N.B. Mainflux creates `FROM scratch` docker containers which are compact and small in size.
 
-> N.B. The `things-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, __rebuilding of all docker containers with `make dockers` or rebuilding the `things-db` and `users-db` containers separately with `make docker_things-db` and `make docker_users-db` respectively, will cause data loss. All your users, things, profiles, groups will be lost!__ As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Mainflux dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Mainflux setup](#cleaning-up-your-dockerized-mainflux-setup) section for details. Please note that this kind of updating might not work if there are database changes.
+> N.B. The `things-db` and `users-db` containers are built from a vanilla PostgreSQL docker image downloaded from docker hub which does not persist the data when these containers are rebuilt. Thus, **rebuilding of all docker containers with `make dockers` or rebuilding the `things-db` and `users-db` containers separately with `make docker_things-db` and `make docker_users-db` respectively, will cause data loss. All your users, things, profiles, groups will be lost!** As we use this setup only for development, we don't guarantee any permanent data persistence. Though, in order to enable data retention, we have configured persistent volumes for each container that stores some data. If you want to update your Mainflux dockerized installation and want to keep your data, use `make cleandocker` to clean the containers and images and keep the data (stored in docker persistent volumes) and then `make run` to update the images and the containers. Check the [Cleaning up your dockerized Mainflux setup](#cleaning-up-your-dockerized-mainflux-setup) section for details. Please note that this kind of updating might not work if there are database changes.
 
 #### Building Docker images for development
 
@@ -109,16 +109,20 @@ make run
 ```
 
 ### Overriding the default docker-compose configuration
+
 Sometimes, depending on the use case and the user's needs it might be useful to override or add some extra parameters to the docker-compose configuration. These configuration changes can be done by specifying multiple compose files with the [docker-compose command line option -f](https://docs.docker.com/compose/reference/overview/) as described [here](https://docs.docker.com/compose/extends/).
 The following format of the `docker-compose` command can be used to extend or override the configuration:
+
 ```
 docker-compose -f docker/docker-compose.yml -f docker/docker-compose.custom1.yml -f docker/docker-compose.custom2.yml up [-d]
 ```
+
 In the command above each successive file overrides the previous parameters.
 
 A practical example in our case would be to enable debugging and tracing in NATS so that we can see better how are the messages moving around.
 
 `docker-compose.nats-debugging.yml`
+
 ```yaml
 version: "3"
 
@@ -128,18 +132,19 @@ services:
 ```
 
 When we have the override files in place, to compose the whole infrastructure including the persistent volumes we can execute:
+
 ```
 docker-compose -f docker/docker-compose.yml -f docker/docker-compose.nats-debugging.yml up -d
 ```
 
-__Note:__ Please store your customizations to some folder outside the Mainflux's source folder and maybe add them to some other git repository. You can always apply your customizations by pointing to the right file using `docker-compose -f ...`.
-
+**Note:** Please store your customizations to some folder outside the Mainflux's source folder and maybe add them to some other git repository. You can always apply your customizations by pointing to the right file using `docker-compose -f ...`.
 
 ### Cleaning up your dockerized Mainflux setup
-If you want to clean your whole dockerized Mainflux installation you can use the `make pv=true cleandocker` command. Please note that __by default the `make cleandocker` command will stop and delete all of the containers and images, but NOT DELETE persistent volumes__. If you want to delete the gathered data in the system (the persistent volumes) please use the following command `make pv=true cleandocker` (pv = persistent volumes). This form of the command will stop and delete the containers, the images and will also delete the persistent volumes.
 
+If you want to clean your whole dockerized Mainflux installation you can use the `make pv=true cleandocker` command. Please note that **by default the `make cleandocker` command will stop and delete all of the containers and images, but NOT DELETE persistent volumes**. If you want to delete the gathered data in the system (the persistent volumes) please use the following command `make pv=true cleandocker` (pv = persistent volumes). This form of the command will stop and delete the containers, the images and will also delete the persistent volumes.
 
 ### Protobuf
+
 If you've made any changes to `.proto` files, you should call `protoc` command prior to compiling individual microservices.
 
 To do this by hand, execute:
@@ -158,6 +163,7 @@ make proto
 > N.B. This must be done once at the beginning in order to generate protobuf Go structures needed for the build. However, if you don't change any of `.proto` files, this step is not mandatory, since all generated files are included in the repository (those are files with `.pb.go` extension).
 
 ### Cross-compiling for ARM
+
 Mainflux can be compiled for ARM platform and run on Raspberry Pi or other similar IoT gateways, by following the instructions [here](https://dave.cheney.net/2015/08/22/cross-compilation-with-go-1-5) or [here](https://www.alexruf.net/golang/arm/raspberrypi/2016/01/16/cross-compile-with-go-1-5-for-raspberry-pi.html) as well as information
 found [here](https://github.com/golang/go/wiki/GoArm). The environment variables `GOARCH=arm` and `GOARM=7` must be set for the compilation.
 
@@ -168,13 +174,17 @@ GOOS=linux GOARCH=arm GOARM=7 make
 ```
 
 ## Running tests
+
 To run all of the tests you can execute:
+
 ```
 make test
 ```
+
 Dockertest is used for the tests, so to run them, you will need the Docker daemon/service running.
 
 ## Installing
+
 Installing Go binaries is simple: just move them from `build` to `$GOBIN` (do not forget to add `$GOBIN` to your `$PATH`).
 
 You can execute:
@@ -188,9 +198,11 @@ which will do this copying of the binaries.
 ## Deployment
 
 ### Prerequisites
+
 Mainflux depends on several infrastructural services, notably [NATS](https://www.nats.io/) broker and [PostgreSQL](https://www.postgresql.org/) database.
 
 #### NATS
+
 Mainflux uses NATS as its central message bus. For development purposes (when not run via Docker), it expects that NATS is installed on the local system.
 
 To do this execute:
@@ -206,6 +218,7 @@ nats-server -js
 ```
 
 #### PostgreSQL
+
 Mainflux uses PostgreSQL to store metadata (`users`,`orgs`,`groups`,`things` and `profiles` entities alongside with authorization tokens).
 It expects that PostgreSQL DB is installed, set up and running on the local system.
 
@@ -225,6 +238,7 @@ postgres=# ALTER USER mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 ```
 
 ### Mainflux Services
+
 Running the Mainflux microservices can be tricky, as there are many of them and each one requires configuration through environment variables.
 
 The whole system (set of microservices) can be run with one command:
@@ -238,21 +252,25 @@ which will properly configure and run all microservices.
 > N.B. `make rundev` actually calls helper script `scripts/run.sh`, so you can inspect this script for the details.
 
 ## Events
+
 Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
 The `things` service publishes events to the `mainflux.things` stream, and the `auth` service publishes
 events to the `mainflux.auth` stream.
 
 Besides the operation-specific fields described below, every event carries the following fields:
+
 - `operation` - the operation that produced the event,
 - `occurred_at` - the time of the operation in RFC 3339 format,
 - `evt_org_id` and `evt_group_id` - the org and the group to which the event belongs, empty when not applicable,
 - `jwt_identity_user_id` and `jwt_identity_user_email` - the user who performed the operation, present only for user-initiated operations.
 
 ### Things Service
+
 For every operation that has side effects (that is changing service state) `things`
 service will generate new event and publish it to Redis Stream called `mainflux.things`.
 Every event has its own event ID that is automatically generated and `operation`
 field that can have one of the following values:
+
 - `thing.create` for thing creation,
 - `thing.update` for thing update,
 - `thing.update_group_and_profile` for thing group and profile reassignment,
@@ -275,6 +293,7 @@ from the Redis Stream named `mainflux.things`.
 
 Whenever thing is created, `things` service will generate new `create` event. This
 event will have the following format:
+
 ```
 1) "1555334740911-0"
 2)  1) "id"
@@ -297,8 +316,10 @@ If you want to extract `metadata` field from this event, you'll have to read it 
 string first and then you can deserialize it to some structured format.
 
 #### Thing update event
+
 Whenever thing instance is updated, `things` service will generate new `update` event.
 This event will have the following format:
+
 ```
 1) "1555336161544-0"
 2) 1) "id"
@@ -309,14 +330,17 @@ This event will have the following format:
    6) "thing.update"
    7) "name"
    8) "weio"
- 
+
 ```
+
 Note that thing update event will contain only those fields that were updated using
 update endpoint.
 
 #### Thing remove event
+
 Whenever thing instance is removed from the system, `things` service will generate and
 publish new `remove` event. This event will have the following format:
+
 ```
 1) 1) "1555339313003-0"
 2) 1) "id"
@@ -326,8 +350,10 @@ publish new `remove` event. This event will have the following format:
 ```
 
 #### Profile create event
+
 Whenever profile instance is created, `things` service will generate and publish new
 `create` event. This event will have the following format:
+
 ```
 1) "1555334740918-0"
 2) 1) "id"
@@ -341,8 +367,10 @@ Whenever profile instance is created, `things` service will generate and publish
 ```
 
 #### Profile update event
+
 Whenever profile instance is updated, `things` service will generate and publish new
 `update` event. This event will have the following format:
+
 ```
 1) "1555338870341-0"
 2) 1) "id"
@@ -352,12 +380,15 @@ Whenever profile instance is updated, `things` service will generate and publish
    5) "operation"
    6) "profile.update"
 ```
+
 Note that update profile event will contain only those fields that were updated using
 update profile endpoint.
 
 #### Profile remove event
+
 Whenever profile instance is removed from the system, `things` service will generate and
 publish new `remove` event. This event will have the following format:
+
 ```
 1) 1) "1555339429661-0"
 2) 1) "id"

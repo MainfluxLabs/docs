@@ -3,7 +3,6 @@
 [Getting Started](getting-started.md)
 [API](api.md)
 
-
 Mainflux is modern, scalable, secure open source and patent-free IoT cloud platform written in Go.
 
 It accepts user and thing connections over various network protocols (e.g. HTTP,
@@ -12,7 +11,7 @@ for building complex IoT solutions.
 
 ![banner](img/gopherBanner.jpg)
 
-### Features
+## Features
 
 - Protocol bridging (e.g. HTTP, MQTT, WebSocket, CoAP)
 - Device management and provisioning
@@ -20,6 +19,6 @@ for building complex IoT solutions.
 - Platform logging and instrumentation support
 - Container-based deployment using Docker
 
-
 ## License
+
 [Apache-2.0](https://github.com/MainfluxLabs/mainflux/blob/master/LICENSE)

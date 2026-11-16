@@ -25,7 +25,7 @@ To run service in a standalone mode, set `MF_THINGS_STANDALONE_EMAIL` and `MF_TH
 
 ## Client Configuration
 
-If you wish to secure the gRPC connection to `Things` and `Users` services you must define the CAs that you trust.  This does not support mutual certificate authentication.
+If you wish to secure the gRPC connection to `Things` and `Users` services you must define the CAs that you trust. This does not support mutual certificate authentication.
 
 ### Adapter Configuration
 
@@ -63,7 +63,7 @@ TLS can be activated per service using the `_CLIENT_TLS` and `_CA_CERTS` environ
 Each adapter has its own pair of variables:
 
 | Variable                     | Description                               |
-|------------------------------|-------------------------------------------|
+| ---------------------------- | ----------------------------------------- |
 | `MF_HTTP_ADAPTER_CLIENT_TLS` | Enable TLS for HTTP adapter → Things gRPC |
 | `MF_HTTP_ADAPTER_CA_CERTS`   | Path to CA cert for HTTP adapter          |
 | `MF_MQTT_ADAPTER_CLIENT_TLS` | Enable TLS for MQTT adapter → Things gRPC |
@@ -78,7 +78,7 @@ Each adapter has its own pair of variables:
 Services that communicate with Things over gRPC follow the same convention:
 
 | Variable             | Description                                          |
-|----------------------|------------------------------------------------------|
+| -------------------- | ---------------------------------------------------- |
 | `MF_THINGS_CA_CERTS` | Path to CA cert for outbound Things gRPC connections |
 
 ### Example

@@ -108,13 +108,16 @@ Available Commands:
 ```
 
 ## Service
-#### Check Things Service Health
+
+### Check Things Service Health
+
 ```bash
 mainfluxlabs-cli health
 ```
 
-### Users management
-#### Create User
+## Users management
+
+### Create User
 
 Within Mainflux, the admin creates users.
 The `<user_token>` is required because the token is used to verify that the requester is admin or not.
@@ -124,31 +127,35 @@ For more details, please see [Authorization page](authorization.md).
   mainfluxlabs-cli users create <user_email> <user_password> <user_token>
 ```
 
-#### Login User
+### Login User
+
 ```bash
 mainfluxlabs-cli users token <user_email> <user_password>
 ```
 
-#### Retrieve User
+### Retrieve User
+
 ```bash
 mainfluxlabs-cli users get <all | user_id> <user_token>
 ```
 
 Only the admin can retrieve `all` users or another user's `user_id`; other users can retrieve only their own `user_id`.
 
-#### Update User Metadata
+### Update User Metadata
+
 ```bash
 mainfluxlabs-cli users update '{"key1":"value1", "key2":"value2"}' <user_token>
 ```
 
-#### Update User Password
+### Update User Password
+
 ```bash
 mainfluxlabs-cli users password <old_password> <password> <user_token>
 ```
 
-### System Provisioning
+## System Provisioning
 
-#### Provision Things
+### Provision Things
 
 Provision multiple Things in bulk from a JSON / CSV input file.
 
@@ -156,20 +163,20 @@ Provision multiple Things in bulk from a JSON / CSV input file.
 mainfluxlabs-cli provision things <file> <profile_id> <user_token>
 ```
 
-* `file` - A path to a CSV or JSON file containing Things (must have the `.json` or `.csv` extension)
-* `profile_id` - ID of the Profile to which the Things are assigned
-* `user_token` - A valid user auth token for the current system
+- `file` - A path to a CSV or JSON file containing Things (must have the `.json` or `.csv` extension)
+- `profile_id` - ID of the Profile to which the Things are assigned
+- `user_token` - A valid user auth token for the current system
 
-##### Input file structure (JSON):
+#### Input file structure (JSON):
 
 The root of the JSON input file must be an array containing objects, each one representing a separate Thing,
 each of which can have the following fields:
 
-* `name`
-* `id`
-* `type`
-* `key`
-* `metadata`
+- `name`
+- `id`
+- `type`
+- `key`
+- `metadata`
 
 See [API -> Things](api.md#things) for the meaning and explanation of these fields.
 
@@ -197,13 +204,13 @@ Example:
 ]
 ```
 
-##### Input file structure (CSV):
+#### Input file structure (CSV):
 
 The mandatory columns of each CSV record are the following, in order:
 
-* ID
-* Name
-* Type
+- ID
+- Name
+- Type
 
 Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.
 
@@ -215,8 +222,7 @@ Example:
 
 The above CSV record and the first object in the JSON example represent the same Thing.
 
-
-#### Provision Profiles
+### Provision Profiles
 
 Provision multiple Profiles in bulk from a JSON / CSV input file.
 
@@ -224,19 +230,19 @@ Provision multiple Profiles in bulk from a JSON / CSV input file.
 mainfluxlabs-cli provision profiles <file> <group_id> <user_token>
 ```
 
-* `file` - A path to a CSV or JSON file containing profiles (must have the `.json` or `.csv` extension)
-* `group_id` - ID of the Group in which the Profiles are created
-* `user_token` - A valid user auth token for the current system
+- `file` - A path to a CSV or JSON file containing profiles (must have the `.json` or `.csv` extension)
+- `group_id` - ID of the Group in which the Profiles are created
+- `user_token` - A valid user auth token for the current system
 
-##### Input file structure (JSON):
+#### Input file structure (JSON):
 
 The root of the JSON input file must be an array containing objects, each one representing a separate Profile,
 each of which can have the following fields:
 
-* `name`
-* `id`
-* `config`
-* `metadata`
+- `name`
+- `id`
+- `config`
+- `metadata`
 
 See [API -> Profiles](api.md#profiles) for the meaning and explanation of these fields.
 
@@ -274,19 +280,19 @@ Example:
 ]
 ```
 
-##### Input file structure (CSV):
+#### Input file structure (CSV):
 
 The mandatory columns of each CSV record are the following, in order:
 
-* ID
-* Name
-* Config - "content_type"
-* Config - "write_enabled"
-* Config - "transformer" - "data_filters"
-* Config - "transformer" - "data_field"
-* Config - "transformer" - "time_field"
-* Config - "transformer" - "time_format"
-* Config - "transformer" - "time_location"
+- ID
+- Name
+- Config - "content_type"
+- Config - "write_enabled"
+- Config - "transformer" - "data_filters"
+- Config - "transformer" - "data_field"
+- Config - "transformer" - "time_field"
+- Config - "transformer" - "time_format"
+- Config - "transformer" - "time_location"
 
 Any remaining columns are interpreted as metadata key-value pairs. The values are interpreted and stored as JSON strings. See example below.
 
@@ -298,88 +304,105 @@ Example:
 
 The above CSV record and the first object in the JSON example represent the same Profile.
 
-### Things
+## Things
 
-#### Create Thing
+### Create Thing
+
 The `type` field is required (`device`, `sensor`, `actuator`, `controller`, `gateway`). The `profile_id` is a separate CLI argument, not part of the JSON.
 
 ```bash
 mainfluxlabs-cli things create '{"name":"<thing_name>","type":"device"}' <profile_id> <user_token>
 ```
 
-#### Create Thing with metadata
+### Create Thing with metadata
+
 ```bash
 mainfluxlabs-cli things create '{"name":"<thing_name>","type":"device","metadata":{"key1":"value1"}}' <profile_id> <user_token>
 ```
 
-#### Update Thing
+### Update Thing
+
 ```bash
 mainfluxlabs-cli things update '{"name":"<new_name>","profile_id":"<profile_id>"}' <thing_id> <user_token>
 ```
 
-#### Remove Thing
+### Remove Thing
+
 ```bash
 mainfluxlabs-cli things delete <thing_id> <user_token>
 ```
 
-#### Retrieve a subset list of provisioned Things
+### Retrieve a subset list of provisioned Things
+
 ```bash
 mainfluxlabs-cli things get all <user_token>
 ```
 
-#### Retrieve Thing by ID
+### Retrieve Thing by ID
+
 ```bash
 mainfluxlabs-cli things get by-id <thing_id> <user_token>
 ```
 
-#### Retrieve Things by Profile
+### Retrieve Things by Profile
+
 ```bash
 mainfluxlabs-cli things get by-profile <profile_id> <user_token>
 ```
 
-#### Retrieve Metadata by Key
+### Retrieve Metadata by Key
+
 ```bash
 mainfluxlabs-cli things metadata <key_type> <thing_key>
 ```
 
-#### Retrieve Thing ID by Key
+### Retrieve Thing ID by Key
+
 ```bash
 mainfluxlabs-cli things identify <key_type> <thing_key>
 ```
 
-### Profiles
-#### Create Profile
+## Profiles
+
+### Create Profile
+
 ```bash
 mainfluxlabs-cli profiles create '{"name":"<profile_name>"}' <group_id> <user_token>
 ```
 
-#### Update Profile
+### Update Profile
+
 ```bash
 mainfluxlabs-cli profiles update '{"name":"<new_name>"}' <profile_id> <user_token>
 ```
 
-#### Remove Profile
+### Remove Profile
+
 ```bash
 mainfluxlabs-cli profiles delete <profile_id> <user_token>
 ```
 
-#### Retrieve a subset list of provisioned Profiles
+### Retrieve a subset list of provisioned Profiles
+
 ```bash
 mainfluxlabs-cli profiles get all <user_token>
 ```
 
-#### Retrieve Profile by ID
+### Retrieve Profile by ID
+
 ```bash
 mainfluxlabs-cli profiles get by-id <profile_id> <user_token>
 ```
 
-#### Retrieve a Profile by Thing
+### Retrieve a Profile by Thing
+
 ```bash
 mainfluxlabs-cli profiles get by-thing <thing_id> <user_token>
 ```
 
-### Messaging
-#### Send a message over HTTP
+## Messaging
+
+### Send a message over HTTP
 
 The `key_type` argument is either `internal` (platform-generated key) or `external` (custom key). An optional subtopic can be prepended as the first argument.
 
@@ -391,7 +414,7 @@ mainfluxlabs-cli messages send '[{"bn":"Dev1","n":"temp","v":20},{"n":"hum","v":
 mainfluxlabs-cli messages send temperature '[{"n":"temp","v":25.3}]' internal <thing_key>
 ```
 
-#### Read messages over HTTP
+### Read messages over HTTP
 
 ```bash
 # Read SenML messages (as thing)
@@ -407,7 +430,7 @@ mainfluxlabs-cli messages read json <user_token>
 
 Use `-s=<subtopic>` to filter by subtopic.
 
-#### Back up and restore messages
+### Back up and restore messages
 
 Both commands require admin privileges. `backup` writes the backup to standard output.
 
@@ -416,197 +439,240 @@ mainfluxlabs-cli messages backup <user_token> > backup.json
 mainfluxlabs-cli messages restore backup.json <user_token>
 ```
 
-### Groups
-#### Create Group
+## Groups
+
+### Create Group
+
 ```bash
 mainfluxlabs-cli groups create '{"name":"<group_name>","description":"<description>","metadata":{"key":"value",...}}' <org_id> <user_token>
 ```
 
-#### Delete Group
+### Delete Group
+
 ```bash
 mainfluxlabs-cli groups delete <group_id> <user_token>
 ```
 
-#### Get Group by ID
+### Get Group by ID
+
 ```bash
 mainfluxlabs-cli groups get <group_id> <user_token>
 ```
 
-#### List all Groups
+### List all Groups
+
 ```bash
 mainfluxlabs-cli groups get all <user_token>
 ```
 
-#### List Groups by Org
+### List Groups by Org
+
 ```bash
 mainfluxlabs-cli groups get by-org <org-id> <user_token>
 ```
 
-#### Update Group
+### Update Group
+
 ```bash
 mainfluxlabs-cli groups update '{"name":"<new_name>"}' <group_id> <user_token>
 ```
 
-#### List Things by Group
+### List Things by Group
+
 ```bash
 mainfluxlabs-cli groups things <group_id> <user_token>
 ```
 
-#### View Group by Thing
+### View Group by Thing
+
 ```bash
 mainfluxlabs-cli groups thing <thing_id> <user_token>
 ```
 
-#### List Profiles by Group
+### List Profiles by Group
+
 ```bash
 mainfluxlabs-cli groups profiles <group_id> <user_token>
 ```
 
-#### View Group by Profile
+### View Group by Profile
+
 ```bash
 mainfluxlabs-cli groups profile <profile_id> <user_token>
 ```
 
-### Group Memberships
-#### Create Group Memberships
+## Group Memberships
+
+### Create Group Memberships
+
 ```bash
 mainfluxlabs-cli group_memberships create '[{"member_id":"<member_id>","role":"<role>"}]' <group_id> <user_token>
 ```
 
-#### Remove Group Memberships
+### Remove Group Memberships
+
 ```bash
 mainfluxlabs-cli group_memberships delete '["<member_id>"]' <group_id> <user_token>
 ```
 
-#### Update Group Memberships
+### Update Group Memberships
+
 ```bash
 mainfluxlabs-cli group_memberships update '[{"member_id":"<member_id>","role":"<new_role>"}]' <group_id> <user_token>
 ```
 
-#### List Group Memberships
+### List Group Memberships
+
 ```bash
 mainfluxlabs-cli group_memberships get <group_id> <user_token>
 ```
 
-### Orgs
-#### Create Org
+## Orgs
+
+### Create Org
+
 ```bash
 mainfluxlabs-cli orgs create '{"name":"<org_name>","description":"<description>","metadata":{"key":"value",...}}' <user_token>
 ```
 
-#### Get Org by ID
+### Get Org by ID
+
 ```bash
 mainfluxlabs-cli orgs get <org_id> <user_token>
 ```
 
-#### List all Orgs
+### List all Orgs
+
 ```bash
 mainfluxlabs-cli orgs get all <user_token>
 ```
 
-#### Update Org
+### Update Org
+
 ```bash
 mainfluxlabs-cli orgs update '{"name":"<new_name>"}' <org_id> <user_token>
 ```
 
-#### Delete Org
+### Delete Org
+
 ```bash
 mainfluxlabs-cli orgs delete <org_id> <user_token>
 ```
 
-### Org Memberships
-#### Create Org Memberships
+## Org Memberships
+
+### Create Org Memberships
+
 ```bash
 mainfluxlabs-cli org_memberships create '[{"email":"<email>","role":"<role>"}]' <org_id> <user_token>
 ```
 
-#### Remove Org Memberships
+### Remove Org Memberships
+
 ```bash
 mainfluxlabs-cli org_memberships delete '["<member_id>"]' <org_id> <user_token>
 ```
 
-#### Get Org Membership(s)
+### Get Org Membership(s)
+
 ```bash
 mainfluxlabs-cli org_memberships get <all | member_id> <org_id> <user_token>
 ```
 
-#### Update Org Memberships
+### Update Org Memberships
+
 ```bash
 mainfluxlabs-cli org_memberships update '[{"email":"<email>","role":"<new_role>"}]' <org_id> <user_token>
 ```
 
-### Webhooks
-#### Create Webhooks
+## Webhooks
+
+### Create Webhooks
+
 ```bash
 mainfluxlabs-cli webhooks create '[{"name":"<webhook_name>","url":"<http://webhook-url.com>","headers":{"key":"value",...}}]' <thing_id> <user_token>
 ```
 
-#### Get Webhook by ID
+### Get Webhook by ID
+
 ```bash
 mainfluxlabs-cli webhooks get by-id <id> <user_token>
 ```
 
-#### Get Webhooks by Group
+### Get Webhooks by Group
+
 ```bash
 mainfluxlabs-cli webhooks get by-group <group_id> <user_token>
 ```
 
-#### Get Webhooks by Thing
+### Get Webhooks by Thing
+
 ```bash
 mainfluxlabs-cli webhooks get by-thing <thing_id> <user_token>
 ```
 
-#### Update Webhook
+### Update Webhook
+
 ```bash
 mainfluxlabs-cli webhooks update '{"name":"<new_name>","url":"<http://webhook-url.com>"}' <webhook_id> <user_token>
 ```
 
-#### Delete Webhooks
+### Delete Webhooks
+
 ```bash
 mainfluxlabs-cli webhooks delete '["<webhook_id>"]' <user_token>
 ```
 
-### Keys management
-#### Issue a new Key
+## Keys management
+
+### Issue a new Key
+
 ```bash
 mainfluxlabs-cli keys issue <duration> <user_token>
 ```
 
-#### Remove API key from database
+### Remove API key from database
+
 ```bash
 mainfluxlabs-cli keys revoke <key_id> <user_token>
 ```
 
-#### Retrieve API key with given id
+### Retrieve API key with given id
+
 ```bash
 mainfluxlabs-cli keys retrieve <key_id> <user_token>
 ```
 
-### Benchmark
+## Benchmark
+
 Provision orgs, groups, transformer profiles, and things, then publish backfilled JSON messages over the HTTP adapter to load-test ingestion and storage.
 
-#### Run a benchmark
+### Run a benchmark
+
 ```bash
 mainfluxlabs-cli benchmark <username> <password>
 ```
 
-#### Run against a remote deployment
+### Run against a remote deployment
+
 The `--url` flag derives every service URL from the deployment base URL.
+
 ```bash
 mainfluxlabs-cli benchmark <username> <password> --url https://example.com
 ```
 
-#### Flags
-| Flag              | Default   | Description                                                     |
-| ----------------- | --------- | --------------------------------------------------------------- |
-| `--orgs`          | `3`       | Number of orgs to create                                        |
-| `--groups`        | `5`       | Number of groups per org                                        |
-| `--things`        | `100`     | Number of things to create                                      |
-| `--messages`      | `10000`   | Number of messages to send                                      |
-| `--rate`          | `0`       | Approximate maximum messages per second, `0` disables the limit |
-| `--batch`         | `100`     | Maximum number of messages per HTTP request                     |
-| `--backfill-days` | `30`      | Spread message timestamps over the last N days                  |
-| `--mtls`          | `false`   | Authenticate a random half of the things over mutual TLS        |
+### Flags
+
+| Flag              | Default | Description                                                     |
+| ----------------- | ------- | --------------------------------------------------------------- |
+| `--orgs`          | `3`     | Number of orgs to create                                        |
+| `--groups`        | `5`     | Number of groups per org                                        |
+| `--things`        | `100`   | Number of things to create                                      |
+| `--messages`      | `10000` | Number of messages to send                                      |
+| `--rate`          | `0`     | Approximate maximum messages per second, `0` disables the limit |
+| `--batch`         | `100`   | Maximum number of messages per HTTP request                     |
+| `--backfill-days` | `30`    | Spread message timestamps over the last N days                  |
+| `--mtls`          | `false` | Authenticate a random half of the things over mutual TLS        |
 
 Each request carries a random number of messages between 1 and `--batch`, sent as a JSON object for a single message and as a JSON array otherwise. The sustained ingestion rate is bounded by the database insert rate, so `--rate` should be set to that rate to prevent the message broker buffer from overflowing.
 
