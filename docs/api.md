@@ -93,8 +93,9 @@ Content-Type: application/json
 
 ### Create User
 
-The predefined user within the Mainflux system is the `root admin`.
-In order to add users to the system, the `root` administrator must create accounts for them.
+The predefined user within the Mainflux system is the `platform root admin`.
+The `platform root admin` or a `platform admin` adds users to the system by creating their accounts with this endpoint or by sending them a [Platform Invite](#create-platform-invite).
+Users can also [register themselves](#self-register-user) when self-registration is enabled.
 
 > Must-have: `email`, `password` (password must meet the [password policy](authentication.md#password-policy)) and `user_token`
 
@@ -123,6 +124,7 @@ Access-Control-Allow-Headers: *
 ### Self-Register User
 
 Allows a new user to register themselves. The system sends an email verification link to complete registration.
+Self-registration is enabled when `MF_USERS_SELF_REGISTER_ENABLED` is `true`, which is the default; otherwise the request fails with `403 Forbidden`.
 
 > Must-have: `user` object (with `email` and `password`) and `redirect_path` (URL for verification)
 
@@ -215,13 +217,13 @@ Content-Length: 120
   "metadata": {
     "foo": "bar"
   },
-  "role": "user"
+  "role": "admin"
 }
 ```
 
 ### List Users
 
-List all users. Requires admin privileges.
+List all users. Requires admin privileges. The `role` field is `root` for the platform root admin and `admin` for a platform admin, and it is omitted for regular users.
 
 > Must-have: `user_token`
 
@@ -245,7 +247,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
+{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","role":"root"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
 ```
 
 ### Search Users
@@ -449,7 +451,7 @@ The request fails with `409 Conflict` when the user is already enabled.
 
 #### Disable User
 
-Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again.
+Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again. A user with a platform role cannot be disabled; unassign the role first.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -465,13 +467,45 @@ HTTP/1.1 204 No Content
 
 The request fails with `409 Conflict` when the user is already disabled.
 
+#### Assign Admin Role
+
+Assign the platform admin role to an enabled user without a platform role. Requires platform root admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+```
+
+#### Unassign Admin Role
+
+Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform root admin privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+```
+
 #### Impersonate User
 
-Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
+Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform root admin can impersonate a platform admin. Platform root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
-The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the root admin logs out of all sessions or changes their password, their impersonated sessions end too.
+The response holds a login key for the impersonated user. The key carries the impersonating admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the impersonating admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
 
-> Must-have: `user_token` (root admin Bearer token), `id` (user ID)
+> Must-have: `user_token` (Bearer token), `id` (user ID)
 
 ```bash
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/impersonate
@@ -2429,7 +2463,7 @@ The `org_invite` field is omitted when the Platform Invite has no org component.
 
 ### Revoke Platform Invite
 
-Cancels a pending Platform Invite. Only the platform root admin can revoke.
+Cancels a pending Platform Invite. Requires admin privileges.
 
 > Must-have: `user_token`, `invite_id`
 
