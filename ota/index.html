@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -290,7 +291,7 @@
 <li><strong>Download.</strong> The thing downloads the firmware from the <code>url</code> of the update with its thing key, resuming with HTTP Range requests if needed (see <a href="../filestore/#checksums-downloads-and-range-requests">Filestore</a>), and verifies the SHA-256 checksum.</li>
 <li><strong>Report.</strong> The thing reports its progress with <code>POST /ota/status</code>, or by publishing on its <code>things/&lt;thing_id&gt;/ota/status</code> MQTT topic. A thing can report only its own status. Reports reach only the OTA service; they are not stored and do not trigger rules or webhooks. A <code>succeeded</code> report must include <code>version</code>; if it differs from the version of the update, the thing is marked <code>failed</code>.</li>
 <li><strong>Timeout.</strong> Things without progress for the <code>timeout</code> of the update are marked <code>failed</code> with <code>timed out</code>. The service checks this every <code>MF_OTA_TIMEOUT_CHECK_INTERVAL</code>.</li>
-<li><strong>Retry.</strong> A user can move the failed things of an update back to <code>pending</code>, and they are notified again. Things that received a newer update in the meantime are skipped, so a retry never rolls a thing back to older firmware. The service never retries on its own.</li>
+<li><strong>Retry.</strong> A user can move the failed things of an update back to <code>pending</code>, and they are notified again. Things with a newer update are skipped. Preventing a downgrade is the firmware's job. The service never retries on its own.</li>
 </ol>
 <p>Viewing updates requires the viewer role in the group, while creating, retrying and removing updates require the editor role. Updates and progress are removed when their group or thing is removed.</p>
 <h2 id="managing-updates">Managing updates<a class="headerlink" href="#managing-updates" title="Permanent link">#</a></h2>

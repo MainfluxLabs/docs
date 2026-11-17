@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -384,24 +385,28 @@ postgres=# ALTER USER mainflux WITH LOGIN ENCRYPTED PASSWORD 'mainflux';
 <p>Mainflux uses <a href="https://redis.io/topics/streams-intro">Redis Streams</a> as an event log for event sourcing.
 The <code>things</code> service publishes events to the <code>mainflux.things</code> stream, and the <code>auth</code> service publishes
 events to the <code>mainflux.auth</code> stream.</p>
-<p>Besides the operation-specific fields described below, every event carries the following fields:
-- <code>operation</code> - the operation that produced the event,
-- <code>occurred_at</code> - the time of the operation in RFC 3339 format,
-- <code>evt_org_id</code> and <code>evt_group_id</code> - the org and the group to which the event belongs, empty when not applicable,
-- <code>jwt_identity_user_id</code> and <code>jwt_identity_user_email</code> - the user who performed the operation, present only for user-initiated operations.</p>
+<p>Besides the operation-specific fields described below, every event carries the following fields:</p>
+<ul>
+<li><code>operation</code> - the operation that produced the event,</li>
+<li><code>occurred_at</code> - the time of the operation in RFC 3339 format,</li>
+<li><code>evt_org_id</code> and <code>evt_group_id</code> - the org and the group to which the event belongs, empty when not applicable,</li>
+<li><code>jwt_identity_user_id</code> and <code>jwt_identity_user_email</code> - the user who performed the operation, present only for user-initiated operations.</li>
+</ul>
 <h3 id="things-service">Things Service<a class="headerlink" href="#things-service" title="Permanent link">#</a></h3>
 <p>For every operation that has side effects (that is changing service state) <code>things</code>
 service will generate new event and publish it to Redis Stream called <code>mainflux.things</code>.
 Every event has its own event ID that is automatically generated and <code>operation</code>
-field that can have one of the following values:
-- <code>thing.create</code> for thing creation,
-- <code>thing.update</code> for thing update,
-- <code>thing.update_group_and_profile</code> for thing group and profile reassignment,
-- <code>thing.remove</code> for thing removal,
-- <code>profile.create</code> for profile creation,
-- <code>profile.update</code> for profile update,
-- <code>profile.remove</code> for profile removal,
-- <code>group.remove</code> for group removal.</p>
+field that can have one of the following values:</p>
+<ul>
+<li><code>thing.create</code> for thing creation,</li>
+<li><code>thing.update</code> for thing update,</li>
+<li><code>thing.update_group_and_profile</code> for thing group and profile reassignment,</li>
+<li><code>thing.remove</code> for thing removal,</li>
+<li><code>profile.create</code> for profile creation,</li>
+<li><code>profile.update</code> for profile update,</li>
+<li><code>profile.remove</code> for profile removal,</li>
+<li><code>group.remove</code> for group removal.</li>
+</ul>
 <p>The <code>auth</code> service publishes <code>org.create</code> and <code>org.remove</code> events.</p>
 <p>By fetching and processing these events you can reconstruct <code>things</code> service state.
 If you store some of your custom data in <code>metadata</code> field, this is the perfect

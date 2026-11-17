@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -205,7 +206,7 @@
                 <h1 id="messaging">Messaging<a class="headerlink" href="#messaging" title="Permanent link">#</a></h1>
 <p>Once a profile is provisioned and assigned to a thing, publishing messages can begin.
 The following sections will provide an example of message publishing for each of the supported protocols.</p>
-<h3 id="configure-profile-config">Configure Profile Config<a class="headerlink" href="#configure-profile-config" title="Permanent link">#</a></h3>
+<h2 id="configure-profile-config">Configure Profile Config<a class="headerlink" href="#configure-profile-config" title="Permanent link">#</a></h2>
 <p>For successful publishing of messages, when creating a profile, it is necessary to define configuration parameters within the structure <code>config</code>.
 The <code>config</code> structure consists of the following fields: <code>content_type</code> and <code>transformer</code>.</p>
 <p>A <code>content_type</code> field defines the payload format of messages in order to transform and store them properly.
@@ -306,7 +307,7 @@ For the previous example, we can filter the extracted payload and save only the 
 }
 </code></pre>
 <p>If the <code>data_filters</code> and <code>data_field</code> fields are empty, the whole payload will be used.</p>
-<h3 id="dispatcher-flags">Dispatcher Flags<a class="headerlink" href="#dispatcher-flags" title="Permanent link">#</a></h3>
+<h2 id="dispatcher-flags">Dispatcher Flags<a class="headerlink" href="#dispatcher-flags" title="Permanent link">#</a></h2>
 <p>In addition to <code>content_type</code> and <code>transformer</code>, the profile <code>config</code> accepts three boolean dispatcher flags that control where an incoming message is routed once it's received:</p>
 <table>
 <thead>
@@ -342,7 +343,7 @@ For the previous example, we can filter the extracted payload and save only the 
 </code></pre>
 <p>Webhook delivery itself is configured per-thing — see the <a href="../webhooks/">Webhooks</a> page. Rule-triggered SMTP/SMPP notifications are configured via rule actions — see the <a href="../rules/">Rules</a> and <a href="../notifiers/">Notifiers</a> pages.</p>
 <hr />
-<h3 id="subtopics">Subtopics<a class="headerlink" href="#subtopics" title="Permanent link">#</a></h3>
+<h2 id="subtopics">Subtopics<a class="headerlink" href="#subtopics" title="Permanent link">#</a></h2>
 <p>In order to use subtopics and give more meaning about the content of messages published or received by subscription, you can simply add any suffix to base <code>/messages</code> topic.</p>
 <p>Example subtopic publish/subscribe for bedroom temperature would be <code>/messages/bedroom/temperature</code>.</p>
 <p>Subtopics are generic and multilevel. You can use almost any suffix with any depth.</p>

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -122,6 +123,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Audit</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#impersonation">Impersonation</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#querying-events">Querying events</a>
     </li>
     </ul>
@@ -195,7 +198,7 @@
 </tr>
 <tr>
 <td><code>actor</code></td>
-<td><code>{id, email}</code> of the user whose action triggered the event</td>
+<td><code>{id, email}</code> of the user whose action triggered the event, plus <code>impersonator</code> <code>{id, email}</code> when the platform root admin or a platform admin acted as that user</td>
 </tr>
 <tr>
 <td><code>org_id</code></td>
@@ -211,9 +214,20 @@
 </tr>
 </tbody>
 </table>
+<h2 id="impersonation">Impersonation<a class="headerlink" href="#impersonation" title="Permanent link">#</a></h2>
+<p>When the platform root admin or a platform admin <a href="../api/#impersonate-user">impersonates a user</a>, every event raised in that session records the user as <code>actor</code> and the impersonating admin as <code>actor.impersonator</code>. Starting the impersonation records a <code>user.impersonate</code> event, with the impersonating admin as <code>actor</code> and the impersonated user in <code>action_data</code>.</p>
+<pre><code class="language-json">&quot;actor&quot;: {
+  &quot;id&quot;: &quot;574106f7-030e-4881-8ab0-151195c29f94&quot;,
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;impersonator&quot;: {
+    &quot;id&quot;: &quot;0b6a8f4e-6a7d-4c43-9a2e-6f5c1f0e7d21&quot;,
+    &quot;email&quot;: &quot;admin@example.com&quot;
+  }
+}
+</code></pre>
 <h2 id="querying-events">Querying events<a class="headerlink" href="#querying-events" title="Permanent link">#</a></h2>
 <p>All list endpoints support <code>offset</code>, <code>limit</code> (max 200), <code>order</code> (<code>id</code>, <code>occurred_at</code>, <code>operation</code>, <code>actor_email</code>, <code>org_id</code>, <code>group_id</code>), <code>dir</code> (<code>asc</code>/<code>desc</code>), <code>email</code> (filter by actor email), <code>operation</code> (filter by operation name), <code>from</code>/<code>to</code> (Unix timestamp bounds on <code>occurred_at</code>), and <code>action_data</code> (URL-encoded JSON — returns events whose <code>action_data</code> contains all supplied key/value pairs).</p>
-<pre><code class="language-bash"># List all events across the platform — restricted to root administrators
+<pre><code class="language-bash"># List all events across the platform — restricted to the platform root admin and platform admins
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   &quot;http://localhost/svcaudit/events?offset=0&amp;limit=20&quot;

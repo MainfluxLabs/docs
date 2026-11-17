@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -112,6 +113,12 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#disable-user">Disable User</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#assign-admin-role">Assign Admin Role</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#unassign-admin-role">Unassign Admin Role</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impersonate-user">Impersonate User</a>
+    </li>
         </ul>
     </li>
         </ul>
@@ -145,6 +152,18 @@
     <li class="toctree-l3"><a class="reference internal" href="#view-membership">View Membership</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#list-memberships">List Memberships</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#backup-and-restore">Backup and Restore</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-users">Backup Users</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#restore-users">Restore Users</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-orgs">Backup Orgs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#restore-orgs">Restore Orgs</a>
     </li>
         </ul>
     </li>
@@ -257,6 +276,10 @@
     <li class="toctree-l3"><a class="reference internal" href="#search-things-by-group">Search Things by Group</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#search-things-by-org">Search Things by Org</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-things">Backup Things</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#restore-things">Restore Things</a>
     </li>
         </ul>
     </li>
@@ -518,7 +541,7 @@ Content-Type: application/json
 Content-Type: application/json
 </code></pre>
 <h3 id="logout-all-sessions">Logout All Sessions<a class="headerlink" href="#logout-all-sessions" title="Permanent link">#</a></h3>
-<p>Revokes all sessions of the user that owns the given login token.</p>
+<p>Revokes all sessions of the user that owns the given login token, including the sessions they impersonate. From an impersonated session, it revokes only that session.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
@@ -529,10 +552,11 @@ Content-Type: application/json
 Content-Type: application/json
 </code></pre>
 <h3 id="create-user">Create User<a class="headerlink" href="#create-user" title="Permanent link">#</a></h3>
-<p>The predefined user within the Mainflux system is the <code>root admin</code>.
-In order to add users to the system, the <code>root</code> administrator must create accounts for them.</p>
+<p>The predefined user within the Mainflux system is the <code>platform root admin</code>.
+The <code>platform root admin</code> or a <code>platform admin</code> adds users to the system by creating their accounts with this endpoint or by sending them a <a href="#create-platform-invite">Platform Invite</a>.
+Users can also <a href="#self-register-user">register themselves</a> when self-registration is enabled.</p>
 <blockquote>
-<p>Must-have: <code>email</code>, <code>password</code> (password must contain at least 8 characters) and <code>user_token</code></p>
+<p>Must-have: <code>email</code>, <code>password</code> (password must meet the <a href="../authentication/#password-policy">password policy</a>) and <code>user_token</code></p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users -d '{&quot;email&quot;:&quot;&lt;user_email&gt;&quot;, &quot;password&quot;:&quot;&lt;user_password&gt;&quot;}'
 </code></pre>
@@ -552,7 +576,8 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 </code></pre>
 <h3 id="self-register-user">Self-Register User<a class="headerlink" href="#self-register-user" title="Permanent link">#</a></h3>
-<p>Allows a new user to register themselves. The system sends an email verification link to complete registration.</p>
+<p>Allows a new user to register themselves. The system sends an email verification link to complete registration.
+Self-registration is enabled when <code>MF_USERS_SELF_REGISTER_ENABLED</code> is <code>true</code>, which is the default; otherwise the request fails with <code>403 Forbidden</code>.</p>
 <blockquote>
 <p>Must-have: <code>user</code> object (with <code>email</code> and <code>password</code>) and <code>redirect_path</code> (URL for verification)</p>
 </blockquote>
@@ -623,11 +648,11 @@ Content-Length: 120
   &quot;metadata&quot;: {
     &quot;foo&quot;: &quot;bar&quot;
   },
-  &quot;role&quot;: &quot;user&quot;
+  &quot;role&quot;: &quot;admin&quot;
 }
 </code></pre>
 <h3 id="list-users">List Users<a class="headerlink" href="#list-users" title="Permanent link">#</a></h3>
-<p>List all users. Requires admin privileges.</p>
+<p>List all users. Requires admin privileges. The <code>role</code> field is <code>root</code> for the platform root admin and <code>admin</code> for a platform admin, and it is omitted for regular users.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
@@ -647,7 +672,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{&quot;total&quot;:2,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;users&quot;:[{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;},{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;}]}
+{&quot;total&quot;:2,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;users&quot;:[{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;role&quot;:&quot;root&quot;},{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;}]}
 </code></pre>
 <h3 id="search-users">Search Users<a class="headerlink" href="#search-users" title="Permanent link">#</a></h3>
 <p>Search users with optional filters such as status, email, and metadata. Supports pagination and ordering. Requires admin privileges.</p>
@@ -794,19 +819,53 @@ Location: https://localhost/auth/login#token=&lt;user_token&gt;
 <pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \ http://localhost/users/&lt;user_id&gt;/enable
 </code></pre>
 <p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
-Content-Type: application/json
+<pre><code class="language-bash">HTTP/1.1 204 No Content
 </code></pre>
+<p>The request fails with <code>409 Conflict</code> when the user is already enabled.</p>
 <h4 id="disable-user">Disable User<a class="headerlink" href="#disable-user" title="Permanent link">#</a></h4>
-<p>Deactivate a user account. Requires admin privileges.</p>
+<p>Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again. A user with a platform role cannot be disabled; unassign the role first.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \ http://localhost/users/&lt;user_id&gt;/disable
 </code></pre>
 <p>Response:</p>
-<pre><code class="language-bash">HTTP/1.1 200 OK
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+</code></pre>
+<p>The request fails with <code>409 Conflict</code> when the user is already disabled.</p>
+<h4 id="assign-admin-role">Assign Admin Role<a class="headerlink" href="#assign-admin-role" title="Permanent link">#</a></h4>
+<p>Assign the platform admin role to an enabled user without a platform role. Requires platform root admin privileges.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users/&lt;user_id&gt;/admin
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+</code></pre>
+<h4 id="unassign-admin-role">Unassign Admin Role<a class="headerlink" href="#unassign-admin-role" title="Permanent link">#</a></h4>
+<p>Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform root admin privileges.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X DELETE -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users/&lt;user_id&gt;/admin
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 204 No Content
+</code></pre>
+<h4 id="impersonate-user">Impersonate User<a class="headerlink" href="#impersonate-user" title="Permanent link">#</a></h4>
+<p>Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform root admin can impersonate a platform admin. Platform root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.</p>
+<p>The response holds a login key for the impersonated user. The key carries the impersonating admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a <code>user.impersonate</code> event. Logging out, or logging out of all sessions, ends only the impersonated session. When the impersonating admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/users/&lt;user_id&gt;/impersonate
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
 Content-Type: application/json
+
+{&quot;token&quot;:&quot;&lt;impersonated_user_token&gt;&quot;}
 </code></pre>
 <h2 id="orgs">Orgs<a class="headerlink" href="#orgs" title="Permanent link">#</a></h2>
 <h3 id="create-org">Create Org<a class="headerlink" href="#create-org" title="Permanent link">#</a></h3>
@@ -991,6 +1050,51 @@ Date: Mon, 17 Jul 2023 09:13:22 GMT
 Content-Length: 235
 
 {&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;member_id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}
+</code></pre>
+<h2 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
+<p>Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform root admin role of the current login key.</p>
+<h3 id="backup-users">Backup Users<a class="headerlink" href="#backup-users" title="Permanent link">#</a></h3>
+<p>Export the platform root admin, all users and their OAuth identities. Requires platform root admin privileges. The response contains password hashes.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcusers/backup -o users-backup.json
+</code></pre>
+<p>Content of <code>users-backup.json</code>:</p>
+<pre><code class="language-json">{&quot;admin&quot;:{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;},&quot;users&quot;:[{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;}],&quot;identities&quot;:[]}
+</code></pre>
+<h3 id="restore-users">Restore Users<a class="headerlink" href="#restore-users" title="Permanent link">#</a></h3>
+<p>Restore users and OAuth identities from a backup. Requires platform root admin privileges.</p>
+<p>The backed up <code>admin</code> keeps the platform root admin role only when its e-mail matches the configured platform root admin. The platform root admin then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up <code>admin</code> is restored as a regular user.</p>
+<p>When the platform root admin takes another ID, the current login keys lose the platform root admin role. Restore Users last, or log in again afterwards.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and the backup JSON</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcusers/restore --data-binary @users-backup.json
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+</code></pre>
+<h3 id="backup-orgs">Backup Orgs<a class="headerlink" href="#backup-orgs" title="Permanent link">#</a></h3>
+<p>Export all Orgs, Org Memberships and platform roles. Requires admin privileges.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcauth/backup -o auth-backup.json
+</code></pre>
+<p>Content of <code>auth-backup.json</code>:</p>
+<pre><code class="language-json">{&quot;orgs&quot;:[{&quot;id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;name&quot;:&quot;org&quot;,&quot;owner_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;org_id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;user_roles&quot;:[{&quot;user_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;role&quot;:&quot;root&quot;},{&quot;user_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;role&quot;:&quot;admin&quot;}]}
+</code></pre>
+<h3 id="restore-orgs">Restore Orgs<a class="headerlink" href="#restore-orgs" title="Permanent link">#</a></h3>
+<p>Restore Orgs, Org Memberships and platform roles from a backup. Requires platform root admin privileges.</p>
+<p>The <code>root</code> role is never restored, since it belongs only to the configured platform root admin. A user who already has a platform role keeps it. Each <code>user_roles</code> entry needs a <code>user_id</code> and a <code>role</code> of <code>root</code> or <code>admin</code>; otherwise the request fails with <code>400 Bad Request</code> before anything is restored.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code> and the backup JSON</p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcauth/restore --data-binary @auth-backup.json
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
 </code></pre>
 <h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">#</a></h2>
 <h3 id="create-group">Create Group<a class="headerlink" href="#create-group" title="Permanent link">#</a></h3>
@@ -1794,6 +1898,24 @@ Content-Type: application/json
   http://localhost/svcthings/orgs/&lt;org_id&gt;/things/search \
   -d '{&quot;name&quot;:&quot;&lt;thing_name&gt;&quot;,&quot;limit&quot;:10,&quot;offset&quot;:0}'
 </code></pre>
+<h3 id="backup-things">Backup Things<a class="headerlink" href="#backup-things" title="Permanent link">#</a></h3>
+<p>Exports all Groups, Group Memberships, Profiles and Things, including the Thing keys. Requires admin privileges.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcthings/backup -o things-backup.json
+</code></pre>
+<p>The backup is a JSON document with the <code>groups</code>, <code>group_memberships</code>, <code>profiles</code> and <code>things</code> lists.</p>
+<h3 id="restore-things">Restore Things<a class="headerlink" href="#restore-things" title="Permanent link">#</a></h3>
+<p>Restores Groups, Group Memberships, Profiles and Things from a backup file created by <a href="#backup-things">Backup Things</a>. Requires admin privileges and <code>Content-Type: application/json</code>.</p>
+<blockquote>
+<p>Must-have: <code>user_token</code>, <code>file_name</code></p>
+</blockquote>
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; http://localhost/svcthings/restore --data-binary @&lt;file_name&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
+</code></pre>
 <h2 id="messages">Messages<a class="headerlink" href="#messages" title="Permanent link">#</a></h2>
 <h3 id="send-messages">Send Messages<a class="headerlink" href="#send-messages" title="Permanent link">#</a></h3>
 <p>Sends messages over HTTP.</p>
@@ -1862,11 +1984,11 @@ Content-Length: 660
 </code></pre>
 <p>Note: <code>&lt;start_timestamp&gt;</code> and <code>&lt;end_timestamp&gt;</code> are int values in nanoseconds. Currently supported formats are <code>json</code> and <code>senml</code>.</p>
 <h3 id="backup-messages">Backup Messages<a class="headerlink" href="#backup-messages" title="Permanent link">#</a></h3>
-<p>Exports a full backup of all stored messages as a single file (format-agnostic).</p>
+<p>Exports all stored JSON and SenML messages as a single JSON document. Requires admin privileges.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -s -S -i -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; &quot;http://localhost/reader/backup&quot; -o &quot;backup.json&quot;
+<pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; &quot;http://localhost/reader/backup&quot; -o &quot;backup.json&quot;
 </code></pre>
 <h3 id="export-messages">Export Messages<a class="headerlink" href="#export-messages" title="Permanent link">#</a></h3>
 <p>Exports messages in a specific format, optionally converting to CSV.</p>
@@ -1881,11 +2003,14 @@ Content-Length: 660
 </code></pre>
 <p>Note: You can use <code>csv</code> or <code>json</code> for <code>file_type</code>. If <code>?convert</code> is omitted, the response is returned as JSON.</p>
 <h3 id="restore-messages">Restore Messages<a class="headerlink" href="#restore-messages" title="Permanent link">#</a></h3>
-<p>Restores messages from a backup file. Requires <code>Content-Type: application/octet-stream</code>.</p>
+<p>Restores messages from a backup file created by <a href="#backup-messages">Backup Messages</a>. Requires admin privileges and <code>Content-Type: application/json</code>.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>file_name</code></p>
 </blockquote>
-<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/octet-stream&quot; &quot;http://localhost/reader/restore&quot; --data-binary @&lt;file_name&gt;
+<pre><code class="language-bash">curl -s -S -i -X POST -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; -H &quot;Content-Type: application/json&quot; &quot;http://localhost/reader/restore&quot; --data-binary @&lt;file_name&gt;
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-bash">HTTP/1.1 201 Created
 </code></pre>
 <h3 id="search-messages">Search Messages<a class="headerlink" href="#search-messages" title="Permanent link">#</a></h3>
 <p>Search messages using one or more queries. Each query supports filtering, pagination, and aggregation options.</p>
@@ -2129,7 +2254,7 @@ Content-Type: application/json
 </code></pre>
 <p>The <code>org_invite</code> field is omitted when the Platform Invite has no org component.</p>
 <h3 id="revoke-platform-invite">Revoke Platform Invite<a class="headerlink" href="#revoke-platform-invite" title="Permanent link">#</a></h3>
-<p>Cancels a pending Platform Invite. Only the platform root admin can revoke.</p>
+<p>Cancels a pending Platform Invite. Requires admin privileges.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code>, <code>invite_id</code></p>
 </blockquote>

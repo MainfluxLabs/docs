@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -252,7 +253,7 @@
 </tr>
 <tr>
 <td><code>input</code></td>
-<td>What triggers evaluation — <code>type</code> (<code>message</code> or <code>alarm</code>), <code>thing_ids</code>, and an optional <code>config</code> (e.g. <code>subtopic</code> filter)</td>
+<td>What triggers evaluation — <code>type</code> (<code>message</code> or <code>alarm</code>), <code>thing_ids</code> (1–100 thing IDs, set on creation only), and an optional <code>config</code> (e.g. <code>subtopic</code> filter)</td>
 </tr>
 <tr>
 <td><code>conditions</code></td>
@@ -345,7 +346,7 @@
         ],
         &quot;operator&quot;: &quot;AND&quot;,
         &quot;actions&quot;: [
-          {&quot;type&quot;: &quot;smtp&quot;, &quot;id&quot;: &quot;513e2557-e09b-42d3-s456-425614175403&quot;},
+          {&quot;type&quot;: &quot;smtp&quot;, &quot;id&quot;: &quot;513e2557-e09b-42d3-a456-425614175403&quot;},
           {&quot;type&quot;: &quot;alarm&quot;, &quot;level&quot;: 3}
         ]
       }
@@ -381,7 +382,7 @@
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   &quot;http://localhost/svcrules/groups/&lt;group_id&gt;/rules?offset=0&amp;limit=20&quot;
 </code></pre>
-<p>List endpoints support <code>offset</code>, <code>limit</code> (max 200), <code>order=name</code>, <code>dir</code> (<code>asc</code>/<code>desc</code>), <code>name</code> (partial match), and <code>input_type</code> (<code>message</code>/<code>alarm</code>) query parameters.</p>
+<p>Both rule list endpoints support <code>offset</code>, <code>limit</code> (max 200), <code>order</code> (<code>id</code> or <code>name</code>), <code>dir</code> (<code>asc</code>/<code>desc</code>), <code>name</code> (partial match), and <code>input_type</code> (<code>message</code>/<code>alarm</code>) query parameters.</p>
 <h3 id="list-rules-by-thing">List Rules by Thing<a class="headerlink" href="#list-rules-by-thing" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
@@ -404,7 +405,7 @@
   }' \
   http://localhost/rules/&lt;rule_id&gt;
 </code></pre>
-<p>Updating a rule does not affect its thing assignments — use the assign/unassign endpoints below for that.</p>
+<p>Updating a rule does not affect its thing assignments, and its <code>input</code> takes no <code>thing_ids</code> — use the assign/unassign endpoints below for that.</p>
 <h3 id="assign-things-to-a-rule">Assign Things to a Rule<a class="headerlink" href="#assign-things-to-a-rule" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X POST \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
@@ -483,7 +484,7 @@
 </tr>
 <tr>
 <td><code>mfx.message.created</code></td>
-<td>Message creation timestamp (Unix)</td>
+<td>Message creation timestamp (Unix time in nanoseconds)</td>
 </tr>
 <tr>
 <td><code>mfx.message.thing_id</code></td>
@@ -495,7 +496,7 @@
 </tr>
 </tbody>
 </table>
-<p><code>mfx.log</code> is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: <code>base</code>, <code>math</code>, <code>string</code>, <code>table</code>. The <code>print</code> function is disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.</p>
+<p><code>mfx.log</code> is currently the only bound function, since scripts only run as read-only rule conditions today. Available Lua standard libraries: <code>base</code>, <code>math</code>, <code>string</code>, <code>table</code>. The <code>print</code>, <code>dofile</code>, <code>loadfile</code> and <code>load</code> functions are disabled. Scripts are capped at 1,000,000 instructions and 65,535 bytes of source.</p>
 <p>Example condition script — flags condensation risk from a payload's <code>temperature</code> and <code>humidity</code> fields:</p>
 <pre><code class="language-lua">local payload = mfx.message.payload
 local temp = tonumber(payload[&quot;temperature&quot;])
@@ -537,6 +538,7 @@ return spread &lt;= 2.0
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   http://localhost/svcrules/groups/&lt;group_id&gt;/scripts
 </code></pre>
+<p>The script list supports <code>offset</code>, <code>limit</code> (max 200), <code>order</code> (<code>id</code> or <code>name</code>), <code>dir</code> (<code>asc</code>/<code>desc</code>), and <code>name</code> (partial match) query parameters.</p>
 <h3 id="view-a-script">View a Script<a class="headerlink" href="#view-a-script" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
@@ -615,12 +617,12 @@ return spread &lt;= 2.0
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   http://localhost/svcrules/things/&lt;thing_id&gt;/runs
 </code></pre>
-<p>Both listing endpoints support the same <code>status</code>, <code>from</code>, <code>to</code> (Unix ms), and pagination query parameters.</p>
+<p>Both listing endpoints support <code>status</code> (<code>success</code>/<code>fail</code>), <code>from</code> and <code>to</code> (Unix time in milliseconds), <code>offset</code>, <code>limit</code> (max 200), <code>order</code> (<code>id</code>, <code>started_at</code>, <code>finished_at</code> or <code>status</code>) and <code>dir</code> query parameters.</p>
 <h3 id="delete-runs">Delete Runs<a class="headerlink" href="#delete-runs" title="Permanent link">#</a></h3>
 <pre><code class="language-bash">curl -s -S -i -X PATCH \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
   -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;script_run_ids&quot;: [&quot;789e4567-e89b-12d3-a456-426614174xyz&quot;]}' \
+  -d '{&quot;script_run_ids&quot;: [&quot;789e4567-e89b-12d3-a456-426614174def&quot;]}' \
   http://localhost/svcrules/runs
 </code></pre>
 <p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>

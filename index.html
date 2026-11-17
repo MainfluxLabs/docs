@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -43,8 +44,22 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Overview</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#connectivity-and-security">Connectivity and Security</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#license">License</a>
+    <li class="toctree-l3"><a class="reference internal" href="#device-management">Device Management</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data">Data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#processing-and-notifications">Processing and Notifications</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#integration">Integration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#operations">Operations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a>
     </li>
     </ul>
                 </li>
@@ -172,24 +187,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="mainfluxlabs">MainfluxLabs<a class="headerlink" href="#mainfluxlabs" title="Permanent link">#</a></h1>
-<p><a href="getting-started/">Getting Started</a>
-<a href="api/">API</a></p>
-<p>Mainflux is modern, scalable, secure open source and patent-free IoT cloud platform written in Go.</p>
-<p>It accepts user and thing connections over various network protocols (e.g. HTTP,
-MQTT, WebSocket, CoAP), thus making a seamless bridge between them. It is used as the IoT middleware
-for building complex IoT solutions.</p>
-<p><img alt="banner" src="img/gopherBanner.jpg" /></p>
-<h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h3>
+                <p><img src="img/mainflux-logo.png" alt="Mainflux" width="96"></p>
+<h1 id="mainflux">Mainflux<a class="headerlink" href="#mainflux" title="Permanent link">#</a></h1>
+<p>Mainflux is an open-source, patent-free IoT platform written in Go. It connects devices over HTTP, MQTT, WebSocket and CoAP, secured with mTLS and DTLS, and covers the complete IoT workflow: device provisioning, access control, shadows, OTA updates and Modbus polling; message storage, file storage and bulk import; rule-based processing with alarms and notifications; integration through webhooks and downlinks; and audit and tracing for operations.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h2>
+<h3 id="connectivity-and-security">Connectivity and Security<a class="headerlink" href="#connectivity-and-security" title="Permanent link">#</a></h3>
 <ul>
-<li>Protocol bridging (e.g. HTTP, MQTT, WebSocket, CoAP)</li>
-<li>Device management and provisioning</li>
-<li>Fine-grained access control</li>
-<li>Platform logging and instrumentation support</li>
-<li>Container-based deployment using Docker</li>
+<li><a href="messaging/">Messaging</a> — things publish messages over HTTP, MQTT, WebSocket and CoAP, with DTLS for CoAP.</li>
+<li><a href="certs/">Certs</a> — X.509 certificates for mutual TLS authentication of things.</li>
+<li><a href="authentication/">Authentication</a> — JWT-based keys for all user-facing operations.</li>
+<li><a href="authorization/">Authorization</a> — role-based access control at organization and group level.</li>
 </ul>
-<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">#</a></h2>
-<p><a href="https://github.com/MainfluxLabs/mainflux/blob/master/LICENSE">Apache-2.0</a></p>
+<h3 id="device-management">Device Management<a class="headerlink" href="#device-management" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="getting-started/#step-3-provision-the-system">Getting Started</a> — provisioning of things, profiles and groups.</li>
+<li><a href="shadows/">Shadows</a> — the reported and desired state of each thing, available while the thing is offline.</li>
+<li><a href="ota/">OTA</a> — over-the-air firmware rollout to things, with per-thing progress reporting.</li>
+<li><a href="modbus/">Modbus</a> — scheduled Modbus TCP polling that reads or writes registers and coils and publishes the values.</li>
+</ul>
+<h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="storage/">Storage</a> — message persistence in TimescaleDB, with PostgreSQL as an optional add-on.</li>
+<li><a href="converters/">Converters</a> — bulk import of CSV and JSON files as platform messages.</li>
+<li><a href="filestore/">Filestore</a> — file storage for things and groups on the local filesystem or SeaweedFS.</li>
+</ul>
+<h3 id="processing-and-notifications">Processing and Notifications<a class="headerlink" href="#processing-and-notifications" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="rules/">Rules</a> — a rule engine that evaluates incoming messages by threshold comparison or Lua scripts.</li>
+<li><a href="alarms/">Alarms</a> — persisted alarms raised by rule actions.</li>
+<li><a href="notifiers/">Notifiers</a> — email notifications over SMTP and SMS notifications over SMPP.</li>
+</ul>
+<h3 id="integration">Integration<a class="headerlink" href="#integration" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="webhooks/">Webhooks</a> — real-time delivery of device messages to external systems as HTTP POST requests.</li>
+<li><a href="downlinks/">Downlinks</a> — scheduled outbound HTTP requests for things and groups.</li>
+<li><a href="uiconfigs/">UIConfigs</a> — JSON configuration objects for dashboards and frontends, scoped to organizations, groups and things.</li>
+</ul>
+<h3 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="audit/">Audit</a> — an audit trail of events from all services, queryable through a read-only API.</li>
+<li><a href="tracing/">Tracing</a> — distributed tracing of all services with Jaeger.</li>
+</ul>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="getting-started/">Getting Started</a></li>
+<li><a href="architecture/">Architecture</a></li>
+<li><a href="api/">API Reference</a></li>
+</ul>
+<p>Mainflux is licensed under <a href="https://github.com/MainfluxLabs/mainflux/blob/master/LICENSE">Apache-2.0</a>.</p>
               
             </div>
           </div><footer>
@@ -243,5 +288,5 @@ for building complex IoT solutions.</p>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-11-12 12:29:41.149122+00:00
+Build Date UTC : 2026-11-17 15:39:38.933406+00:00
 -->

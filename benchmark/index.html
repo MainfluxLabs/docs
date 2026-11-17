@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -222,10 +223,12 @@ sudo pip install -r requirements.txt
 <pre><code>./bin/mzbench start_server
 </code></pre>
 <p>The <a href="https://github.com/mzbench/mzbench/blob/master/doc/cli.md">MZBench CLI</a> lets you control the server and benchmarks from the command line.</p>
-<p>Another way of using MZBench is over <a href="https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md">Dashboard</a>. After starting server you should check dashboard on <code>http://localhost:4800</code>. </p>
-<p>If you install MZBench on an external server (e.g. a Digital Ocean droplet), the dashboard is reachable at <code>&lt;server_ip&gt;:4800</code> only after you:
-- change default value for <code>network_interface</code> from <code>127.0.0.1</code> to <code>0.0.0.0</code> in configuration file. Default configuration file location is <code>~/.config/mzbench/server.config</code>, create it from sample configuration file <code>~/.config/mzbench/server.config.example</code>
-- open port <code>4800</code> with <code>ufw allow 4800</code></p>
+<p>Another way of using MZBench is over <a href="https://github.com/mzbench/mzbench/blob/master/doc/dashboard.md">Dashboard</a>. After starting server you should check dashboard on <code>http://localhost:4800</code>.</p>
+<p>If you install MZBench on an external server (e.g. a Digital Ocean droplet), the dashboard is reachable at <code>&lt;server_ip&gt;:4800</code> only after you:</p>
+<ul>
+<li>change default value for <code>network_interface</code> from <code>127.0.0.1</code> to <code>0.0.0.0</code> in configuration file. Default configuration file location is <code>~/.config/mzbench/server.config</code>, create it from sample configuration file <code>~/.config/mzbench/server.config.example</code></li>
+<li>open port <code>4800</code> with <code>ufw allow 4800</code></li>
+</ul>
 <p>MZBench can run your test scenarios on many nodes, simultaneously. For now, you are able to run tests locally, so your nodes will be virtual nodes on machine where MZBench server is installed (your PC or DO droplet). You can try one of our <a href="https://github.com/MainfluxLabs/benchmark/tree/master/mzbench">MQTT scenarios</a> that uses <a href="https://github.com/vernemq/vmq_mzbench">vmq_mzbench</a> worker. Copy-paste scenario in MZBench dashboard, click button <em>Environmental variables</em> -&gt; <em>Add from script</em> and add appropriate values. Because it's running locally, you should try with smaller values, for example for fan-in scenario use 100 publishers on 2 nodes.
 Try this before moving forward in setting up Amazon EC2 plugin.</p>
 <h3 id="setting-up-amazon-ec2-plugin">Setting up Amazon EC2 plugin<a class="headerlink" href="#setting-up-amazon-ec2-plugin" title="Permanent link">#</a></h3>
@@ -260,7 +263,7 @@ Also, in EC2 dashboard go to section <code>key pairs</code>, click <code>Actions
                           {secret_access_key, &quot;IAM_USER_SECRET_ACCESS_KEY&quot;}
                         ],
                         instance_user =&gt; &quot;ec2-user&quot;
-                  }}              
+                  }}
               ]
 }
 ]}].

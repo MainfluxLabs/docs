@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -212,7 +213,7 @@
 <p>Sometimes it makes sense to run Things as a standalone service to reduce network traffic or simplify deployment. This means that Things service operates only using a single user and is able to authorize it without gRPC communication with Auth service. When running Things in the standalone mode, <code>Auth</code> and <code>Users</code> services can be omitted from the deployment.
 To run service in a standalone mode, set <code>MF_THINGS_STANDALONE_EMAIL</code> and <code>MF_THINGS_STANDALONE_TOKEN</code>.</p>
 <h2 id="client-configuration">Client Configuration<a class="headerlink" href="#client-configuration" title="Permanent link">#</a></h2>
-<p>If you wish to secure the gRPC connection to <code>Things</code> and <code>Users</code> services you must define the CAs that you trust.  This does not support mutual certificate authentication.</p>
+<p>If you wish to secure the gRPC connection to <code>Things</code> and <code>Users</code> services you must define the CAs that you trust. This does not support mutual certificate authentication.</p>
 <h3 id="adapter-configuration">Adapter Configuration<a class="headerlink" href="#adapter-configuration" title="Permanent link">#</a></h3>
 <p><code>MF_HTTP_ADAPTER_CA_CERTS</code>, <code>MF_MQTT_ADAPTER_CA_CERTS</code>, <code>MF_WS_ADAPTER_CA_CERTS</code>, <code>MF_COAP_ADAPTER_CA_CERTS</code> - the path to a file that contains the CAs in PEM format. If not set, the default connection will be insecure. If it fails to read the file, the adapter will fail to start up.</p>
 <h3 id="things_1">Things<a class="headerlink" href="#things_1" title="Permanent link">#</a></h3>

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/eui.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -269,7 +270,7 @@ curl -s -S -i -X PATCH \
   https://localhost/downlinks
 </code></pre>
 <h2 id="backup-and-restore">Backup and restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
-<p>The service exposes backup and restore endpoints for exporting and re-importing all downlink definitions. This is useful for migrations, environment snapshots, or disaster recovery.</p>
+<p>The service exposes backup and restore endpoints for exporting and re-importing all downlink definitions. This is useful for migrations, environment snapshots, or disaster recovery. Both endpoints require admin privileges.</p>
 <pre><code class="language-bash"># Export all downlinks
 curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
