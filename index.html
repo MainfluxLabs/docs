@@ -45,7 +45,9 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#connectivity-and-security">Connectivity and Security</a>
+    <li class="toctree-l3"><a class="reference internal" href="#connectivity">Connectivity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#security-and-access-control">Security and Access Control</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#device-management">Device Management</a>
     </li>
@@ -189,44 +191,51 @@
               
                 <p><img src="img/mainflux-logo.png" alt="Mainflux" width="96"></p>
 <h1 id="mainflux">Mainflux<a class="headerlink" href="#mainflux" title="Permanent link">#</a></h1>
-<p>Mainflux is an open-source, patent-free IoT platform written in Go. It connects devices over HTTP, MQTT, WebSocket and CoAP, secured with mTLS and DTLS, and covers the complete IoT workflow: device provisioning, access control, shadows, OTA updates and Modbus polling; message storage, file storage and bulk import; rule-based processing with alarms and notifications; integration through webhooks and downlinks; and audit and tracing for operations.</p>
+<p>Mainflux is an open-source IoT platform that connects devices, manages them across organizations, and turns their data into action.</p>
+<p>Devices publish over HTTP, MQTT, WebSocket and CoAP, and receive commands over MQTT, WebSocket and CoAP. Where data cannot be pushed, Mainflux pulls it: it polls Modbus TCP equipment and external HTTP APIs on a schedule. Historical data arrives through CSV and JSON import, and files through the Filestore API.</p>
+<p>Every incoming message can be stored for querying, evaluated by rules that raise alarms and send email or SMS notifications, and forwarded to external systems through webhooks.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h2>
-<h3 id="connectivity-and-security">Connectivity and Security<a class="headerlink" href="#connectivity-and-security" title="Permanent link">#</a></h3>
+<h3 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="messaging/">Messaging</a> — things publish messages over HTTP, MQTT, WebSocket and CoAP, with DTLS for CoAP.</li>
-<li><a href="certs/">Certs</a> — X.509 certificates for mutual TLS authentication of things.</li>
+<li><a href="messaging/">Messaging</a> — publish-subscribe messaging with subtopics, and commands to individual things or entire groups.</li>
+<li><a href="modbus/">Modbus</a> — scheduled Modbus TCP polling that reads or writes registers and coils and publishes the values.</li>
+<li><a href="downlinks/">Downlinks</a> — scheduled HTTP requests to external APIs, with each response published as a message of the thing.</li>
+</ul>
+<h3 id="security-and-access-control">Security and Access Control<a class="headerlink" href="#security-and-access-control" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="certs/">Certs</a> — X.509 certificates for mTLS on HTTP, MQTT and WebSocket; CoAP uses DTLS with pre-shared keys.</li>
+<li><a href="api/#users">Users</a> — user accounts with self-registration, platform invites and OAuth login.</li>
 <li><a href="authentication/">Authentication</a> — JWT-based keys for all user-facing operations.</li>
 <li><a href="authorization/">Authorization</a> — role-based access control at organization and group level.</li>
 </ul>
 <h3 id="device-management">Device Management<a class="headerlink" href="#device-management" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="getting-started/#step-3-provision-the-system">Getting Started</a> — provisioning of things, profiles and groups.</li>
-<li><a href="shadows/">Shadows</a> — the reported and desired state of each thing, available while the thing is offline.</li>
+<li><a href="api/#things">Provisioning</a> — organizations, groups, profiles and things managed through the HTTP API.</li>
+<li><a href="shadows/">Shadows</a> — reported and desired state of each thing, readable and settable while the thing is offline.</li>
 <li><a href="ota/">OTA</a> — over-the-air firmware rollout to things, with per-thing progress reporting.</li>
-<li><a href="modbus/">Modbus</a> — scheduled Modbus TCP polling that reads or writes registers and coils and publishes the values.</li>
 </ul>
 <h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="storage/">Storage</a> — message persistence in TimescaleDB, with PostgreSQL as an optional add-on.</li>
+<li><a href="storage/">Storage</a> — message persistence in TimescaleDB, with PostgreSQL as an optional add-on, and an HTTP API for querying stored messages.</li>
 <li><a href="converters/">Converters</a> — bulk import of CSV and JSON files as platform messages.</li>
-<li><a href="filestore/">Filestore</a> — file storage for things and groups on the local filesystem or SeaweedFS.</li>
+<li><a href="filestore/">Filestore</a> — file upload and storage for things and groups on the local filesystem or SeaweedFS.</li>
 </ul>
 <h3 id="processing-and-notifications">Processing and Notifications<a class="headerlink" href="#processing-and-notifications" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="rules/">Rules</a> — a rule engine that evaluates incoming messages by threshold comparison or Lua scripts.</li>
+<li><a href="rules/">Rules</a> — threshold and Lua script conditions evaluated on incoming messages.</li>
 <li><a href="alarms/">Alarms</a> — persisted alarms raised by rule actions.</li>
 <li><a href="notifiers/">Notifiers</a> — email notifications over SMTP and SMS notifications over SMPP.</li>
 </ul>
 <h3 id="integration">Integration<a class="headerlink" href="#integration" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="webhooks/">Webhooks</a> — real-time delivery of device messages to external systems as HTTP POST requests.</li>
-<li><a href="downlinks/">Downlinks</a> — scheduled outbound HTTP requests for things and groups.</li>
 <li><a href="uiconfigs/">UIConfigs</a> — JSON configuration objects for dashboards and frontends, scoped to organizations, groups and things.</li>
 </ul>
 <h3 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="audit/">Audit</a> — an audit trail of events from all services, queryable through a read-only API.</li>
+<li><a href="audit/">Audit</a> — audit trail of events from all services, queryable through a read-only API.</li>
 <li><a href="tracing/">Tracing</a> — distributed tracing of all services with Jaeger.</li>
+<li><a href="api/#backup-and-restore">Backup and Restore</a> — export and restore of users, organizations, things and messages.</li>
 </ul>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <ul>
@@ -288,5 +297,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-11-17 15:39:38.933406+00:00
+Build Date UTC : 2026-11-17 20:41:43.134690+00:00
 -->
