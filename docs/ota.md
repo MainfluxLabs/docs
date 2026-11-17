@@ -36,7 +36,7 @@ Each thing of an update has its own progress: `status`, `error`, `reported_versi
 3. **Download.** The thing downloads the firmware from the `url` of the update with its thing key, resuming with HTTP Range requests if needed (see [Filestore](filestore.md#checksums-downloads-and-range-requests)), and verifies the SHA-256 checksum.
 4. **Report.** The thing reports its progress with `POST /ota/status`, or by publishing on its `things/<thing_id>/ota/status` MQTT topic. A thing can report only its own status. Reports reach only the OTA service; they are not stored and do not trigger rules or webhooks. A `succeeded` report must include `version`; if it differs from the version of the update, the thing is marked `failed`.
 5. **Timeout.** Things without progress for the `timeout` of the update are marked `failed` with `timed out`. The service checks this every `MF_OTA_TIMEOUT_CHECK_INTERVAL`.
-6. **Retry.** A user can move the failed things of an update back to `pending`, and they are notified again. Things that received a newer update in the meantime are skipped, so a retry never rolls a thing back to older firmware. The service never retries on its own.
+6. **Retry.** A user can move the failed things of an update back to `pending`, and they are notified again. Things with a newer update are skipped. Preventing a downgrade is the firmware's job. The service never retries on its own.
 
 Viewing updates requires the viewer role in the group, while creating, retrying and removing updates require the editor role. Updates and progress are removed when their group or thing is removed.
 
