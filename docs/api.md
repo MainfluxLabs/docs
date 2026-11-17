@@ -442,9 +442,10 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 Response:
 
 ```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
+HTTP/1.1 204 No Content
 ```
+
+The request fails with `409 Conflict` when the user is already enabled.
 
 #### Disable User
 
@@ -459,9 +460,10 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 Response:
 
 ```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
+HTTP/1.1 204 No Content
 ```
+
+The request fails with `409 Conflict` when the user is already disabled.
 
 #### Impersonate User
 
