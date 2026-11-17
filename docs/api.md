@@ -94,7 +94,8 @@ Content-Type: application/json
 ### Create User
 
 The predefined user within the Mainflux system is the `platform root admin`.
-In order to add users to the system, the `platform root admin` or a `platform admin` must create accounts for them.
+The `platform root admin` or a `platform admin` adds users to the system by creating their accounts with this endpoint or by sending them a [Platform Invite](#create-platform-invite).
+Users can also [register themselves](#self-register-user) when self-registration is enabled.
 
 > Must-have: `email`, `password` (password must meet the [password policy](authentication.md#password-policy)) and `user_token`
 
@@ -123,6 +124,7 @@ Access-Control-Allow-Headers: *
 ### Self-Register User
 
 Allows a new user to register themselves. The system sends an email verification link to complete registration.
+Self-registration is enabled when `MF_USERS_SELF_REGISTER_ENABLED` is `true`, which is the default; otherwise the request fails with `403 Forbidden`.
 
 > Must-have: `user` object (with `email` and `password`) and `redirect_path` (URL for verification)
 
@@ -501,7 +503,7 @@ HTTP/1.1 204 No Content
 
 Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform root admin can impersonate a platform admin. Platform root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
-The response holds a login key for the impersonated user. The key carries the platform admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the platform admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
+The response holds a login key for the impersonated user. The key carries the impersonating admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the impersonating admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -2461,7 +2463,7 @@ The `org_invite` field is omitted when the Platform Invite has no org component.
 
 ### Revoke Platform Invite
 
-Cancels a pending Platform Invite. Only a platform admin can revoke.
+Cancels a pending Platform Invite. Requires admin privileges.
 
 > Must-have: `user_token`, `invite_id`
 
