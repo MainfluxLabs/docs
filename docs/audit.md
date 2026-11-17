@@ -4,15 +4,15 @@ The Audit service consumes Redis Stream events published by every other Mainflux
 
 Each event contains the following fields:
 
-| Field         | Description                                                                                                                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `id`          | Unique event identifier                                                                                                        |
-| `occurred_at` | RFC 3339 timestamp of when the recorded action occurred                                                                        |
-| `operation`   | The operation that triggered the event, e.g. `thing.create`, `org.create`                                                      |
-| `actor`       | `{id, email}` of the user whose action triggered the event, plus `impersonator` `{id, email}` when an admin acted as that user |
-| `org_id`      | Organization the event belongs to (absent if not tied to an org)                                                               |
-| `group_id`    | Group the event belongs to (absent if not tied to a group)                                                                     |
-| `action_data` | Operation-specific payload describing the event (always present)                                                               |
+| Field         | Description                                                                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Unique event identifier                                                                                                                                           |
+| `occurred_at` | RFC 3339 timestamp of when the recorded action occurred                                                                                                           |
+| `operation`   | The operation that triggered the event, e.g. `thing.create`, `org.create`                                                                                         |
+| `actor`       | `{id, email}` of the user whose action triggered the event, plus `impersonator` `{id, email}` when the platform root admin or a platform admin acted as that user |
+| `org_id`      | Organization the event belongs to (absent if not tied to an org)                                                                                                  |
+| `group_id`    | Group the event belongs to (absent if not tied to a group)                                                                                                        |
+| `action_data` | Operation-specific payload describing the event (always present)                                                                                                  |
 
 ## Impersonation
 

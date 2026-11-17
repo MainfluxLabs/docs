@@ -46,6 +46,8 @@ Below are the predefined roles in the system:
 - Cannot assign or unassign the `Platform Admin` role, back up or restore Users, or enable, disable or change the password of the `Platform Root Admin` or of another `Platform Admin`.
 - Cannot be disabled while holding the role.
 
+Operations that require admin privileges are available to the `Platform Root Admin` and to every `Platform Admin`.
+
 > Although these roles are the same for an Organization and a Group, **they operate completely separately at those levels**,
 > which means that one User **can have different roles** in an Organization and a Group within that Organization.
 > The exception is the Organization `Owner` and `Admin`, who can access every Group in their Organization without Group membership.
