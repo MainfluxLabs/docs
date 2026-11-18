@@ -30,7 +30,7 @@ Each thing of an update has its own progress: `status`, `error`, `reported_versi
 | `succeeded`   | The thing reported the version of the update                                 |
 | `failed`      | The thing reported an error or another version, timed out, or was superseded |
 
-The `status` of an update is computed from its things on every read and is never stored.
+The `status` of an update is derived from the statuses of its things and is updated whenever one of them changes.
 
 | Status                    | Meaning                                                  |
 | ------------------------- | -------------------------------------------------------- |
