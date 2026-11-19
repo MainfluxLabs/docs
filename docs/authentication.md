@@ -12,7 +12,7 @@ Mainflux uses JWT-based authentication keys for all user-facing operations. Ther
 
 **Login keys** are issued automatically when a user logs in. They expire after a short session period and can be refreshed within the session. Logging out revokes the session, after which its login keys can no longer be refreshed. Every authenticated request (other than registration and login) must carry a valid key in the `Authorization: Bearer <key>` header.
 
-The platform root admin or a platform admin can also obtain a login key for another user through [impersonation](api.md#impersonate-user). That key carries the impersonating admin's `impersonator_id` and `impersonator_email` claims, which stay on the key across refresh.
+The platform owner or a platform admin can also obtain a login key for another user through [impersonation](api.md#impersonate-user). That key carries the impersonating admin's `impersonator_id` and `impersonator_email` claims, which stay on the key across refresh.
 
 **API keys** are created on demand and provide stable, long-lived access for scripts, integrations, and automated workflows. They can be given an explicit expiration time; if none is set, they never expire. Because API keys must be validated against the database on each request (unlike login keys, which are self-contained JWTs), they are the only key type that supports revocation. Disabling a user deletes all of their API keys. An API key holder can perform all the same operations as a logged-in user — managing things, profiles, groups, and the user's own profile — **except** creating additional API keys.
 
@@ -36,7 +36,7 @@ Passwords are checked on registration, password change and password reset. Login
 - The password must not be one of the 100,000 most common passwords, compared case-insensitively.
 - The password must not contain the local part of the user's e-mail address.
 
-`MF_USERS_ADMIN_PASSWORD` must meet the policy, otherwise the users service fails to start.
+`MF_USERS_PLATFORM_OWNER_PASSWORD` must meet the policy, otherwise the users service fails to start.
 
 ## Device Authentication
 
