@@ -74,7 +74,9 @@ The response contains the created update with `201 Created`.
 
 ### List updates of a group
 
-The `status` query parameter filters the updates by status.
+The `status` query parameter filters the updates by status. The `order` query parameter sorts
+them by `id`, `created_at`, `version`, `status` or a `stats` count (`targets`, `pending`,
+`downloading`, `installing`, `succeeded`, `failed`).
 
 ```bash
 curl -s -S -i \
