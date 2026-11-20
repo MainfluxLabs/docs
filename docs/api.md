@@ -2154,6 +2154,8 @@ Content-Length: 660
 Generates a new API key. The new API key is uniquely identified by its ID.
 Duration is expressed in seconds.
 
+The `type` must be `2` and the `duration` must be positive; otherwise the request fails with `400 Bad Request`. Login and recovery keys are issued only by the Users service.
+
 > Must-have: `user_token`
 
 ```bash
@@ -2238,6 +2240,8 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
+
+The request fails with `404 Not Found` when the API key does not exist.
 
 ## Org Invites
 
