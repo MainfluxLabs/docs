@@ -254,8 +254,8 @@ which will properly configure and run all microservices.
 ## Events
 
 Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
-The `things` service publishes events to the `mainflux.things` stream, and the `auth` service publishes
-events to the `mainflux.auth` stream.
+The `things` service publishes events to the `mainflux.things` stream, the `auth` service publishes
+events to the `mainflux.auth` stream, and the `users` service publishes events to the `mainflux.users` stream.
 
 Besides the operation-specific fields described below, every event carries the following fields:
 
@@ -274,13 +274,51 @@ field that can have one of the following values:
 - `thing.create` for thing creation,
 - `thing.update` for thing update,
 - `thing.update_group_and_profile` for thing group and profile reassignment,
+- `thing.update_metadata` for merging keys into thing metadata,
+- `thing.update_external_key` for setting a thing external key (the key itself is not included),
+- `thing.remove_external_key` for thing external key removal,
 - `thing.remove` for thing removal,
 - `profile.create` for profile creation,
 - `profile.update` for profile update,
 - `profile.remove` for profile removal,
-- `group.remove` for group removal.
+- `group.create` for group creation,
+- `group.update` for group update,
+- `group.remove` for group removal,
+- `group_membership.create` for adding a member to a group,
+- `group_membership.update` for changing a group member's role,
+- `group_membership.remove` for removing a member from a group.
 
-The `auth` service publishes `org.create` and `org.remove` events.
+The `auth` service publishes the following events to the `mainflux.auth` stream:
+- `org.create` for org creation,
+- `org.update` for org update,
+- `org.remove` for org removal,
+- `org_membership.create` for adding a member to an org,
+- `org_membership.update` for changing an org member's role,
+- `org_membership.remove` for removing a member from an org,
+- `org_invite.create` for inviting a user to an org,
+- `org_invite.revoke` for revoking an org invite,
+- `org_invite.accept` for accepting an org invite,
+- `org_invite.decline` for declining an org invite,
+- `api_key.issue` for issuing an API key (the key secret is not included),
+- `api_key.revoke` for revoking an API key,
+- `session.logout_all` for ending all of a user's sessions,
+- `user.login` for starting a session (the user is the actor),
+- `user.impersonate` for starting an impersonated session.
+
+The `users` service publishes the following events to the `mainflux.users` stream:
+- `user.register` for registering a user; for self-registration and registration by invite the new user is the actor,
+- `user.login_failed` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
+- `user.update` for user metadata update,
+- `user.change_password` for changing a password, by the user or by a platform admin for another user,
+- `user.reset_password` for setting a new password through password recovery (the user is the actor),
+- `user.enable` for enabling a user,
+- `user.disable` for disabling a user,
+- `user.assign_admin_role` for assigning the platform admin role,
+- `user.unassign_admin_role` for removing the platform admin role,
+- `platform_invite.create` for inviting a person to register on the platform; when it includes an org invite, the event carries that org,
+- `platform_invite.revoke` for revoking a platform invite.
+
+Events never carry secrets such as keys, passwords or tokens.
 
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
