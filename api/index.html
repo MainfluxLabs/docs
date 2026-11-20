@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../css/eui.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -552,8 +552,8 @@ Content-Type: application/json
 Content-Type: application/json
 </code></pre>
 <h3 id="create-user">Create User<a class="headerlink" href="#create-user" title="Permanent link">#</a></h3>
-<p>The predefined user within the Mainflux system is the <code>platform root admin</code>.
-The <code>platform root admin</code> or a <code>platform admin</code> adds users to the system by creating their accounts with this endpoint or by sending them a <a href="#create-platform-invite">Platform Invite</a>.
+<p>The predefined user within the Mainflux system is the <code>platform owner</code>.
+The <code>platform owner</code> or a <code>platform admin</code> adds users to the system by creating their accounts with this endpoint or by sending them a <a href="#create-platform-invite">Platform Invite</a>.
 Users can also <a href="#self-register-user">register themselves</a> when self-registration is enabled.</p>
 <blockquote>
 <p>Must-have: <code>email</code>, <code>password</code> (password must meet the <a href="../authentication/#password-policy">password policy</a>) and <code>user_token</code></p>
@@ -648,11 +648,11 @@ Content-Length: 120
   &quot;metadata&quot;: {
     &quot;foo&quot;: &quot;bar&quot;
   },
-  &quot;role&quot;: &quot;admin&quot;
+  &quot;role&quot;: &quot;platform_admin&quot;
 }
 </code></pre>
 <h3 id="list-users">List Users<a class="headerlink" href="#list-users" title="Permanent link">#</a></h3>
-<p>List all users. Requires admin privileges. The <code>role</code> field is <code>root</code> for the platform root admin and <code>admin</code> for a platform admin, and it is omitted for regular users.</p>
+<p>List all users. Requires admin privileges. The <code>role</code> field is <code>platform_owner</code> for the platform owner and <code>platform_admin</code> for a platform admin, and it is omitted for regular users.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
@@ -663,7 +663,7 @@ Content-Length: 120
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:11:28 GMT
 Content-Type: application/json
-Content-Length: 217
+Content-Length: 213
 Connection: keep-alive
 Strict-Transport-Security: max-age=63072000; includeSubdomains
 X-Frame-Options: DENY
@@ -672,7 +672,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{&quot;total&quot;:2,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;users&quot;:[{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;role&quot;:&quot;root&quot;},{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;}]}
+{&quot;total&quot;:2,&quot;offset&quot;:0,&quot;limit&quot;:10,&quot;users&quot;:[{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;role&quot;:&quot;platform_owner&quot;},{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;}]}
 </code></pre>
 <h3 id="search-users">Search Users<a class="headerlink" href="#search-users" title="Permanent link">#</a></h3>
 <p>Search users with optional filters such as status, email, and metadata. Supports pagination and ordering. Requires admin privileges.</p>
@@ -834,7 +834,7 @@ Location: https://localhost/auth/login#token=&lt;user_token&gt;
 </code></pre>
 <p>The request fails with <code>409 Conflict</code> when the user is already disabled.</p>
 <h4 id="assign-admin-role">Assign Admin Role<a class="headerlink" href="#assign-admin-role" title="Permanent link">#</a></h4>
-<p>Assign the platform admin role to an enabled user without a platform role. Requires platform root admin privileges.</p>
+<p>Assign the platform admin role to an enabled user without a platform role. Requires platform owner privileges.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
 </blockquote>
@@ -844,7 +844,7 @@ Location: https://localhost/auth/login#token=&lt;user_token&gt;
 <pre><code class="language-bash">HTTP/1.1 204 No Content
 </code></pre>
 <h4 id="unassign-admin-role">Unassign Admin Role<a class="headerlink" href="#unassign-admin-role" title="Permanent link">#</a></h4>
-<p>Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform root admin privileges.</p>
+<p>Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform owner privileges.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
 </blockquote>
@@ -854,7 +854,7 @@ Location: https://localhost/auth/login#token=&lt;user_token&gt;
 <pre><code class="language-bash">HTTP/1.1 204 No Content
 </code></pre>
 <h4 id="impersonate-user">Impersonate User<a class="headerlink" href="#impersonate-user" title="Permanent link">#</a></h4>
-<p>Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform root admin can impersonate a platform admin. Platform root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.</p>
+<p>Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform owner can impersonate a platform admin. The platform owner, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.</p>
 <p>The response holds a login key for the impersonated user. The key carries the impersonating admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a <code>user.impersonate</code> event. Logging out, or logging out of all sessions, ends only the impersonated session. When the impersonating admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> (Bearer token), <code>id</code> (user ID)</p>
@@ -1052,21 +1052,21 @@ Content-Length: 235
 {&quot;limit&quot;:10,&quot;offset&quot;:0,&quot;total&quot;:2,&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;a08bd22c-916d-4ed1-8ca4-8d32ede58822&quot;,&quot;email&quot;:&quot;user@example.com&quot;,&quot;role&quot;:&quot;owner&quot;},{&quot;member_id&quot;:&quot;34cf0a14-dc23-42ed-87bd-fa7ecc205bc2&quot;,&quot;email&quot;:&quot;user_2@example.com&quot;,&quot;role&quot;:&quot;admin&quot;}
 </code></pre>
 <h2 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">#</a></h2>
-<p>Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform root admin role of the current login key.</p>
+<p>Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform owner role of the current login key.</p>
 <h3 id="backup-users">Backup Users<a class="headerlink" href="#backup-users" title="Permanent link">#</a></h3>
-<p>Export the platform root admin, all users and their OAuth identities. Requires platform root admin privileges. The response contains password hashes.</p>
+<p>Export the platform owner, all users and their OAuth identities. Requires platform owner privileges. The response contains password hashes.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcusers/backup -o users-backup.json
 </code></pre>
 <p>Content of <code>users-backup.json</code>:</p>
-<pre><code class="language-json">{&quot;admin&quot;:{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;},&quot;users&quot;:[{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;}],&quot;identities&quot;:[]}
+<pre><code class="language-json">{&quot;platform_owner&quot;:{&quot;id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;email&quot;:&quot;admin@example.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;},&quot;users&quot;:[{&quot;id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;email&quot;:&quot;test@email.com&quot;,&quot;password&quot;:&quot;&lt;password_hash&gt;&quot;,&quot;status&quot;:&quot;enabled&quot;}],&quot;identities&quot;:[]}
 </code></pre>
 <h3 id="restore-users">Restore Users<a class="headerlink" href="#restore-users" title="Permanent link">#</a></h3>
-<p>Restore users and OAuth identities from a backup. Requires platform root admin privileges.</p>
-<p>The backed up <code>admin</code> keeps the platform root admin role only when its e-mail matches the configured platform root admin. The platform root admin then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up <code>admin</code> is restored as a regular user.</p>
-<p>When the platform root admin takes another ID, the current login keys lose the platform root admin role. Restore Users last, or log in again afterwards.</p>
+<p>Restore users and OAuth identities from a backup. Requires platform owner privileges.</p>
+<p>The backed up <code>platform_owner</code> keeps its role only when its e-mail matches the configured platform owner. The platform owner then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up <code>platform_owner</code> is restored as a regular user.</p>
+<p>When the platform owner takes another ID, the current login keys lose the platform owner role. Restore Users last, or log in again afterwards.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> and the backup JSON</p>
 </blockquote>
@@ -1083,11 +1083,11 @@ Content-Length: 235
 <pre><code class="language-bash">curl -s -S -X GET -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; http://localhost/svcauth/backup -o auth-backup.json
 </code></pre>
 <p>Content of <code>auth-backup.json</code>:</p>
-<pre><code class="language-json">{&quot;orgs&quot;:[{&quot;id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;name&quot;:&quot;org&quot;,&quot;owner_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;org_id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;user_roles&quot;:[{&quot;user_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;role&quot;:&quot;root&quot;},{&quot;user_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;role&quot;:&quot;admin&quot;}]}
+<pre><code class="language-json">{&quot;orgs&quot;:[{&quot;id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;name&quot;:&quot;org&quot;,&quot;owner_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;org_memberships&quot;:[{&quot;member_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;org_id&quot;:&quot;c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;created_at&quot;:&quot;2024-01-01T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2024-01-01T00:00:00Z&quot;}],&quot;user_roles&quot;:[{&quot;user_id&quot;:&quot;4bf4a13a-e9c3-4207-aa11-fe569986c301&quot;,&quot;role&quot;:&quot;platform_owner&quot;},{&quot;user_id&quot;:&quot;d782b42b-e317-4cd7-9dd0-4e2ea0f349c8&quot;,&quot;role&quot;:&quot;platform_admin&quot;}]}
 </code></pre>
 <h3 id="restore-orgs">Restore Orgs<a class="headerlink" href="#restore-orgs" title="Permanent link">#</a></h3>
-<p>Restore Orgs, Org Memberships and platform roles from a backup. Requires platform root admin privileges.</p>
-<p>The <code>root</code> role is never restored, since it belongs only to the configured platform root admin. A user who already has a platform role keeps it. Each <code>user_roles</code> entry needs a <code>user_id</code> and a <code>role</code> of <code>root</code> or <code>admin</code>; otherwise the request fails with <code>400 Bad Request</code> before anything is restored.</p>
+<p>Restore Orgs, Org Memberships and platform roles from a backup. Requires platform owner privileges.</p>
+<p>The <code>platform_owner</code> role is never restored, since it belongs only to the configured platform owner. A user who already has a platform role keeps it. Each <code>user_roles</code> entry needs a <code>user_id</code> and a <code>role</code> of <code>platform_owner</code> or <code>platform_admin</code>; otherwise the request fails with <code>400 Bad Request</code> before anything is restored.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code> and the backup JSON</p>
 </blockquote>

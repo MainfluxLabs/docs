@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../css/eui.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -69,7 +69,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#owner">Owner</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#platform-root-admin">Platform Root Admin</a>
+    <li class="toctree-l3"><a class="reference internal" href="#platform-owner">Platform Owner</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#platform-admin">Platform Admin</a>
     </li>
@@ -194,7 +194,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="authorization">Authorization<a class="headerlink" href="#authorization" title="Permanent link">#</a></h1>
-<p>Users are registered by the <code>Platform Root Admin</code> or a <code>Platform Admin</code>, by accepting a Platform Invite, or through self-registration with e-mail verification when <code>MF_USERS_SELF_REGISTER_ENABLED</code> is <code>true</code> (the default).</p>
+<p>Users are registered by the <code>Platform Owner</code> or a <code>Platform Admin</code>, by accepting a Platform Invite, or through self-registration with e-mail verification when <code>MF_USERS_SELF_REGISTER_ENABLED</code> is <code>true</code> (the default).</p>
 <p>Once registered, a user needs certain rights to manage entities within the system.
 Mainflux uses <strong>roles</strong> to control permissions for entities at two levels: at the Organization level and at the Group level.</p>
 <p><em>More information about creating a user can be found at <a href="../api/#users">Users API</a></em>.</p>
@@ -221,7 +221,7 @@ Below are the predefined roles in the system:</p>
 <li>Has all the permissions of an admin.</li>
 <li>Has access to all entities within the Organization or Group they own.</li>
 </ul>
-<h3 id="platform-root-admin">Platform Root Admin<a class="headerlink" href="#platform-root-admin" title="Permanent link">#</a></h3>
+<h3 id="platform-owner">Platform Owner<a class="headerlink" href="#platform-owner" title="Permanent link">#</a></h3>
 <ul>
 <li>Has all permissions across all Organizations and Groups (and entities within them).</li>
 <li>Acts as the primary administrator for the entire platform.</li>
@@ -229,12 +229,12 @@ Below are the predefined roles in the system:</p>
 </ul>
 <h3 id="platform-admin">Platform Admin<a class="headerlink" href="#platform-admin" title="Permanent link">#</a></h3>
 <ul>
-<li>Has the same permissions as the <code>Platform Root Admin</code> within all Organizations and Groups, as shown in the tables below.</li>
-<li>Can <a href="../api/#impersonate-user">impersonate</a> any enabled user other than a <code>Platform Root Admin</code> or another <code>Platform Admin</code>.</li>
-<li>Cannot assign or unassign the <code>Platform Admin</code> role, back up or restore Users, or enable, disable or change the password of the <code>Platform Root Admin</code> or of another <code>Platform Admin</code>.</li>
+<li>Has the same permissions as the <code>Platform Owner</code> within all Organizations and Groups, as shown in the tables below.</li>
+<li>Can <a href="../api/#impersonate-user">impersonate</a> any enabled user other than the <code>Platform Owner</code> or another <code>Platform Admin</code>.</li>
+<li>Cannot assign or unassign the <code>Platform Admin</code> role, back up or restore Users, or enable, disable or change the password of the <code>Platform Owner</code> or of another <code>Platform Admin</code>.</li>
 <li>Cannot be disabled while holding the role.</li>
 </ul>
-<p>Operations that require admin privileges are available to the <code>Platform Root Admin</code> and to every <code>Platform Admin</code>.</p>
+<p>Operations that require admin privileges are available to the <code>Platform Owner</code> and to every <code>Platform Admin</code>.</p>
 <blockquote>
 <p>Although these roles are the same for an Organization and a Group, <strong>they operate completely separately at those levels</strong>,
 which means that one User <strong>can have different roles</strong> in an Organization and a Group within that Organization.
@@ -254,7 +254,7 @@ Organization <code>Editor</code> and <code>Viewer</code> need Group membership t
 <th>Editor</th>
 <th>Admin</th>
 <th>Owner</th>
-<th>Platform Root Admin</th>
+<th>Platform Owner</th>
 <th>Platform Admin</th>
 </tr>
 </thead>
@@ -350,7 +350,7 @@ Organization <code>Editor</code> and <code>Viewer</code> need Group membership t
 <ul>
 <li>In the second case, if a <code>Viewer</code> or <code>Editor</code> tries to invite new users to the Organization, they will also get the above error message.</li>
 <li>Next case, if an <code>Editor</code> attempts to access entities within that Organization's Groups (of which they are not a Member), access will also be denied.</li>
-<li>The same error message will be received if the <code>Owner</code>, or any other Organization Member who is not a <code>Platform Root Admin</code> or a <code>Platform Admin</code>, tries to access an Organization in which they are not Members.</li>
+<li>The same error message will be received if the <code>Owner</code>, or any other Organization Member who is not the <code>Platform Owner</code> or a <code>Platform Admin</code>, tries to access an Organization in which they are not Members.</li>
 </ul>
 <h2 id="group-members">Group Members<a class="headerlink" href="#group-members" title="Permanent link">#</a></h2>
 <p>In order to enable the correct management of the entities within the Group, the rights that the members have over these entities are checked.
@@ -368,7 +368,7 @@ When an Organization <code>Editor</code> creates a Group, they become its <code>
 <th>Editor</th>
 <th>Admin</th>
 <th>Owner</th>
-<th>Platform Root Admin</th>
+<th>Platform Owner</th>
 <th>Platform Admin</th>
 </tr>
 </thead>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../css/eui.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -202,7 +202,7 @@ make cli
 <p>The binary will be placed at <code>build/mainfluxlabs-cli</code>. See the <a href="../cli/">CLI</a> page for more details.</p>
 <h2 id="step-3-provision-the-system">Step 3 - Provision the System<a class="headerlink" href="#step-3-provision-the-system" title="Permanent link">#</a></h2>
 <p>The entity hierarchy in Mainflux is <strong>Org → Group → Profile → Thing</strong>. Each resource must be created in this order, as each step requires the ID from the previous one.</p>
-<p>User management requires an admin token. The default admin credentials are configured via <code>MF_USERS_ADMIN_EMAIL</code> and <code>MF_USERS_ADMIN_PASSWORD</code> in <code>docker/.env</code>. The users service fails to start if <code>MF_USERS_ADMIN_PASSWORD</code> does not meet the <a href="../authentication/#password-policy">password policy</a>.</p>
+<p>User management requires an admin token. The platform owner credentials are configured via <code>MF_USERS_PLATFORM_OWNER_EMAIL</code> and <code>MF_USERS_PLATFORM_OWNER_PASSWORD</code> in <code>docker/.env</code>. The users service fails to start if <code>MF_USERS_PLATFORM_OWNER_PASSWORD</code> does not meet the <a href="../authentication/#password-policy">password policy</a>.</p>
 <p><strong>1. Get an admin token</strong></p>
 <pre><code class="language-bash">mainfluxlabs-cli users token admin@example.com mainflux-pass
 </code></pre>

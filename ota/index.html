@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../css/eui.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -248,6 +248,10 @@
 <td>Creation timestamp (RFC 3339)</td>
 </tr>
 <tr>
+<td><code>status</code></td>
+<td><code>in_progress</code>, <code>completed</code> or <code>completed_with_failures</code>, derived from its things</td>
+</tr>
+<tr>
 <td><code>stats</code></td>
 <td>Number of things of the update per status, and the total number of target things</td>
 </tr>
@@ -284,6 +288,30 @@
 </tr>
 </tbody>
 </table>
+<p>The <code>status</code> of an update is derived from the statuses of its things and is updated whenever one of them changes.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>in_progress</code></td>
+<td>At least one thing is pending, downloading or installing</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td>No thing is running or failed</td>
+</tr>
+<tr>
+<td><code>completed_with_failures</code></td>
+<td>No thing is running and at least one failed</td>
+</tr>
+</tbody>
+</table>
+<p>An update whose things were all removed (deleted or moved to another group) is <code>completed</code>.</p>
 <h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
 <ol>
 <li><strong>Create.</strong> A user creates an update for things of a group. Every thing starts as <code>pending</code>. A thing runs at most one update at a time: its older running update is marked <code>failed</code> with <code>superseded by update &lt;id&gt;</code>.</li>
@@ -311,14 +339,18 @@
 </code></pre>
 <p>The response contains the created update with <code>201 Created</code>.</p>
 <h3 id="list-updates-of-a-group">List updates of a group<a class="headerlink" href="#list-updates-of-a-group" title="Permanent link">#</a></h3>
+<p>The <code>status</code> query parameter filters the updates by status. The <code>order</code> query parameter sorts
+them by <code>id</code>, <code>created_at</code>, <code>version</code>, <code>status</code> or a <code>stats</code> count (<code>targets</code>, <code>pending</code>,
+<code>downloading</code>, <code>installing</code>, <code>succeeded</code>, <code>failed</code>).</p>
 <pre><code class="language-bash">curl -s -S -i \
   -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
-  &quot;https://localhost/svcota/groups/&lt;group_id&gt;/updates?offset=0&amp;limit=10&quot;
+  &quot;https://localhost/svcota/groups/&lt;group_id&gt;/updates?offset=0&amp;limit=10&amp;status=in_progress&quot;
 </code></pre>
 <pre><code class="language-json">{
   &quot;total&quot;: 1,
   &quot;offset&quot;: 0,
   &quot;limit&quot;: 10,
+  &quot;status&quot;: &quot;in_progress&quot;,
   &quot;updates&quot;: [
     {
       &quot;id&quot;: &quot;c3d4e5f6-a7b8-9012-cdef-123456789012&quot;,
@@ -330,6 +362,7 @@
       &quot;description&quot;: &quot;Sensor firmware 1.4.0&quot;,
       &quot;timeout&quot;: 86400,
       &quot;created_at&quot;: &quot;2026-11-04T12:00:00Z&quot;,
+      &quot;status&quot;: &quot;in_progress&quot;,
       &quot;stats&quot;: {
         &quot;targets&quot;: 1,
         &quot;pending&quot;: 0,
