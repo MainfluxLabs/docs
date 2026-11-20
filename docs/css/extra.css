@@ -1,0 +1,191 @@
+@font-face {
+  font-family: "inter-display";
+  src: url("fonts/inter-display-regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "inter-display";
+  src: url("fonts/inter-display-bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.wy-menu-vertical,
+.rst-versions {
+  font-family: "inter-display", sans-serif;
+}
+
+/* Page surface */
+body {
+  color: oklch(1% 0 266);
+}
+
+.wy-nav-content-wrap,
+.wy-nav-content {
+  background: oklch(100% 0 266);
+}
+
+/* Links */
+a,
+a:visited {
+  color: oklch(55% 0.129 232);
+}
+
+.rst-content p a,
+.rst-content li a,
+.rst-content td a {
+  text-decoration: underline;
+}
+
+.rst-content a code,
+.rst-content a:hover code,
+.rst-content a:visited code {
+  color: inherit;
+}
+
+/* Sidebar */
+.wy-nav-side,
+.wy-nav-top,
+.rst-versions,
+.rst-versions .rst-current-version {
+  background: oklch(25% 0.0416 266);
+}
+
+.rst-versions {
+  border-top: 1px solid oklch(34% 0.0608 266);
+}
+
+/* Sidebar header */
+.wy-side-nav-search {
+  background: oklch(28% 0.0488 266);
+  border-bottom: 1px solid oklch(34% 0.0608 266);
+}
+
+.wy-side-nav-search > a {
+  color: oklch(73% 0.0424 266);
+}
+
+/* Search */
+.wy-side-nav-search input[type="text"] {
+  border: 1px solid oklch(40% 0.0696 266);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  font-family: "inter-display", sans-serif;
+  color: oklch(94% 0.004 266);
+}
+
+.wy-side-nav-search input[type="text"]::placeholder {
+  color: oklch(52% 0.0704 266);
+}
+
+.wy-side-nav-search input[type="text"]:hover {
+  background-color: color-mix(in oklch, transparent, oklch(94% 0.004 266) 5%);
+}
+
+.wy-side-nav-search input[type="text"]:focus {
+  outline: 2px solid oklch(52% 0.132 232);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* Sidebar items */
+.wy-menu-vertical a,
+.wy-menu-vertical li ul li a {
+  color: oklch(73% 0.0424 266);
+}
+
+.wy-menu-vertical li.current,
+.wy-menu-vertical li.current a,
+.wy-menu-vertical li.current > a,
+.wy-menu-vertical li.toctree-l1.current > a,
+.wy-menu-vertical li.toctree-l2.current > a,
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a,
+.wy-menu-vertical li.toctree-l3.current > a,
+.wy-menu-vertical li.toctree-l3.current li.toctree-l4 > a {
+  background: transparent;
+  color: oklch(73% 0.0424 266);
+  border: none;
+}
+
+.wy-menu-vertical a:hover,
+.wy-menu-vertical li.current a:hover,
+.wy-menu-vertical li.current > a:hover {
+  background: color-mix(in oklch, transparent, oklch(73% 0.0424 266) 5%);
+}
+
+.wy-menu-vertical a:active {
+  background: color-mix(in oklch, transparent, oklch(73% 0.0424 266) 10%);
+}
+
+.wy-menu-vertical li.current > a {
+  color: oklch(94% 0.004 266);
+  font-weight: 400;
+}
+
+.wy-menu-vertical li.current > a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: oklch(52% 0.132 232);
+}
+
+.wy-menu-vertical button.toctree-expand {
+  color: inherit !important;
+}
+
+/* Bottom bar; the theme template sets the link color inline. */
+.rst-versions a {
+  color: oklch(73% 0.0424 266) !important;
+}
+
+.rst-versions a:hover {
+  color: oklch(94% 0.004 266) !important;
+}
+
+/* Previous and next buttons */
+.rst-footer-buttons .btn-neutral,
+.rst-footer-buttons .btn-neutral:visited {
+  background-color: transparent !important;
+  color: oklch(1% 0 266) !important;
+  border: 1px solid oklch(46% 0.072 266);
+  border-radius: 0;
+  box-shadow: none;
+  font-family: "inter-display", sans-serif;
+}
+
+.rst-footer-buttons .btn-neutral:hover {
+  background-color: color-mix(in oklch, transparent, oklch(1% 0 266) 5%) !important;
+}
+
+/* Inline code */
+.rst-content code {
+  color: oklch(1% 0 266);
+  background: oklch(91% 0.0072 266);
+  border: none;
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* Code blocks */
+.rst-content pre code,
+.rst-content pre code.hljs {
+  background: oklch(91% 0.0072 266);
+  border: none;
+  color: oklch(1% 0 266);
+}
+
+/* Tables */
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+  white-space: normal;
+}
