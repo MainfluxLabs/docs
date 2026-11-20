@@ -21,6 +21,8 @@ A rule evaluates a set of conditions against an incoming payload. When condition
 | `operator`    | `AND` or `OR` — required when more than one condition is defined                                                                                                 |
 | `actions`     | List of actions to trigger when the conditions are met (see below)                                                                                               |
 
+Every thing in `thing_ids` must belong to the rule's group; otherwise rule creation fails with `403 Forbidden`.
+
 ### Conditions
 
 Each condition has a required `type`, which selects how it's evaluated.
