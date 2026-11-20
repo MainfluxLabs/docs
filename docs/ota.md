@@ -17,6 +17,7 @@ An update describes the firmware and the things that should install it.
 | `description` | Optional free-form description                                                     |
 | `timeout`     | Seconds without progress after which a thing is marked `failed` (default 24 hours) |
 | `created_at`  | Creation timestamp (RFC 3339)                                                      |
+| `status`      | `in_progress`, `completed` or `completed_with_failures`, derived from its things   |
 | `stats`       | Number of things of the update per status, and the total number of target things   |
 
 Each thing of an update has its own progress: `status`, `error`, `reported_version` and `updated_at`.
@@ -28,6 +29,16 @@ Each thing of an update has its own progress: `status`, `error`, `reported_versi
 | `installing`  | The thing is installing the firmware                                         |
 | `succeeded`   | The thing reported the version of the update                                 |
 | `failed`      | The thing reported an error or another version, timed out, or was superseded |
+
+The `status` of an update is derived from the statuses of its things and is updated whenever one of them changes.
+
+| Status                    | Meaning                                                  |
+| ------------------------- | -------------------------------------------------------- |
+| `in_progress`             | At least one thing is pending, downloading or installing |
+| `completed`               | No thing is running or failed                            |
+| `completed_with_failures` | No thing is running and at least one failed              |
+
+An update whose things were all removed (deleted or moved to another group) is `completed`.
 
 ## How it works
 
@@ -63,10 +74,14 @@ The response contains the created update with `201 Created`.
 
 ### List updates of a group
 
+The `status` query parameter filters the updates by status. The `order` query parameter sorts
+them by `id`, `created_at`, `version`, `status` or a `stats` count (`targets`, `pending`,
+`downloading`, `installing`, `succeeded`, `failed`).
+
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  "https://localhost/svcota/groups/<group_id>/updates?offset=0&limit=10"
+  "https://localhost/svcota/groups/<group_id>/updates?offset=0&limit=10&status=in_progress"
 ```
 
 ```json
@@ -74,6 +89,7 @@ curl -s -S -i \
   "total": 1,
   "offset": 0,
   "limit": 10,
+  "status": "in_progress",
   "updates": [
     {
       "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
@@ -85,6 +101,7 @@ curl -s -S -i \
       "description": "Sensor firmware 1.4.0",
       "timeout": 86400,
       "created_at": "2026-11-04T12:00:00Z",
+      "status": "in_progress",
       "stats": {
         "targets": 1,
         "pending": 0,
