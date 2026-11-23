@@ -16,6 +16,7 @@ Mainflux IoT platform is comprised of the following services:
 | [ws-adapter](https://github.com/MainfluxLabs/mainflux/tree/master/ws)                                | Provides a WebSocket interface for sending commands                            |
 | [modbus](https://github.com/MainfluxLabs/mainflux/tree/master/modbus)                                | Polls Modbus TCP devices on a schedule and publishes readings as messages      |
 | [rules](https://github.com/MainfluxLabs/mainflux/tree/master/rules)                                  | Evaluates threshold rules and Lua scripts against incoming device messages     |
+| [pyscripts](https://github.com/MainfluxLabs/mainflux/tree/master/pyscripts)                          | Stores Python scripts per group and runs them on demand in a sandbox           |
 | [alarms](https://github.com/MainfluxLabs/mainflux/tree/master/consumers/alarms)                      | Persists alarms triggered by rule actions to PostgreSQL                        |
 | [downlinks](https://github.com/MainfluxLabs/mainflux/tree/master/downlinks)                          | Manages scheduled outbound HTTP requests (downlinks) for things and groups     |
 | [shadows](https://github.com/MainfluxLabs/mainflux/tree/master/shadows)                              | Maintains a persisted desired/reported state record (shadow) for each thing    |

@@ -33,6 +33,7 @@ nav:
   - Messaging: messaging.md
   - Storage: storage.md
   - Rules: rules.md
+  - Python Scripts: pyscripts.md
   - Alarms: alarms.md
   - Shadows: shadows.md
   - Converters: converters.md

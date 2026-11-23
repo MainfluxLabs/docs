@@ -14,6 +14,7 @@ window.onload = function() {
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/filestore.yml", name: "filestore service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/modbus.yml", name: "modbus service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/notifiers.yml", name: "notifiers service" },
+        { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/pyscripts.yml", name: "pyscripts service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/readers.yml", name: "readers service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/rules.yml", name: "rules service" },
         { url: "https://raw.githubusercontent.com/MainfluxLabs/mainflux/refs/heads/master/api/openapi/shadows.yml", name: "shadows service" },

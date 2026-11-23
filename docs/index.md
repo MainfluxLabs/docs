@@ -38,6 +38,7 @@ Every incoming message can be stored for querying, evaluated by rules that raise
 ### Processing and Notifications
 
 - [Rules](rules.md) — threshold and Lua script conditions evaluated on incoming messages.
+- [Python Scripts](pyscripts.md) — group-scoped Python scripts with numpy and pandas, run on demand in a sandbox with a recorded run history.
 - [Alarms](alarms.md) — persisted alarms raised by rule actions.
 - [Notifiers](notifiers.md) — email notifications over SMTP and SMS notifications over SMPP.
 
