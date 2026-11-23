@@ -11,7 +11,7 @@ The Python Scripts service stores Python scripts per group, runs them on demand 
 | `name`        | Script name (up to 254 characters)                           |
 | `description` | Optional free-form description                               |
 | `source`      | Python source code (up to 65,535 bytes by default)           |
-| `checksum`    | Hex-encoded SHA-256 of `source`, recomputed on every update   |
+| `checksum`    | Hex-encoded SHA-256 of `source`, recomputed on every update  |
 | `created_at`  | Creation timestamp                                           |
 | `updated_at`  | Timestamp of the last update                                 |
 
@@ -29,7 +29,7 @@ Each run produces a run record:
 | ----------------- | --------------------------------------------------------------- |
 | `id`              | Unique run identifier                                           |
 | `script_id`       | The script that was run                                         |
-| `script_checksum` | Checksum of the script source the run executed                 |
+| `script_checksum` | Checksum of the script source the run executed                  |
 | `status`          | `success` or `fail`                                             |
 | `return_value`    | JSON value produced by the script (`null` on failure)           |
 | `logs`            | Lines the script wrote to standard output or standard error     |
@@ -88,16 +88,16 @@ The service refuses to start a worker that reports no seccomp filter.
 
 Every run is subject to the following limits:
 
-| Limit             | Default      | Variable                       | Error recorded on the run                           |
-| ----------------- | ------------ | ------------------------------ | --------------------------------------------------- |
-| Wall-clock time   | 10 s         | `MF_PYSCRIPTS_RUN_TIMEOUT`     | `timeout after 10s`                                 |
-| CPU time          | 5 s          | `MF_PYSCRIPTS_MAX_CPU_SECONDS` | `cpu time limit exceeded (5s)`                      |
+| Limit             | Default      | Variable                       | Error recorded on the run                                                   |
+| ----------------- | ------------ | ------------------------------ | --------------------------------------------------------------------------- |
+| Wall-clock time   | 10 s         | `MF_PYSCRIPTS_RUN_TIMEOUT`     | `timeout after 10s`                                                         |
+| CPU time          | 5 s          | `MF_PYSCRIPTS_MAX_CPU_SECONDS` | `cpu time limit exceeded (5s)`                                              |
 | Memory            | 256 MiB      | `MF_PYSCRIPTS_MAX_MEMORY`      | `script killed, most likely by the memory limit`, or a Python `MemoryError` |
-| Output size       | 1 MiB        | `MF_PYSCRIPTS_MAX_OUTPUT_SIZE` | `output limit exceeded`, or `result cannot be returned: ...` |
-| Log lines         | 256          | `MF_PYSCRIPTS_MAX_LOG_LINES`   | —                                                   |
-| File size         | 0 bytes      | `MF_PYSCRIPTS_MAX_FILE_SIZE`   | `file size limit exceeded`                          |
-| Script size       | 65,535 bytes | `MF_PYSCRIPTS_MAX_SCRIPT_SIZE` | Rejected with `400` when the script is saved        |
-| Run payload size  | 1 MiB        | —                              | Rejected with `400` when the run is requested       |
+| Output size       | 1 MiB        | `MF_PYSCRIPTS_MAX_OUTPUT_SIZE` | `output limit exceeded`, or `result cannot be returned: ...`                |
+| Log lines         | 256          | `MF_PYSCRIPTS_MAX_LOG_LINES`   | —                                                                           |
+| File size         | 0 bytes      | `MF_PYSCRIPTS_MAX_FILE_SIZE`   | `file size limit exceeded`                                                  |
+| Script size       | 65,535 bytes | `MF_PYSCRIPTS_MAX_SCRIPT_SIZE` | Rejected with `400` when the script is saved                                |
+| Run payload size  | 1 MiB        | —                              | Rejected with `400` when the run is requested                               |
 
 Notes on the limits:
 
@@ -256,12 +256,12 @@ curl -s -S -i -X POST \
 
 A failed script still returns `200 OK`. The response status tells script failures apart from service failures:
 
-| Status | Cause                                                                                                         |
-| ------ | ------------------------------------------------------------------------------------------------------------- |
+| Status | Cause                                                                                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `200`  | The script ran. If it raised an exception, exceeded a limit or returned a value that is not JSON-serializable, `status` is `fail` and the reason is in `error`. The run is recorded. |
-| `429`  | The group or user exceeded the [rate limit](#rate-limiting)                                                   |
-| `503`  | No worker became free within `MF_PYSCRIPTS_ACQUIRE_TIMEOUT` (`no python worker available`). The request is rejected rather than queued, so it can be retried. |
-| `500`  | The runner failed for a reason outside the script                                                             |
+| `429`  | The group or user exceeded the [rate limit](#rate-limiting)                                                                                                                          |
+| `503`  | No worker became free within `MF_PYSCRIPTS_ACQUIRE_TIMEOUT` (`no python worker available`). The request is rejected rather than queued, so it can be retried.                        |
+| `500`  | The runner failed for a reason outside the script                                                                                                                                    |
 
 Creating and updating scripts also need a worker, so they can return `429` and `503` too.
 
@@ -277,14 +277,14 @@ curl -s -S -i \
   "https://localhost/svcpyscripts/scripts/<script_id>/runs?limit=5&order=started_at&dir=desc&status=fail"
 ```
 
-| Parameter     | Description                                              |
-| ------------- | -------------------------------------------------------- |
-| `offset`      | Number of items to skip (default `0`)                    |
-| `limit`       | Page size, up to 200 (default `10`)                      |
+| Parameter     | Description                                                       |
+| ------------- | ----------------------------------------------------------------- |
+| `offset`      | Number of items to skip (default `0`)                             |
+| `limit`       | Page size, up to 200 (default `10`)                               |
 | `order`       | Sort field: `id`, `started_at` or `status` (default `started_at`) |
-| `dir`         | Sort direction: `asc` or `desc` (default `desc`)         |
-| `status`      | Filter by status: `success` or `fail`                    |
-| `from` / `to` | Filter by start time, as Unix timestamps in milliseconds |
+| `dir`         | Sort direction: `asc` or `desc` (default `desc`)                  |
+| `status`      | Filter by status: `success` or `fail`                             |
+| `from` / `to` | Filter by start time, as Unix timestamps in milliseconds          |
 
 The `order` fields for runs are different from the ones for scripts.
 
