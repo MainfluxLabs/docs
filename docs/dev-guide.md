@@ -264,6 +264,8 @@ Besides the operation-specific fields described below, every event carries the f
 - `evt_org_id` and `evt_group_id` - the org and the group to which the event belongs, empty when not applicable,
 - `jwt_identity_user_id` and `jwt_identity_user_email` - the user who performed the operation, present only for user-initiated operations.
 
+Events never carry secrets such as keys, passwords or tokens.
+
 ### Things Service
 
 For every operation that has side effects (that is changing service state) `things`
@@ -287,38 +289,6 @@ field that can have one of the following values:
 - `group_membership.create` for adding a member to a group,
 - `group_membership.update` for changing a group member's role,
 - `group_membership.remove` for removing a member from a group.
-
-The `auth` service publishes the following events to the `mainflux.auth` stream:
-- `org.create` for org creation,
-- `org.update` for org update,
-- `org.remove` for org removal,
-- `org_membership.create` for adding a member to an org,
-- `org_membership.update` for changing an org member's role,
-- `org_membership.remove` for removing a member from an org,
-- `org_invite.create` for inviting a user to an org,
-- `org_invite.revoke` for revoking an org invite,
-- `org_invite.accept` for accepting an org invite,
-- `org_invite.decline` for declining an org invite,
-- `api_key.issue` for issuing an API key (the key secret is not included),
-- `api_key.revoke` for revoking an API key,
-- `session.logout_all` for ending all of a user's sessions,
-- `user.login` for starting a session (the user is the actor),
-- `user.impersonate` for starting an impersonated session.
-
-The `users` service publishes the following events to the `mainflux.users` stream:
-- `user.register` for registering a user, including through Google or GitHub sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
-- `user.login_fail` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
-- `user.update` for user metadata update,
-- `user.change_password` for changing a password, by the user or by a platform admin for another user,
-- `user.reset_password` for setting a new password through password recovery (the user is the actor),
-- `user.enable` for enabling a user,
-- `user.disable` for disabling a user,
-- `user.assign_admin_role` for assigning the platform admin role,
-- `user.unassign_admin_role` for removing the platform admin role,
-- `platform_invite.create` for inviting a person to register on the platform; when it includes an org invite, the event carries that org,
-- `platform_invite.revoke` for revoking a platform invite.
-
-Events never carry secrets such as keys, passwords or tokens.
 
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
@@ -438,3 +408,41 @@ publish new `remove` event. This event will have the following format:
 **Note:** Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.
+
+### Auth Service
+
+For every operation that changes state, the `auth` service publishes an event to the Redis Stream called `mainflux.auth`.
+The `operation` field can have one of the following values:
+
+- `org.create` for org creation,
+- `org.update` for org update,
+- `org.remove` for org removal,
+- `org_membership.create` for adding a member to an org,
+- `org_membership.update` for changing an org member's role,
+- `org_membership.remove` for removing a member from an org,
+- `org_invite.create` for inviting a user to an org,
+- `org_invite.revoke` for revoking an org invite,
+- `org_invite.accept` for accepting an org invite,
+- `org_invite.decline` for declining an org invite,
+- `api_key.issue` for issuing an API key (the key secret is not included),
+- `api_key.revoke` for revoking an API key,
+- `session.logout_all` for ending all of a user's sessions,
+- `user.login` for starting a session (the user is the actor),
+- `user.impersonate` for starting an impersonated session.
+
+### Users Service
+
+For every operation that changes state, the `users` service publishes an event to the Redis Stream called `mainflux.users`.
+The `operation` field can have one of the following values:
+
+- `user.register` for registering a user, including through Google or GitHub sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
+- `user.login_fail` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
+- `user.update` for user metadata update,
+- `user.change_password` for changing a password, by the user or by a platform admin for another user,
+- `user.reset_password` for setting a new password through password recovery (the user is the actor),
+- `user.enable` for enabling a user,
+- `user.disable` for disabling a user,
+- `user.assign_admin_role` for assigning the platform admin role,
+- `user.unassign_admin_role` for removing the platform admin role,
+- `platform_invite.create` for inviting a person to register on the platform; when it includes an org invite, the event carries that org,
+- `platform_invite.revoke` for revoking a platform invite.
