@@ -392,13 +392,13 @@ Access-Control-Allow-Headers: *
 
 ### OAuth Login
 
-The Mainflux system supports login via OAuth providers such as Google and GitHub. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.
+The Mainflux system supports login via OAuth providers: Google, GitHub and a generic OpenID Connect (OIDC) provider such as Keycloak, Azure AD or Okta. The OIDC provider reads its endpoints from the issuer's `.well-known/openid-configuration`. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.
 
 #### Initiate OAuth Login
 
 Redirect the user to the OAuth provider's login page. You can optionally provide an `inviteID` and a `redirect_path` where the user should be redirected after login.
 
-> Must-have: `provider` (Google or GitHub)
+> Must-have: `provider` (`google`, `github` or `oidc`)
 > Optional query params: `invite_id`, `redirect_path`
 
 ```bash
@@ -417,7 +417,7 @@ Response:
 
 After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and redirects to `MF_HOST` + `MF_REDIRECT_LOGIN_URL` with the login token in the URL fragment.
 
-> Must-have: `provider` (Google or GitHub), `code`, `state` (from OAuth provider)
+> Must-have: `provider` (`google`, `github` or `oidc`), `code`, `state` (from OAuth provider)
 > Cookies: `state` and `verifier` must be set
 
 ```bash
