@@ -444,5 +444,5 @@ The `operation` field can have one of the following values:
 - `user.disable` for disabling a user,
 - `user.assign_admin_role` for assigning the platform admin role,
 - `user.unassign_admin_role` for removing the platform admin role,
-- `platform_invite.create` for inviting a person to register on the platform; when it includes an org invite, the event carries that org,
+- `platform_invite.create` for inviting a person to register on the platform; its org invite is recorded by auth as `org_invite.create`,
 - `platform_invite.revoke` for revoking a platform invite.
