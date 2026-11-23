@@ -93,8 +93,9 @@ Content-Type: application/json
 
 ### Create User
 
-The predefined user within the Mainflux system is the `root admin`.
-In order to add users to the system, the `root` administrator must create accounts for them.
+The predefined user within the Mainflux system is the `platform owner`.
+The `platform owner` or a `platform admin` adds users to the system by creating their accounts with this endpoint or by sending them a [Platform Invite](#create-platform-invite).
+Users can also [register themselves](#self-register-user) when self-registration is enabled.
 
 > Must-have: `email`, `password` (password must meet the [password policy](authentication.md#password-policy)) and `user_token`
 
@@ -123,6 +124,7 @@ Access-Control-Allow-Headers: *
 ### Self-Register User
 
 Allows a new user to register themselves. The system sends an email verification link to complete registration.
+Self-registration is enabled when `MF_USERS_SELF_REGISTER_ENABLED` is `true`, which is the default; otherwise the request fails with `403 Forbidden`.
 
 > Must-have: `user` object (with `email` and `password`) and `redirect_path` (URL for verification)
 
@@ -215,13 +217,13 @@ Content-Length: 120
   "metadata": {
     "foo": "bar"
   },
-  "role": "user"
+  "role": "platform_admin"
 }
 ```
 
 ### List Users
 
-List all users. Requires admin privileges.
+List all users. Requires admin privileges. The `role` field is `platform_owner` for the platform owner and `platform_admin` for a platform admin, and it is omitted for regular users.
 
 > Must-have: `user_token`
 
@@ -236,7 +238,7 @@ HTTP/1.1 200 OK
 Server: nginx/1.16.0
 Date: Wed, 10 Mar 2021 15:11:28 GMT
 Content-Type: application/json
-Content-Length: 217
+Content-Length: 213
 Connection: keep-alive
 Strict-Transport-Security: max-age=63072000; includeSubdomains
 X-Frame-Options: DENY
@@ -245,7 +247,7 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 
-{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
+{"total":2,"offset":0,"limit":10,"users":[{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","role":"platform_owner"},{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com"}]}
 ```
 
 ### Search Users
@@ -442,13 +444,14 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 Response:
 
 ```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
+HTTP/1.1 204 No Content
 ```
+
+The request fails with `409 Conflict` when the user is already enabled.
 
 #### Disable User
 
-Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again.
+Deactivate a user account and revoke all its sessions and API keys. Requires admin privileges. The API keys are deleted and are not restored when the user is enabled again. A user with a platform role cannot be disabled; unassign the role first.
 
 > Must-have: `user_token` (Bearer token), `id` (user ID)
 
@@ -459,17 +462,50 @@ curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" \ http://localhost
 Response:
 
 ```bash
-HTTP/1.1 200 OK
-Content-Type: application/json
+HTTP/1.1 204 No Content
+```
+
+The request fails with `409 Conflict` when the user is already disabled.
+
+#### Assign Admin Role
+
+Assign the platform admin role to an enabled user without a platform role. Requires platform owner privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
+```
+
+#### Unassign Admin Role
+
+Unassign the platform admin role from a user and revoke all sessions of the user. Requires platform owner privileges.
+
+> Must-have: `user_token` (Bearer token), `id` (user ID)
+
+```bash
+curl -s -S -i -X DELETE -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/admin
+```
+
+Response:
+
+```bash
+HTTP/1.1 204 No Content
 ```
 
 #### Impersonate User
 
-Sign in as another user without their password, for support and troubleshooting. Only the root admin can impersonate. Root admins, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
+Sign in as another user without their password, for support and troubleshooting. Requires admin privileges, and only the platform owner can impersonate a platform admin. The platform owner, disabled users and the caller cannot be impersonated, and an impersonated session cannot start another impersonation or issue API keys.
 
-The response holds a login key for the impersonated user. The key carries the root admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the root admin logs out of all sessions or changes their password, their impersonated sessions end too.
+The response holds a login key for the impersonated user. The key carries the impersonating admin as impersonator and keeps it across refresh. Every audit event raised with it records both users, and starting the impersonation records a `user.impersonate` event. Logging out, or logging out of all sessions, ends only the impersonated session. When the impersonating admin logs out of all sessions, changes their password or loses the platform admin role, their impersonated sessions end too.
 
-> Must-have: `user_token` (root admin Bearer token), `id` (user ID)
+> Must-have: `user_token` (Bearer token), `id` (user ID)
 
 ```bash
 curl -s -S -i -X POST -H "Authorization: Bearer <user_token>" http://localhost/users/<user_id>/impersonate
@@ -741,11 +777,11 @@ Content-Length: 235
 
 ## Backup and Restore
 
-Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform root admin role of the current login key.
+Users are backed up by the Users service and Orgs, Org Memberships and platform roles by the Auth service. Restore Orgs before Users, because restoring Users can revoke the platform owner role of the current login key.
 
 ### Backup Users
 
-Export the platform root admin, all users and their OAuth identities. Requires platform root admin privileges. The response contains password hashes.
+Export the platform owner, all users and their OAuth identities. Requires platform owner privileges. The response contains password hashes.
 
 > Must-have: `user_token`
 
@@ -756,16 +792,16 @@ curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcus
 Content of `users-backup.json`:
 
 ```json
-{"admin":{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","password":"<password_hash>","status":"enabled"},"users":[{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com","password":"<password_hash>","status":"enabled"}],"identities":[]}
+{"platform_owner":{"id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","email":"admin@example.com","password":"<password_hash>","status":"enabled"},"users":[{"id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","email":"test@email.com","password":"<password_hash>","status":"enabled"}],"identities":[]}
 ```
 
 ### Restore Users
 
-Restore users and OAuth identities from a backup. Requires platform root admin privileges.
+Restore users and OAuth identities from a backup. Requires platform owner privileges.
 
-The backed up `admin` keeps the platform root admin role only when its e-mail matches the configured platform root admin. The platform root admin then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up `admin` is restored as a regular user.
+The backed up `platform_owner` keeps its role only when its e-mail matches the configured platform owner. The platform owner then takes the ID from the backup, so restored memberships still refer to it. Otherwise the backed up `platform_owner` is restored as a regular user.
 
-When the platform root admin takes another ID, the current login keys lose the platform root admin role. Restore Users last, or log in again afterwards.
+When the platform owner takes another ID, the current login keys lose the platform owner role. Restore Users last, or log in again afterwards.
 
 > Must-have: `user_token` and the backup JSON
 
@@ -792,14 +828,14 @@ curl -s -S -X GET -H "Authorization: Bearer <user_token>" http://localhost/svcau
 Content of `auth-backup.json`:
 
 ```json
-{"orgs":[{"id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","name":"org","owner_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"org_memberships":[{"member_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","org_id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","role":"owner","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"user_roles":[{"user_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","role":"root"},{"user_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","role":"admin"}]}
+{"orgs":[{"id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","name":"org","owner_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"org_memberships":[{"member_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","org_id":"c75a2c56-2d33-4b8a-8bba-3d6e3e44e2e1","role":"owner","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z"}],"user_roles":[{"user_id":"4bf4a13a-e9c3-4207-aa11-fe569986c301","role":"platform_owner"},{"user_id":"d782b42b-e317-4cd7-9dd0-4e2ea0f349c8","role":"platform_admin"}]}
 ```
 
 ### Restore Orgs
 
-Restore Orgs, Org Memberships and platform roles from a backup. Requires platform root admin privileges.
+Restore Orgs, Org Memberships and platform roles from a backup. Requires platform owner privileges.
 
-The `root` role is never restored, since it belongs only to the configured platform root admin. A user who already has a platform role keeps it. Each `user_roles` entry needs a `user_id` and a `role` of `root` or `admin`; otherwise the request fails with `400 Bad Request` before anything is restored.
+The `platform_owner` role is never restored, since it belongs only to the configured platform owner. A user who already has a platform role keeps it. Each `user_roles` entry needs a `user_id` and a `role` of `platform_owner` or `platform_admin`; otherwise the request fails with `400 Bad Request` before anything is restored.
 
 > Must-have: `user_token` and the backup JSON
 
@@ -2118,6 +2154,8 @@ Content-Length: 660
 Generates a new API key. The new API key is uniquely identified by its ID.
 Duration is expressed in seconds.
 
+The `type` must be `2` and the `duration` must be positive; otherwise the request fails with `400 Bad Request`. Login and recovery keys are issued only by the Users service.
+
 > Must-have: `user_token`
 
 ```bash
@@ -2202,6 +2240,8 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 ```
+
+The request fails with `404 Not Found` when the API key does not exist.
 
 ## Org Invites
 
@@ -2427,7 +2467,7 @@ The `org_invite` field is omitted when the Platform Invite has no org component.
 
 ### Revoke Platform Invite
 
-Cancels a pending Platform Invite. Only the platform root admin can revoke.
+Cancels a pending Platform Invite. Requires admin privileges.
 
 > Must-have: `user_token`, `invite_id`
 

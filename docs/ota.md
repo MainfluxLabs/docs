@@ -17,17 +17,28 @@ An update describes the firmware and the things that should install it.
 | `description` | Optional free-form description                                                     |
 | `timeout`     | Seconds without progress after which a thing is marked `failed` (default 24 hours) |
 | `created_at`  | Creation timestamp (RFC 3339)                                                      |
+| `status`      | `in_progress`, `completed` or `completed_with_failures`, derived from its things   |
 | `stats`       | Number of things of the update per status, and the total number of target things   |
 
 Each thing of an update has its own progress: `status`, `error`, `reported_version` and `updated_at`.
 
-| Status        | Meaning                                                                         |
-| ------------- | ------------------------------------------------------------------------------- |
-| `pending`     | The thing has not started the update yet                                        |
-| `downloading` | The thing is downloading the firmware                                           |
-| `installing`  | The thing is installing the firmware                                            |
-| `succeeded`   | The thing reported the version of the update                                    |
-| `failed`      | The thing reported an error or another version, timed out, or was superseded    |
+| Status        | Meaning                                                                      |
+| ------------- | ---------------------------------------------------------------------------- |
+| `pending`     | The thing has not started the update yet                                     |
+| `downloading` | The thing is downloading the firmware                                        |
+| `installing`  | The thing is installing the firmware                                         |
+| `succeeded`   | The thing reported the version of the update                                 |
+| `failed`      | The thing reported an error or another version, timed out, or was superseded |
+
+The `status` of an update is derived from the statuses of its things and is updated whenever one of them changes.
+
+| Status                    | Meaning                                                  |
+| ------------------------- | -------------------------------------------------------- |
+| `in_progress`             | At least one thing is pending, downloading or installing |
+| `completed`               | No thing is running or failed                            |
+| `completed_with_failures` | No thing is running and at least one failed              |
+
+An update whose things were all removed (deleted or moved to another group) is `completed`.
 
 ## How it works
 
@@ -36,7 +47,7 @@ Each thing of an update has its own progress: `status`, `error`, `reported_versi
 3. **Download.** The thing downloads the firmware from the `url` of the update with its thing key, resuming with HTTP Range requests if needed (see [Filestore](filestore.md#checksums-downloads-and-range-requests)), and verifies the SHA-256 checksum.
 4. **Report.** The thing reports its progress with `POST /ota/status`, or by publishing on its `things/<thing_id>/ota/status` MQTT topic. A thing can report only its own status. Reports reach only the OTA service; they are not stored and do not trigger rules or webhooks. A `succeeded` report must include `version`; if it differs from the version of the update, the thing is marked `failed`.
 5. **Timeout.** Things without progress for the `timeout` of the update are marked `failed` with `timed out`. The service checks this every `MF_OTA_TIMEOUT_CHECK_INTERVAL`.
-6. **Retry.** A user can move the failed things of an update back to `pending`, and they are notified again. Things that received a newer update in the meantime are skipped, so a retry never rolls a thing back to older firmware. The service never retries on its own.
+6. **Retry.** A user can move the failed things of an update back to `pending`, and they are notified again. Things with a newer update are skipped. Preventing a downgrade is the firmware's job. The service never retries on its own.
 
 Viewing updates requires the viewer role in the group, while creating, retrying and removing updates require the editor role. Updates and progress are removed when their group or thing is removed.
 
@@ -63,10 +74,14 @@ The response contains the created update with `201 Created`.
 
 ### List updates of a group
 
+The `status` query parameter filters the updates by status. The `order` query parameter sorts
+them by `id`, `created_at`, `version`, `status` or a `stats` count (`targets`, `pending`,
+`downloading`, `installing`, `succeeded`, `failed`).
+
 ```bash
 curl -s -S -i \
   -H "Authorization: Bearer <user_token>" \
-  "https://localhost/svcota/groups/<group_id>/updates?offset=0&limit=10"
+  "https://localhost/svcota/groups/<group_id>/updates?offset=0&limit=10&status=in_progress"
 ```
 
 ```json
@@ -74,6 +89,7 @@ curl -s -S -i \
   "total": 1,
   "offset": 0,
   "limit": 10,
+  "status": "in_progress",
   "updates": [
     {
       "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
@@ -85,6 +101,7 @@ curl -s -S -i \
       "description": "Sensor firmware 1.4.0",
       "timeout": 86400,
       "created_at": "2026-11-04T12:00:00Z",
+      "status": "in_progress",
       "stats": {
         "targets": 1,
         "pending": 0,

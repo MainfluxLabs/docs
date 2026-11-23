@@ -1,6 +1,7 @@
 # Getting Started
 
 ## Step 1 - Run the System
+
 Before proceeding, install the following prerequisites:
 
 - [Docker](https://docs.docker.com/install/) (v24 or later)
@@ -17,6 +18,7 @@ make run
 This will start Mainflux docker composition in detached mode.
 
 ## Step 2 - Install the CLI
+
 Open a new terminal from which you can interact with the running Mainflux system. The easiest way to do this is by using the Mainflux CLI, which can be downloaded as a pre-built binary from the [latest release page](https://github.com/MainfluxLabs/mainflux/releases).
 
 > Move the binary to a directory in your `$PATH` (e.g. `/usr/local/bin`) to make `mainfluxlabs-cli` accessible system-wide.
@@ -34,7 +36,7 @@ The binary will be placed at `build/mainfluxlabs-cli`. See the [CLI](cli.md) pag
 
 The entity hierarchy in Mainflux is **Org → Group → Profile → Thing**. Each resource must be created in this order, as each step requires the ID from the previous one.
 
-User management requires an admin token. The default admin credentials are configured via `MF_USERS_ADMIN_EMAIL` and `MF_USERS_ADMIN_PASSWORD` in `docker/.env`. The users service fails to start if `MF_USERS_ADMIN_PASSWORD` does not meet the [password policy](authentication.md#password-policy).
+User management requires an admin token. The platform owner credentials are configured via `MF_USERS_PLATFORM_OWNER_EMAIL` and `MF_USERS_PLATFORM_OWNER_PASSWORD` in `docker/.env`. The users service fails to start if `MF_USERS_PLATFORM_OWNER_PASSWORD` does not meet the [password policy](authentication.md#password-policy).
 
 **1. Get an admin token**
 

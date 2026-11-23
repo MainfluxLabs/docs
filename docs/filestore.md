@@ -9,7 +9,7 @@ The backend is selected with `MF_FILESTORE_BACKEND` (`local` or `seaweedfs`). Th
 Every file stored in the platform carries the following metadata fields:
 
 | Field      | Description                                                                                                          |
-|------------|----------------------------------------------------------------------------------------------------------------------|
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
 | `name`     | File name; serves as the unique identifier within the thing or group scope                                           |
 | `class`    | Logical file class, derived from the extension (`images`, `documents`, `BIM`, `pointclouds`, `binaries`, `archives`) |
 | `format`   | File format, derived from the extension                                                                              |
@@ -21,7 +21,7 @@ Every file stored in the platform carries the following metadata fields:
 `class` and `format` are **not** supplied by the client — they are derived from the uploaded file's extension. The supported extensions and the class each maps to are:
 
 | Class         | Extensions                                                                                          |
-|---------------|-----------------------------------------------------------------------------------------------------|
+| ------------- | --------------------------------------------------------------------------------------------------- |
 | `images`      | `jpg`, `jpeg`, `png`, `svg`                                                                         |
 | `documents`   | `pdf`, `csv`, `txt`, `doc`, `docx`, `odt`, `odf`, `odp`, `ods`, `xls`, `xlsx`, `ppt`, `pptx`, `xps` |
 | `BIM`         | `ifc`                                                                                               |
@@ -32,7 +32,7 @@ Every file stored in the platform carries the following metadata fields:
 On upload, the MIME type detected from the first 512 bytes of the file is checked against the class and format derived from its extension:
 
 | Class / format                  | Required detected MIME type                                           |
-|---------------------------------|-----------------------------------------------------------------------|
+| ------------------------------- | --------------------------------------------------------------------- |
 | `images` (`jpg`, `jpeg`, `png`) | `image/*`                                                             |
 | `images` (`svg`)                | `image/*` or `text/*` (SVG is XML, so it is usually detected as text) |
 | `documents` (`pdf`)             | `application/pdf`                                                     |
@@ -48,7 +48,7 @@ A file whose extension is unsupported, or whose content does not match its class
 ## Scopes
 
 | Scope       | Authentication                     | Description                                                                                                 |
-|-------------|------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| ----------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Thing files | `Authorization: Thing <thing_key>` | Files private to a specific device                                                                          |
 | Group files | `Authorization: Bearer <token>`    | Files shared across a group; viewer access to list and download, editor access to upload, update and delete |
 
