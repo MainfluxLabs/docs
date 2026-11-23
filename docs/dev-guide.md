@@ -435,7 +435,7 @@ The `operation` field can have one of the following values:
 For every operation that changes state, the `users` service publishes an event to the Redis Stream called `mainflux.users`.
 The `operation` field can have one of the following values:
 
-- `user.register` for registering a user, including through Google or GitHub sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
+- `user.register` for registering a user, including through Google, GitHub or OIDC sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
 - `user.login_fail` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
 - `user.update` for user metadata update,
 - `user.change_password` for changing a password, by the user or by a platform owner or admin for another user,
