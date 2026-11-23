@@ -288,8 +288,8 @@ The `auth` service publishes the following events to the `mainflux.auth` stream:
 - `user.impersonate` for starting an impersonated session.
 
 The `users` service publishes the following events to the `mainflux.users` stream:
-- `user.register` for registering a user; for self-registration and registration by invite the new user is the actor,
-- `user.login_failed` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
+- `user.register` for registering a user, including through Google or GitHub sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
+- `user.login_fail` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
 - `user.update` for user metadata update,
 - `user.change_password` for changing a password, by the user or by a platform admin for another user,
 - `user.reset_password` for setting a new password through password recovery (the user is the actor),
