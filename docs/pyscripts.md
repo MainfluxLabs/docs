@@ -8,7 +8,7 @@ The Python Scripts service stores Python scripts per group, runs them on demand 
 | ------------- | ------------------------------------------------------------ |
 | `id`          | Unique script identifier                                     |
 | `group_id`    | ID of the group the script belongs to                        |
-| `name`        | Script name (up to 254 characters)                           |
+| `name`        | Script name (up to 254 bytes)                                |
 | `description` | Optional free-form description                               |
 | `source`      | Python source code (up to 65,535 bytes by default)           |
 | `checksum`    | Hex-encoded SHA-256 of `source`, recomputed on every update  |
@@ -99,6 +99,8 @@ Every run is subject to the following limits:
 | Script size       | 65,535 bytes | `MF_PYSCRIPTS_MAX_SCRIPT_SIZE` | Rejected with `400` when the script is saved                                |
 | Run payload size  | 1 MiB        | —                              | Rejected with `400` when the run is requested                               |
 
+Size variables take a byte count (for example `MF_PYSCRIPTS_MAX_MEMORY=268435456`), `MF_PYSCRIPTS_RUN_TIMEOUT` takes a duration (`10s`), and `MF_PYSCRIPTS_MAX_CPU_SECONDS` takes an integer number of seconds.
+
 Notes on the limits:
 
 - The memory limit is what the script itself may allocate, on top of the worker's own memory, which already includes numpy and pandas.
@@ -143,7 +145,7 @@ The response has the status `201 Created`:
       "group_id": "71737291-b2b2-4b56-afc9-6e44de30b6bd",
       "name": "mean-reading",
       "description": "Average of all readings in the payload",
-      "checksum": "e4d22d3b8f1cb1ae86e9f1a694718560047310d9c825f9ceeb34fea9af5a07d8",
+      "checksum": "78fe9da1e5bce23000ddea6566e31957b98e395c3b24078e05be42609faa0792",
       "created_at": "2026-10-14T08:46:11.708118Z",
       "updated_at": "2026-10-14T08:46:11.708118Z"
     }
@@ -180,7 +182,7 @@ curl -s -S -i \
 | --------- | ------------------------------------------------------------ |
 | `offset`  | Number of items to skip (default `0`)                        |
 | `limit`   | Page size, up to 200 (default `10`)                          |
-| `order`   | Sort field: `id`, `name`, `created_at` or `updated_at`       |
+| `order`   | Sort field: `id`, `name`, `created_at` or `updated_at` (default `id`) |
 | `dir`     | Sort direction: `asc` or `desc` (default `desc`)             |
 | `name`    | Filter by name                                               |
 
@@ -226,7 +228,7 @@ curl -s -S -i -X PATCH \
 
 ### Run a Script
 
-The request body becomes the script's `message`. `payload` must be a JSON object of at most 1 MiB. `subtopic`, `created` (an integer) and `thing_id` are optional.
+The request body becomes the script's `message`. All fields are optional. `payload`, if given, must be a JSON object of at most 1 MiB, and `created` is an integer.
 
 ```bash
 curl -s -S -i -X POST \
@@ -245,7 +247,7 @@ curl -s -S -i -X POST \
 {
   "id": "d2072e08-003f-477b-a61e-f1cb4c3e8d9d",
   "script_id": "28fbd528-08e2-4cb0-b44d-87846f0697ca",
-  "script_checksum": "e4d22d3b8f1cb1ae86e9f1a694718560047310d9c825f9ceeb34fea9af5a07d8",
+  "script_checksum": "78fe9da1e5bce23000ddea6566e31957b98e395c3b24078e05be42609faa0792",
   "status": "success",
   "return_value": 23.5,
   "logs": ["got 3 readings"],
