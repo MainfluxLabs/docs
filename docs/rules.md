@@ -35,7 +35,7 @@ Each condition has a required `type`, which selects how it's evaluated.
 | `threshold`  | Threshold only. Numeric value to compare against                                                                                                                                       |
 | `script_id`  | Script only. ID of the [script](#scripts) to run                                                                                                                                       |
 
-A `script` condition runs the referenced Lua script and uses its return value as the result: a strict `return true` counts as met, anything else — `return false`, no return, or a runtime error — counts as not met. The script's result is combined with any other conditions on the rule the same way a threshold result would be, under the rule's `operator`. Script conditions run with a **read-only** API (only `mfx.log` is available, since a condition must not have side effects), and are only supported on `message`-input rules, not `alarm`-input rules. Every evaluation is recorded as a [script run](#script-runs).
+A `script` condition runs the referenced Lua script and uses its return value as the result: a strict `return true` counts as met, anything else — `return false`, no return, or a runtime error — counts as not met. The script's result is combined with any other conditions on the rule the same way a threshold result would be, under the rule's `operator`. Script conditions run with a **read-only** API (only `mfx.log` is available, since a condition must not have side effects), and are only supported on `message`-input rules, not `alarm`-input rules. The script's result, logs and runtime error are recorded in the [rule run](#rule-runs).
 
 ### Actions
 
@@ -292,23 +292,21 @@ curl -s -S -i -X PATCH \
   http://localhost/svcrules/scripts
 ```
 
-## Script Runs
+## Rule Runs
 
-Every script condition evaluation is recorded as a run, capturing the outcome, logs, and any runtime error.
+A rule run is stored when a rule fires, or when its evaluation, a condition or an action fails. It records the result of each evaluated condition and executed action.
 
-| Field         | Description                                      |
-| ------------- | ------------------------------------------------ |
-| `id`          | Unique run identifier                            |
-| `script_id`   | ID of the script that was executed               |
-| `rule_id`     | ID of the rule whose condition triggered the run |
-| `thing_id`    | ID of the thing that triggered the execution     |
-| `logs`        | Log lines written via `mfx.log()`                |
-| `started_at`  | Execution start timestamp (RFC 3339)             |
-| `finished_at` | Execution end timestamp (RFC 3339)               |
-| `status`      | `success` or `fail`                              |
-| `error`       | Runtime error message, if any                    |
-
-`status` reflects only whether the script ran without a Lua runtime error — it does not reflect whether the script's return value counted as the condition being met. `rule_id` is empty on runs recorded before rule-scoped tracking was added.
+| Field         | Description                                                                        |
+| ------------- | ---------------------------------------------------------------------------------- |
+| `id`          | Unique run identifier                                                              |
+| `rule_id`     | ID of the rule                                                                     |
+| `thing_id`    | ID of the thing whose message or alarm the rule evaluated                          |
+| `started_at`  | Run start timestamp (RFC 3339)                                                     |
+| `finished_at` | Run end timestamp (RFC 3339)                                                       |
+| `status`      | `fail` when the evaluation, a condition or an action fails, else `success`         |
+| `error`       | Evaluation error that belongs to no single condition or action, if any             |
+| `conditions`  | Evaluated conditions with `type`, `script_id`, `met`, `result`, `logs` and `error` |
+| `actions`     | Executed actions with `type`, `id` and `error`                                     |
 
 ### List Runs for a Rule
 
@@ -334,7 +332,7 @@ Both listing endpoints support `status` (`success`/`fail`), `from` and `to` (Uni
 curl -s -S -i -X PATCH \
   -H "Authorization: Bearer <user_token>" \
   -H "Content-Type: application/json" \
-  -d '{"script_run_ids": ["789e4567-e89b-12d3-a456-426614174def"]}' \
+  -d '{"run_ids": ["789e4567-e89b-12d3-a456-426614174def"]}' \
   http://localhost/svcrules/runs
 ```
 
