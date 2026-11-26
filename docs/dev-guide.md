@@ -255,7 +255,8 @@ which will properly configure and run all microservices.
 
 Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
 The `things` service publishes events to the `mainflux.things` stream, the `auth` service publishes
-events to the `mainflux.auth` stream, and the `users` service publishes events to the `mainflux.users` stream.
+events to the `mainflux.auth` stream, the `users` service publishes events to the `mainflux.users` stream,
+and the `certs` service publishes events to the `mainflux.certs` stream.
 
 Besides the operation-specific fields described below, every event carries the following fields:
 
@@ -446,3 +447,14 @@ The `operation` field can have one of the following values:
 - `user.unassign_admin_role` for removing the platform admin role,
 - `platform_invite.create` for inviting a person to register on the platform; its org invite is recorded by auth as `org_invite.create`,
 - `platform_invite.revoke` for revoking a platform invite.
+
+### Certs Service
+
+For every operation that changes state, the `certs` service publishes an event to the Redis Stream called `mainflux.certs`.
+Every event carries the certificate `serial` and the `thing_id`, and belongs to the thing's org and group.
+The `operation` field can have one of the following values:
+
+- `cert.issue` for issuing a certificate for a thing,
+- `cert.rotate` for replacing a thing's certificate with a newly issued one, carrying the replaced certificate as `revoked_serial`,
+- `cert.revoke` for revoking a certificate,
+- `cert.renew` for renewing an expiring certificate, carrying the replaced certificate as `revoked_serial`; automatic renewals have no actor.
