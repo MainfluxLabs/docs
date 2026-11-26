@@ -111,6 +111,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pyscripts/">Python Scripts</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
                 </li>
               </ul>
@@ -337,7 +341,8 @@ Authorization: Thing &lt;thing_key&gt;
 </tbody>
 </table>
 <p>SenML-only parameters: <code>name</code>, <code>v</code>, <code>vb</code>, <code>vs</code>, <code>vd</code>, <code>comparator</code> (<code>eq</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>).</p>
-<p>JSON-only parameters: <code>filter</code> (dot-notation path to filter by payload field presence).</p>
+<p>JSON-only parameters: <code>key_val</code> (repeatable <code>key:value</code>, <code>key</code> or <code>:value</code> pair that every returned message matches; the first colon separates the key from the value, so a value without a key starts with a colon and matches the value in any payload field; the key is dot-separated), <code>comparator</code> (<code>eq</code>, <code>starts_with</code>, <code>contains</code>).</p>
+<p>Example: <code>GET /json?key_val=temperature:20&amp;key_val=humidity&amp;key_val=:online</code> returns messages whose <code>temperature</code> equals <code>20</code>, whose <code>humidity</code> is not null and that hold <code>online</code> in any payload field.</p>
 <p>Export-only parameters:</p>
 <table>
 <thead>

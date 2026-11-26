@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://mainflux.com/index.html/pyscripts/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Python Scripts - MainfluxLabs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Python Scripts";
+        var mkdocs_page_input_path = "pyscripts.md";
+        var mkdocs_page_url = "/index.html/pyscripts/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MainfluxLabs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authorization/">Authorization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../certs/">Certs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../messaging/">Messaging</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../storage/">Storage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Python Scripts</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#scripts">Scripts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#runs">Runs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#writing-a-script">Writing a script</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sandbox-and-limits">Sandbox and limits</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#rate-limiting">Rate limiting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-scripts">Managing scripts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create-scripts">Create Scripts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-scripts-by-group">List Scripts by Group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#view-a-script">View a Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-a-script">Update a Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-scripts">Remove Scripts</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-scripts">Running scripts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#run-a-script">Run a Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#list-runs-by-script">List Runs by Script</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#remove-runs">Remove Runs</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../shadows/">Shadows</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../converters/">Converters</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filestore/">Filestore</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../uiconfigs/">UIConfigs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../notifiers/">Notifiers</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../webhooks/">Webhooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../downlinks/">Downlinks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../modbus/">Modbus</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ota/">OTA</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../audit/">Audit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tracing/">Tracing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev-guide/">Developer's Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmark</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MainfluxLabs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Python Scripts</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="python-scripts">Python Scripts<a class="headerlink" href="#python-scripts" title="Permanent link">#</a></h1>
+<p>The Python Scripts service stores Python scripts per group, runs them on demand against a message, and records the outcome of every run. Scripts can use the Python standard library together with <code>numpy</code> and <code>pandas</code>, which are imported once by a pool of long-lived worker processes. Each run executes in a sandboxed child process forked from a worker, so no run can affect the next one.</p>
+<h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique script identifier</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>ID of the group the script belongs to</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Script name (up to 254 bytes)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Optional free-form description</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>Python source code (up to 65,535 bytes by default)</td>
+</tr>
+<tr>
+<td><code>checksum</code></td>
+<td>Hex-encoded SHA-256 of <code>source</code>, recomputed on every update</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>Creation timestamp</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>Timestamp of the last update</td>
+</tr>
+</tbody>
+</table>
+<p>Authorization is delegated to the Things service. Reading scripts and runs requires <code>viewer</code> access to the group. Creating, updating and removing scripts, removing runs, and <strong>running</strong> scripts require <code>editor</code> access. Running counts as an editor action because it executes code inside the service.</p>
+<p>Script source and run logs are readable by every viewer of the group, so they must not contain credentials.</p>
+<p>When a group is removed, its scripts and their runs are removed with it.</p>
+<h2 id="runs">Runs<a class="headerlink" href="#runs" title="Permanent link">#</a></h2>
+<p>Each run produces a run record:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Unique run identifier</td>
+</tr>
+<tr>
+<td><code>script_id</code></td>
+<td>The script that was run</td>
+</tr>
+<tr>
+<td><code>script_checksum</code></td>
+<td>Checksum of the script source the run executed</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>success</code> or <code>fail</code></td>
+</tr>
+<tr>
+<td><code>return_value</code></td>
+<td>JSON value produced by the script (<code>null</code> on failure)</td>
+</tr>
+<tr>
+<td><code>logs</code></td>
+<td>Lines the script wrote to standard output or standard error</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Reason for the failure (on failure)</td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td>Timestamp of when the run started</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td>Timestamp of when the run finished</td>
+</tr>
+</tbody>
+</table>
+<p>Each run records the checksum of the source it executed, so a run can still be matched to its source after the script is edited.</p>
+<p>Only the newest 1,000 runs of each script are kept. Older runs are deleted automatically when a new run is saved.</p>
+<h2 id="writing-a-script">Writing a script<a class="headerlink" href="#writing-a-script" title="Permanent link">#</a></h2>
+<p>A script is plain Python that runs from top to bottom. The run input is available as the global <code>message</code>, a dictionary with the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>payload</code></td>
+<td>Message payload, a JSON object (<code>None</code> if not supplied)</td>
+</tr>
+<tr>
+<td><code>subtopic</code></td>
+<td>Message subtopic, present only when supplied</td>
+</tr>
+<tr>
+<td><code>created</code></td>
+<td>Message timestamp, present only when supplied</td>
+</tr>
+<tr>
+<td><code>thing_id</code></td>
+<td>ID of the thing the message refers to, present only when supplied</td>
+</tr>
+</tbody>
+</table>
+<p>If the script's last top-level statement is an expression, its value is the run's result, as in a notebook cell. Otherwise the result is <code>null</code>. Anything written with <code>print</code> or to <code>sys.stderr</code> is recorded in the run's <code>logs</code>. If the script raises an exception, the run fails and the traceback is recorded in <code>error</code>.</p>
+<pre><code class="language-python">import numpy as np
+
+vals = [r[&quot;v&quot;] for r in message[&quot;payload&quot;][&quot;readings&quot;]]
+print(&quot;got&quot;, len(vals), &quot;readings&quot;)
+float(np.mean(vals))
+</code></pre>
+<p>The result must be JSON-serializable. Convert numpy and pandas values to native Python types first, for example with <code>float(...)</code>, <code>int(...)</code> or <code>.tolist()</code>. If the result is a numpy scalar other than <code>np.float64</code> (for example <code>np.int64</code>, <code>np.float32</code> or <code>np.bool_</code>), an array, a DataFrame, <code>NaN</code> or <code>Infinity</code>, the run fails with <code>result cannot be returned: ...</code>. <code>np.float64</code> is a subclass of Python <code>float</code>, so it is returned as a number.</p>
+<p>The only third-party packages available are <code>numpy</code> and <code>pandas</code>, and no others can be installed.</p>
+<h2 id="sandbox-and-limits">Sandbox and limits<a class="headerlink" href="#sandbox-and-limits" title="Permanent link">#</a></h2>
+<p>Before any script code runs, the forked child:</p>
+<ul>
+<li>sets the CPU, data and file size resource limits and disables core dumps,</li>
+<li>installs a seccomp allow-list filter,</li>
+<li>starts a new session and replaces stdin, stdout and stderr with <code>/dev/null</code>.</li>
+</ul>
+<p>The seccomp filter denies every system call that it does not explicitly allow. As a result:</p>
+<ul>
+<li><strong>Network access is blocked.</strong> Socket system calls are denied, so modules such as <code>socket</code>, <code>urllib.request</code>, <code>http.client</code> and <code>smtplib</code> fail.</li>
+<li><strong>Process creation is blocked.</strong> <code>subprocess</code>, <code>os.fork</code>, <code>os.exec*</code> and <code>multiprocessing</code> fail. Threads (<code>threading</code>, <code>ThreadPoolExecutor</code>) are allowed.</li>
+<li><strong>Files can be read but not written.</strong> Opening a file for writing or creating one fails with <code>EROFS</code>.</li>
+<li><strong>Signals can be sent only to the run's own process.</strong></li>
+</ul>
+<p>The service refuses to start a worker that reports no seccomp filter.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The sandbox is meant for scripts written by trusted group editors, not for hostile multi-tenant code. Scripts run under the same user as the service and can read any file that user can read. Worker processes do not receive the service's environment variables, but if the files that <code>MF_PYSCRIPTS_SERVER_KEY</code> or <code>MF_PYSCRIPTS_DB_SSL_KEY</code> point to are mounted into the container, a group editor can read them and return their contents as a run result.</p>
+</div>
+<p>Every run is subject to the following limits:</p>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Default</th>
+<th>Variable</th>
+<th>Error recorded on the run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wall-clock time</td>
+<td>10 s</td>
+<td><code>MF_PYSCRIPTS_RUN_TIMEOUT</code></td>
+<td><code>timeout after 10s</code></td>
+</tr>
+<tr>
+<td>CPU time</td>
+<td>5 s</td>
+<td><code>MF_PYSCRIPTS_MAX_CPU_SECONDS</code></td>
+<td><code>cpu time limit exceeded (5s)</code></td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>256 MiB</td>
+<td><code>MF_PYSCRIPTS_MAX_MEMORY</code></td>
+<td><code>script killed, most likely by the memory limit</code>, or a Python <code>MemoryError</code></td>
+</tr>
+<tr>
+<td>Output size</td>
+<td>1 MiB</td>
+<td><code>MF_PYSCRIPTS_MAX_OUTPUT_SIZE</code></td>
+<td><code>output limit exceeded</code>, or <code>result cannot be returned: ...</code></td>
+</tr>
+<tr>
+<td>Log lines</td>
+<td>256</td>
+<td><code>MF_PYSCRIPTS_MAX_LOG_LINES</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>File size</td>
+<td>0 bytes</td>
+<td><code>MF_PYSCRIPTS_MAX_FILE_SIZE</code></td>
+<td><code>file size limit exceeded</code></td>
+</tr>
+<tr>
+<td>Script size</td>
+<td>65,535 bytes</td>
+<td><code>MF_PYSCRIPTS_MAX_SCRIPT_SIZE</code></td>
+<td>Rejected with <code>400</code> when the script is saved</td>
+</tr>
+<tr>
+<td>Run payload size</td>
+<td>1 MiB</td>
+<td>—</td>
+<td>Rejected with <code>400</code> when the run is requested</td>
+</tr>
+</tbody>
+</table>
+<p>Size variables take a byte count (for example <code>MF_PYSCRIPTS_MAX_MEMORY=268435456</code>), <code>MF_PYSCRIPTS_RUN_TIMEOUT</code> takes a duration (<code>10s</code>), and <code>MF_PYSCRIPTS_MAX_CPU_SECONDS</code> takes an integer number of seconds.</p>
+<p>Notes on the limits:</p>
+<ul>
+<li>The memory limit is what the script itself may allocate, on top of the worker's own memory, which already includes numpy and pandas.</li>
+<li>The output size covers the logs and the result together. A result can never exceed 4 MiB, whatever the configured output size.</li>
+<li>Log lines beyond the limit are dropped and the run does not fail. A log line longer than 8,192 characters is truncated and ends with <code>... (truncated)</code>.</li>
+</ul>
+<h2 id="rate-limiting">Rate limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">#</a></h2>
+<p>Creating, updating and running scripts each occupy a worker, because creating and updating compile the source. These requests are rate limited per group to 2 requests per second, with a burst of 10. In addition, each group, and each user across all of their groups, can have only one of these requests in progress at a time. A request over either limit is rejected with <code>429 Too Many Requests</code>.</p>
+<p>If a run leaves its worker unusable, the worker is replaced, and the group and user stay busy for another 2 seconds.</p>
+<h2 id="managing-scripts">Managing scripts<a class="headerlink" href="#managing-scripts" title="Permanent link">#</a></h2>
+<h3 id="create-scripts">Create Scripts<a class="headerlink" href="#create-scripts" title="Permanent link">#</a></h3>
+<p>Up to 32 scripts can be created in a single request. Each script is compiled before it is stored, so a script that does not compile is rejected with <code>400</code> when it is created, not when it is run. For a syntax error, the response's <code>error</code> contains Python's message with the line number. If any script in the request is invalid, none of them are stored.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;scripts&quot;: [
+      {
+        &quot;name&quot;: &quot;mean-reading&quot;,
+        &quot;description&quot;: &quot;Average of all readings in the payload&quot;,
+        &quot;source&quot;: &quot;import numpy as np\nvals = [r[\&quot;v\&quot;] for r in message[\&quot;payload\&quot;][\&quot;readings\&quot;]]\nprint(\&quot;got\&quot;, len(vals), \&quot;readings\&quot;)\nfloat(np.mean(vals))&quot;
+      }
+    ]
+  }' \
+  https://localhost/svcpyscripts/groups/&lt;group_id&gt;/scripts
+</code></pre>
+<p>The response has the status <code>201 Created</code>:</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: [
+    {
+      &quot;id&quot;: &quot;28fbd528-08e2-4cb0-b44d-87846f0697ca&quot;,
+      &quot;group_id&quot;: &quot;71737291-b2b2-4b56-afc9-6e44de30b6bd&quot;,
+      &quot;name&quot;: &quot;mean-reading&quot;,
+      &quot;description&quot;: &quot;Average of all readings in the payload&quot;,
+      &quot;checksum&quot;: &quot;78fe9da1e5bce23000ddea6566e31957b98e395c3b24078e05be42609faa0792&quot;,
+      &quot;created_at&quot;: &quot;2026-10-14T08:46:11.708118Z&quot;,
+      &quot;updated_at&quot;: &quot;2026-10-14T08:46:11.708118Z&quot;
+    }
+  ]
+}
+</code></pre>
+<p>The response does not include <code>source</code>. Use <a href="#view-a-script">View a Script</a> to retrieve it.</p>
+<p>The <code>source</code> field is a JSON string, so newlines and quotes must be escaped. For anything longer than a few lines, keep the script in a <code>.py</code> file and generate the request body from it:</p>
+<pre><code class="language-bash">python3 -c 'import json, sys; print(json.dumps({&quot;scripts&quot;: [{&quot;name&quot;: &quot;mean-reading&quot;, &quot;source&quot;: open(sys.argv[1]).read()}]}))' \
+  mean_reading.py &gt; body.json
+
+curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  --data-binary @body.json \
+  https://localhost/svcpyscripts/groups/&lt;group_id&gt;/scripts
+</code></pre>
+<h3 id="list-scripts-by-group">List Scripts by Group<a class="headerlink" href="#list-scripts-by-group" title="Permanent link">#</a></h3>
+<p>The listed scripts do not include <code>source</code>.</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/svcpyscripts/groups/&lt;group_id&gt;/scripts?offset=0&amp;limit=10&amp;order=name&amp;dir=asc&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>Number of items to skip (default <code>0</code>)</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Page size, up to 200 (default <code>10</code>)</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>Sort field: <code>id</code>, <code>name</code>, <code>created_at</code> or <code>updated_at</code> (default <code>id</code>)</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td>Sort direction: <code>asc</code> or <code>desc</code> (default <code>desc</code>)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Filter by name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="view-a-script">View a Script<a class="headerlink" href="#view-a-script" title="Permanent link">#</a></h3>
+<p>This is the only endpoint that returns the script <code>source</code>.</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  https://localhost/svcpyscripts/scripts/&lt;script_id&gt;
+</code></pre>
+<h3 id="update-a-script">Update a Script<a class="headerlink" href="#update-a-script" title="Permanent link">#</a></h3>
+<p>This request replaces the script's name, description and source, and recomputes its <code>checksum</code>. The new source is compiled first, and the request is rejected with <code>400</code> if it does not compile. Existing runs keep the checksum they were executed with. The response has the status <code>200 OK</code> and an empty body.</p>
+<pre><code class="language-bash">curl -s -S -i -X PUT \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;mean-reading&quot;,
+    &quot;description&quot;: &quot;Rounded average of all readings&quot;,
+    &quot;source&quot;: &quot;import numpy as np\nvals = [r[\&quot;v\&quot;] for r in message[\&quot;payload\&quot;][\&quot;readings\&quot;]]\nround(float(np.mean(vals)), 2)&quot;
+  }' \
+  https://localhost/svcpyscripts/scripts/&lt;script_id&gt;
+</code></pre>
+<h3 id="remove-scripts">Remove Scripts<a class="headerlink" href="#remove-scripts" title="Permanent link">#</a></h3>
+<p>Up to 100 scripts can be removed in a single request. A script's runs are removed with it. The response has the status <code>204 No Content</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;script_ids&quot;: [&quot;28fbd528-08e2-4cb0-b44d-87846f0697ca&quot;]}' \
+  https://localhost/svcpyscripts/scripts
+</code></pre>
+<h2 id="running-scripts">Running scripts<a class="headerlink" href="#running-scripts" title="Permanent link">#</a></h2>
+<h3 id="run-a-script">Run a Script<a class="headerlink" href="#run-a-script" title="Permanent link">#</a></h3>
+<p>The request body becomes the script's <code>message</code>. All fields are optional. <code>payload</code>, if given, must be a JSON object of at most 1 MiB, and <code>created</code> is an integer.</p>
+<pre><code class="language-bash">curl -s -S -i -X POST \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;payload&quot;: {&quot;readings&quot;: [{&quot;v&quot;: 21}, {&quot;v&quot;: 23.5}, {&quot;v&quot;: 26}]},
+    &quot;subtopic&quot;: &quot;sensors&quot;,
+    &quot;thing_id&quot;: &quot;d126173e-b05d-4e60-a2ee-05a674157a12&quot;,
+    &quot;created&quot;: 1760000000000
+  }' \
+  https://localhost/svcpyscripts/scripts/&lt;script_id&gt;/run
+</code></pre>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;d2072e08-003f-477b-a61e-f1cb4c3e8d9d&quot;,
+  &quot;script_id&quot;: &quot;28fbd528-08e2-4cb0-b44d-87846f0697ca&quot;,
+  &quot;script_checksum&quot;: &quot;78fe9da1e5bce23000ddea6566e31957b98e395c3b24078e05be42609faa0792&quot;,
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;return_value&quot;: 23.5,
+  &quot;logs&quot;: [&quot;got 3 readings&quot;],
+  &quot;started_at&quot;: &quot;2026-10-14T08:46:11.794358Z&quot;,
+  &quot;finished_at&quot;: &quot;2026-10-14T08:46:11.806112Z&quot;
+}
+</code></pre>
+<p>A failed script still returns <code>200 OK</code>. The response status tells script failures apart from service failures:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200</code></td>
+<td>The script ran. If it raised an exception, exceeded a limit or returned a value that is not JSON-serializable, <code>status</code> is <code>fail</code> and the reason is in <code>error</code>. The run is recorded.</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>The group or user exceeded the <a href="#rate-limiting">rate limit</a></td>
+</tr>
+<tr>
+<td><code>503</code></td>
+<td>No worker became free within <code>MF_PYSCRIPTS_ACQUIRE_TIMEOUT</code> (<code>no python worker available</code>). The request is rejected rather than queued, so it can be retried.</td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>The runner failed for a reason outside the script</td>
+</tr>
+</tbody>
+</table>
+<p>Creating and updating scripts also need a worker, so they can return <code>429</code> and <code>503</code> too.</p>
+<p>If the client disconnects while the script is running, the run is stopped and recorded as failed with <code>run cancelled by the caller</code>.</p>
+<h3 id="list-runs-by-script">List Runs by Script<a class="headerlink" href="#list-runs-by-script" title="Permanent link">#</a></h3>
+<p>By default, runs are listed newest first.</p>
+<pre><code class="language-bash">curl -s -S -i \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  &quot;https://localhost/svcpyscripts/scripts/&lt;script_id&gt;/runs?limit=5&amp;order=started_at&amp;dir=desc&amp;status=fail&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>Number of items to skip (default <code>0</code>)</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Page size, up to 200 (default <code>10</code>)</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>Sort field: <code>id</code>, <code>started_at</code> or <code>status</code> (default <code>started_at</code>)</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td>Sort direction: <code>asc</code> or <code>desc</code> (default <code>desc</code>)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Filter by status: <code>success</code> or <code>fail</code></td>
+</tr>
+<tr>
+<td><code>from</code> / <code>to</code></td>
+<td>Filter by start time, as Unix timestamps in milliseconds</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>order</code> fields for runs are different from the ones for scripts.</p>
+<h3 id="remove-runs">Remove Runs<a class="headerlink" href="#remove-runs" title="Permanent link">#</a></h3>
+<p>Up to 100 runs can be removed in a single request. The response has the status <code>204 No Content</code>.</p>
+<pre><code class="language-bash">curl -s -S -i -X PATCH \
+  -H &quot;Authorization: Bearer &lt;user_token&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;run_ids&quot;: [&quot;d2072e08-003f-477b-a61e-f1cb4c3e8d9d&quot;]}' \
+  https://localhost/svcpyscripts/runs
+</code></pre>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<p>The service listens on port <code>9033</code> by default (<code>MF_PYSCRIPTS_HTTP_PORT</code>) and is exposed through nginx under <code>/svcpyscripts</code>. The worker pool is configured through the following environment variables, in addition to the <a href="#sandbox-and-limits">run limits</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MF_PYSCRIPTS_PYTHON</code></td>
+<td><code>python3</code></td>
+<td>Python interpreter used for the workers</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_WORKERS</code></td>
+<td><code>2</code></td>
+<td>Number of pre-warmed workers, and so the number of concurrent runs</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_ACQUIRE_TIMEOUT</code></td>
+<td><code>5s</code></td>
+<td>How long a request waits for a free worker before returning <code>503</code></td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_START_TIMEOUT</code></td>
+<td><code>60s</code></td>
+<td>How long a worker may take to start</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_BLAS_THREADS</code></td>
+<td><code>1</code></td>
+<td>Number of BLAS/OpenMP threads per run</td>
+</tr>
+</tbody>
+</table>
+<p>In Docker Compose, the container is read-only, drops all capabilities and is bounded by the following variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MF_PYSCRIPTS_MEM_LIMIT</code></td>
+<td><code>1g</code></td>
+<td>Container memory limit</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_CPUS</code></td>
+<td><code>2</code></td>
+<td>Container CPU limit</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_PIDS_LIMIT</code></td>
+<td><code>512</code></td>
+<td>Container process limit</td>
+</tr>
+<tr>
+<td><code>MF_PYSCRIPTS_TMPFS_SIZE</code></td>
+<td><code>64m</code></td>
+<td>Size of the <code>/tmp</code> tmpfs mount</td>
+</tr>
+</tbody>
+</table>
+<p>Keep <code>MF_PYSCRIPTS_MEM_LIMIT</code> above <code>MF_PYSCRIPTS_WORKERS × (~120 MB + MF_PYSCRIPTS_MAX_MEMORY)</code> and below the memory available to Docker. If you change one of these three values, adjust the other two to match. If the container limit is too low, a single memory-heavy run can cause the kernel to kill processes in the whole container rather than only the run.</p>
+<p>The service image is built from <code>docker/Dockerfile.python</code> (<code>make docker_pyscripts</code>). Python 3 with <code>numpy</code>, <code>pandas</code>, <code>pyseccomp</code> and <code>libseccomp</code> must be installed in the image. See the <a href="https://github.com/MainfluxLabs/mainflux/blob/master/pyscripts/README.md">Pyscripts service README</a> for the full list of environment variables.</p>
+<p>For the full API reference, see the <a href="https://mainfluxlabs.github.io/docs/swagger/">API documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../rules/" class="btn btn-neutral float-left" title="Rules"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../alarms/" class="btn btn-neutral float-right" title="Alarms">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright (c) MainfluxLabs</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/MainfluxLabs/mainflux" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../rules/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../alarms/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

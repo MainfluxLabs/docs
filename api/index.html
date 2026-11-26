@@ -401,6 +401,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pyscripts/">Python Scripts</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../alarms/">Alarms</a>
                 </li>
               </ul>
@@ -785,11 +789,11 @@ Access-Control-Allow-Methods: *
 Access-Control-Allow-Headers: *
 </code></pre>
 <h3 id="oauth-login">OAuth Login<a class="headerlink" href="#oauth-login" title="Permanent link">#</a></h3>
-<p>The Mainflux system supports login via OAuth providers such as Google and GitHub. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.</p>
+<p>The Mainflux system supports login via OAuth providers: Google, GitHub and a generic OpenID Connect (OIDC) provider such as Keycloak, Azure AD or Okta. The OIDC provider reads its endpoints from the issuer's <code>.well-known/openid-configuration</code>. This flow involves two endpoints: initiating the OAuth login and handling the provider callback.</p>
 <h4 id="initiate-oauth-login">Initiate OAuth Login<a class="headerlink" href="#initiate-oauth-login" title="Permanent link">#</a></h4>
 <p>Redirect the user to the OAuth provider's login page. You can optionally provide an <code>inviteID</code> and a <code>redirect_path</code> where the user should be redirected after login.</p>
 <blockquote>
-<p>Must-have: <code>provider</code> (Google or GitHub)
+<p>Must-have: <code>provider</code> (<code>google</code>, <code>github</code> or <code>oidc</code>)
 Optional query params: <code>invite_id</code>, <code>redirect_path</code></p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X GET &quot;http://localhost/users/oauth/google?invite_id=&lt;invite_id&gt;&amp;redirect_path=/dashboard&quot;
@@ -802,7 +806,7 @@ Optional query params: <code>invite_id</code>, <code>redirect_path</code></p>
 <h4 id="oauth-callback">OAuth Callback<a class="headerlink" href="#oauth-callback" title="Permanent link">#</a></h4>
 <p>After the user authenticates with the OAuth provider, the provider redirects to this endpoint with a code and state. This endpoint completes the login process and redirects to <code>MF_HOST</code> + <code>MF_REDIRECT_LOGIN_URL</code> with the login token in the URL fragment.</p>
 <blockquote>
-<p>Must-have: <code>provider</code> (Google or GitHub), <code>code</code>, <code>state</code> (from OAuth provider)
+<p>Must-have: <code>provider</code> (<code>google</code>, <code>github</code> or <code>oidc</code>), <code>code</code>, <code>state</code> (from OAuth provider)
 Cookies: <code>state</code> and <code>verifier</code> must be set</p>
 </blockquote>
 <pre><code class="language-bash">curl -s -S -i -X GET &quot;http://localhost/users/oauth/google/callback?code=&lt;auth_code&gt;&amp;state=&lt;state_from_login&gt;&quot;
@@ -2035,6 +2039,7 @@ Content-Length: 660
 <h3 id="issue-api-key">Issue API Key<a class="headerlink" href="#issue-api-key" title="Permanent link">#</a></h3>
 <p>Generates a new API key. The new API key is uniquely identified by its ID.
 Duration is expressed in seconds.</p>
+<p>The <code>type</code> must be <code>2</code> and the <code>duration</code> must be positive; otherwise the request fails with <code>400 Bad Request</code>. Login and recovery keys are issued only by the Users service.</p>
 <blockquote>
 <p>Must-have: <code>user_token</code></p>
 </blockquote>
@@ -2100,6 +2105,7 @@ Content-Type: application/json
 Connection: keep-alive
 Access-Control-Expose-Headers: Location
 </code></pre>
+<p>The request fails with <code>404 Not Found</code> when the API key does not exist.</p>
 <h2 id="org-invites">Org Invites<a class="headerlink" href="#org-invites" title="Permanent link">#</a></h2>
 <p>Org Invites allow organization administrators to invite registered users to join an organization. An invitation is delivered via email and must be explicitly accepted or declined by the recipient.</p>
 <h3 id="create-org-invite">Create Org Invite<a class="headerlink" href="#create-org-invite" title="Permanent link">#</a></h3>
