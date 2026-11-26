@@ -45,11 +45,11 @@ Only the newest 1,000 runs of each script are kept. Older runs are deleted autom
 
 A script is plain Python that runs from top to bottom. The run input is available as the global `message`, a dictionary with the following keys:
 
-| Key        | Description                                               |
-| ---------- | --------------------------------------------------------- |
-| `payload`  | Message payload, a JSON object (`None` if not supplied)   |
-| `subtopic` | Message subtopic, present only when supplied              |
-| `created`  | Message timestamp, present only when supplied             |
+| Key        | Description                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| `payload`  | Message payload, a JSON object (`None` if not supplied)           |
+| `subtopic` | Message subtopic, present only when supplied                      |
+| `created`  | Message timestamp, present only when supplied                     |
 | `thing_id` | ID of the thing the message refers to, present only when supplied |
 
 If the script's last top-level statement is an expression, its value is the run's result, as in a notebook cell. Otherwise the result is `null`. Anything written with `print` or to `sys.stderr` is recorded in the run's `logs`. If the script raises an exception, the run fails and the traceback is recorded in `error`.
@@ -62,7 +62,7 @@ print("got", len(vals), "readings")
 float(np.mean(vals))
 ```
 
-The result must be JSON-serializable. Convert numpy and pandas values to native Python types first, for example with `float(...)`, `int(...)` or `.tolist()`. If the result is a numpy scalar, an array, a DataFrame, `NaN` or `Infinity`, the run fails with `result cannot be returned: ...`.
+The result must be JSON-serializable. Convert numpy and pandas values to native Python types first, for example with `float(...)`, `int(...)` or `.tolist()`. If the result is a numpy scalar other than `np.float64` (for example `np.int64`, `np.float32` or `np.bool_`), an array, a DataFrame, `NaN` or `Infinity`, the run fails with `result cannot be returned: ...`. `np.float64` is a subclass of Python `float`, so it is returned as a number.
 
 The only third-party packages available are `numpy` and `pandas`, and no others can be installed.
 
@@ -84,7 +84,7 @@ The seccomp filter denies every system call that it does not explicitly allow. A
 The service refuses to start a worker that reports no seccomp filter.
 
 !!! warning
-    The sandbox is meant for scripts written by trusted group editors, not for hostile multi-tenant code. Scripts run under the same user as the service and can read any file that user can read. Worker processes do not receive the service's environment variables, but if files such as `MF_PYSCRIPTS_SERVER_KEY` or `MF_PYSCRIPTS_DB_SSL_KEY` are mounted into the container, a group editor can read them and return their contents as a run result.
+    The sandbox is meant for scripts written by trusted group editors, not for hostile multi-tenant code. Scripts run under the same user as the service and can read any file that user can read. Worker processes do not receive the service's environment variables, but if the files that `MF_PYSCRIPTS_SERVER_KEY` or `MF_PYSCRIPTS_DB_SSL_KEY` point to are mounted into the container, a group editor can read them and return their contents as a run result.
 
 Every run is subject to the following limits:
 
@@ -178,13 +178,13 @@ curl -s -S -i \
   "https://localhost/svcpyscripts/groups/<group_id>/scripts?offset=0&limit=10&order=name&dir=asc"
 ```
 
-| Parameter | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| `offset`  | Number of items to skip (default `0`)                        |
-| `limit`   | Page size, up to 200 (default `10`)                          |
+| Parameter | Description                                                           |
+| --------- | --------------------------------------------------------------------- |
+| `offset`  | Number of items to skip (default `0`)                                 |
+| `limit`   | Page size, up to 200 (default `10`)                                   |
 | `order`   | Sort field: `id`, `name`, `created_at` or `updated_at` (default `id`) |
-| `dir`     | Sort direction: `asc` or `desc` (default `desc`)             |
-| `name`    | Filter by name                                               |
+| `dir`     | Sort direction: `asc` or `desc` (default `desc`)                      |
+| `name`    | Filter by name                                                        |
 
 ### View a Script
 
