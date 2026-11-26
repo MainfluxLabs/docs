@@ -59,7 +59,9 @@ Each reader exposes the same API for both SenML and JSON formats:
 
 SenML-only parameters: `name`, `v`, `vb`, `vs`, `vd`, `comparator` (`eq`, `lt`, `le`, `gt`, `ge`).
 
-JSON-only parameters: `filter` (dot-notation path to filter by payload field presence).
+JSON-only parameters: `key_val` (repeatable `key:value`, `key` or `:value` pair that every returned message matches; the first colon separates the key from the value, so a value without a key starts with a colon and matches the value in any payload field; the key is dot-separated), `comparator` (`eq`, `starts_with`, `contains`).
+
+Example: `GET /json?key_val=temperature:20&key_val=humidity&key_val=:online` returns messages whose `temperature` equals `20`, whose `humidity` is not null and that hold `online` in any payload field.
 
 Export-only parameters:
 
