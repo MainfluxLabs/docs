@@ -55,7 +55,7 @@ Flags:
   -h, --help                  help for mainfluxlabs-cli
   -p, --http-url string       HTTP adapter URL (default "http://localhost/http")
   -i, --insecure              Do not check for TLS cert
-      --key string            JSON payload key
+      --key-val stringArray   JSON payload key-value pair in the key:value, key or :value form, where the first colon separates the key from the value (repeatable)
   -l, --limit uint            Limit query parameter (default 100)
   -m, --metadata string       Metadata query parameter
   -n, --name string           Name query parameter
@@ -72,7 +72,6 @@ Flags:
       --to int                To timestamp in milliseconds
       --url string            Deployment base URL from which service URLs that are not set explicitly are derived
   -u, --users-url string      Users service URL (default "http://localhost/svcusers")
-      --value string          JSON payload value
   -w, --webhooks-url string   Webhooks service URL (default "http://localhost/svcwebhooks")
 
 Use "mainfluxlabs-cli [command] --help" for more information about a command.
