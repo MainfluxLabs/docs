@@ -254,9 +254,16 @@ which will properly configure and run all microservices.
 ## Events
 
 Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
-The `things` service publishes events to the `mainflux.things` stream, the `auth` service publishes
-events to the `mainflux.auth` stream, the `users` service publishes events to the `mainflux.users` stream,
-and the `certs` service publishes events to the `mainflux.certs` stream.
+Each service publishes its events to its own stream:
+
+- `things` to `mainflux.things`,
+- `auth` to `mainflux.auth`,
+- `users` to `mainflux.users`,
+- `certs` to `mainflux.certs`,
+- `webhooks` to `mainflux.webhooks`,
+- `smtp-notifier` to `mainflux.smtp-notifier` and `smpp-notifier` to `mainflux.smpp-notifier`,
+- `downlinks` to `mainflux.downlinks`,
+- `modbus` to `mainflux.modbus`.
 
 Besides the operation-specific fields described below, every event carries the following fields:
 
@@ -458,3 +465,46 @@ The `operation` field can have one of the following values:
 - `cert.rotate` for replacing a thing's certificate with a newly issued one, carrying the replaced certificate as `revoked_serial`,
 - `cert.revoke` for revoking a certificate,
 - `cert.renew` for renewing an expiring certificate, carrying the replaced certificate as `revoked_serial`; automatic renewals have no actor.
+
+### Webhooks Service
+
+For every operation that changes state, the `webhooks` service publishes an event to the Redis Stream called `mainflux.webhooks`.
+Every event carries the webhook `id` and belongs to the org and group of the webhook's thing.
+Events never carry the webhook URL or headers, which may hold credentials.
+The `operation` field can have one of the following values:
+
+- `webhook.create` for creating a webhook, carrying its `thing_id`, `name` and `metadata`,
+- `webhook.update` for updating a webhook, carrying its `name` and `metadata`,
+- `webhook.remove` for removing a webhook.
+
+### Notifiers Services
+
+For every operation that changes state, the `smtp-notifier` service publishes an event to the Redis Stream called
+`mainflux.smtp-notifier`, and the `smpp-notifier` service to `mainflux.smpp-notifier`.
+Every event carries the notifier `id` and belongs to the notifier's org and group.
+The `operation` field can have one of the following values:
+
+- `notifier.create` for creating a notifier, carrying its `name`, `contacts` (comma-separated) and `metadata`,
+- `notifier.update` for updating a notifier, carrying its `name`, `contacts` and `metadata`,
+- `notifier.remove` for removing a notifier.
+
+### Downlinks Service
+
+For every operation that changes state, the `downlinks` service publishes an event to the Redis Stream called `mainflux.downlinks`.
+Every event carries the downlink `id` and belongs to the org and group of the downlink's thing.
+Events never carry the downlink URL, headers or payload, which may hold credentials.
+The `operation` field can have one of the following values:
+
+- `downlink.create` for creating a downlink, carrying its `thing_id`, `name` and `metadata`,
+- `downlink.update` for updating a downlink, carrying its `name` and `metadata`,
+- `downlink.remove` for removing a downlink.
+
+### Modbus Service
+
+For every operation that changes state, the `modbus` service publishes an event to the Redis Stream called `mainflux.modbus`.
+Every event carries the Modbus client `id` and belongs to the org and group of the client's thing.
+The `operation` field can have one of the following values:
+
+- `modbus_client.create` for creating a Modbus client, including from an uploaded file, carrying its `thing_id`, `name` and `metadata`,
+- `modbus_client.update` for updating a Modbus client, carrying its `name` and `metadata`,
+- `modbus_client.remove` for removing a Modbus client.
