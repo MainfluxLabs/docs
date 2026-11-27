@@ -254,8 +254,16 @@ which will properly configure and run all microservices.
 ## Events
 
 Mainflux uses [Redis Streams](https://redis.io/topics/streams-intro) as an event log for event sourcing.
-The `things` service publishes events to the `mainflux.things` stream, and the `auth` service publishes
-events to the `mainflux.auth` stream.
+Each service publishes its events to its own stream:
+
+- `things` to `mainflux.things`,
+- `auth` to `mainflux.auth`,
+- `users` to `mainflux.users`,
+- `certs` to `mainflux.certs`,
+- `webhooks` to `mainflux.webhooks`,
+- `smtp-notifier` to `mainflux.smtp-notifier` and `smpp-notifier` to `mainflux.smpp-notifier`,
+- `downlinks` to `mainflux.downlinks`,
+- `modbus` to `mainflux.modbus`.
 
 Besides the operation-specific fields described below, every event carries the following fields:
 
@@ -263,6 +271,8 @@ Besides the operation-specific fields described below, every event carries the f
 - `occurred_at` - the time of the operation in RFC 3339 format,
 - `evt_org_id` and `evt_group_id` - the org and the group to which the event belongs, empty when not applicable,
 - `jwt_identity_user_id` and `jwt_identity_user_email` - the user who performed the operation, present only for user-initiated operations.
+
+Events never carry secrets such as keys, passwords or tokens.
 
 ### Things Service
 
@@ -274,13 +284,19 @@ field that can have one of the following values:
 - `thing.create` for thing creation,
 - `thing.update` for thing update,
 - `thing.update_group_and_profile` for thing group and profile reassignment,
+- `thing.update_metadata` for merging keys into thing metadata,
+- `thing.update_external_key` for setting a thing external key (the key itself is not included),
+- `thing.remove_external_key` for thing external key removal,
 - `thing.remove` for thing removal,
 - `profile.create` for profile creation,
 - `profile.update` for profile update,
 - `profile.remove` for profile removal,
-- `group.remove` for group removal.
-
-The `auth` service publishes `org.create` and `org.remove` events.
+- `group.create` for group creation,
+- `group.update` for group update,
+- `group.remove` for group removal,
+- `group_membership.create` for adding a member to a group,
+- `group_membership.update` for changing a group member's role,
+- `group_membership.remove` for removing a member from a group.
 
 By fetching and processing these events you can reconstruct `things` service state.
 If you store some of your custom data in `metadata` field, this is the perfect
@@ -400,3 +416,95 @@ publish new `remove` event. This event will have the following format:
 **Note:** Every one of these events will omit fields that were not used or are not
 relevant for specific operation. Also, field ordering is not guaranteed, so DO NOT
 rely on it.
+
+### Auth Service
+
+For every operation that changes state, the `auth` service publishes an event to the Redis Stream called `mainflux.auth`.
+The `operation` field can have one of the following values:
+
+- `org.create` for org creation,
+- `org.update` for org update,
+- `org.remove` for org removal,
+- `org_membership.create` for adding a member to an org,
+- `org_membership.update` for changing an org member's role,
+- `org_membership.remove` for removing a member from an org,
+- `org_invite.create` for inviting a user to an org,
+- `org_invite.revoke` for revoking an org invite,
+- `org_invite.accept` for accepting an org invite,
+- `org_invite.decline` for declining an org invite,
+- `api_key.issue` for issuing an API key (the key secret is not included),
+- `api_key.revoke` for revoking an API key,
+- `session.logout_all` for ending all of a user's sessions,
+- `user.login` for starting a session (the user is the actor),
+- `user.impersonate` for starting an impersonated session.
+
+### Users Service
+
+For every operation that changes state, the `users` service publishes an event to the Redis Stream called `mainflux.users`.
+The `operation` field can have one of the following values:
+
+- `user.register` for registering a user, including through Google, GitHub or OIDC sign-in; for self-registration, registration by invite and sign-in the new user is the actor,
+- `user.login_fail` for a login attempt with invalid credentials, carrying the attempted e-mail and no actor,
+- `user.update` for user metadata update,
+- `user.change_password` for changing a password, by the user or by a platform owner or admin for another user,
+- `user.reset_password` for setting a new password through password recovery (the user is the actor),
+- `user.enable` for enabling a user,
+- `user.disable` for disabling a user,
+- `user.assign_admin_role` for assigning the platform admin role,
+- `user.unassign_admin_role` for removing the platform admin role,
+- `platform_invite.create` for inviting a person to register on the platform; its org invite is recorded by auth as `org_invite.create`,
+- `platform_invite.revoke` for revoking a platform invite.
+
+### Certs Service
+
+For every operation that changes state, the `certs` service publishes an event to the Redis Stream called `mainflux.certs`.
+Every event carries the certificate `serial` and the `thing_id`, and belongs to the thing's org and group.
+The `operation` field can have one of the following values:
+
+- `cert.issue` for issuing a certificate for a thing,
+- `cert.rotate` for replacing a thing's certificate with a newly issued one, carrying the replaced certificate as `revoked_serial`,
+- `cert.revoke` for revoking a certificate,
+- `cert.renew` for renewing an expiring certificate, carrying the replaced certificate as `revoked_serial`; automatic renewals have no actor.
+
+### Webhooks Service
+
+For every operation that changes state, the `webhooks` service publishes an event to the Redis Stream called `mainflux.webhooks`.
+Every event carries the webhook `id` and belongs to the org and group of the webhook's thing.
+Events never carry the webhook URL or headers, which may hold credentials.
+The `operation` field can have one of the following values:
+
+- `webhook.create` for creating a webhook, carrying its `thing_id`, `name` and `metadata`,
+- `webhook.update` for updating a webhook, carrying its `name` and `metadata`,
+- `webhook.remove` for removing a webhook.
+
+### Notifiers Services
+
+For every operation that changes state, the `smtp-notifier` service publishes an event to the Redis Stream called
+`mainflux.smtp-notifier`, and the `smpp-notifier` service to `mainflux.smpp-notifier`.
+Every event carries the notifier `id` and belongs to the notifier's org and group.
+The `operation` field can have one of the following values:
+
+- `notifier.create` for creating a notifier, carrying its `name`, `contacts` (comma-separated) and `metadata`,
+- `notifier.update` for updating a notifier, carrying its `name`, `contacts` and `metadata`,
+- `notifier.remove` for removing a notifier.
+
+### Downlinks Service
+
+For every operation that changes state, the `downlinks` service publishes an event to the Redis Stream called `mainflux.downlinks`.
+Every event carries the downlink `id` and belongs to the org and group of the downlink's thing.
+Events never carry the downlink URL, headers or payload, which may hold credentials.
+The `operation` field can have one of the following values:
+
+- `downlink.create` for creating a downlink, carrying its `thing_id`, `name` and `metadata`,
+- `downlink.update` for updating a downlink, carrying its `name` and `metadata`,
+- `downlink.remove` for removing a downlink.
+
+### Modbus Service
+
+For every operation that changes state, the `modbus` service publishes an event to the Redis Stream called `mainflux.modbus`.
+Every event carries the Modbus client `id` and belongs to the org and group of the client's thing.
+The `operation` field can have one of the following values:
+
+- `modbus_client.create` for creating a Modbus client, including from an uploaded file, carrying its `thing_id`, `name` and `metadata`,
+- `modbus_client.update` for updating a Modbus client, carrying its `name` and `metadata`,
+- `modbus_client.remove` for removing a Modbus client.
